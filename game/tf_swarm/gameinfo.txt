@@ -1,0 +1,27 @@
+"GameInfo"
+{
+	"game"		"TF2: ASW"
+	"title"		"    "	// asw - leave this blank as we have a texture logo
+	"type"		"multiplayer_only"
+	GameData	"swarm.fgd"
+	InstancePath "tilegen/instances/"
+	
+	SupportsDX8     0
+	
+	"FileSystem"
+	{
+		"SteamAppId"	"630"
+		"ToolsAppId"	"211"
+		
+		"SearchPaths"
+		{
+			"Game"	"|gameinfo_path|pak01_dir"
+			"Game"	"|gameinfo_path|."
+			//"Game"	"swarm"
+			// FIXME: Including Swarm Base fixes some GameUI issues, but breaks some particles!
+			//"Game"	"swarm_base"
+			"Game"	"../SourceFilmmaker/game/hl2"			// This is workaround for hl2 content mounting
+			"Game"	"platform"
+		}
+	}
+}

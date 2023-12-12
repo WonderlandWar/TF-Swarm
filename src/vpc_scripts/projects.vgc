@@ -1,0 +1,26 @@
+$Project "client"
+{
+	"game\client\client_swarm.vpc"	[$SWARM]
+	"game\client\client_tf.vpc"		[$TF]
+}
+
+$Project "server"
+{
+	"game\server\server_swarm.vpc"	[$SWARM]
+	"game\server\server_tf.vpc"		[$TF]
+}
+
+$Project "missionchooser"
+{
+	"game\missionchooser\missionchooser_swarm.vpc"	[$SWARM]
+}
+
+$Project "shaderlib"
+{
+	"materialsystem\shaderlib\shaderlib.vpc"
+}
+
+$Project "game_shader"
+{
+	"materialsystem\stdshaders\game_shader_dx9.vpc"
+}
