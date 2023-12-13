@@ -34,6 +34,8 @@
 #include "materialsystem/IMaterial.h"
 #include "materialsystem/IMaterialVar.h"
 
+#include "imaterialproxydict.h"
+
 extern CTFWeaponInfo *GetTFWeaponInfo( int iWeapon );
 #endif
 
@@ -2186,6 +2188,6 @@ IMaterial *CWeaponInvisProxy::GetMaterial()
 	return m_pPercentInvisible->GetOwningMaterial();
 }
 
-EXPOSE_INTERFACE( CWeaponInvisProxy, IMaterialProxy, "weapon_invis" IMATERIAL_PROXY_INTERFACE_VERSION );
+EXPOSE_MATERIAL_PROXY( CWeaponInvisProxy, weapon_invis );
 
 #endif // CLIENT_DLL
