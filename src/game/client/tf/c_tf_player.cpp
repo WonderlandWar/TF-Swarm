@@ -423,7 +423,7 @@ void C_TFRagdoll::CreateTFRagdoll()
 	if ( cl_ragdoll_physics_enable.GetBool() )
 	{
 		// Make us a ragdoll..
-		//SetRenderFX( kRenderFxRagdoll );
+		m_bClientSideRagdoll = true;
 
 		matrix3x4a_t boneDelta0[MAXSTUDIOBONES];
 		matrix3x4a_t boneDelta1[MAXSTUDIOBONES];
@@ -2346,8 +2346,8 @@ float C_TFPlayer::GetEffectiveInvisibilityLevel( void )
 int C_TFPlayer::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	// If we're a dead player with a fresh ragdoll, don't draw
-	//if ( GetRenderFX() == kRenderFxRagdoll )
-	//	return 0;
+	if ( m_bClientSideRagdoll )
+		return 0;
 
 	// Don't draw the model at all if we're fully invisible
 	if ( GetEffectiveInvisibilityLevel() >= 1.0f )
@@ -3243,8 +3243,8 @@ ShadowType_t C_TFPlayer::ShadowCastType( void )
 		return SHADOWS_NONE;
 
 	// If in ragdoll mode.
-	//if ( GetRenderFX() == kRenderFxRagdoll )
-	//	return SHADOWS_NONE;
+	if ( m_bClientSideRagdoll )
+		return SHADOWS_NONE;
 
 	C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
 

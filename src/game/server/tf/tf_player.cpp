@@ -4744,12 +4744,12 @@ void CTFPlayer::CreateRagdollEntity( bool bGib, bool bBurning )
 	AddSolidFlags( FSOLID_NOT_SOLID );
 	AddEffects( EF_NODRAW | EF_NOSHADOW );
 	SetMoveType( MOVETYPE_NONE );
-
+	
 	// Add additional gib setup.
-	//if ( bGib )
-	//{
-	//	SetRenderFX( kRenderFxRagdoll );
-	//}
+	if ( bGib )
+	{
+		m_bClientSideRagdoll = true;
+	}
 
 	// Save ragdoll handle.
 	m_hRagdoll = pRagdoll;
