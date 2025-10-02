@@ -128,11 +128,8 @@ CHudElement::CHudElement( const char *pElementName )
 	m_nSplitScreenPlayerSlot = -1;
 	SetNeedsRemove( false );
 	m_bIsParentedToClientDLLRootPanel = false;
-	
-	// Make this for all hud elements, but when its a bit safer
-#if defined( TF_CLIENT_DLL ) || defined( DOD_DLL )
-	RegisterForRenderGroup( "global" );
-#endif
+
+
 }
 
 //-----------------------------------------------------------------------------

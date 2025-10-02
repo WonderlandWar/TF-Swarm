@@ -917,7 +917,7 @@ void CBasePlayer::DrawDebugGeometryOverlays(void)
 //=========================================================
 // TraceAttack
 //=========================================================
-void CBasePlayer::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDir, trace_t *ptr )
+void CBasePlayer::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
 {
 	if ( m_takedamage )
 	{
@@ -2713,18 +2713,11 @@ bool CBasePlayer::IsValidObserverTarget(CBaseEntity * target)
 	{
 		switch ( mp_forcecamera.GetInt() )	
 		{
-			case OBS_ALLOW_ALL		:	break;
-#ifndef TF_DLL
-			case OBS_ALLOW_TEAM		:	if ( GetTeamNumber() != target->GetTeamNumber() )
-											 return false;
-										break;
-#else
-			case OBS_ALLOW_TEAM		:
-			case OBS_ALLOW_TEAM_ALL :	if ( GetTeamNumber() != target->GetTeamNumber() )
+			case OBS_ALLOW_ALL	:	break;
+			case OBS_ALLOW_TEAM :	if ( GetTeamNumber() != target->GetTeamNumber() )
 										 return false;
-										break;
-#endif
-			case OBS_ALLOW_NONE		:	return false;
+									break;
+			case OBS_ALLOW_NONE :	return false;
 		}
 	}
 
@@ -5103,11 +5096,11 @@ void CBasePlayer::Precache( void )
 	enginesound->PrecacheSentenceGroup( "HEV" );
 
 	// These are always needed
-#ifndef TF_DLL
+
 	PrecacheParticleSystem( "slime_splash_01" );
 	PrecacheParticleSystem( "slime_splash_02" );
 	PrecacheParticleSystem( "slime_splash_03" );
-#endif
+
 
 	// in the event that the player JUST spawned, and the level node graph
 	// was loaded, fix all of the node graph pointers before the game starts.

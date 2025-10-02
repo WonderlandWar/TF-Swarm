@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -11,7 +11,6 @@
 
 #include "tf_shareddefs.h"
 #include "baseviewport.h"
-#include "clientmode_tf.h"
 
 
 using namespace vgui;
@@ -23,35 +22,16 @@ namespace vgui
 	class CBitmapImagePanel;
 }
 
-//-----------------------------------------------------------------------------
-// Purpose: this is the viewport that contains all the hud elements
-//-----------------------------------------------------------------------------
-class CHudViewport : public CBaseViewport
-{
-private:
-	DECLARE_CLASS_SIMPLE( CHudViewport, CBaseViewport );
-
-protected:
-	virtual void ApplySchemeSettings( vgui::IScheme *pScheme )
-	{
-		BaseClass::ApplySchemeSettings( pScheme );
-
-		GetHud().InitColors( pScheme );
-
-		SetPaintBackgroundEnabled( false );
-	}
-
-	virtual void CreateDefaultPanels( void ) { /* don't create any panels yet*/ };
-};
-
 //==============================================================================
-class TFViewport : public CHudViewport
+class TFViewport : public CBaseViewport
 {
 
-public:
-	DECLARE_CLASS_SIMPLE( TFViewport, CHudViewport );
+private:
+	DECLARE_CLASS_SIMPLE( TFViewport, CBaseViewport );
 
 public:
+	TFViewport();
+	~TFViewport();
 
 	IViewPortPanel* CreatePanelByName(const char *szPanelName);
 	void CreateDefaultPanels( void );
@@ -62,6 +42,8 @@ public:
 	int GetDeathMessageStartHeight( void );
 
 	virtual void OnScreenSizeChanged( int iOldWide, int iOldTall );
+
+	virtual void OnTick() OVERRIDE;
 
 private:
 	void CenterWindow( vgui::Frame *win );

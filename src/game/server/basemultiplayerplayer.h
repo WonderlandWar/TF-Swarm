@@ -34,8 +34,7 @@ public:
 	virtual void		ModifyOrAppendCriteria( AI_CriteriaSet& criteriaSet );
 
 	virtual bool		SpeakIfAllowed( AIConcept_t concept, SpeechPriorityType priority, const char *modifiers = NULL, char *pszOutResponseChosen = NULL, size_t bufsize = 0, IRecipientFilter *filter = NULL );
-	// Note: In TF-Swarm, this was changed from void to bool in an attempt to fix some issues, didn't seem to work though...
-	bool				SpeakConcept( AI_Response &outresponse, int iConcept );
+	void				SpeakConcept( AI_Response &outresponse, int iConcept );
 	virtual bool		SpeakConceptIfAllowed( int iConcept, const char *modifiers = NULL, char *pszOutResponseChosen = NULL, size_t bufsize = 0, IRecipientFilter *filter = NULL );
 
 	virtual bool		CanHearAndReadChatFrom( CBasePlayer *pPlayer );

@@ -1,19 +1,19 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: A blood spray effect to expose successful hits.
 //
 //=============================================================================//
 
 #include "cbase.h"
-#include "precache_register.h"
-#include "FX_Sparks.h"
+#include "clienteffectprecachesystem.h"
+#include "fx_sparks.h"
 #include "iefx.h"
 #include "c_te_effect_dispatch.h"
 #include "particles_ez.h"
 #include "decals.h"
 #include "engine/IEngineSound.h"
 #include "fx_quad.h"
-#include "engine/IVDebugOverlay.h"
+#include "engine/ivdebugoverlay.h"
 #include "shareddefs.h"
 #include "fx_blood.h"
 #include "view.h"
@@ -38,12 +38,29 @@ void TFBloodSprayCallback( Vector vecOrigin, Vector vecNormal, ClientEntityHandl
 	{
 		bUnderwater = true;
 	}
+
+	bool bPyroVision = false;
+#ifdef CLIENT_DLL
+	// Use birthday fun if the local player has an item that allows them to see it (Pyro Goggles)
+	if ( IsLocalPlayerUsingVisionFilterFlags( TF_VISION_FILTER_PYRO ) )
+	{
+		bPyroVision = true;
+	}
+#endif
 	 
 	if ( !bUnderwater && TFGameRules() && TFGameRules()->IsBirthday() && RandomFloat(0,1) < 0.2 )
 	{
 		DispatchParticleEffect( "bday_blood", vecOrigin, vecAngles, pPlayer );
 	}
-	else
+	else if ( TFGameRules() && bPyroVision )
+	{
+		DispatchParticleEffect( "pyrovision_blood", vecOrigin, vecAngles, pPlayer );
+	}
+	else if ( UTIL_IsLowViolence() )
+	{
+		DispatchParticleEffect( bUnderwater ? "lowV_water_blood_impact_red_01" : "lowV_blood_impact_red_01", vecOrigin, vecAngles, pPlayer );
+	}
+	else 
 	{
 		DispatchParticleEffect( bUnderwater ? "water_blood_impact_red_01" : "blood_impact_red_01", vecOrigin, vecAngles, pPlayer );
 	}
@@ -54,8 +71,7 @@ void TFBloodSprayCallback( Vector vecOrigin, Vector vecNormal, ClientEntityHandl
 
 	// Now throw out a spray away from the view
 	// Get the distance to the view
-	ASSERT_LOCAL_PLAYER_RESOLVABLE();
-	float flDistance = (vecOrigin - MainViewOrigin( GET_ACTIVE_SPLITSCREEN_SLOT() )).Length();
+	float flDistance = (vecOrigin - MainViewOrigin()).Length();
 	float flLODDistance = 0.25 * (flDistance / 512);
 
 	Vector right, up;
@@ -72,7 +88,7 @@ void TFBloodSprayCallback( Vector vecOrigin, Vector vecNormal, ClientEntityHandl
 
 	// If the normal's too close to being along the view, push it out
 	Vector vecForward, vecRight;
-	AngleVectors( MainViewAngles( GET_ACTIVE_SPLITSCREEN_SLOT() ), &vecForward, &vecRight, NULL );
+	AngleVectors( MainViewAngles(), &vecForward, &vecRight, NULL );
 	float flDot = DotProduct( vecNormal, vecForward );
 	if ( fabs(flDot) > 0.5 )
 	{
@@ -97,11 +113,12 @@ void TFBloodSprayCallback( Vector vecOrigin, Vector vecNormal, ClientEntityHandl
 
 	if ( flDistance < 400 )
 	{
-		DispatchParticleEffect( "blood_spray_red_01", vecOrigin, vecAngles, pPlayer );
+
+		DispatchParticleEffect( UTIL_IsLowViolence() ? "lowV_blood_spray_red_01" : "blood_spray_red_01", vecOrigin, vecAngles, pPlayer );
 	}
 	else
 	{
-		DispatchParticleEffect( "blood_spray_red_01_far", vecOrigin, vecAngles, pPlayer );
+		DispatchParticleEffect( UTIL_IsLowViolence() ? "lowV_blood_spray_red_01_far" : "blood_spray_red_01_far", vecOrigin, vecAngles, pPlayer );
 	}
 }
 
@@ -132,7 +149,7 @@ C_TETFBlood::C_TETFBlood( void )
 {
 	m_vecOrigin.Init();
 	m_vecNormal.Init();
-	m_hEntity = INVALID_EHANDLE_INDEX;
+	m_hEntity = INVALID_EHANDLE;
 }
 
 //-----------------------------------------------------------------------------
@@ -148,7 +165,7 @@ void C_TETFBlood::PostDataUpdate( DataUpdateType_t updateType )
 static void RecvProxy_BloodEntIndex( const CRecvProxyData *pData, void *pStruct, void *pOut )
 {
 	int nEntIndex = pData->m_Value.m_Int;
-	((C_TETFBlood*)pStruct)->m_hEntity = (nEntIndex < 0) ? INVALID_EHANDLE_INDEX : ClientEntityList().EntIndexToHandle( nEntIndex );
+	((C_TETFBlood*)pStruct)->m_hEntity = (nEntIndex < 0) ? INVALID_EHANDLE : ClientEntityList().EntIndexToHandle( nEntIndex );
 }
 
 IMPLEMENT_CLIENTCLASS_EVENT_DT(C_TETFBlood, DT_TETFBlood, CTETFBlood)

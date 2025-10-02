@@ -1018,6 +1018,8 @@ C_BaseEntity::C_BaseEntity() :
 	m_iv_vecOrigin( "C_BaseEntity::m_iv_vecOrigin" ),
 	m_iv_angRotation( "C_BaseEntity::m_iv_angRotation" )
 {
+	m_pAttributes = NULL;
+
 	AddVar( &m_vecOrigin, &m_iv_vecOrigin, LATCH_SIMULATION_VAR );
 	AddVar( &m_angRotation, &m_iv_angRotation, LATCH_SIMULATION_VAR );
 

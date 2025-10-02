@@ -1,8 +1,8 @@
 [vpc crc file version 2]
-8209bbc3 E:\Program Files (x86)\Steam\steamapps\git\TF-Swarm\src\devtools\bin\vpc.exe
+8209bbc3 E:\coding_stuff\New-TF-Swarm\src\devtools\bin\vpc.exe
 _Nc_VS2013/vpcgame:tf_
-04764afc client_tf.vpc
-682d7792 ..\..\game\client\client_base.vpc
+339f275c client_tf.vpc
+afcd6a3b ..\..\game\client\client_base.vpc
 9a02405f ..\..\vpc_scripts\source_dll_base.vpc
 d752cf80 ..\..\vpc_scripts\platform_dirs.vpc
 6c4a5ff1 ..\..\vpc_scripts\source_base.vpc
@@ -13,4 +13,12 @@ d752cf80 ..\..\vpc_scripts\platform_dirs.vpc
 7cf17fbc ..\..\vpc_scripts\source_dll_win32_release.vpc
 34c37fcf ..\..\vpc_scripts\source_win32_base.vpc
 49651204 ..\..\vpc_scripts\source_video_base.vpc
+59ed9584 ..\..\game\shared\tf\tf_gcmessages_include.vpc
+11ccbcbd ..\..\game\shared\tf\tf_proto_def_messages_include.vpc
+1d665c9b ..\..\game\client\client_econ_base.vpc
+b05a1396 ..\..\gcsdk\gcsdk_game_include.vpc
+edac72ea ..\..\vpc_scripts\protobuf_builder.vpc
+8e467f9d ..\..\gcsdk\steammessages_include.vpc
+91e857ac ..\..\game\shared\base_gcmessages_include.vpc
+f8cf6deb ..\..\game\shared\econ_gcmessages_include.vpc
 30bf2216 ..\..\vpc_scripts\definitions\win32_2010.def

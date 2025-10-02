@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -7,17 +7,20 @@
 //=============================================================================//
 #include "cbase.h"
 #include "c_vguiscreen.h"
-#include <vgui/IVGUI.h>
+#include <vgui/IVGui.h>
 #include "ienginevgui.h"
 #include "vgui_bitmapimage.h"
-#include "vgui_BitmapPanel.h"
+#include "vgui_bitmappanel.h"
 #include "vgui_controls/Label.h"
 #include "tf_weapon_pda.h"
-#include "vgui/isurface.h"
+#include "vgui/ISurface.h"
+#include "tf_controls.h"
 #include "c_tf_player.h"
+#include "tf_weapon_invis.h"
 #include <vgui_controls/RadioButton.h>
 #include "clientmode.h"
 #include <vgui_controls/ProgressBar.h>
+#include <vgui_controls/CircularProgressBar.h>
 
 using namespace vgui;
 
@@ -209,7 +212,125 @@ void CPDAPanel_Spy_Invis::OnTick( void )
 	{
 		if ( m_pInvisProgress )
 		{
-			m_pInvisProgress->SetProgress( pPlayer->m_Shared.GetSpyCloakMeter() / 100.0f );
+			float flMeter = pPlayer->m_Shared.GetSpyCloakMeter();
+			m_pInvisProgress->SetProgress( flMeter / 100.0f );
 		}
 	}	
+}
+
+//-----------------------------------------------------------------------------
+// Spy Invis PDA panel for the pocketwatch
+//-----------------------------------------------------------------------------
+class CPDAPanel_Spy_Invis_Pocket : public CPDAPanel
+{
+	DECLARE_CLASS( CPDAPanel_Spy_Invis_Pocket, CPDAPanel );
+
+public:
+	CPDAPanel_Spy_Invis_Pocket( vgui::Panel *parent, const char *panelName );
+
+	virtual void OnTick();
+
+protected:
+	ProgressBar *m_pInvisProgress;
+	float	m_flPrevProgress;
+};
+
+DECLARE_VGUI_SCREEN_FACTORY( CPDAPanel_Spy_Invis_Pocket, "pda_panel_spy_invis_pocket" );
+
+//-----------------------------------------------------------------------------
+// Constructor: 
+//-----------------------------------------------------------------------------
+CPDAPanel_Spy_Invis_Pocket::CPDAPanel_Spy_Invis_Pocket( vgui::Panel *parent, const char *panelName )
+	: CPDAPanel( parent, "CPDAPanel_Spy_Invis_Pocket" ) 
+{
+	vgui::ivgui()->AddTickSignal( GetVPanel() );
+
+	CircularProgressBar* pCircularProgressBar = new CircularProgressBar( this, "InvisProgress" );
+	pCircularProgressBar->SetReverseProgress( true );
+	m_pInvisProgress = pCircularProgressBar;
+	m_flPrevProgress = -1;
+}
+
+//-----------------------------------------------------------------------------
+// Update the progress bar with how much invis we have left
+//-----------------------------------------------------------------------------
+void CPDAPanel_Spy_Invis_Pocket::OnTick( void )
+{
+	C_BaseCombatWeapon *pInvisWeapon = GetOwningWeapon();
+
+	if ( !pInvisWeapon )
+		return;
+
+	C_TFPlayer *pPlayer = ToTFPlayer( pInvisWeapon->GetOwner() );
+
+	if ( pPlayer && !pPlayer->IsDormant() )
+	{
+		if ( m_pInvisProgress )
+		{
+			float flMeter = pPlayer->m_Shared.GetSpyCloakMeter();
+			if ( m_flPrevProgress != flMeter )
+			{
+				m_flPrevProgress = flMeter;
+
+				if ( flMeter == 100.f )
+				{
+					m_pInvisProgress->SetFgColor( COLOR_GREEN );
+				}
+				else if ( flMeter < 40.f )
+				{
+					m_pInvisProgress->SetFgColor( COLOR_RED );
+				}
+				else
+				{
+					m_pInvisProgress->SetFgColor( COLOR_YELLOW );
+				}
+
+				m_pInvisProgress->SetProgress( flMeter / 100.0f );
+			}
+		}
+	}	
+}
+
+//-----------------------------------------------------------------------------
+// Spy Invis PDA panel for the TTG pocketwatch
+//-----------------------------------------------------------------------------
+class CPDAPanel_Spy_Invis_Pocket_TTG : public CPDAPanel_Spy_Invis_Pocket
+{
+	DECLARE_CLASS( CPDAPanel_Spy_Invis_Pocket_TTG, CPDAPanel_Spy_Invis_Pocket );
+
+public:
+	CPDAPanel_Spy_Invis_Pocket_TTG( vgui::Panel *parent, const char *panelName );
+};
+
+DECLARE_VGUI_SCREEN_FACTORY( CPDAPanel_Spy_Invis_Pocket_TTG, "pda_panel_spy_invis_pocket_ttg" );
+
+//-----------------------------------------------------------------------------
+// Constructor: 
+//-----------------------------------------------------------------------------
+CPDAPanel_Spy_Invis_Pocket_TTG::CPDAPanel_Spy_Invis_Pocket_TTG( vgui::Panel *parent, const char *panelName )
+: CPDAPanel_Spy_Invis_Pocket( parent, "CPDAPanel_Spy_Invis_Pocket_TTG" ) 
+{
+	dynamic_cast<CircularProgressBar*>(m_pInvisProgress)->SetStartSegment( 7 ); // Do the pellet first.
+}
+
+//-----------------------------------------------------------------------------
+// Spy Invis PDA panel for the Hitman pocketwatch
+//-----------------------------------------------------------------------------
+
+class CPDAPanel_Spy_Invis_Pocket_HM : public CPDAPanel_Spy_Invis_Pocket
+{
+	DECLARE_CLASS( CPDAPanel_Spy_Invis_Pocket_HM, CPDAPanel_Spy_Invis_Pocket );
+
+public:
+	CPDAPanel_Spy_Invis_Pocket_HM( vgui::Panel *parent, const char *panelName );
+};
+
+DECLARE_VGUI_SCREEN_FACTORY( CPDAPanel_Spy_Invis_Pocket_HM, "pda_panel_spy_invis_pocket_hm" );
+
+//-----------------------------------------------------------------------------
+// Constructor: 
+//-----------------------------------------------------------------------------
+CPDAPanel_Spy_Invis_Pocket_HM::CPDAPanel_Spy_Invis_Pocket_HM( vgui::Panel *parent, const char *panelName )
+	: CPDAPanel_Spy_Invis_Pocket( parent, "CPDAPanel_Spy_Invis_Pocket_HM" ) 
+{
 }

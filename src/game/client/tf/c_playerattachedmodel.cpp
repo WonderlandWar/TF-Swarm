@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: A clientside, visual only model that's attached to players
 //
@@ -36,7 +36,7 @@ C_PlayerAttachedModel *C_PlayerAttachedModel::Create( const char *pszModelName, 
 bool C_PlayerAttachedModel::Initialize( const char *pszModelName, C_BaseEntity *pParent, int iAttachment, Vector vecOffset, float flLifetime, int iFlags )
 {
 	AddEffects( EF_NORECEIVESHADOW | EF_NOSHADOW );
-	if ( InitializeAsClientEntity( pszModelName, false ) == false )
+	if ( InitializeAsClientEntity( pszModelName, RENDER_GROUP_OPAQUE_ENTITY ) == false )
 	{
 		Release();
 		return false;
@@ -98,7 +98,7 @@ void C_PlayerAttachedModel::ClientThink( void )
 	if ( m_iFlags & PAM_ANIMATE_RANDOMLY && gpGlobals->curtime > m_flAnimateAt )
 	{
 		float flDelta = RandomFloat(0.2,0.4) * (RandomInt(0,1) == 1 ? 1 : -1);
-		float flCycle = clamp( GetCycle() + flDelta, 0, 1 );
+		float flCycle = clamp( GetCycle() + flDelta, 0.f, 1.f );
 		SetCycle( flCycle );
 		m_flAnimateAt = gpGlobals->curtime + PAM_ANIMATE_TIME;
 	}

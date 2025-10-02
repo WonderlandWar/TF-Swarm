@@ -63,7 +63,7 @@ public:
 	virtual int OnTakeDamage( const CTakeDamageInfo &info );
 
 	// To spark when hit
-	void TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
+	void TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
 
 	bool IsBreakable( void );
 	bool SparkWhenHit( void );

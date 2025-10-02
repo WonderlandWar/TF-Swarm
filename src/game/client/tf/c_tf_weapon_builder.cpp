@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Client's CWeaponBuilder class
 //
@@ -14,12 +14,38 @@
 #include "c_tf_weapon_builder.h"
 #include "c_weapon__stubs.h"
 #include "iinput.h"
-#include <vgui/IVGUI.h>
+#include <vgui/IVGui.h>
 #include "c_tf_player.h"
 #include "c_vguiscreen.h"
 #include "ienginevgui.h"
 
 STUB_WEAPON_CLASS_IMPLEMENT( tf_weapon_builder, C_TFWeaponBuilder );
+PRECACHE_WEAPON_REGISTER( tf_weapon_builder );
+
+// SUPER HACK TO FIX DEMOS.  For a couple days, we accidently renamed 
+// CTFWeaponBuilder to C_TFWeaponBuilder on the server.  This was fine for
+// playing the game but broke all previously recorded demos.  Fixing this and
+// re-renaming the class back to the original name fixed all demos recorded
+// with the brokenly-renamed class.  To handle these demos that think the class
+// is called C_TFWeaponBuilder on the server, we're creating a new class that derives from
+// the real C_TFWeaponBuilder and does nothing special except that it calls
+// IMPLEMENT_CLIENTCLASS and maps itself to serverclass "C_TFWeaponBuilder"
+// (which, if you've followed along, doesn't exist anymore).
+//
+// As a history lesson, this broke from the change in tf_player_shared.h in cl 1722245
+class C_TFWeaponBuilderReplayHack : public C_TFWeaponBuilder
+{
+	DECLARE_CLASS( C_TFWeaponBuilderReplayHack, C_TFWeaponBuilder );
+public:
+	DECLARE_CLIENTCLASS();
+	DECLARE_PREDICTABLE();
+};
+IMPLEMENT_CLIENTCLASS( C_TFWeaponBuilderReplayHack, DT_TFWeaponBuilder, C_TFWeaponBuilder )
+BEGIN_PREDICTION_DATA( C_TFWeaponBuilderReplayHack )
+END_PREDICTION_DATA()
+
+
+IMPLEMENT_NETWORKCLASS_ALIASED( TFWeaponBuilder, DT_TFWeaponBuilder )
 
 // Recalc object sprite when we receive a new object type to build
 void RecvProxy_ObjectType( const CRecvProxyData *pData, void *pStruct, void *pOut )
@@ -35,13 +61,25 @@ void RecvProxy_ObjectType( const CRecvProxyData *pData, void *pStruct, void *pOu
 BEGIN_NETWORK_TABLE_NOBASE( C_TFWeaponBuilder, DT_BuilderLocalData )
 	RecvPropInt( RECVINFO(m_iObjectType), 0, RecvProxy_ObjectType ),
 	RecvPropEHandle( RECVINFO(m_hObjectBeingBuilt) ),
+	RecvPropArray3( RECVINFO_ARRAY( m_aBuildableObjectTypes ), RecvPropBool( RECVINFO( m_aBuildableObjectTypes[0] ) ) ),
 END_NETWORK_TABLE()
 
-
-IMPLEMENT_CLIENTCLASS_DT(C_TFWeaponBuilder, DT_TFWeaponBuilder, CTFWeaponBuilder)
+BEGIN_NETWORK_TABLE( C_TFWeaponBuilder, DT_TFWeaponBuilder )
 	RecvPropInt( RECVINFO(m_iBuildState) ),
 	RecvPropDataTable( "BuilderLocalData", 0, 0, &REFERENCE_RECV_TABLE( DT_BuilderLocalData ) ),
+	RecvPropInt( RECVINFO(m_iObjectMode) ),
+	RecvPropFloat( RECVINFO( m_flWheatleyTalkingUntil) ),
 END_RECV_TABLE()
+
+
+
+
+//-----------------------------------------------------------------------------
+IMPLEMENT_NETWORKCLASS_ALIASED( TFWeaponSapper, DT_TFWeaponSapper )
+BEGIN_NETWORK_TABLE( C_TFWeaponSapper, DT_TFWeaponSapper )
+	RecvPropFloat( RECVINFO( m_flChargeBeginTime ) ),
+END_NETWORK_TABLE()
+
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -53,6 +91,7 @@ C_TFWeaponBuilder::C_TFWeaponBuilder()
 	m_pSelectionTextureActive = NULL;
 	m_pSelectionTextureInactive = NULL;
 	m_iValidBuildPoseParam = -1;
+	m_flWheatleyTalkingUntil = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -131,6 +170,26 @@ CStudioHdr *C_TFWeaponBuilder::OnNewModel( void )
 }
 
 //-----------------------------------------------------------------------------
+// Purpose:
+// ----------------------------------------------------------------------------
+void C_TFWeaponBuilder::PostDataUpdate( DataUpdateType_t type )
+{
+	if ( type == DATA_UPDATE_CREATED )
+	{
+		// m_iViewModelIndex is set by the base Precache(), which didn't know what
+		// type of object we built, so it didn't get the right viewmodel index.
+		// Now that our data is filled in, go and get the right index.
+		const char *pszViewModel = GetViewModel(0);
+		if ( pszViewModel && pszViewModel[0] )
+		{
+			m_iViewModelIndex = CBaseEntity::PrecacheModel( pszViewModel );
+		}
+	}
+
+	BaseClass::PostDataUpdate( type );
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: only called for local player
 //-----------------------------------------------------------------------------
 void C_TFWeaponBuilder::Redraw()
@@ -206,7 +265,7 @@ void C_TFWeaponBuilder::SetupObjectSelectionSprite( void )
 	char *iconTexture = GetObjectInfo( m_iObjectType )->m_pIconActive;
 	if ( iconTexture && iconTexture[ 0 ] )
 	{
-		m_pSelectionTextureActive = HudIcons().GetIcon( iconTexture );
+		m_pSelectionTextureActive = gHUD.GetIcon( iconTexture );
 	}
 	else
 	{
@@ -216,7 +275,7 @@ void C_TFWeaponBuilder::SetupObjectSelectionSprite( void )
 	iconTexture = GetObjectInfo( m_iObjectType )->m_pIconInactive;
 	if ( iconTexture && iconTexture[ 0 ] )
 	{
-		m_pSelectionTextureInactive = HudIcons().GetIcon( iconTexture );
+		m_pSelectionTextureInactive = gHUD.GetIcon( iconTexture );
 	}
 	else
 	{
@@ -247,7 +306,7 @@ CHudTexture const *C_TFWeaponBuilder::GetSpriteInactive( void ) const
 //-----------------------------------------------------------------------------
 const char *C_TFWeaponBuilder::GetPrintName( void ) const
 {
-	return GetObjectInfo( m_iObjectType )->m_pStatusName;
+	return GetObjectInfo( m_iObjectType )->m_AltModes[m_iObjectMode].pszStatusName;
 }
 
 //-----------------------------------------------------------------------------
@@ -267,7 +326,7 @@ bool C_TFWeaponBuilder::CanBeSelected( void )
 	if ( !pOwner )
 		return false;
 
-	if ( pOwner->CanBuild( m_iObjectType ) != CB_CAN_BUILD )
+	if ( pOwner->CanBuild( m_iObjectType, m_iObjectMode ) != CB_CAN_BUILD )
 		return false;
 
 	return HasAmmo();
@@ -278,7 +337,11 @@ bool C_TFWeaponBuilder::CanBeSelected( void )
 //-----------------------------------------------------------------------------
 bool C_TFWeaponBuilder::VisibleInWeaponSelection( void )
 {
-	return GetObjectInfo( m_iObjectType )->m_bVisibleInWeaponSelection;
+	if ( BaseClass::VisibleInWeaponSelection() == false )
+		return false;
+	if ( m_iObjectType != BUILDER_INVALID_OBJECT )
+		return GetObjectInfo( m_iObjectType )->m_bVisibleInWeaponSelection;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -290,8 +353,30 @@ bool C_TFWeaponBuilder::HasAmmo( void )
 	if ( !pOwner )
 		return false;
 
-	int iCost = CalculateObjectCost( m_iObjectType );
+	int iCost = pOwner->m_Shared.CalculateObjectCost( pOwner, m_iObjectType );
 	return ( pOwner->GetBuildResources() >= iCost );
+}
+
+// -----------------------------------------------------------------------------
+// Purpose:
+// -----------------------------------------------------------------------------
+bool C_TFWeaponBuilder::CanBuildObjectType( int iObjectType )
+{
+	if ( iObjectType < 0 || iObjectType >= OBJ_LAST )
+		return false;
+
+	return m_aBuildableObjectTypes[iObjectType];
+}
+
+// -----------------------------------------------------------------------------
+// Purpose:
+// -----------------------------------------------------------------------------
+void C_TFWeaponBuilder::UpdateAttachmentModels( void )
+{
+	if ( m_iObjectType != BUILDER_INVALID_OBJECT && GetObjectInfo( m_iObjectType )->m_bUseItemInfo )
+	{
+		BaseClass::UpdateAttachmentModels();
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -306,6 +391,9 @@ const char *C_TFWeaponBuilder::GetViewModel( int iViewModel ) const
 
 	if ( m_iObjectType != BUILDER_INVALID_OBJECT )
 	{
+		if ( GetObjectInfo( m_iObjectType )->m_bUseItemInfo )
+			return BaseClass::GetViewModel();
+
 		return GetObjectInfo( m_iObjectType )->m_pViewModel;
 	}
 
@@ -332,15 +420,41 @@ const char *C_TFWeaponBuilder::GetWorldModel( void ) const
 
 Activity C_TFWeaponBuilder::GetDrawActivity( void )
 {
-	CTFPlayer *pOwner = ToTFPlayer( GetOwner() );
-
-	// hax alert! use the one handed sapper deploy if we're invis
-	if ( pOwner && pOwner->m_Shared.InCond( TF_COND_STEALTHED ) && GetSubType() == OBJ_ATTACHMENT_SAPPER )
+	// sapper used to call different draw animations , one when invis and one when not.
+	// now you can go invis *while* deploying, so let's always use the one-handed deploy.
+	if ( GetType() == OBJ_ATTACHMENT_SAPPER )
 	{
 		return ACT_VM_DRAW_DEPLOYED;
 	}
-	else
-	{
-		return BaseClass::GetDrawActivity();
-	}
+
+	return BaseClass::GetDrawActivity();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool C_TFWeaponBuilder::EffectMeterShouldFlash( void )
+{
+	if ( !GetOwner() )
+		return false;
+
+	int iRoboSapper = 0;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOwner(), iRoboSapper, robo_sapper );
+
+	return ( iRoboSapper && GetEffectBarProgress() >= 1.f );
+}
+
+const char *C_TFWeaponSapper::GetViewModel( int iViewModel ) const
+{
+	// Skip over Builder's version
+	return C_TFWeaponBase::GetViewModel();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+const char *C_TFWeaponSapper::GetWorldModel( void ) const
+{
+	// Skip over Builder's version
+	return C_TFWeaponBase::GetWorldModel();
 }

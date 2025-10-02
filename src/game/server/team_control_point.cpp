@@ -70,10 +70,8 @@ CTeamControlPoint::CTeamControlPoint()
 {
 	m_TeamData.SetSize( GetNumberOfTeams() );
 	m_pCaptureInProgressSound = NULL;
-	
-#ifdef  TF_DLL
-	UseClientSideAnimation();
-#endif
+
+
 }
 
 //-----------------------------------------------------------------------------
@@ -87,25 +85,8 @@ void CTeamControlPoint::Spawn( void )
 		Warning( "team_control_point '%s' has bad point_default_owner.\n", GetDebugName() );
 		m_iDefaultOwner = TEAM_UNASSIGNED;
 	}
-	
-#ifdef TF_DLL
-	if ( m_iszCaptureStartSound == NULL_STRING )
-	{
-		m_iszCaptureStartSound = AllocPooledString( "Hologram.Start" );
-	}
-	if ( m_iszCaptureEndSound == NULL_STRING )
-	{
-		m_iszCaptureEndSound = AllocPooledString( "Hologram.Stop" );
-	}
-	if ( m_iszCaptureInProgress == NULL_STRING )
-	{
-		m_iszCaptureInProgress = AllocPooledString( "Hologram.Move" );
-	}
-	if ( m_iszCaptureInterrupted == NULL_STRING )
-	{
-		m_iszCaptureInterrupted = AllocPooledString( "Hologram.Interrupted" );
-	}
-#endif
+
+
 
 	Precache();
 
@@ -255,10 +236,8 @@ void CTeamControlPoint::Precache( void )
 	{
 		PrecacheScriptSound( STRING( m_iszWarnSound ) );
 	}
-	
-#ifdef TF_DLL
-	PrecacheScriptSound( "Announcer.ControlPointContested" );
-#endif
+
+
 }
 
 //------------------------------------------------------------------------------

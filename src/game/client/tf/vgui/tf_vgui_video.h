@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2007, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: VGUI panel which can play back video, in-engine
 //
@@ -30,6 +30,8 @@ public:
 	float GetStartDelay(){ return m_flStartAnimDelay; }
 	float GetEndDelay(){ return m_flEndAnimDelay; }
 
+	virtual bool BeginPlayback( const char *pFilename ) OVERRIDE;
+
 protected:
 	virtual void ReleaseVideo();
 	virtual void OnVideoOver();
@@ -37,6 +39,7 @@ protected:
 private:
 	float m_flStartAnimDelay;
 	float m_flEndAnimDelay;
+	bool m_bLoop;
 };
 
 #endif // TF_VGUI_VIDEO_H

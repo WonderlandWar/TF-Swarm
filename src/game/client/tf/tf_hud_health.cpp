@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Implementation of CHudHealth class.
 //
@@ -125,7 +125,7 @@ void CHudHealth::OnThink()
 		return; 
 
 	// Never below zero.
-	int nHealth = max( pPlayer->GetHealth(), 0 );
+	int nHealth = MAX( pPlayer->GetHealth(), 0 );
 
 	// Only update the fade if we've changed health
 	if ( nHealth == m_nHealth )

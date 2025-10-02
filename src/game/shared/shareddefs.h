@@ -22,11 +22,7 @@
 #define TICK_NEVER_THINK		(-1)
 
 
-#if defined( TF_DLL )
-#define ANIMATION_CYCLE_BITS		10
-#else
 #define ANIMATION_CYCLE_BITS		15
-#endif
 
 #define ANIMATION_CYCLE_MINFRAC		(1.0f / (1<<ANIMATION_CYCLE_BITS))
 
@@ -99,11 +95,8 @@ public:
 
 #define MAX_CLIMB_SPEED		200
 
-#if defined(TF_DLL) || defined(TF_CLIENT_DLL)
-	#define TIME_TO_DUCK_MSECS		200
-#else
+
 	#define TIME_TO_DUCK_MSECS		400
-#endif 
  
 #define TIME_TO_UNDUCK_MSECS		200
 
@@ -134,6 +127,70 @@ inline float FractionUnDucked( int msecs )
 #define HUD_PRINTTALK		3
 #define HUD_PRINTCENTER		4
 
+// Vote creation or processing failure codes
+typedef enum
+{
+	VOTE_FAILED_GENERIC = 0,
+	VOTE_FAILED_TRANSITIONING_PLAYERS,
+	VOTE_FAILED_RATE_EXCEEDED,
+	VOTE_FAILED_YES_MUST_EXCEED_NO,
+	VOTE_FAILED_QUORUM_FAILURE,
+	VOTE_FAILED_ISSUE_DISABLED,
+	VOTE_FAILED_MAP_NOT_FOUND,
+	VOTE_FAILED_MAP_NAME_REQUIRED,
+	VOTE_FAILED_ON_COOLDOWN,
+	VOTE_FAILED_TEAM_CANT_CALL,
+	VOTE_FAILED_WAITINGFORPLAYERS,
+	VOTE_FAILED_PLAYERNOTFOUND,
+	VOTE_FAILED_CANNOT_KICK_ADMIN,
+	VOTE_FAILED_SCRAMBLE_IN_PROGRESS,
+	VOTE_FAILED_SPECTATOR,
+	VOTE_FAILED_NEXTLEVEL_SET,
+	VOTE_FAILED_MAP_NOT_VALID,
+	VOTE_FAILED_CANNOT_KICK_FOR_TIME,
+	VOTE_FAILED_CANNOT_KICK_DURING_ROUND,
+	VOTE_FAILED_VOTE_IN_PROGRESS,
+	VOTE_FAILED_KICK_LIMIT_REACHED,
+	VOTE_FAILED_KICK_DENIED_BY_GC,
+	// Special reason - the vote issue itself will handle this request specially -- the vote system shouldn't proceed
+	// with the vote.  Shows no error to user.
+	//
+	// Used by match-based votekicks to send a votekick request to the match system when the user tries to call one --
+	// which then owns starting a proper vote later or telling the user why the match system isn't allowing the
+	// votekick.
+	VOTE_FAILED_REQUEST_HANDLED_BY_ISSUE,
+
+	// TF-specific?
+	VOTE_FAILED_MODIFICATION_ALREADY_ACTIVE,
+
+	VOTE_FAILED_PLAYER_TRANSITIONING,
+
+	VOTE_FAILED_INVALID_ARGUMENT,
+} vote_create_failed_t;
+
+enum
+{
+	SERVER_MODIFICATION_ITEM_DURATION_IN_MINUTES = 120
+};
+
+#define MAX_VOTE_DETAILS_LENGTH 64
+#define INVALID_ISSUE			-1
+#define MAX_VOTE_OPTIONS		5
+#define DEDICATED_SERVER		99
+
+enum CastVote
+{
+	VOTE_OPTION1 = 0,  // Use this for Yes
+	VOTE_OPTION2 = 1,  // Use this for No
+	VOTE_OPTION3 = 2,
+	VOTE_OPTION4 = 3,
+	VOTE_OPTION5 = 4,
+	VOTE_UNCAST  = 5,
+
+	// Alias yes/no to OPTION1/OPTION2
+	VOTE_YES = 0,
+	VOTE_NO  = 1,
+};
 
 //===================================================================================================================
 // Close caption flags
@@ -417,7 +474,6 @@ enum {
 	OBS_ALLOW_ALL = 0,	// allow all modes, all targets
 	OBS_ALLOW_TEAM,		// allow only own team & first person, no PIP
 	OBS_ALLOW_NONE,		// don't allow any spectating after death (fixed & fade to black)
-	OBS_ALLOW_TEAM_ALL,
 
 	OBS_ALLOW_NUM_MODES,
 };
@@ -832,19 +888,6 @@ enum
 #define CELL_COUNT_BITS( bits ) MINIMUM_BITS_NEEDED( CELL_COUNT( bits ) ) // How many bits are necessary to respresent that cell
 #define CELL_BASEENTITY_ORIGIN_CELL_BITS 5 // default amount of entropy bits for base entity
 
-//-----------------------------------------------------------------------------
-// Commentary Mode
-//-----------------------------------------------------------------------------
-#if defined(TF_DLL) || defined(TF_CLIENT_DLL)
-#define GAME_HAS_NO_USE_KEY
-
-#if defined( SPROP_COORD )
-#undef SPROP_COORD
-#endif
-
-#define SPROP_COORD SPROP_COORD_MP
-
-#endif
 
 // The player's method of starting / stopping commentary
 #ifdef GAME_HAS_NO_USE_KEY

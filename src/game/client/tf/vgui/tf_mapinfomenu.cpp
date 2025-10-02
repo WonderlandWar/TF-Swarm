@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2006, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,19 +12,19 @@
 #include <game/client/iviewport.h>
 #include <vgui/ILocalize.h>
 #include <KeyValues.h>
-#include <FileSystem.h>
+#include <filesystem.h>
 #include "IGameUIFuncs.h" // for key bindings
+#include "inputsystem/iinputsystem.h"
 
-#include "winerror.h"
 #include "ixboxsystem.h"
 #include "tf_gamerules.h"
 #include "tf_controls.h"
 #include "tf_shareddefs.h"
 #include "tf_mapinfomenu.h"
 
-using namespace vgui;
+#include "video/ivideoservices.h"
 
-const char *GetMapDisplayName( const char *mapName );
+using namespace vgui;
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
@@ -45,20 +45,19 @@ CTFMapInfoMenu::CTFMapInfoMenu( IViewPort *pViewPort ) : Frame( NULL, PANEL_MAPI
 	SetProportional( true );
 	SetVisible( false );
 	SetKeyBoardInputEnabled( true );
-	SetMouseInputEnabled( true );
 
-	m_pTitle = new CTFLabel( this, "MapInfoTitle", " " );
+	m_pTitle = new CExLabel( this, "MapInfoTitle", " " );
 
 #ifdef _X360
 	m_pFooter = new CTFFooter( this, "Footer" );
 #else
-	m_pContinue = new CTFButton( this, "MapInfoContinue", "#TF_Continue" );
-	m_pBack = new CTFButton( this, "MapInfoBack", "#TF_Back" );
-	m_pIntro = new CTFButton( this, "MapInfoWatchIntro", "#TF_WatchIntro" );
+	m_pContinue = new CExButton( this, "MapInfoContinue", "#TF_Continue" );
+	m_pBack = new CExButton( this, "MapInfoBack", "#TF_Back" );
+	m_pIntro = new CExButton( this, "MapInfoWatchIntro", "#TF_WatchIntro" );
 #endif
 
 	// info window about this map
-	m_pMapInfo = new CTFRichText( this, "MapInfoText" );
+	m_pMapInfo = new CExRichText( this, "MapInfoText" );
 	m_pMapImage = new ImagePanel( this, "MapImage" );
 
 	m_szMapName[0] = 0;
@@ -78,7 +77,21 @@ void CTFMapInfoMenu::ApplySchemeSettings( vgui::IScheme *pScheme )
 {
 	BaseClass::ApplySchemeSettings( pScheme );
 
-	LoadControlSettings("Resource/UI/MapInfoMenu.res");
+	if ( ::input->IsSteamControllerActive() )
+	{
+		LoadControlSettings( "Resource/UI/MapInfoMenu_SC.res" );
+		m_pContinueHintIcon = dynamic_cast< CSCHintIcon* >( FindChildByName( "MapInfoContinueHintIcon" ) );
+		m_pBackHintIcon = dynamic_cast< CSCHintIcon* >( FindChildByName( "MapInfoBackHintIcon" ) );
+		m_pIntroHintIcon = dynamic_cast< CSCHintIcon* >( FindChildByName( "MapInfoIntroHintIcon" ) );
+
+		SetMouseInputEnabled( false );
+	}
+	else
+	{
+		LoadControlSettings( "Resource/UI/MapInfoMenu.res" );
+		m_pContinueHintIcon = m_pBackHintIcon = m_pIntroHintIcon = nullptr;
+		SetMouseInputEnabled( true );
+	}
 
 	CheckIntroState();
 	CheckBackContinueButtons();
@@ -99,7 +112,7 @@ void CTFMapInfoMenu::ApplySchemeSettings( vgui::IScheme *pScheme )
 	}
 #endif
 
-	LoadMapPage( m_szMapName );
+	LoadMapPage();
 	SetMapTitle();
 
 #ifndef _X360
@@ -109,17 +122,7 @@ void CTFMapInfoMenu::ApplySchemeSettings( vgui::IScheme *pScheme )
 	}
 #endif
 
-	if ( IsX360() )
-	{
-		SetDialogVariable( "gamemode", g_pVGuiLocalize->Find( GetMapType( m_szMapName ) ) );
-	}
-	else
-	{
-		if ( GameRules() )
-		{
-			SetDialogVariable( "gamemode", g_pVGuiLocalize->Find( GameRules()->GetGameTypeName() ) );
-		}
-	}
+	SetDialogVariable( "gamemode", g_pVGuiLocalize->Find( GetMapType( m_szMapName ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -130,16 +133,17 @@ void CTFMapInfoMenu::ShowPanel( bool bShow )
 	if ( IsVisible() == bShow )
 		return;
 
+	m_KeyRepeat.Reset();
+
 	if ( bShow )
 	{
+		InvalidateLayout( true, true );		// Force scheme reload since the steam controller state may have changed.
 		Activate();
-		SetMouseInputEnabled( true );
 		CheckIntroState();
 	}
 	else
 	{
 		SetVisible( false );
-		SetMouseInputEnabled( false );
 	}
 }
 
@@ -148,8 +152,18 @@ void CTFMapInfoMenu::ShowPanel( bool bShow )
 //-----------------------------------------------------------------------------
 bool CTFMapInfoMenu::CheckForIntroMovie()
 {
-	if ( g_pFullFileSystem->FileExists( TFGameRules()->GetVideoFileForMap() ) )
-		return true;
+	const char *pVideoFileName = TFGameRules()->GetVideoFileForMap();
+	if ( pVideoFileName == NULL )
+	{
+		return false;
+	}
+
+	VideoSystem_t  playbackSystem = VideoSystem::NONE;
+	char resolvedFile[MAX_PATH];
+	if ( g_pVideo && g_pVideo->LocatePlayableVideoFile( pVideoFileName, "GAME", &playbackSystem, resolvedFile, sizeof(resolvedFile) ) == VideoResult::SUCCESS  )
+	{
+		return true;	
+	}
 
 	return false;
 }
@@ -180,6 +194,10 @@ void CTFMapInfoMenu::CheckIntroState()
 		if ( m_pIntro && !m_pIntro->IsVisible() )
 		{
 			m_pIntro->SetVisible( true );
+			if ( m_pIntroHintIcon )
+			{
+				m_pIntroHintIcon->SetVisible( true );
+			}
 		}
 #endif
 	}
@@ -194,6 +212,10 @@ void CTFMapInfoMenu::CheckIntroState()
 		if ( m_pIntro && m_pIntro->IsVisible() )
 		{
 			m_pIntro->SetVisible( false );
+			if ( m_pIntroHintIcon )
+			{
+				m_pIntroHintIcon->SetVisible( false );
+			}
 		}
 #endif
 	}
@@ -210,11 +232,19 @@ void CTFMapInfoMenu::CheckBackContinueButtons()
 		if ( GetLocalPlayerTeam() == TEAM_UNASSIGNED )
 		{
 			m_pBack->SetVisible( true );
+			if ( m_pBackHintIcon )
+			{
+				m_pBackHintIcon->SetVisible( true );
+			}
 			m_pContinue->SetText( "#TF_Continue" );
 		}
 		else
 		{
 			m_pBack->SetVisible( false );
+			if ( m_pBackHintIcon )
+			{
+				m_pBackHintIcon->SetVisible( false );
+			}
 			m_pContinue->SetText( "#TF_Close" );
 		}
 	}
@@ -226,6 +256,8 @@ void CTFMapInfoMenu::CheckBackContinueButtons()
 //-----------------------------------------------------------------------------
 void CTFMapInfoMenu::OnCommand( const char *command )
 {
+	m_KeyRepeat.Reset();
+
 	if ( !Q_strcmp( command, "back" ) )
 	{
 		 // only want to go back to the Welcome menu if we're not already on a team
@@ -255,7 +287,14 @@ void CTFMapInfoMenu::OnCommand( const char *command )
 			}
 			else if ( GetLocalPlayerTeam() == TEAM_UNASSIGNED )
 			{
-				m_pViewPort->ShowPanel( PANEL_TEAM, true );
+				if ( TFGameRules()->IsInArenaMode() == true && tf_arena_use_queue.GetBool() == true )
+				{
+					m_pViewPort->ShowPanel( PANEL_ARENA_TEAM, true );
+				}
+				else
+				{
+					engine->ClientCmd( "team_ui_setup" );
+				}
 			}
 
 			UTIL_IncrementMapKey( "viewed" );
@@ -271,7 +310,14 @@ void CTFMapInfoMenu::OnCommand( const char *command )
 		}
 		else
 		{
-			m_pViewPort->ShowPanel( PANEL_TEAM, true );
+			if ( TFGameRules()->IsInArenaMode() == true && tf_arena_use_queue.GetBool() == true )
+			{
+				m_pViewPort->ShowPanel( PANEL_ARENA_TEAM, true );
+			}
+			else
+			{
+				engine->ClientCmd( "team_ui_setup" );
+			}
 		}
 	}
 	else
@@ -291,11 +337,18 @@ void CTFMapInfoMenu::Update()
 //-----------------------------------------------------------------------------
 // Purpose: chooses and loads the text page to display that describes mapName map
 //-----------------------------------------------------------------------------
-void CTFMapInfoMenu::LoadMapPage( const char *mapName )
+void CTFMapInfoMenu::LoadMapPage()
 {
+	if ( !m_szMapName[0] )
+	{
+		m_pMapInfo->SetText( "" );
+		m_pMapImage->SetVisible( false );
+		return;
+	}
+
 	// load the map image (if it exists for the current map)
 	char szMapImage[ MAX_PATH ];
-	Q_snprintf( szMapImage, sizeof( szMapImage ), "VGUI/maps/menu_photos_%s", mapName );
+	Q_snprintf( szMapImage, sizeof( szMapImage ), "VGUI/maps/menu_photos_%s", m_szMapName );
 	Q_strlower( szMapImage );
 
 	IMaterial *pMapMaterial = materials->FindMaterial( szMapImage, TEXTURE_GROUP_VGUI, false );
@@ -309,7 +362,7 @@ void CTFMapInfoMenu::LoadMapPage( const char *mapName )
 			}
 
 			// take off the vgui/ at the beginning when we set the image
-			Q_snprintf( szMapImage, sizeof( szMapImage ), "maps/menu_photos_%s", mapName );
+			Q_snprintf( szMapImage, sizeof( szMapImage ), "maps/menu_photos_%s", m_szMapName );
 			Q_strlower( szMapImage );
 			
 			m_pMapImage->SetImage( szMapImage );
@@ -323,111 +376,191 @@ void CTFMapInfoMenu::LoadMapPage( const char *mapName )
 		}
 	}
 
-	// load the map description files
-	char mapRES[ MAX_PATH ];
-
-	char uilanguage[ 64 ];
-	engine->GetUILanguage( uilanguage, sizeof( uilanguage ) );
-
-	Q_snprintf( mapRES, sizeof( mapRES ), "maps/%s_%s.txt", mapName, uilanguage );
-
-	// try English if the file doesn't exist for our language
-	if( !g_pFullFileSystem->FileExists( mapRES, "GAME" ) )
+	// try loading map descriptions from the localization files first
+	char mapDescriptionKey[ 64 ];
+	Q_snprintf( mapDescriptionKey, sizeof( mapDescriptionKey ), "#%s_description", m_szMapName );
+	Q_strlower( mapDescriptionKey );
+	wchar_t* wszMapDescription = g_pVGuiLocalize->Find( mapDescriptionKey );
+	if( wszMapDescription )
 	{
-		Q_snprintf( mapRES, sizeof( mapRES ), "maps/%s_english.txt", mapName );
-
-		// if the file doesn't exist for English either, try the filename without any language extension
-		if( !g_pFullFileSystem->FileExists( mapRES, "GAME" ) )
-		{
-			Q_snprintf( mapRES, sizeof( mapRES ), "maps/%s.txt", mapName );
-		}
-	}
-
-	// if no map specific description exists, load default text
-	if( !g_pFullFileSystem->FileExists( mapRES, "GAME" ) )
-	{
-		const char *pszDefault = "maps/default.txt";
-
-		if ( TFGameRules() )
-		{
-			if ( TFGameRules()->GetGameType() == TF_GAMETYPE_CTF )
-			{
-				pszDefault = "maps/default_ctf.txt";
-			}
-			else if ( TFGameRules()->GetGameType() == TF_GAMETYPE_CP )
-			{
-				pszDefault = "maps/default_cp.txt";
-			}
-		}
-
-		if ( g_pFullFileSystem->FileExists( pszDefault ) )
-		{
-			Q_snprintf ( mapRES, sizeof( mapRES ), pszDefault );
-		}
-		else
-		{
-			m_pMapInfo->SetText( "" );
-
-			// we haven't loaded a valid map image for the current map
-			if ( m_pMapImage && !m_pMapImage->IsVisible() )
-			{
-				if ( m_pMapInfo )
-				{
-					m_pMapInfo->SetWide( m_pMapInfo->GetWide() + ( m_pMapImage->GetWide() * 0.75 ) ); // add in the extra space the images would have taken 
-				}
-			}
-
-			return; 
-		}
-	}
-
-	FileHandle_t f = g_pFullFileSystem->Open( mapRES, "rb" );
-
-	// read into a memory block
-	int fileSize = g_pFullFileSystem->Size(f);
-	int dataSize = fileSize + sizeof( wchar_t );
-	if ( dataSize % 2 )
-		++dataSize;
-	wchar_t *memBlock = (wchar_t *)malloc(dataSize);
-	memset( memBlock, 0x0, dataSize);
-	int bytesRead = g_pFullFileSystem->Read(memBlock, fileSize, f);
-	if ( bytesRead < fileSize )
-	{
-		// NULL-terminate based on the length read in, since Read() can transform \r\n to \n and
-		// return fewer bytes than we were expecting.
-		char *data = reinterpret_cast<char *>( memBlock );
-		data[ bytesRead ] = 0;
-		data[ bytesRead+1 ] = 0;
-	}
-
-	// null-terminate the stream (redundant, since we memset & then trimmed the transformed buffer already)
-	memBlock[dataSize / sizeof(wchar_t) - 1] = 0x0000;
-
-	// check the first character, make sure this a little-endian unicode file
-
-#if defined( _X360 )
-	if ( memBlock[0] != 0xFFFE )
-#else
-	if ( memBlock[0] != 0xFEFF )
-#endif
-	{
-		// its a ascii char file
-		m_pMapInfo->SetText( reinterpret_cast<char *>( memBlock ) );
+		m_pMapInfo->SetText( wszMapDescription );
 	}
 	else
 	{
-		// ensure little-endian unicode reads correctly on all platforms
-		CByteswap byteSwap;
-		byteSwap.SetTargetBigEndian( false );
-		byteSwap.SwapBufferToTargetEndian( memBlock, memBlock, dataSize/sizeof(wchar_t) );
+		// try loading map descriptions from .txt files first
+		char mapRES[ MAX_PATH ];
 
-		m_pMapInfo->SetText( memBlock+1 );
+		char uilanguage[ 64 ];
+		uilanguage[0] = 0;
+		engine->GetUILanguage( uilanguage, sizeof( uilanguage ) );
+
+		Q_snprintf( mapRES, sizeof( mapRES ), "maps/%s_%s.txt", m_szMapName, uilanguage );
+
+		// try English if the file doesn't exist for our language
+		if( !g_pFullFileSystem->FileExists( mapRES, "GAME" ) )
+		{
+			Q_snprintf( mapRES, sizeof( mapRES ), "maps/%s_english.txt", m_szMapName );
+
+			// if the file doesn't exist for English either, try the filename without any language extension
+			if( !g_pFullFileSystem->FileExists( mapRES, "GAME" ) )
+			{
+				Q_snprintf( mapRES, sizeof( mapRES ), "maps/%s.txt", m_szMapName );
+			}
+		}
+
+		// if no map specific description exists, load default text
+		if( g_pFullFileSystem->FileExists( mapRES, "GAME" ) )
+		{
+			FileHandle_t f = g_pFullFileSystem->Open( mapRES, "rb" );
+
+			// read into a memory block
+			int fileSize = g_pFullFileSystem->Size(f);
+			int dataSize = fileSize + sizeof( wchar_t );
+			if ( dataSize % 2 )
+				++dataSize;
+			wchar_t *memBlock = (wchar_t *)malloc(dataSize);
+			memset( memBlock, 0x0, dataSize);
+			int bytesRead = g_pFullFileSystem->Read(memBlock, fileSize, f);
+			if ( bytesRead < fileSize )
+			{
+				// NULL-terminate based on the length read in, since Read() can transform \r\n to \n and
+				// return fewer bytes than we were expecting.
+				char *data = reinterpret_cast<char *>( memBlock );
+				data[ bytesRead ] = 0;
+				data[ bytesRead+1 ] = 0;
+			}
+
+	#ifndef WIN32
+			if ( ((ucs2 *)memBlock)[0] == 0xFEFF )
+			{
+				// convert the win32 ucs2 data to wchar_t
+				dataSize*=2;// need to *2 to account for ucs2 to wchar_t (4byte) growth
+				wchar_t *memBlockConverted = (wchar_t *)malloc(dataSize);	
+				V_UCS2ToUnicode( (ucs2 *)memBlock, memBlockConverted, dataSize );
+				free(memBlock);
+				memBlock = memBlockConverted;
+			}
+	#else
+			// null-terminate the stream (redundant, since we memset & then trimmed the transformed buffer already)
+			memBlock[dataSize / sizeof(wchar_t) - 1] = 0x0000;
+	#endif
+			// check the first character, make sure this a little-endian unicode file
+
+	#if defined( _X360 )
+			if ( memBlock[0] != 0xFFFE )
+	#else
+			if ( memBlock[0] != 0xFEFF )
+	#endif
+			{
+				// its a ascii char file
+				m_pMapInfo->SetText( reinterpret_cast<char *>( memBlock ) );
+			}
+			else
+			{
+				// ensure little-endian unicode reads correctly on all platforms
+				CByteswap byteSwap;
+				byteSwap.SetTargetBigEndian( false );
+				byteSwap.SwapBufferToTargetEndian( memBlock, memBlock, dataSize/sizeof(wchar_t) );
+
+				m_pMapInfo->SetText( memBlock+1 );
+			}
+			// go back to the top of the text buffer
+			m_pMapInfo->GotoTextStart();
+
+			g_pFullFileSystem->Close( f );
+			free(memBlock);
+		}
+		else
+		{
+			// try loading map descriptions from localization files next
+			const char *pszDescription = NULL;
+			char mapInfoKey[ 64 ];
+
+			if ( TFGameRules() && TFGameRules()->IsPowerupMode() && ( FStrEq( m_szMapName, "ctf_foundry" ) || FStrEq( m_szMapName, "ctf_gorge" ) ) )
+			{
+				Q_snprintf( mapInfoKey, sizeof( mapInfoKey ), "#%s_beta", m_szMapName );
+			}
+			else
+			{
+				Q_snprintf( mapInfoKey, sizeof( mapInfoKey ), "#%s", m_szMapName );
+			}
+		
+			Q_strlower( mapInfoKey );
+
+			if( !g_pVGuiLocalize->Find( mapInfoKey ) )
+			{
+				if ( StringHasPrefix( m_szMapName, "vsh_" ) )
+				{
+					pszDescription = "#default_vsh_description";
+				}
+				else if ( StringHasPrefix( m_szMapName, "zi_" ) )
+				{
+					pszDescription = "#default_zi_description";
+				}
+				else if ( TFGameRules() )
+				{
+					if ( TFGameRules()->IsMannVsMachineMode() )
+					{
+						pszDescription = "#default_mvm_description";
+					}
+					else
+					{
+						switch ( TFGameRules()->GetGameType() )
+						{
+						case TF_GAMETYPE_CTF:
+							pszDescription = "#default_ctf_description";
+							break;
+						case TF_GAMETYPE_CP:
+							if ( TFGameRules()->IsInKothMode() )
+							{
+								pszDescription = "#default_koth_description";
+							}
+							else
+							{
+								pszDescription = "#default_cp_description";
+							}
+							break;
+						case TF_GAMETYPE_ESCORT:
+							if ( TFGameRules()->HasMultipleTrains() )
+							{
+								pszDescription = "#default_payload_race_description";
+							}
+							else
+							{
+								pszDescription = "#default_payload_description";
+							}
+							break;
+						case TF_GAMETYPE_ARENA:
+							pszDescription = "#default_arena_description";
+							break;
+						case TF_GAMETYPE_RD:
+							pszDescription = "#default_rd_description";
+							break;
+						case TF_GAMETYPE_PASSTIME:
+							pszDescription = "#default_passtime_description";
+							break;
+						case TF_GAMETYPE_PD:
+							pszDescription = "#default_pd_description";
+							break;
+						}
+					}
+				}
+			}
+			else
+			{
+				pszDescription = mapInfoKey;
+			}
+
+			if ( pszDescription && pszDescription[0] )
+			{
+				m_pMapInfo->SetText( pszDescription );
+			}
+			else
+			{
+				m_pMapInfo->SetText( "" );
+			}
+		}
 	}
-	// go back to the top of the text buffer
-	m_pMapInfo->GotoTextStart();
-
-	g_pFullFileSystem->Close( f );
-	free(memBlock);
 
 	// we haven't loaded a valid map image for the current map
 	if ( m_pMapImage && !m_pMapImage->IsVisible() )
@@ -452,15 +585,21 @@ void CTFMapInfoMenu::SetMapTitle()
 //-----------------------------------------------------------------------------
 void CTFMapInfoMenu::OnKeyCodePressed( KeyCode code )
 {
-	if ( code == KEY_XBUTTON_A )
+	m_KeyRepeat.KeyDown( code );
+
+	if ( code == KEY_XBUTTON_A || code == STEAMCONTROLLER_A )
 	{
 		OnCommand( "continue" );
 	}
-	else if ( code == KEY_XBUTTON_Y )
+	else if ( code == STEAMCONTROLLER_B )
+	{
+		OnCommand( "back" );
+	}
+	else if ( code == KEY_XBUTTON_Y || code == STEAMCONTROLLER_Y )
 	{
 		OnCommand( "intro" );
 	}
-	else if( code == KEY_XBUTTON_UP || code == KEY_XSTICK1_UP )
+	else if( code == KEY_XBUTTON_UP || code == KEY_XSTICK1_UP || code == STEAMCONTROLLER_DPAD_UP )
 	{
 		// Scroll class info text up
 		if ( m_pMapInfo )
@@ -468,7 +607,7 @@ void CTFMapInfoMenu::OnKeyCodePressed( KeyCode code )
 			PostMessage( m_pMapInfo, new KeyValues("MoveScrollBarDirect", "delta", 1) );
 		}
 	}
-	else if( code == KEY_XBUTTON_DOWN || code == KEY_XSTICK1_DOWN )
+	else if( code == KEY_XBUTTON_DOWN || code == KEY_XSTICK1_DOWN || code == STEAMCONTROLLER_DPAD_DOWN )
 	{
 		// Scroll class info text up
 		if ( m_pMapInfo )
@@ -487,6 +626,8 @@ void CTFMapInfoMenu::OnKeyCodePressed( KeyCode code )
 //-----------------------------------------------------------------------------
 void CTFMapInfoMenu::OnKeyCodeReleased( vgui::KeyCode code )
 {
+	m_KeyRepeat.KeyUp( code );
+
 	BaseClass::OnKeyCodeReleased( code );
 }
 
@@ -495,102 +636,19 @@ void CTFMapInfoMenu::OnKeyCodeReleased( vgui::KeyCode code )
 //-----------------------------------------------------------------------------
 void CTFMapInfoMenu::OnThink()
 {
+	vgui::KeyCode code = m_KeyRepeat.KeyRepeated();
+	if ( code )
+	{
+		OnKeyCodePressed( code );
+	}
+
+	//Always hide the health... this needs to be done every frame because a message from the server keeps resetting this.
+	C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
+	if ( pLocalPlayer )
+	{
+		pLocalPlayer->m_Local.m_iHideHUD |= HIDEHUD_HEALTH;
+	}
+
 	BaseClass::OnThink();
 }
 
-struct s_MapInfo
-{
-	const char	*pDiskName;
-	const char	*pDisplayName;
-	const char	*pGameType;
-};
-
-static s_MapInfo s_Maps[] = {
-	"ctf_2fort",	"2Fort",		"#Gametype_CTF",
-	"cp_dustbowl",	"Dustbowl",		"#TF_AttackDefend",
-	"cp_granary",	"Granary",		"#Gametype_CP",
-	"cp_well",		"Well (CP)",	"#Gametype_CP",
-	"cp_gravelpit", "Gravel Pit",	"#TF_AttackDefend",
-	"tc_hydro",		"Hydro",		"#TF_TerritoryControl",
-	"ctf_well",		"Well (CTF)",	"#Gametype_CTF",
-};
-
-//-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
-const char *GetMapDisplayName( const char *mapName )
-{
-	static char szDisplayName[256];
-	char szTempName[256];
-	const char *pszSrc = NULL;
-
-	szDisplayName[0] = '\0';
-
-	if ( !mapName )
-		return szDisplayName;
-/*
-	// check the worldspawn entity to see if the map author has specified a name
-	if ( GetClientWorldEntity() )
-	{
-		const char *pszMapDescription = GetClientWorldEntity()->m_iszMapDescription;
-		if ( Q_strlen( pszMapDescription ) > 0 )
-		{
-			Q_strncpy( szDisplayName, pszMapDescription, sizeof( szDisplayName ) );
-			Q_strupr( szDisplayName );
-			
-			return szDisplayName;
-		}
-	}
-*/
-	// check our lookup table
-	Q_strncpy( szTempName, mapName, sizeof( szTempName ) );
-	Q_strlower( szTempName );
-
-	for ( int i = 0; i < ARRAYSIZE( s_Maps ); ++i )
-	{
-		if ( !Q_stricmp( s_Maps[i].pDiskName, szTempName ) )
-		{
-			return s_Maps[i].pDisplayName;
-		}
-	}
-
-	// we haven't found a "friendly" map name, so let's just clean up what we have
-	if ( !Q_strncmp( szTempName, "cp_", 3 ) ||
-		 !Q_strncmp( szTempName, "tc_", 3 ) ||
-		 !Q_strncmp( szTempName, "ad_", 3 ) )
-	{
-		pszSrc = szTempName + 3;
-	}
-	else if ( !Q_strncmp( szTempName, "ctf_", 4 ) )
-	{
-		pszSrc = szTempName + 4;
-	}
-	else
-	{
-		pszSrc = szTempName;
-	}
-
-	Q_strncpy( szDisplayName, pszSrc, sizeof( szDisplayName ) );
-	Q_strupr( szDisplayName );
-
-	return szDisplayName;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
-const char *CTFMapInfoMenu::GetMapType( const char *mapName )
-{
-	if ( IsX360() && mapName )
-	{
-		for ( int i = 0; i < ARRAYSIZE( s_Maps ); ++i )
-		{
-			if ( !Q_stricmp( s_Maps[i].pDiskName, mapName ) )
-			{
-				return s_Maps[i].pGameType;
-			}
-		}
-	}
-
-	return "";
-}

@@ -109,20 +109,9 @@ public:
 	{
 		BaseClass::ApplySettings( resourceData );
 
-		const char *pszName = GetName();
-		const char *pszClassPage = GetClassPage( pszName );
-
-#if DEBUG
-		if ( pszClassPage == NULL )
-		{
-			Assert( 0 );
-			return;
-		}
-#endif
-
 		// name, position etc of button is set, now load matching
 		// resource file for associated info panel:
-		m_pPanel->LoadControlSettings( pszClassPage );
+		m_pPanel->LoadControlSettings( GetClassPage( GetName() ) );
 	}		
 
 	T *GetClassPanel( void ) { return m_pPanel; }

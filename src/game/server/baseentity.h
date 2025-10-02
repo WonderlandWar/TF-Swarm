@@ -26,6 +26,7 @@
 #include "bittools.h"
 
 class CDamageModifier;
+class CDmgAccumulator;
 
 struct CSoundParameters;
 
@@ -842,12 +843,12 @@ public:
 	virtual ITraceFilter*	GetBeamTraceFilter( void );
 
 	// Call this to do a TraceAttack on an entity, performs filtering. Don't call TraceAttack() directly except when chaining up to base class
-	void			DispatchTraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
+	void			DispatchTraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator = NULL );
 	virtual bool	PassesDamageFilter( const CTakeDamageInfo &info );
 
-
+	
 protected:
-	virtual void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
+	virtual void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator = NULL );
 
 public:
 
@@ -1082,6 +1083,17 @@ public:
 	virtual void	ModifyOrAppendDerivedCriteria( AI_CriteriaSet& set ) {};
 	void			AppendContextToCriteria( AI_CriteriaSet& set, const char *prefix = "" );
 	void			DumpResponseCriteria( void );
+
+	// Return the IHasAttributes interface for this base entity. Removes the need for:
+	//	dynamic_cast< IHasAttributes * >( pEntity );
+	// Which is remarkably slow.
+	// GetAttribInterface( CBaseEntity *pEntity ) in attribute_manager.h uses
+	//  this function, tests for NULL, and Asserts m_pAttributes == dynamic_cast.
+	inline IHasAttributes *GetHasAttributesInterfacePtr() const { return m_pAttributes; }
+
+protected:
+	// NOTE: m_pAttributes needs to be set in the leaf class constructor.
+	IHasAttributes *m_pAttributes;
 	
 private:
 	friend class CAI_Senses;

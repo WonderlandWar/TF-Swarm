@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2001, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -7,8 +7,6 @@
 #include "cbase.h"
 #include "tf_shareddefs.h"
 #include "tf_gamerules.h"
-#include "c_triggers.h"
-#include "c_func_brush.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -16,9 +14,9 @@
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-class C_FuncRespawnRoom : public C_BaseTrigger
+class C_FuncRespawnRoom : public C_BaseEntity
 {
-	DECLARE_CLASS( C_FuncRespawnRoom, C_BaseTrigger );
+	DECLARE_CLASS( C_FuncRespawnRoom, C_BaseEntity );
 public:
 	DECLARE_CLIENTCLASS();
 };
@@ -29,13 +27,13 @@ END_RECV_TABLE()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-class C_FuncRespawnRoomVisualizer : public C_FuncBrush
+class C_FuncRespawnRoomVisualizer : public C_BaseEntity
 {
-	DECLARE_CLASS( C_FuncRespawnRoomVisualizer, C_FuncBrush );
+	DECLARE_CLASS( C_FuncRespawnRoomVisualizer, C_BaseEntity );
 public:
 	DECLARE_CLIENTCLASS();
 
-	virtual int DrawModel( int flags, const RenderableInstance_t &instance );
+	virtual int DrawModel( int flags );
 
 	virtual bool ShouldCollide( int collisionGroup, int contentsMask ) const;
 };
@@ -47,7 +45,7 @@ END_RECV_TABLE()
 //-----------------------------------------------------------------------------
 // Purpose: Don't draw for friendly players
 //-----------------------------------------------------------------------------
-int C_FuncRespawnRoomVisualizer::DrawModel( int flags, const RenderableInstance_t &instance )
+int C_FuncRespawnRoomVisualizer::DrawModel( int flags )
 {
 	// Don't draw for anyone in endround
 	if ( TFGameRules()->State_Get() == GR_STATE_TEAM_WIN )
@@ -62,7 +60,7 @@ int C_FuncRespawnRoomVisualizer::DrawModel( int flags, const RenderableInstance_
 		return 1;
 	}
 
-	return BaseClass::DrawModel( flags, instance );
+	return BaseClass::DrawModel( flags );
 }
 
 //-----------------------------------------------------------------------------

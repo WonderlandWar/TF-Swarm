@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -186,6 +186,7 @@ const char** CTFHLTVDirector::GetModEvents()
 		"player_death",
 		"player_chat",
 		"player_spawn",
+		"player_hurt",
 		"round_start",
 		"round_end",
 		"server_cvar",
@@ -206,6 +207,7 @@ const char** CTFHLTVDirector::GetModEvents()
 		"teamplay_timer_time_added",
 		"teamplay_update_timer",
 		"teamplay_win_panel",
+		"training_complete",
 		"tf_game_over",
 		"object_destroyed",
 			

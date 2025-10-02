@@ -6,6 +6,9 @@
 
 $Macro OUTBINNAME	"server"
 $Macro OUTBINDIR	"$SRCDIR\..\game\$GAMENAME\bin"
+// It's important to include $GAMENAME in the generated_proto directory
+// to avoid race conditions when multiple games are in one solution.
+$Macro GENERATED_PROTO_DIR	"$SRCDIR\game\server\generated_proto_$GAMENAME"
 
 $MacroRequired "GAMENAME"
 
@@ -699,6 +702,8 @@ $Project
 		$File	"world.h"
 		$File	"$SRCDIR\game\shared\mp_shareddefs.cpp"
 		$File	"$SRCDIR\game\shared\SharedFunctorUtils.h"
+		$File	"$SRCDIR\game\server\vote_controller.h"
+		$File	"$SRCDIR\game\server\vote_controller.cpp"
 
 		// Not using precompiled header cbase.h
 
@@ -1060,6 +1065,7 @@ $Project
 		$File	"$SRCDIR\public\worldsize.h"
 		$File	"$SRCDIR\public\zip_uncompressed.h"
 		$File	"$SRCDIR\game\shared\mp_shareddefs.h"
+		$File	"$SRCDIR\game\shared\econ\ihasowner.h"
 	}
 
 	$Folder	"Tools Framework"

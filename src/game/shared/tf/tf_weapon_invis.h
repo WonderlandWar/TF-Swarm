@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: PDA Weapon
 //
@@ -12,11 +12,19 @@
 
 #include "tf_shareddefs.h"
 #include "tf_weaponbase.h"
+#include "tf_gamerules.h"
 
 // Client specific.
 #if defined( CLIENT_DLL ) 
 #define CTFWeaponInvis C_TFWeaponInvis
 #endif
+
+enum invis_weapontypes_t
+{
+	INVIS_BASE = 0,
+	INVIS_FEIGN_DEATH,
+	INVIS_MOTION_CLOAK,
+};
 
 class CTFWeaponInvis : public CTFWeaponBase
 {
@@ -32,6 +40,8 @@ public:
 	CTFWeaponInvis() {}
 
 	virtual void	Spawn();
+	virtual void	OnActiveStateChanged( int iOldState );
+	virtual void	PrimaryAttack( void );
 	virtual void	SecondaryAttack();
 	virtual bool	Deploy( void );
 
@@ -50,6 +60,21 @@ public:
 	virtual void	SetWeaponVisible( bool visible );
 
 	virtual void	ItemBusyFrame( void );
+
+	int				GetInvisType( void ) { int iMode = 0; CALL_ATTRIB_HOOK_INT( iMode, set_weapon_mode ); return iMode; };
+	virtual bool	HasFeignDeath( void ) { return (GetInvisType() == INVIS_FEIGN_DEATH); }
+	virtual bool	HasMotionCloak( void ) { return (GetInvisType() == INVIS_MOTION_CLOAK); } 
+
+	virtual void	SetFeignDeathState( bool bEnabled );
+	virtual void	SetCloakRates( void );
+
+	virtual bool	ActivateInvisibilityWatch( void );
+	virtual void	CleanupInvisibilityWatch( void );
+
+	virtual	bool	AllowsAutoSwitchTo( void )						{ return false; }
+	virtual bool	CanDeploy( void )								{ return false; }
+
+	virtual const char *GetViewModel( int viewmodelindex  ) const;
 
 #ifndef CLIENT_DLL
 	virtual void	GetControlPanelInfo( int nPanelIndex, const char *&pPanelName );

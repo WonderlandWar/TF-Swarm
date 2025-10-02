@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2006, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -6,7 +6,7 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include <vgui/isurface.h>
+#include <vgui/ISurface.h>
 #include <vgui/ILocalize.h>
 #include "tf_shareddefs.h"
 #include "tf_overview.h"
@@ -458,7 +458,12 @@ ConVar cl_overview_chat_time( "cl_overview_chat_time", "2.0", FCVAR_ARCHIVE );
 //-----------------------------------------------------------------------------
 void CTFMapOverview::PlayerChat( int index )
 {
-	m_flPlayerChatTime[index-1] = gpGlobals->curtime + cl_overview_chat_time.GetFloat();
+	index = index-1;
+
+	if ( !IsIndexIntoPlayerArrayValid(index) )
+		return;
+		
+	m_flPlayerChatTime[index] = gpGlobals->curtime + cl_overview_chat_time.GetFloat();
 }
 
 //-----------------------------------------------------------------------------
@@ -638,7 +643,7 @@ bool CTFMapOverview::DrawCapturePoint( int iCP, MapObject_t *obj )
 
 		if ( requiredPlayers > 1 )
 		{
-			numPlayers = min( numPlayers, requiredPlayers );
+			numPlayers = MIN( numPlayers, requiredPlayers );
 
 			wchar_t wText[6];
 			_snwprintf( wText, sizeof(wText)/sizeof(wchar_t), L"%d", numPlayers );

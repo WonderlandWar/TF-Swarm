@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,10 +13,12 @@
 #include "ienginevgui.h"
 #include <vgui/ILocalize.h>
 #include <vgui/ISurface.h>
-#include <vgui/IVGUI.h>
+#include <vgui/IVGui.h>
 #include <vgui_controls/EditablePanel.h>
 #include <vgui_controls/ProgressBar.h>
 #include "tf_weaponbase.h"
+#include "tf_gamerules.h"
+#include "tf_logic_halloween_2014.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -48,14 +50,16 @@ DECLARE_HUDELEMENT( CHudDemomanChargeMeter );
 //-----------------------------------------------------------------------------
 CHudDemomanChargeMeter::CHudDemomanChargeMeter( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudDemomanCharge" )
 {
-	Panel *pParent = GetClientMode()->GetViewport();
+	Panel *pParent = g_pClientMode->GetViewport();
 	SetParent( pParent );
 
 	m_pChargeMeter = new ContinuousProgressBar( this, "ChargeMeter" );
 
-	SetHiddenBits( HIDEHUD_MISCSTATUS );
+	SetHiddenBits( HIDEHUD_MISCSTATUS | HIDEHUD_PIPES_AND_CHARGE );
 
 	vgui::ivgui()->AddTickSignal( GetVPanel() );
+
+	RegisterForRenderGroup( "inspect_panel" );
 }
 
 //-----------------------------------------------------------------------------
@@ -76,24 +80,23 @@ bool CHudDemomanChargeMeter::ShouldDraw( void )
 {
 	C_TFPlayer *pPlayer = C_TFPlayer::GetLocalTFPlayer();
 
-	if ( !pPlayer || !pPlayer->IsPlayerClass( TF_CLASS_DEMOMAN ) || !pPlayer->IsAlive() )
-	{
+	if ( !pPlayer || !pPlayer->IsAlive() )
 		return false;
-	}
 
 	CTFWeaponBase *pWpn = pPlayer->GetActiveTFWeapon();
-
-	if ( !pWpn )
-	{
+	ITFChargeUpWeapon *pChargeupWeapon = dynamic_cast< ITFChargeUpWeapon *>( pWpn );
+	if ( !pWpn || !pChargeupWeapon || !pChargeupWeapon->CanCharge() )
 		return false;
-	}
 
-	int iWeaponID = pWpn->GetWeaponID();
 
-	if ( iWeaponID != TF_WEAPON_PIPEBOMBLAUNCHER )
-	{
+	if ( pPlayer->m_Shared.InCond( TF_COND_HALLOWEEN_GHOST_MODE ) )
 		return false;
-	}
+
+	if ( CTFMinigameLogic::GetMinigameLogic() && CTFMinigameLogic::GetMinigameLogic()->GetActiveMinigame() )
+		return false;
+
+	if ( TFGameRules() && TFGameRules()->ShowMatchSummary() )
+		return false;
 
 	return CHudElement::ShouldDraw();
 }
@@ -109,9 +112,10 @@ void CHudDemomanChargeMeter::OnTick( void )
 		return;
 
 	CTFWeaponBase *pWpn = pPlayer->GetActiveTFWeapon();
-	ITFChargeUpWeapon *pChargeupWeapon = dynamic_cast< ITFChargeUpWeapon *>( pWpn );
+	
 
-	if ( !pWpn || !pChargeupWeapon )
+	ITFChargeUpWeapon *pChargeupWeapon = dynamic_cast< ITFChargeUpWeapon *>( pWpn );
+	if ( !pWpn || !pChargeupWeapon || !pChargeupWeapon->CanCharge() )
 		return;
 
 	if ( m_pChargeMeter )

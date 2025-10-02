@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,15 +12,16 @@
 #endif
 
 #include "tf_controls.h"
+#include "tf_imagepanel.h"
 #include <teammenu.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-class CTFTeamButton : public CTFButton
+class CTFTeamButton : public CExButton
 {
 private:
-	DECLARE_CLASS_SIMPLE( CTFTeamButton, CTFButton );
+	DECLARE_CLASS_SIMPLE( CTFTeamButton, CExButton );
 
 public:
 	CTFTeamButton( vgui::Panel *parent, const char *panelName );
@@ -53,7 +54,7 @@ private:
 //-----------------------------------------------------------------------------
 // Purpose: Displays the team menu
 //-----------------------------------------------------------------------------
-class CTFTeamMenu : public CTeamMenu
+class CTFTeamMenu : public CTeamMenu, public CGameEventListener
 {
 private:
 	DECLARE_CLASS_SIMPLE( CTFTeamMenu, CTeamMenu );
@@ -73,16 +74,27 @@ public:
 	bool IsBlueTeamDisabled(){ return m_bBlueDisabled; }
 	bool IsRedTeamDisabled(){ return m_bRedDisabled; }
 
+	// IGameEventListener interface:
+	virtual void FireGameEvent( IGameEvent *event );
+
 protected:
 	virtual void ApplySchemeSettings(vgui::IScheme *pScheme);
 	virtual void OnKeyCodePressed( vgui::KeyCode code );
 
 	// command callbacks
 	virtual void OnCommand( const char *command );
+	virtual void OnClose();
 
 	virtual void LoadMapPage( const char *mapName );
 
 	virtual void OnTick( void );
+
+	virtual void OnThink() OVERRIDE;
+
+private:
+
+	void SetHighlanderTeamsFullPanels( bool bTeamsFull, bool bForce = false );
+	void ActivateSelectIconHint( int focus_group_number );
 
 private:
 
@@ -90,12 +102,25 @@ private:
 	CTFTeamButton	*m_pRedTeamButton;
 	CTFTeamButton	*m_pAutoTeamButton;
 	CTFTeamButton	*m_pSpecTeamButton;
-	CTFLabel		*m_pSpecLabel;
+	CExLabel		*m_pSpecLabel;
 
 #ifdef _X360
 	CTFFooter		*m_pFooter;
 #else
-	CTFButton		*m_pCancelButton;
+	CExButton		*m_pCancelButton;
+
+	CExLabel		*m_pHighlanderLabel;
+	CExLabel		*m_pHighlanderLabelShadow;
+	CExLabel		*m_pTeamsFullLabel;
+	CExLabel		*m_pTeamsFullLabelShadow;
+	CTFImagePanel	*m_pTeamsFullArrow;
+
+	CSCHintIcon		*m_pCancelHintIcon;
+	CSCHintIcon		*m_pJoinBluHintIcon;
+	CSCHintIcon		*m_pJoinRedHintIcon;
+	CSCHintIcon		*m_pJoinAutoHintIcon;
+	CSCHintIcon		*m_pJoinSpectatorsHintIcon;
+
 #endif
 
 	bool m_bRedDisabled;

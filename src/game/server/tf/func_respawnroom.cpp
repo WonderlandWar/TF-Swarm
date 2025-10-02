@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,6 +12,9 @@
 #include "tf_gamerules.h"
 #include "entity_tfstart.h"
 #include "modelentities.h"
+#include "tf_obj_sentrygun.h"
+#include "entity_rune.h"
+#include "tf_item.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -19,12 +22,16 @@
 //-----------------------------------------------------------------------------
 // Purpose: Visualizes a respawn room to the enemy team
 //-----------------------------------------------------------------------------
-class CFuncRespawnRoomVisualizer : public CFuncBrush
+DECLARE_AUTO_LIST( IFuncRespawnRoomVisualizerAutoList );
+
+class CFuncRespawnRoomVisualizer : public CFuncBrush, public IFuncRespawnRoomVisualizerAutoList
 {
 	DECLARE_CLASS( CFuncRespawnRoomVisualizer, CFuncBrush );
 public:
 	DECLARE_DATADESC();
 	DECLARE_SERVERCLASS();
+
+	CFuncRespawnRoomVisualizer();
 
 	virtual void Spawn( void );
 	void	InputRoundActivate( inputdata_t &inputdata );
@@ -35,17 +42,24 @@ public:
 	virtual int		ShouldTransmit( const CCheckTransmitInfo *pInfo );
 	virtual bool	ShouldCollide( int collisionGroup, int contentsMask ) const;
 
+	void			InputSetSolid( inputdata_t &inputdata );
+
 	void SetActive( bool bActive );
 
 protected:
 	string_t					m_iszRespawnRoomName;
 	CHandle<CFuncRespawnRoom>	m_hRespawnRoom;
+	bool						m_bSolid;
 };
+
+IMPLEMENT_AUTO_LIST( IFuncRespawnRoomVisualizerAutoList );
+
+IMPLEMENT_AUTO_LIST( IFuncRespawnRoomAutoList );
 
 LINK_ENTITY_TO_CLASS( func_respawnroom, CFuncRespawnRoom);
 
 BEGIN_DATADESC( CFuncRespawnRoom )
-	DEFINE_FUNCTION( RespawnRoomTouch ),
+	DEFINE_FUNCTION( CFuncRespawnRoomShim::Touch ),
 	// inputs
 	DEFINE_INPUTFUNC( FIELD_VOID, "SetActive", InputSetActive ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "SetInactive", InputSetInactive ),
@@ -96,18 +110,71 @@ void CFuncRespawnRoom::Activate( void )
 //-----------------------------------------------------------------------------
 void CFuncRespawnRoom::RespawnRoomTouch(CBaseEntity *pOther)
 {
-	if ( PassesTriggerFilters(pOther) )
+	if ( TFGameRules()->IsMannVsMachineMode() )
+	{
+		if ( GetTeamNumber() == TF_TEAM_PVE_INVADERS )
+		{
+			return;
+		}
+	}
+
+	if ( PassesTriggerFilters( pOther ) )
 	{
 		if ( pOther->IsPlayer() && InSameTeam( pOther ) )
 		{
 			// Players carrying the flag drop it if they try to run into a respawn room
-			CTFPlayer *pPlayer = ToTFPlayer(pOther);
+			CTFPlayer *pPlayer = ToTFPlayer( pOther );
 			if ( pPlayer->HasTheFlag() )
 			{
 				pPlayer->DropFlag();
 			}
+			else if ( TFGameRules() && TFGameRules()->GetGameType() == TF_GAMETYPE_PD && pPlayer->HasItem() && ( pPlayer->GetItem()->GetItemID() == TF_ITEM_CAPTURE_FLAG ) )
+			{
+				pPlayer->GetItem()->Drop( pPlayer, true, true, true );
+			}
+
+			if ( pPlayer->m_Shared.IsCarryingObject() && TFGameRules()->IsMannVsMachineMode() )
+			{
+				CObjectSentrygun *pSentry = dynamic_cast< CObjectSentrygun* >( pPlayer->m_Shared.GetCarriedObject() );
+				if ( pSentry )
+				{
+					pSentry->UpdatePlacement();
+					pSentry->DetonateObject();
+				}
+			}
+			// Drop your powerup rune when entering a respawn room. 
+			// False parameter ensures rune isn't unintentionally 'thrown' into the respawn room
+			pPlayer->DropRune( false );
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CFuncRespawnRoom::StartTouch(CBaseEntity *pOther)
+{
+	CTFPlayer *pTFPlayer = ToTFPlayer( pOther );
+	if ( pTFPlayer )
+	{
+		pTFPlayer->m_Shared.IncrementRespawnTouchCount();
+	}
+	
+	BaseClass::StartTouch( pOther );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CFuncRespawnRoom::EndTouch(CBaseEntity *pOther)
+{
+	CTFPlayer *pTFPlayer = ToTFPlayer( pOther );
+	if ( pTFPlayer )
+	{
+		pTFPlayer->m_Shared.DecrementRespawnTouchCount();
+	}
+	
+	BaseClass::EndTouch( pOther );
 }
 
 //-----------------------------------------------------------------------------
@@ -151,20 +218,17 @@ void CFuncRespawnRoom::InputRoundActivate( inputdata_t &input )
 		ChangeTeam( TEAM_UNASSIGNED );
 
 		// If we don't have a team, find a respawn point inside us that we can derive a team from.
-		CBaseEntity *pSpot = gEntList.FindEntityByClassname( NULL, "info_player_teamspawn" );
-		while( pSpot )
+		for ( int i=0; i<ITFTeamSpawnAutoList::AutoList().Count(); ++i )
 		{
-			if ( PointIsWithin( pSpot->GetAbsOrigin() ) )
+			CTFTeamSpawn *pTFSpawn = static_cast< CTFTeamSpawn* >( ITFTeamSpawnAutoList::AutoList()[i] );
+			if ( PointIsWithin( pTFSpawn->GetAbsOrigin() ) )
 			{
-				CTFTeamSpawn *pTFSpawn = assert_cast<CTFTeamSpawn*>(pSpot);
 				if ( !pTFSpawn->IsDisabled() && pTFSpawn->GetTeamNumber() > LAST_SHARED_TEAM )
 				{
 					ChangeTeam( pTFSpawn->GetTeamNumber() );
 					break;
 				}
 			}
-
-			pSpot = gEntList.FindEntityByClassname( pSpot, "info_player_teamspawn" );
 		}
 
 		if ( GetTeamNumber() == TEAM_UNASSIGNED )
@@ -233,19 +297,6 @@ bool CFuncRespawnRoom::GetActive() const
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: Return true if the specified point is within this zone
-//-----------------------------------------------------------------------------
-bool CFuncRespawnRoom::PointIsWithin( const Vector &vecPoint )
-{
-	Ray_t ray;
-	trace_t tr;
-	ICollideable *pCollide = CollisionProp();
-	ray.Init( vecPoint, vecPoint );
-	enginetrace->ClipRayToCollideable( ray, MASK_ALL, pCollide, &tr );
-	return ( tr.startsolid );
-}
-
-//-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CFuncRespawnRoom::AddVisualizer( CFuncRespawnRoomVisualizer *pViz )
@@ -259,13 +310,12 @@ void CFuncRespawnRoom::AddVisualizer( CFuncRespawnRoomVisualizer *pViz )
 //-----------------------------------------------------------------------------
 // Purpose: Is a given point contained within a respawn room?
 //-----------------------------------------------------------------------------
-bool PointInRespawnRoom( CBaseEntity *pTarget, const Vector &vecOrigin )
+bool PointInRespawnRoom( const CBaseEntity *pTarget, const Vector &vecOrigin, bool bTouching_SameTeamOnly /*= false*/ )
 {
 	// Find out whether we're in a respawn room or not
-	CBaseEntity *pEntity = NULL;
-	while ((pEntity = gEntList.FindEntityByClassname( pEntity, "func_respawnroom" )) != NULL)
+	for ( int i=0; i<IFuncRespawnRoomAutoList::AutoList().Count(); ++i )
 	{
-		CFuncRespawnRoom *pRespawnRoom = (CFuncRespawnRoom *)pEntity;
+		CFuncRespawnRoom *pRespawnRoom = static_cast< CFuncRespawnRoom* >( IFuncRespawnRoomAutoList::AutoList()[i] );
 
 		// Are we within this respawn room?
 		if ( pRespawnRoom->GetActive() )
@@ -277,9 +327,40 @@ bool PointInRespawnRoom( CBaseEntity *pTarget, const Vector &vecOrigin )
 			}
 			else 
 			{
-				if ( pTarget && pRespawnRoom->IsTouching(pTarget) )
-					return true;
+				if ( pTarget && pRespawnRoom->IsTouching( pTarget ) )
+				{
+					if ( !bTouching_SameTeamOnly || ( pRespawnRoom->GetTeamNumber() == TEAM_UNASSIGNED || pRespawnRoom->InSameTeam( pTarget ) ) )
+						return true;
+				}
 			}
+		}
+	}
+
+	return false;
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool PointsCrossRespawnRoomVisualizer( const Vector& vecStart, const Vector &vecEnd, int nTeamToIgnore )
+{
+	// Setup the ray.
+	Ray_t ray;
+	ray.Init( vecStart, vecEnd );
+
+	for ( int i=0; i<IFuncRespawnRoomVisualizerAutoList::AutoList().Count(); ++i )
+	{
+		CFuncRespawnRoomVisualizer *pEntity = static_cast< CFuncRespawnRoomVisualizer* >( IFuncRespawnRoomVisualizerAutoList::AutoList()[i] );
+
+		if( pEntity->GetTeamNumber() == nTeamToIgnore && nTeamToIgnore != TEAM_UNASSIGNED )
+			continue;
+
+		trace_t trace;
+		enginetrace->ClipRayToEntity( ray, MASK_ALL, pEntity, &trace );
+		if ( trace.fraction < 1.0f )
+		{
+			return true;
 		}
 	}
 
@@ -292,12 +373,19 @@ LINK_ENTITY_TO_CLASS( func_respawnroomvisualizer, CFuncRespawnRoomVisualizer);
 
 BEGIN_DATADESC( CFuncRespawnRoomVisualizer )
 	DEFINE_KEYFIELD( m_iszRespawnRoomName, FIELD_STRING, "respawnroomname" ),
+	DEFINE_KEYFIELD( m_bSolid, FIELD_BOOLEAN, "solid_to_enemies" ),
 	// inputs
 	DEFINE_INPUTFUNC( FIELD_VOID, "RoundActivate", InputRoundActivate ),
+	DEFINE_INPUTFUNC( FIELD_BOOLEAN, "SetSolid", InputSetSolid ),
 END_DATADESC()
 
 IMPLEMENT_SERVERCLASS_ST( CFuncRespawnRoomVisualizer, DT_FuncRespawnRoomVisualizer )
 END_SEND_TABLE()
+
+CFuncRespawnRoomVisualizer::CFuncRespawnRoomVisualizer()
+{
+	m_bSolid = true;
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -329,6 +417,8 @@ void CFuncRespawnRoomVisualizer::InputRoundActivate( inputdata_t &inputdata )
 			Warning("%s(%s) was unable to find func_respawnroomvisualizer named '%s'\n", GetClassname(), GetDebugName(), STRING(m_iszRespawnRoomName) );
 		}
 	}
+
+	SetActive( m_bSolid );
 }
 
 //-----------------------------------------------------------------------------
@@ -356,6 +446,16 @@ int CFuncRespawnRoomVisualizer::DrawDebugTextOverlays( void )
 		}
 	}
 	return text_offset;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CFuncRespawnRoomVisualizer::InputSetSolid( inputdata_t &inputdata )
+{
+	m_bSolid = inputdata.value.Bool();
+
+	SetActive( m_bSolid );
 }
 
 //-----------------------------------------------------------------------------
@@ -428,7 +528,7 @@ void CFuncRespawnRoomVisualizer::SetActive( bool bActive )
 {
 	if ( bActive )
 	{
-		// We're a trigger, but we want to be solid. Out ShouldCollide() will make
+		// We're a trigger, but we want to be solid. Our ShouldCollide() will make
 		// us non-solid to members of the team that spawns here.
 		RemoveSolidFlags( FSOLID_TRIGGER );
 		RemoveSolidFlags( FSOLID_NOT_SOLID );	

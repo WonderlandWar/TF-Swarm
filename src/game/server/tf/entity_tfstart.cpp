@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. ========//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -24,6 +24,8 @@ BEGIN_DATADESC( CTFTeamSpawn )
 	DEFINE_KEYFIELD( m_iszControlPointName, FIELD_STRING, "controlpoint" ),
 	DEFINE_KEYFIELD( m_iszRoundBlueSpawn, FIELD_STRING, "round_bluespawn" ),
 	DEFINE_KEYFIELD( m_iszRoundRedSpawn, FIELD_STRING, "round_redspawn" ),
+	DEFINE_KEYFIELD( m_nSpawnMode, FIELD_INTEGER, "SpawnMode" ),
+	DEFINE_KEYFIELD( m_nMatchSummaryType, FIELD_INTEGER, "MatchSummary" ),
 
 	// Inputs.
 	DEFINE_INPUTFUNC( FIELD_VOID, "Enable", InputEnable ),
@@ -34,6 +36,8 @@ BEGIN_DATADESC( CTFTeamSpawn )
 
 END_DATADESC()
 
+IMPLEMENT_AUTO_LIST( ITFTeamSpawnAutoList );
+
 LINK_ENTITY_TO_CLASS( info_player_teamspawn, CTFTeamSpawn );
 
 //-----------------------------------------------------------------------------
@@ -42,6 +46,10 @@ LINK_ENTITY_TO_CLASS( info_player_teamspawn, CTFTeamSpawn );
 CTFTeamSpawn::CTFTeamSpawn()
 {
 	m_bDisabled = false;
+	m_nMatchSummaryType = PlayerTeamSpawn_MatchSummary_None;
+	m_bAlreadyUsedForMatchSummary = false;
+
+	AddEFlags( EFL_FORCE_ALLOW_MOVEPARENT );
 }
 
 //-----------------------------------------------------------------------------
@@ -51,15 +59,15 @@ void CTFTeamSpawn::Activate( void )
 {
 	BaseClass::Activate();
 
-	Vector mins = g_pGameRules->GetViewVectors()->m_vHullMin;
-	Vector maxs = g_pGameRules->GetViewVectors()->m_vHullMax;
+	Vector mins = VEC_HULL_MIN;
+	Vector maxs = VEC_HULL_MAX;
 
 	trace_t trace;
 	UTIL_TraceHull( GetAbsOrigin(), GetAbsOrigin(), mins, maxs, MASK_PLAYERSOLID, NULL, COLLISION_GROUP_PLAYER_MOVEMENT, &trace );
 	bool bClear = ( trace.fraction == 1 && trace.allsolid != 1 && (trace.startsolid != 1) );
 	if ( !bClear )
 	{
-		Warning("Spawnpoint at (%.2f %.2f %.2f) is not clear.\n", GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z );
+		DevMsg("Spawnpoint at (%.2f %.2f %.2f) is not clear.\n", GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z );
 		// m_debugOverlays |= OVERLAY_TEXT_BIT;
 	}
 }
@@ -109,8 +117,8 @@ int CTFTeamSpawn::DrawDebugTextOverlays(void)
 		}
 
 		// Make sure it's empty
-		Vector mins = g_pGameRules->GetViewVectors()->m_vHullMin;
-		Vector maxs = g_pGameRules->GetViewVectors()->m_vHullMax;
+		Vector mins = VEC_HULL_MIN;
+		Vector maxs = VEC_HULL_MAX;
 
 		Vector vTestMins = GetAbsOrigin() + mins;
 		Vector vTestMaxs = GetAbsOrigin() + maxs;

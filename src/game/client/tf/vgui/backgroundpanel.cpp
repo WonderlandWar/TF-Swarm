@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,7 +13,7 @@
 #include <vgui/ISurface.h>
 #include <vgui_controls/Label.h>
 #include <vgui/ILocalize.h>
-#include "vgui_controls/buildgroup.h"
+#include "vgui_controls/BuildGroup.h"
 #include "vgui_controls/BitmapImagePanel.h"
 
 using namespace vgui;
@@ -574,14 +574,14 @@ void ResizeWindowControls( EditablePanel *pWindow, int tall, int wide, int offse
 
 	// Resize to account for 1.25 aspect ratio (1280x1024) screens
 	{
-		for ( int i = 0; i < panelList->Count(); ++i )
+		for ( int i = 0; i < panelList->Size(); ++i )
 		{
 			PHandle handle = (*panelList)[i];
 
 			Panel *panel = handle.Get();
 
 			bool found = false;
-			for ( int j = 0; j < resizedPanels.Count(); ++j )
+			for ( int j = 0; j < resizedPanels.Size(); ++j )
 			{
 				if (panel == resizedPanels[j])
 					found = true;
@@ -602,14 +602,14 @@ void ResizeWindowControls( EditablePanel *pWindow, int tall, int wide, int offse
 	}
 
 	// and now re-center them.  Woohoo!
-	for ( int i = 0; i < panelList->Count(); ++i )
+	for ( int i = 0; i < panelList->Size(); ++i )
 	{
 		PHandle handle = (*panelList)[i];
 
 		Panel *panel = handle.Get();
 
 		bool found = false;
-		for ( int j = 0; j < movedPanels.Count(); ++j )
+		for ( int j = 0; j < movedPanels.Size(); ++j )
 		{
 			if (panel == movedPanels[j])
 				found = true;

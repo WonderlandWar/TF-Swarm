@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2001, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -65,11 +65,48 @@ void CTFPlayerMove::SetupMove( CBasePlayer *player, CUserCmd *ucmd, IMoveHelper 
 		// Check to see if we are a crouched, heavy, firing his weapons and zero out movement.
 		if ( pTFPlayer->GetPlayerClass()->IsClass( TF_CLASS_HEAVYWEAPONS ) )
 		{
-			if ( ( pTFPlayer->GetFlags() & FL_DUCKING ) && ( pTFPlayer->m_Shared.InCond( TF_COND_AIMING ) ) )
+			if ( pTFPlayer->m_Shared.InCond( TF_COND_AIMING ) )
 			{
-				ucmd->forwardmove = 0.0f;
-				ucmd->sidemove = 0.0f;
+				if ( pTFPlayer->GetFlags() & FL_DUCKING )
+				{
+					ucmd->forwardmove = 0.0f;
+					ucmd->sidemove = 0.0f;
+				}
+
+				// Don't allow jumping while firing (unless the design changes)
+				ucmd->buttons &= ~IN_JUMP;
 			}
+		}
+
+		// targe Exploit fix. Clients sending higher view angle changes then allowed
+		// Clamp their YAW Movement
+		if ( pTFPlayer->m_Shared.InCond( TF_COND_SHIELD_CHARGE ) )
+		{
+			// Get the view deltas and clamp them if they are too high, give a high tolerance (lag)
+			float flCap = pTFPlayer->m_Shared.CalculateChargeCap();
+			flCap *= 2.5f;
+			QAngle qAngle = pTFPlayer->m_qPreviousChargeEyeAngle;
+			float flDiff = abs( qAngle[YAW] ) - abs( ucmd->viewangles[YAW] );
+			if ( flDiff > flCap )
+			{
+				//float flReportedPitchDelta = qAngle[YAW] - ucmd->viewangles[YAW];
+				if ( ucmd->viewangles[YAW] > qAngle[YAW] )
+				{
+					ucmd->viewangles[YAW] = qAngle[YAW] + flCap;
+					pTFPlayer->SnapEyeAngles( ucmd->viewangles );
+				}
+				else // smaller values
+				{
+					ucmd->viewangles[YAW] = qAngle[YAW] - flCap;
+					pTFPlayer->SnapEyeAngles( ucmd->viewangles );
+				}
+			}
+			
+			pTFPlayer->m_qPreviousChargeEyeAngle = ucmd->viewangles;
+		}
+		else
+		{
+			pTFPlayer->m_qPreviousChargeEyeAngle = pTFPlayer->EyeAngles();
 		}
 	}
 

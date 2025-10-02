@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: CTF AmmoPack.
 //
@@ -10,7 +10,9 @@
 #include "tf_player.h"
 #include "tf_team.h"
 #include "engine/IEngineSound.h"
+#include "filesystem.h"
 #include "tf_powerup.h"
+#include "bot/tf_bot.h"
 
 //=============================================================================
 float PackRatios[POWERUP_SIZES] =
@@ -27,15 +29,17 @@ float PackRatios[POWERUP_SIZES] =
 
 BEGIN_DATADESC( CTFPowerup )
 
-// Keyfields.
-DEFINE_KEYFIELD( m_bDisabled, FIELD_BOOLEAN, "StartDisabled" ),
+	// Keyfields.
+	DEFINE_KEYFIELD( m_bDisabled, FIELD_BOOLEAN, "StartDisabled" ),
+	DEFINE_KEYFIELD( m_iszModel, FIELD_STRING, "powerup_model" ),
+	DEFINE_KEYFIELD( m_bAutoMaterialize, FIELD_BOOLEAN, "AutoMaterialize" ),
 
-// Inputs.
-DEFINE_INPUTFUNC( FIELD_VOID, "Enable", InputEnable ),
-DEFINE_INPUTFUNC( FIELD_VOID, "Disable", InputDisable ),
-DEFINE_INPUTFUNC( FIELD_VOID, "Toggle", InputToggle ),
+	// Inputs.
+	DEFINE_INPUTFUNC( FIELD_VOID, "Enable", InputEnable ),
+	DEFINE_INPUTFUNC( FIELD_VOID, "Disable", InputDisable ),
+	DEFINE_INPUTFUNC( FIELD_VOID, "Toggle", InputToggle ),
 
-// Outputs.
+	// Outputs.
 
 END_DATADESC();
 
@@ -51,6 +55,11 @@ CTFPowerup::CTFPowerup()
 {
 	m_bDisabled = false;
 	m_bRespawning = false;
+	m_bAutoMaterialize = true;
+
+	m_iszModel = NULL_STRING;
+
+	m_flThrowerTouchTime = -1;
 
 	UseClientSideAnimation();
 }
@@ -60,7 +69,9 @@ CTFPowerup::CTFPowerup()
 //-----------------------------------------------------------------------------
 void CTFPowerup::Spawn( void )
 {
-	BaseClass::Precache();
+	Precache();
+	SetModel( GetPowerupModel() );
+
 	BaseClass::Spawn();
 
 	BaseClass::SetOriginalSpawnOrigin( GetAbsOrigin() );
@@ -83,6 +94,15 @@ void CTFPowerup::Spawn( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+void CTFPowerup::Precache()
+{
+	PrecacheModel( GetPowerupModel() );
+	BaseClass::Precache();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
 CBaseEntity* CTFPowerup::Respawn( void )
 {
 	m_bRespawning = true;
@@ -98,6 +118,19 @@ CBaseEntity* CTFPowerup::Respawn( void )
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CTFPowerup::Materialize( void )
+{
+	if ( !m_bAutoMaterialize )
+	{
+		return;
+	}
+
+	Materialize_Internal();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTFPowerup::Materialize_Internal( void )
 {
 	if ( !m_bDisabled && IsEffectActive( EF_NODRAW ) )
 	{
@@ -134,6 +167,12 @@ bool CTFPowerup::ValidTouch( CBasePlayer *pPlayer )
 		return false;
 	}
 
+	// enemies in mann vs machine can't pick up any powerups
+	if ( TFGameRules()->IsMannVsMachineMode() && pPlayer->GetTeamNumber() == TF_TEAM_PVE_INVADERS )
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -143,6 +182,30 @@ bool CTFPowerup::ValidTouch( CBasePlayer *pPlayer )
 bool CTFPowerup::MyTouch( CBasePlayer *pPlayer )
 {
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+void CTFPowerup::DropSingleInstance( Vector &vecLaunchVel, CBaseCombatCharacter *pThrower, float flThrowerTouchDelay, float flResetTime /*= 0.1f*/ )
+{
+//	SetSize( Vector(-8,-8,-8), Vector(8,8,8) );
+	SetMoveType( MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_BOUNCE );
+	SetAbsVelocity( vecLaunchVel );	
+	SetSolid( SOLID_BBOX );
+	if ( flResetTime )
+	{
+		ActivateWhenAtRest( flResetTime );
+	}
+
+	m_bThrownSingleInstance = true;
+	AddSpawnFlags( SF_NORESPAWN );
+
+	SetOwnerEntity( pThrower );
+	m_flThrowerTouchTime = gpGlobals->curtime + flThrowerTouchDelay;
+
+	// Remove ourselves after some time
+	SetContextThink( &CBaseEntity::SUB_Remove, gpGlobals->curtime + GetLifeTime(), "PowerupRemoveThink" );
 }
 
 //-----------------------------------------------------------------------------
@@ -202,7 +265,43 @@ void CTFPowerup::SetDisabled( bool bDisabled )
 		{
             RemoveEffects( EF_NODRAW );
 		}
+		else if ( !m_bAutoMaterialize )
+		{
+			// We wait for a set-enabled to re-materialize if we were 
+			// set to not auto-materialize
+			Materialize_Internal();
+		}
 	}
 }
 
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+const char *CTFPowerup::GetPowerupModel( void )
+{
+	if ( m_iszModel != NULL_STRING )
+	{
+		if ( g_pFullFileSystem->FileExists( STRING( m_iszModel ), "GAME" ) )
+		{
+			return ( STRING( m_iszModel ) );
+		}
+	}
 
+	return GetDefaultPowerupModel();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+bool CTFPowerup::ItemCanBeTouchedByPlayer( CBasePlayer *pPlayer )
+{
+	if ( pPlayer == GetOwnerEntity() )
+	{
+		if ( ( m_flThrowerTouchTime > 0 ) && ( gpGlobals->curtime < m_flThrowerTouchTime ) )
+		{
+			return false;
+		}
+	}
+
+	return BaseClass::ItemCanBeTouchedByPlayer( pPlayer );
+}

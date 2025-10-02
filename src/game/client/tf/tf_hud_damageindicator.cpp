@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Hud element that indicates the direction of damage taken by the player
 //
@@ -13,13 +13,13 @@
 #include <KeyValues.h>
 #include <vgui_controls/AnimationController.h>
 #include <vgui/ISurface.h>
-#include "vguimatsurface/IMatSystemSurface.h"
-#include "materialsystem/IMaterial.h"
-#include "materialsystem/IMesh.h"
+#include "VGuiMatSurface/IMatSystemSurface.h"
+#include "materialsystem/imaterial.h"
+#include "materialsystem/imesh.h"
 #include "materialsystem/imaterialvar.h"
-#include "ieffects.h"
+#include "IEffects.h"
 #include "hudelement.h"
-#include "precache_register.h"
+#include "clienteffectprecachesystem.h"
 
 using namespace vgui;
 
@@ -90,7 +90,7 @@ DECLARE_HUD_MESSAGE( CHudDamageIndicator, Damage );
 CHudDamageIndicator::CHudDamageIndicator( const char *pElementName ) :
 	CHudElement( pElementName ), BaseClass(NULL, "HudDamageIndicator")
 {
-	vgui::Panel *pParent = GetClientMode()->GetViewport();
+	vgui::Panel *pParent = g_pClientMode->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_HEALTH );
@@ -150,9 +150,8 @@ bool CHudDamageIndicator::ShouldDraw( void )
 void CHudDamageIndicator::GetDamagePosition( const Vector &vecDelta, float flRadius, float *xpos, float *ypos, float *flRotation )
 {
 	// Player Data
-	ASSERT_LOCAL_PLAYER_RESOLVABLE();
-	Vector playerPosition = MainViewOrigin( GET_ACTIVE_SPLITSCREEN_SLOT() );
-	QAngle playerAngles = MainViewAngles( GET_ACTIVE_SPLITSCREEN_SLOT() );
+	Vector playerPosition = MainViewOrigin();
+	QAngle playerAngles = MainViewAngles();
 
 	Vector forward, right, up(0,0,1);
 	AngleVectors (playerAngles, &forward, NULL, NULL );
@@ -241,7 +240,7 @@ void CHudDamageIndicator::Paint()
 	for (int i = iSize-1; i >= 0; i--)
 	{
 		// Scale size to the damage
-		int clampedDamage = clamp( m_vecDamages[i].iScale, 0, m_iMaximumDamage );
+		float clampedDamage = clamp( (float) m_vecDamages[i].iScale, 0.f, m_iMaximumDamage );
 
 		int iWidth = RemapVal(clampedDamage, 0, m_iMaximumDamage, m_flMinimumWidth, m_flMaximumWidth) * 0.5;
 		int iHeight = RemapVal(clampedDamage, 0, m_iMaximumDamage, m_flMinimumHeight, m_flMaximumHeight) * 0.5;
@@ -282,7 +281,11 @@ void CHudDamageIndicator::Paint()
 void CHudDamageIndicator::MsgFunc_Damage( bf_read &msg )
 {
 	damage_t damage;
-	damage.iScale = msg.ReadByte();
+	damage.iScale = msg.ReadShort();
+	msg.ReadLong();	// Read & ignored
+	if ( !msg.ReadOneBit() )
+		return;
+
 	if ( damage.iScale > m_iMaximumDamage )
 	{
 		damage.iScale = m_iMaximumDamage;
@@ -293,13 +296,12 @@ void CHudDamageIndicator::MsgFunc_Damage( bf_read &msg )
 	damage.flStartTime = gpGlobals->curtime;
 	damage.flLifeTime = gpGlobals->curtime + RemapVal(damage.iScale, 0, m_iMaximumDamage, m_flMinimumTime, m_flMaximumTime);
 
-	ASSERT_LOCAL_PLAYER_RESOLVABLE();
 	if ( vecOrigin == vec3_origin )
 	{
-		vecOrigin = MainViewOrigin( GET_ACTIVE_SPLITSCREEN_SLOT() );
+		vecOrigin = MainViewOrigin();
 	}
 
-	damage.vecDelta = (vecOrigin - MainViewOrigin( GET_ACTIVE_SPLITSCREEN_SLOT() ));
+	damage.vecDelta = (vecOrigin - MainViewOrigin());
 	VectorNormalize( damage.vecDelta );
 
 	// Add some noise

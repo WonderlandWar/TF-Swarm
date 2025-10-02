@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,7 +13,7 @@
 #include "weapon_ifmbase.h"
 
 #ifdef CLIENT_DLL
-#include "materialsystem/materialsystemutil.h"
+#include "materialsystem/MaterialSystemUtil.h"
 #endif
 
 #if defined( CLIENT_DLL )
@@ -40,7 +40,7 @@ public:
 public:
 	virtual void	ViewModelDrawn( CBaseViewModel *pBaseViewModel );
 	virtual void	DrawCrosshair( );
-	virtual int		DrawModel( int flags, const RenderableInstance_t &instance );
+	virtual int		DrawModel( int flags );
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 
 protected:

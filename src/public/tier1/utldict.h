@@ -31,6 +31,16 @@ enum EDictCompareType
 //-----------------------------------------------------------------------------
 // A dictionary mapping from symbol to structure
 //-----------------------------------------------------------------------------
+#define FOR_EACH_DICT( dictName, iteratorName ) \
+	for( int iteratorName=dictName.First(); iteratorName != dictName.InvalidIndex(); iteratorName = dictName.Next( iteratorName ) )
+
+// faster iteration, but in an unspecified order
+#define FOR_EACH_DICT_FAST( dictName, iteratorName ) \
+	for ( int iteratorName = 0; iteratorName < dictName.MaxElement(); ++iteratorName ) if ( !dictName.IsValidIndex( iteratorName ) ) continue; else
+
+//-----------------------------------------------------------------------------
+// A dictionary mapping from symbol to structure
+//-----------------------------------------------------------------------------
 template <class T, class I = int > 
 class CUtlDict
 {
@@ -57,6 +67,9 @@ public:
 
 	// Number of elements
 	unsigned int Count() const;
+
+	// Number of allocated slots
+	I MaxElement() const;
 	
 	// Checks if a node is valid and in the tree
 	bool  IsValidIndex( I i ) const;
@@ -188,6 +201,14 @@ inline	unsigned int CUtlDict<T, I>::Count() const
 	return m_Elements.Count(); 
 }
 
+//-----------------------------------------------------------------------------
+// Number of allocated slots
+//-----------------------------------------------------------------------------
+template <class T, class I>
+inline I CUtlDict<T, I>::MaxElement() const
+{
+	return m_Elements.MaxElement();
+}
 	
 //-----------------------------------------------------------------------------
 // Checks if a node is valid and in the tree

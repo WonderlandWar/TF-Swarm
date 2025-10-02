@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: TF implementation of the IPresence interface
 //
@@ -10,9 +10,9 @@
 #pragma once
 #endif
 
-#include "gameeventlistener.h"
+#include "GameEventListener.h"
 #include "basepresence.h"
-//#include "hl2orange.spa.h"
+#include "hl2orange.spa.h"
 
 //-----------------------------------------------------------------------------
 // Purpose: TF implementation for setting user contexts and properties.

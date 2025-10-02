@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2006, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,7 +12,7 @@
 #endif
 
 #include "tf_vgui_video.h"
-#include "tf_modelpanel.h"
+#include "basemodelpanel.h"
 
 #define MAX_CAPTION_LENGTH	256
 
@@ -60,8 +60,19 @@ public:
 	virtual void OnCommand( const char *command );
 	virtual void OnKeyCodePressed( KeyCode code );
 
-	void OnTick();
+	virtual void OnTick() OVERRIDE;
+	virtual void OnThink() OVERRIDE;
 
+	//=============================================================================
+	// HPE_BEGIN
+	// [msmith] Some refactoring.
+	//=============================================================================
+	void StartVideo();
+	void ShutdownVideo();
+	//=============================================================================
+	// HPE_END
+	//=============================================================================
+	
 	MESSAGE_FUNC( OnIntroFinished, "IntroFinished" );
 
 private:
@@ -69,18 +80,32 @@ private:
 	void Shutdown( void );
 	bool LoadCaptions( void );
 	void UpdateCaptions( void );
+	
+	
 
-private:
+	//=============================================================================
+	// HPE_BEGIN
+	// [msmith] Added support for in game videos.
+	//=============================================================================
+	bool PendingInGameVideo( void );
+	const char *GetVideoFileName( bool withExtension = true );
+	void UnpauseGame( void );
+	void PauseGame( void );
+	//=============================================================================
+	// HPE_END
+	//=============================================================================
 
 	CTFVideoPanel	*m_pVideo;
 	CModelPanel		*m_pModel;
-	CTFLabel		*m_pCaptionLabel;
+	CExLabel		*m_pCaptionLabel;
 
 #ifdef _X360
 	CTFFooter		*m_pFooter;
 #else
-	CTFButton		*m_pBack;
-	CTFButton		*m_pOK;
+	CExButton		*m_pBack;
+	CExButton		*m_pOK;
+	CExButton		*m_pReplayVideo;
+	CExButton		*m_pContinue;
 #endif
 
 	float			m_flActionThink;
@@ -89,6 +114,14 @@ private:
 	CUtlVector< CVideoCaption* > m_Captions;
 	int				m_iCurrentCaption;
 	float			m_flVideoStartTime;
+	//=============================================================================
+	// HPE_BEGIN
+	// [msmith] Added support for in game videos.
+	//=============================================================================
+	bool			m_bPlayingInGameVideo;
+	//=============================================================================
+	// HPE_END
+	//=============================================================================
 };
 
 

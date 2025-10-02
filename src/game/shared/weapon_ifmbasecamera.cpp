@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -11,8 +11,8 @@
 #ifdef CLIENT_DLL
 #include "view_shared.h"
 #include "iviewrender.h"
-#include "vgui_controls/controls.h"
-#include "vgui/isurface.h"
+#include "vgui_controls/Controls.h"
+#include "vgui/ISurface.h"
 
 bool ToolFramework_SetupEngineView( Vector &origin, QAngle &angles, float &fov );
 
@@ -187,9 +187,9 @@ void CWeaponIFMBaseCamera::TransmitRenderInfo()
 //-----------------------------------------------------------------------------
 #define FRUSTUM_SIZE 1000
 
-int CWeaponIFMBaseCamera::DrawModel( int flags, const RenderableInstance_t &instance )
+int CWeaponIFMBaseCamera::DrawModel( int flags )
 {
-	int nRetVal = BaseClass::DrawModel( flags, instance );
+	int nRetVal = BaseClass::DrawModel( flags );
 
 	CBasePlayer *pPlayer = GetPlayerOwner();
 	if ( pPlayer && !pPlayer->IsLocalPlayer() )
@@ -387,7 +387,7 @@ void CWeaponIFMBaseCamera::DrawCrosshair( void )
 
 	// Draw the targeting zone around the crosshair
 	int r, g, b, a;
-	GetHud().m_clrYellowish.GetColor( r, g, b, a );
+	gHUD.m_clrYellowish.GetColor( r, g, b, a );
 
 	Color light( r, g, b, 160 );
 

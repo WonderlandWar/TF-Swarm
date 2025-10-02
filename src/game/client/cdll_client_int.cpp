@@ -110,8 +110,6 @@
 
 #if defined( SWARM_DLL )
 #include "swarm/gameui/swarm/basemodpanel.h"
-#elif defined ( TF_CLIENT_DLL )
-#include "tf/gameui/tf/basemodpanel.h"
 #else
 #error "GAMEUI_EMBEDDED"
 #endif
@@ -1769,8 +1767,6 @@ void ConfigureCurrentSystemLevel()
 	char szModName[32] = "ep2";
 #elif defined ( SDK_CLIENT_DLL )
 	char szModName[32] = "sdk";
-#elif defined ( TF_CLIENT_DLL )
-	char szModName[32] = "tf";
 #endif
 
 	UpdateSystemLevel( nCPULevel, nGPULevel, nMemLevel, nGPUMemLevel, VGui_IsSplitScreen(), szModName );

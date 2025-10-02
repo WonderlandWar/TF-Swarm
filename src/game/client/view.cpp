@@ -48,8 +48,6 @@
 
 #if defined( SWARM_DLL )
 #include "swarm/gameui/swarm/basemodpanel.h"
-#elif defined ( TF_CLIENT_DLL )
-#include "tf/gameui/tf/basemodpanel.h"
 #else
 #error "GAMEUI_EMBEDDED"
 #endif

@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: CTF Spawn Point.
 //
@@ -18,10 +18,25 @@ class CTeamControlPointRound;
 // TF team spawning entity.
 //
 
-class CTFTeamSpawn : public CPointEntity
+enum PlayerTeamSpawnMode_t
+{
+	PlayerTeamSpawnMode_Normal = 0,
+	PlayerTeamSpawnMode_Triggered = 1,
+};
+
+enum PlayerTeamSpawn_MatchSummary_t
+{
+	PlayerTeamSpawn_MatchSummary_None = 0,
+	PlayerTeamSpawn_MatchSummary_Loser = 1,
+	PlayerTeamSpawn_MatchSummary_Winner = 2,
+};
+
+DECLARE_AUTO_LIST( ITFTeamSpawnAutoList );
+
+class CTFTeamSpawn : public CServerOnlyPointEntity, public ITFTeamSpawnAutoList
 {
 public:
-	DECLARE_CLASS( CTFTeamSpawn, CPointEntity );
+	DECLARE_CLASS( CTFTeamSpawn, CServerOnlyPointEntity );
 
 	CTFTeamSpawn();
 
@@ -29,6 +44,8 @@ public:
 
 	bool IsDisabled( void ) { return m_bDisabled; }
 	void SetDisabled( bool bDisabled ) { m_bDisabled = bDisabled; }
+
+	PlayerTeamSpawnMode_t GetTeamSpawnMode( void ) { return m_nSpawnMode; }
 
 	// Inputs/Outputs.
 	void InputEnable( inputdata_t &inputdata );
@@ -41,8 +58,13 @@ public:
 	CHandle<CTeamControlPointRound> GetRoundBlueSpawn( void ) { return m_hRoundBlueSpawn; }
 	CHandle<CTeamControlPointRound> GetRoundRedSpawn( void ) { return m_hRoundRedSpawn; }
 
+	PlayerTeamSpawn_MatchSummary_t GetMatchSummaryType( void ){ return m_nMatchSummaryType; }
+	bool AlreadyUsedForMatchSummary( void ){ return m_bAlreadyUsedForMatchSummary; }
+	void SetAlreadyUsedForMatchSummary( void ){ m_bAlreadyUsedForMatchSummary = true; }
+
 private:
-	bool	m_bDisabled;		// Enabled/Disabled?
+	bool							m_bDisabled;		// Enabled/Disabled?
+	PlayerTeamSpawnMode_t			m_nSpawnMode;		// How are players allowed to spawn here?
 
 	string_t						m_iszControlPointName;
 	string_t						m_iszRoundBlueSpawn;
@@ -51,6 +73,9 @@ private:
 	CHandle<CTeamControlPoint>		m_hControlPoint;
 	CHandle<CTeamControlPointRound>	m_hRoundBlueSpawn;
 	CHandle<CTeamControlPointRound>	m_hRoundRedSpawn;
+
+	PlayerTeamSpawn_MatchSummary_t	m_nMatchSummaryType;		// is this a spawn location for a match summary?
+	bool m_bAlreadyUsedForMatchSummary;
 
 	DECLARE_DATADESC();
 };

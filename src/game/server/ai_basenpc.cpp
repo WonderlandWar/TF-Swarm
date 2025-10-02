@@ -1223,7 +1223,7 @@ float CAI_BaseNPC::GetHitgroupDamageMultiplier( int iHitGroup, const CTakeDamage
 //=========================================================
 // TraceAttack
 //=========================================================
-void CAI_BaseNPC::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
+void CAI_BaseNPC::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
 {
 	m_fNoDamageDecal = false;
 	if ( m_takedamage == DAMAGE_NO )

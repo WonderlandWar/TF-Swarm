@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2007, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -38,8 +38,8 @@ public:
 	virtual void SetParent( vgui::VPANEL parent ){ BaseClass::SetParent( parent ); }
 
 	virtual void FireGameEvent( IGameEvent *event );
-	
-	virtual bool WantsBackgroundBlurred( void ) { return false; }
+
+	virtual GameActionSet_t GetPreferredActionSet() { return GAME_ACTION_SET_IN_GAME_HUD; }
 
 protected:
 	virtual void OnKeyCodePressed( vgui::KeyCode code );
@@ -52,13 +52,13 @@ protected:
 protected:
 	IViewPort			*m_pViewPort;
 
-	CTFLabel			*m_pTitle;
+	CExLabel			*m_pTitle;
 	vgui::ImagePanel	*m_pMapImage;
 	
 #ifdef _X360
 	CTFFooter			*m_pFooter;
 #else
-	CTFButton			*m_pContinue;
+	CExButton			*m_pContinue;
 #endif
 
 	char				m_szMapImage[MAX_ROUND_IMAGE_NAME];

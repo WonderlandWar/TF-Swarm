@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2006, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Game-specific explosion effects
 //
@@ -12,6 +12,10 @@
 #include "tf_weapon_parse.h"
 #include "c_basetempentity.h"
 #include "tier0/vprof.h"
+#include "c_tf_player.h"
+#include "econ_item_system.h"
+#include "c_tf_fx.h"
+#include "networkstringtabledefs.h"
 
 //--------------------------------------------------------------------------------------------------------------
 CTFWeaponInfo *GetTFWeaponInfo( int iWeapon )
@@ -36,7 +40,7 @@ CTFWeaponInfo *GetTFWeaponInfo( int iWeapon )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void TFExplosionCallback( const Vector &vecOrigin, const Vector &vecNormal, int iWeaponID, ClientEntityHandle_t hEntity )
+void TFExplosionCallback( const Vector &vecOrigin, const Vector &vecNormal, int iWeaponID, ClientEntityHandle_t hEntity, int nDefID, int nSound, int iCustomParticleIndex )
 {
 	// Get the weapon information.
 	CTFWeaponInfo *pWeaponInfo = NULL;
@@ -44,7 +48,11 @@ void TFExplosionCallback( const Vector &vecOrigin, const Vector &vecNormal, int 
 	{
 	case TF_WEAPON_GRENADE_PIPEBOMB:
 	case TF_WEAPON_GRENADE_DEMOMAN:
+	case TF_WEAPON_PUMPKIN_BOMB:
 		pWeaponInfo = GetTFWeaponInfo( TF_WEAPON_PIPEBOMBLAUNCHER );
+		break;
+	case TF_WEAPON_FLAMETHROWER_ROCKET:
+		pWeaponInfo = GetTFWeaponInfo( TF_WEAPON_FLAMETHROWER );
 		break;
 	default:
 		pWeaponInfo = GetTFWeaponInfo( iWeaponID );
@@ -62,7 +70,7 @@ void TFExplosionCallback( const Vector &vecOrigin, const Vector &vecNormal, int 
 	}
 
 	// Calculate the angles, given the normal.
-	bool bIsWater = ( UTIL_PointContents( vecOrigin, CONTENTS_WATER ) & CONTENTS_WATER ) != 0;
+	bool bIsWater = ( UTIL_PointContents( vecOrigin ) & CONTENTS_WATER );
 	bool bInAir = false;
 	QAngle angExplosion( 0.0f, 0.0f, 0.0f );
 
@@ -79,33 +87,42 @@ void TFExplosionCallback( const Vector &vecOrigin, const Vector &vecNormal, int 
 	}
 
 	// Base explosion effect and sound.
-	char *pszEffect = "explosion";
-	char *pszSound = "BaseExplosionEffect.Sound";
+	const char *pszEffect = "ExplosionCore_wall";
+	const char *pszSound = "BaseExplosionEffect.Sound";
+
+	// check for a custom particle effect
+	if ( iCustomParticleIndex != INVALID_STRING_INDEX )
+	{
+		pszEffect = GetParticleSystemNameFromIndex( iCustomParticleIndex );
+	}
 
 	if ( pWeaponInfo )
 	{
 		// Explosions.
-		if ( bIsWater )
+		if ( iCustomParticleIndex == INVALID_STRING_INDEX )
 		{
-			if ( Q_strlen( pWeaponInfo->m_szExplosionWaterEffect ) > 0 )
+			if ( bIsWater )
 			{
-				pszEffect = pWeaponInfo->m_szExplosionWaterEffect;
-			}
-		}
-		else
-		{
-			if ( bIsPlayer || bInAir )
-			{
-				if ( Q_strlen( pWeaponInfo->m_szExplosionPlayerEffect ) > 0 )
+				if ( Q_strlen( pWeaponInfo->m_szExplosionWaterEffect ) > 0 )
 				{
-					pszEffect = pWeaponInfo->m_szExplosionPlayerEffect;
+					pszEffect = pWeaponInfo->m_szExplosionWaterEffect;
 				}
 			}
 			else
 			{
-				if ( Q_strlen( pWeaponInfo->m_szExplosionEffect ) > 0 )
+				if ( bIsPlayer || bInAir )
 				{
-					pszEffect = pWeaponInfo->m_szExplosionEffect;
+					if ( Q_strlen( pWeaponInfo->m_szExplosionPlayerEffect ) > 0 )
+					{
+						pszEffect = pWeaponInfo->m_szExplosionPlayerEffect;
+					}
+				}
+				else
+				{
+					if ( Q_strlen( pWeaponInfo->m_szExplosionEffect ) > 0 )
+					{
+						pszEffect = pWeaponInfo->m_szExplosionEffect;
+					}
 				}
 			}
 		}
@@ -113,12 +130,42 @@ void TFExplosionCallback( const Vector &vecOrigin, const Vector &vecNormal, int 
 		// Sound.
 		if ( Q_strlen( pWeaponInfo->m_szExplosionSound ) > 0 )
 		{
-			pszSound = pWeaponInfo->m_szExplosionSound;
+			// Check for a replacement sound in the itemdef first - defaults to SPECIAL1
+			if ( nDefID >= 0 )
+			{
+				C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
+				if ( pLocalPlayer )
+				{
+					CEconItemDefinition *pItemDef = ItemSystem()->GetStaticDataForItemByDefIndex( nDefID );
+					if ( pItemDef )
+					{
+						pszSound = (char *)pItemDef->GetWeaponReplacementSound( pLocalPlayer->GetTeamNumber(), (WeaponSound_t)nSound );
+						if ( !pszSound || !pszSound[0] )
+						{
+							pszSound = pWeaponInfo->m_szExplosionSound;
+						}
+					}
+				}
+			}
+			else
+			{
+				pszSound = pWeaponInfo->m_szExplosionSound;
+			}
 		}
 	}
 	
+	if ( iWeaponID == TF_WEAPON_PUMPKIN_BOMB )
+	{
+		pszSound = "Halloween.PumpkinExplode";
+	}
+
 	CLocalPlayerFilter filter;
 	C_BaseEntity::EmitSound( filter, SOUND_FROM_WORLD, pszSound, &vecOrigin );
+
+	if ( GameRules() )
+	{
+		pszEffect = GameRules()->TranslateEffectForVisionFilter( "particles", pszEffect );
+	}
 
 	DispatchParticleEffect( pszEffect, vecOrigin, angExplosion );
 }
@@ -143,6 +190,9 @@ public:
 	Vector		m_vecNormal;
 	int			m_iWeaponID;
 	ClientEntityHandle_t m_hEntity;
+	int			m_nDefID;
+	int			m_nSound;
+	int			m_iCustomParticleIndex;
 };
 
 //-----------------------------------------------------------------------------
@@ -153,7 +203,10 @@ C_TETFExplosion::C_TETFExplosion( void )
 	m_vecOrigin.Init();
 	m_vecNormal.Init();
 	m_iWeaponID = TF_WEAPON_NONE;
-	m_hEntity = INVALID_EHANDLE_INDEX;
+	m_hEntity = INVALID_EHANDLE;
+	m_nDefID = -1;
+	m_nSound = SPECIAL1;
+	m_iCustomParticleIndex = INVALID_STRING_INDEX;
 }
 
 //-----------------------------------------------------------------------------
@@ -163,13 +216,16 @@ void C_TETFExplosion::PostDataUpdate( DataUpdateType_t updateType )
 {
 	VPROF( "C_TETFExplosion::PostDataUpdate" );
 
-	TFExplosionCallback( m_vecOrigin, m_vecNormal, m_iWeaponID, m_hEntity );
+	TFExplosionCallback( m_vecOrigin, m_vecNormal, m_iWeaponID, m_hEntity, m_nDefID, m_nSound, m_iCustomParticleIndex );
 }
 
 static void RecvProxy_ExplosionEntIndex( const CRecvProxyData *pData, void *pStruct, void *pOut )
 {
 	int nEntIndex = pData->m_Value.m_Int;
-	((C_TETFExplosion*)pStruct)->m_hEntity = (nEntIndex < 0) ? INVALID_EHANDLE_INDEX : ClientEntityList().EntIndexToHandle( nEntIndex );
+	// The 'new' encoding for INVALID_EHANDLE_INDEX is 2047, but the old encoding
+	// was -1. Old demos and replays will use the old encoding so we have to check
+	// for it. The field is now unsigned so -1 will not be created in new replays.
+	((C_TETFExplosion*)pStruct)->m_hEntity = (nEntIndex == kInvalidEHandleExplosion || nEntIndex == -1) ? INVALID_EHANDLE : ClientEntityList().EntIndexToHandle( nEntIndex );
 }
 
 IMPLEMENT_CLIENTCLASS_EVENT_DT( C_TETFExplosion, DT_TETFExplosion, CTETFExplosion )
@@ -179,5 +235,8 @@ IMPLEMENT_CLIENTCLASS_EVENT_DT( C_TETFExplosion, DT_TETFExplosion, CTETFExplosio
 	RecvPropVector( RECVINFO( m_vecNormal ) ),
 	RecvPropInt( RECVINFO( m_iWeaponID ) ),
 	RecvPropInt( "entindex", 0, SIZEOF_IGNORE, 0, RecvProxy_ExplosionEntIndex ),
+	RecvPropInt( RECVINFO( m_nDefID ) ),
+	RecvPropInt( RECVINFO( m_nSound ) ),
+	RecvPropInt( RECVINFO( m_iCustomParticleIndex ) ),
 END_RECV_TABLE()
 

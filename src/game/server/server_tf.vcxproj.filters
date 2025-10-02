@@ -7,8 +7,20 @@
     <Filter Include="Link Libraries">
       <UniqueIdentifier>{C5D73B3A-C648-896C-B7CE-F174808E5BA5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Protobuf Files">
+      <UniqueIdentifier>{14744026-5703-4552-1949-4929EDF94F84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Protobuf Files\Generated Files">
+      <UniqueIdentifier>{82CE6FC4-D3A4-D558-9C3C-5521324CEF08}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{BA03E055-4FA2-FCE3-8A1C-D348547D379C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common">
+      <UniqueIdentifier>{ADC3E669-83B2-2FBA-6721-2BDED4F89BD1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Economy">
+      <UniqueIdentifier>{2A88BB86-0D5C-03F6-38E5-DA89AA7C189F}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\IFM">
       <UniqueIdentifier>{5571F7DC-7863-A105-5250-28ED3BC3F948}</UniqueIdentifier>
@@ -16,14 +28,149 @@
     <Filter Include="Source Files\Nav Mesh">
       <UniqueIdentifier>{DFBE7717-599F-4970-3FEC-C30B1A09271D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Navigation Mesh">
+      <UniqueIdentifier>{B09D60FE-50B0-FE99-73C2-303E809808E2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NextBot">
+      <UniqueIdentifier>{D64D73F0-455F-F930-8D88-FB3DD840FA43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NextBot\NextBotCommonBehaviors">
+      <UniqueIdentifier>{7D9CB3A4-9D82-3DF2-C9C3-4FDBD8BFBF69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NextBot\NextBotInterfaces">
+      <UniqueIdentifier>{C967B67D-525B-8DF9-1948-7E0262F1582C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NextBot\NextBotNavMeshEntities">
+      <UniqueIdentifier>{7DAAE319-204A-FE55-0DD9-E8D2C1E80C49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NextBot\NextBotPath">
+      <UniqueIdentifier>{CD0E3097-21AF-9201-62AB-5F107D71FE27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NextBot\NextBotPlayer">
+      <UniqueIdentifier>{42E9B275-BCCD-6BA2-D798-66FEECDDA22C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Precompiled Header">
       <UniqueIdentifier>{A7D26A13-21F4-C6B5-5922-8A4FB05AF07D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Steam Workshop">
+      <UniqueIdentifier>{44FBE346-ECFB-A479-28A0-84FF47BB3BCE}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\temporary entities">
       <UniqueIdentifier>{EE0D1E04-BD60-DE4A-710E-2457C590BA24}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\TF">
       <UniqueIdentifier>{58C8951E-966E-882B-AD44-F32C8E51717D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot">
+      <UniqueIdentifier>{201FD58C-6BD0-2DF3-1CCD-7E6D03717BD2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior">
+      <UniqueIdentifier>{82807A1E-DC5D-9D15-0E35-46315630883D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Demoman">
+      <UniqueIdentifier>{78AD4445-7722-0AD7-BC04-9FB220A2B98E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Engineer">
+      <UniqueIdentifier>{7F02ED7D-24D6-844E-C584-1A5B008D7241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Engineer\MvMEngineer">
+      <UniqueIdentifier>{22279F1E-F33C-8305-7185-6AFA9881088C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Medic">
+      <UniqueIdentifier>{A09402C3-C173-708B-8A7C-E5EABCFE949F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Missions">
+      <UniqueIdentifier>{EF66257C-5B14-3629-B90B-218E103F75BB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\NavEntities">
+      <UniqueIdentifier>{9200FE65-C214-6B69-FA22-C8EFF977C46D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Scenario">
+      <UniqueIdentifier>{62D4F6BD-B4EA-C763-C4C2-7CC2295D723E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Scenario\CapturePoint">
+      <UniqueIdentifier>{AC54F1B6-B3E9-D95E-29CE-8BDA3857FD69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Scenario\CaptureTheFlag">
+      <UniqueIdentifier>{C128CED7-87F1-0D02-45D1-5021017EE78A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Scenario\CreepWave">
+      <UniqueIdentifier>{B3BAFE22-AD0A-E8A4-823A-5A96EBCE3D28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Scenario\Payload">
+      <UniqueIdentifier>{99D7DE34-A07C-D7E1-55EE-CEC7FC805124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Scenario\Raid">
+      <UniqueIdentifier>{0EE9C748-1B64-7D88-C4B5-509CEB767774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Sniper">
+      <UniqueIdentifier>{4A63F9C9-F959-A34D-AAB5-09BFA33F6440}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Spy">
+      <UniqueIdentifier>{6526A2DC-5D12-324F-F9F4-5B6208609C11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Squad">
+      <UniqueIdentifier>{C610AA78-9F47-307B-A941-50B4CC49779F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\Behavior\Training">
+      <UniqueIdentifier>{C1F5DD3C-C647-D93E-4D65-F160422BEFEB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot\MapEntities">
+      <UniqueIdentifier>{435294A0-80A4-6FFA-525A-5F742A62911B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Bot NPC">
+      <UniqueIdentifier>{EE22E980-CE82-B91C-BB01-1C1DEE8CB135}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Halloween">
+      <UniqueIdentifier>{31239E91-7988-C568-2839-3F9238D4A320}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Halloween\Behavior">
+      <UniqueIdentifier>{E00FF7FE-8269-DCE0-B8B1-9570A00BFD0B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Halloween\Eyeball Boss">
+      <UniqueIdentifier>{C2E0D09F-4690-035B-63C1-0A3412CD4683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Halloween\Eyeball Boss\Behavior">
+      <UniqueIdentifier>{CBBFB785-31E7-09B5-A78B-93156AE10D57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Halloween\Ghost">
+      <UniqueIdentifier>{42DEA016-FA9F-1321-87A2-D160A32DC492}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Halloween\Merasmus">
+      <UniqueIdentifier>{C45DB5F6-FB95-DB5A-0768-12728B3885B3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Halloween\Merasmus\Behavior">
+      <UniqueIdentifier>{99AE1B21-69B3-D9EB-58BB-C4A19BEAA885}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Halloween\Spell">
+      <UniqueIdentifier>{5125B7CD-2451-4E11-F634-BEE0A2EBA987}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Halloween\Zombie">
+      <UniqueIdentifier>{99D269D4-8C33-40E9-C73D-2FB8DF63CDDC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Halloween\Zombie\Behavior">
+      <UniqueIdentifier>{9C3788E2-3502-B072-9158-4E8268DE74D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Matchmaking">
+      <UniqueIdentifier>{95C470E8-F0A6-88E4-637E-B7F5B65DBC1D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\MiniGames">
+      <UniqueIdentifier>{2BD76E0E-B5AA-79EF-307D-37B17AE1C75C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\NavMesh">
+      <UniqueIdentifier>{83265375-7EFA-5AD0-A259-8C946FCD3649}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\PvE">
+      <UniqueIdentifier>{8B560B30-6496-26AF-8564-C909462EE072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\PvE\Boss Alpha">
+      <UniqueIdentifier>{C41B5CC9-601F-D184-F03F-BF9B5F9E1DF9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\PvE\Boss Alpha\Behavior">
+      <UniqueIdentifier>{D3C83B1B-E92D-94F3-2DA6-A35C1E3B16B1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TF\Raid">
+      <UniqueIdentifier>{1928AA25-340B-4877-9FFC-D8F39488C247}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\TF\Weapon">
       <UniqueIdentifier>{0129E4C8-A75E-AB66-5A70-08D7311C04BB}</UniqueIdentifier>
@@ -43,6 +190,9 @@
       <Filter>Link Libraries</Filter>
     </Library>
     <Library Include="..\..\lib\public\dmxloader.lib">
+      <Filter>Link Libraries</Filter>
+    </Library>
+    <Library Include="..\..\lib\public\gcsdk_sdk.lib">
       <Filter>Link Libraries</Filter>
     </Library>
     <Library Include="..\..\lib\public\interfaces.lib">
@@ -318,6 +468,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\public\ihandleentity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\ihasowner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\public\ihltv.h">
@@ -611,6 +764,15 @@
     <ClInclude Include="..\..\public\texture_group_names.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_gcmessages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_matchmaking_scoring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_proto_def_messages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="timedeventmgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -718,6 +880,21 @@
     </ClInclude>
     <ClInclude Include="..\..\public\zip_uncompressed.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\server\generated_proto_mod_tf\tf_gcmessages.pb.h">
+      <Filter>Protobuf Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\server\generated_proto_mod_tf\tf_proto_def_messages.pb.h">
+      <Filter>Protobuf Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\server\generated_proto_mod_tf\base_gcmessages.pb.h">
+      <Filter>Protobuf Files\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\server\generated_proto_mod_tf\econ_gcmessages.pb.h">
+      <Filter>Protobuf Files\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\server\generated_proto_mod_tf\steammessages.pb.h">
+      <Filter>Protobuf Files\Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\achievement_saverestore.h">
       <Filter>Source Files</Filter>
@@ -1235,7 +1412,7 @@
     <ClInclude Include="globalstate_private.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="GrenadeThrown.h">
+    <ClInclude Include="grenadethrown.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="hierarchy.h">
@@ -1559,6 +1736,9 @@
     <ClInclude Include="team_objectiveresource.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="team_train_watcher.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\teamplay_gamerules.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -1607,6 +1787,9 @@
     <ClInclude Include="..\..\game\shared\voice_gamemgr.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\server\vote_controller.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="vscript_server.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -1627,6 +1810,114 @@
     </ClInclude>
     <ClInclude Include="world.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\protoutils.h">
+      <Filter>Source Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\attribute_manager.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_claimcode.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_dynamic_recipe.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_entity.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_entity_creation.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_gcmessages.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_holidays.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_item.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_item_constants.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_item_interface.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_item_inventory.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_item_preset.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_item_schema.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_item_system.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_item_tools.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_item_view.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_paintkit.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_quests.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\econ_wearable.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\gc_clientsystem.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\ihasattributes.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\item_selection_criteria.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\econ\localization_provider.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_item_inventory.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_item_schema.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_item_system.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_item_wearable.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_ladder_data.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_proto_script_obj_def.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_quest_constants.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_quest_map.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_quest_map_node.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_quest_map_utils.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_quest_restriction.h">
+      <Filter>Source Files\Economy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_wardata.h">
+      <Filter>Source Files\Economy</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\weapon_ifmbase.h">
       <Filter>Source Files\IFM</Filter>
@@ -1661,6 +1952,90 @@
     <ClInclude Include="nav_pathfind.h">
       <Filter>Source Files\Nav Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="NextBot\NextBot.h">
+      <Filter>Source Files\NextBot</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotBehavior.h">
+      <Filter>Source Files\NextBot</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotGroundLocomotion.h">
+      <Filter>Source Files\NextBot</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotKnownEntity.h">
+      <Filter>Source Files\NextBot</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotManager.h">
+      <Filter>Source Files\NextBot</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotUtil.h">
+      <Filter>Source Files\NextBot</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\simple_bot.h">
+      <Filter>Source Files\NextBot</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\Behavior\BehaviorBackUp.h">
+      <Filter>Source Files\NextBot\NextBotCommonBehaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\Behavior\BehaviorMoveTo.h">
+      <Filter>Source Files\NextBot\NextBotCommonBehaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotBodyInterface.h">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotComponentInterface.h">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotContextualQueryInterface.h">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotEventResponderInterface.h">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotHearingInterface.h">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotIntentionInterface.h">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotInterface.h">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotLocomotionInterface.h">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NextBotVisionInterface.h">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\NavMeshEntities\func_nav_prerequisite.h">
+      <Filter>Source Files\NextBot\NextBotNavMeshEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\Path\NextBotChasePath.h">
+      <Filter>Source Files\NextBot\NextBotPath</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\Path\NextBotPath.h">
+      <Filter>Source Files\NextBot\NextBotPath</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\Path\NextBotPathFollow.h">
+      <Filter>Source Files\NextBot\NextBotPath</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\Path\NextBotRetreatPath.h">
+      <Filter>Source Files\NextBot\NextBotPath</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\Player\NextBotPlayer.h">
+      <Filter>Source Files\NextBot\NextBotPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\Player\NextBotPlayerBody.h">
+      <Filter>Source Files\NextBot\NextBotPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBot\Player\NextBotPlayerLocomotion.h">
+      <Filter>Source Files\NextBot\NextBotPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\server\tf\workshop\maps_workshop.h">
+      <Filter>Source Files\Steam Workshop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\workshop\ugc_utils.h">
+      <Filter>Source Files\Steam Workshop</Filter>
+    </ClInclude>
     <ClInclude Include="plasma.h">
       <Filter>Source Files\temporary entities</Filter>
     </ClInclude>
@@ -1682,7 +2057,13 @@
     <ClInclude Include="te_particlesystem.h">
       <Filter>Source Files\temporary entities</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\achievements_tf.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\baseobject_shared.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\countdown_announcer.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\entity_ammopack.h">
@@ -1691,10 +2072,22 @@
     <ClInclude Include="tf\entity_armor.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="tf\entity_bird.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\entity_bonuspack.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\entity_capture_flag.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="tf\entity_currencypack.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="tf\entity_forcerespawn.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\entity_halloween_pickup.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\entity_healthkit.h">
@@ -1703,10 +2096,25 @@
     <ClInclude Include="tf\entity_intermission.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="tf\entity_passtime_ball_spawn.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="tf\entity_roundwin.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="tf\entity_rune.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\entity_soldier_statue.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="tf\entity_tfstart.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\entity_training_annotations.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\func_achievement.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\func_capture_zone.h">
@@ -1715,31 +2123,109 @@
     <ClInclude Include="tf\func_changeclass.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="tf\func_croc.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\func_flag_alert.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\func_forcefield.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="tf\func_no_build.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\func_nogrenades.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="tf\func_passtime_goal.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\func_passtime_goalie_zone.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\func_passtime_no_ball_zone.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\func_powerupvolume.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="tf\func_regenerate.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\func_respawnflag.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\func_respawnroom.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="tf\func_suggested_build.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\ihasgenericmeter.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\Multiplayer\multiplayer_animstate.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\passtime_ballcontroller.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\passtime_ballcontroller_homing.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\passtime_ballcontroller_playerseek.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\passtime_convars.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\passtime_game_events.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\quest_objective_manager.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\server\tf\serverbenchmark_tf.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\shared_object_tracker.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\te_tfblood.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="tf\tf_achievementdata.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="tf\tf_ammo_pack.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_autobalance.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\tf_bot_temp.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_classdata.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="tf\tf_client.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_condition.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_duckleaderboard.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_entity_spawner.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_extra_map_entity.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_flame.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\tf_fx.h">
@@ -1757,13 +2243,40 @@
     <ClInclude Include="..\..\game\shared\tf\tf_gamestats_shared.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_generic_bomb.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_halloween_souls_pickup.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_item.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_item_constants.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_item_powerup_bottle.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_logic_halloween_2014.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_logic_player_destruction.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_logic_robot_destruction.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_mapinfo.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\tf_obj.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_obj_baseupgrade_shared.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_obj_catapult.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\tf_obj_dispenser.h">
@@ -1775,10 +2288,19 @@
     <ClInclude Include="tf\tf_obj_sentrygun.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="tf\tf_obj_spy_trap.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="tf\tf_obj_teleporter.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\tf_objective_resource.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_passtime_ball.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_passtime_logic.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\tf_player.h">
@@ -1799,6 +2321,9 @@
     <ClInclude Include="..\..\game\shared\tf\tf_playerclass_shared.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_point_manager.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="tf\tf_powerup.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
@@ -1811,10 +2336,34 @@
     <ClInclude Include="tf\tf_projectile_rocket.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="tf\tf_props.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_pumpkin_bomb.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_revive.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_robot_destruction_robot.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_shareddefs.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
+    <ClInclude Include="tf\tf_tactical_mission.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_target_dummy.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_taunt_prop.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
     <ClInclude Include="tf\tf_team.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_triggers.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
     <ClInclude Include="tf\tf_turret.h">
@@ -1822,6 +2371,561 @@
     </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_viewmodel.h">
       <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\server\tf\tf_voteissues.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_wartracker.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_passtime_gun.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_wheel_of_doom.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\trigger_catapult.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\trigger_passtime_ball.h">
+      <Filter>Source Files\TF</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\tf_bot.h">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\tf_bot_body.h">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\tf_bot_locomotion.h">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\tf_bot_manager.h">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\tf_bot_squad.h">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\tf_bot_vision.h">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_approach_object.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_attack.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_behavior.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_dead.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_destroy_enemy_sentry.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_escort.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_get_ammo.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_get_health.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_melee_attack.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_move_to_vantage_point.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_mvm_deploy_bomb.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_retreat_to_cover.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_scenario_monitor.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_seek_and_destroy.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_tactical_monitor.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_taunt.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_use_item.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\tf_bot_use_teleporter.h">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\demoman\tf_bot_prepare_stickybomb_trap.h">
+      <Filter>Source Files\TF\Bot\Behavior\Demoman</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\demoman\tf_bot_stickybomb_sentrygun.h">
+      <Filter>Source Files\TF\Bot\Behavior\Demoman</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\engineer\tf_bot_engineer_build.h">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\engineer\tf_bot_engineer_build_dispenser.h">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\engineer\tf_bot_engineer_build_sentrygun.h">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\engineer\tf_bot_engineer_build_teleport_entrance.h">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\engineer\tf_bot_engineer_build_teleport_exit.h">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\engineer\tf_bot_engineer_building.h">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\engineer\tf_bot_engineer_move_to_build.h">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\engineer\mvm_engineer\tf_bot_mvm_engineer_build_sentry.h">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer\MvMEngineer</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\engineer\mvm_engineer\tf_bot_mvm_engineer_build_teleporter.h">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer\MvMEngineer</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\engineer\mvm_engineer\tf_bot_mvm_engineer_idle.h">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer\MvMEngineer</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\engineer\mvm_engineer\tf_bot_mvm_engineer_teleport_spawn.h">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer\MvMEngineer</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\medic\tf_bot_medic_heal.h">
+      <Filter>Source Files\TF\Bot\Behavior\Medic</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\medic\tf_bot_medic_retreat.h">
+      <Filter>Source Files\TF\Bot\Behavior\Medic</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\missions\tf_bot_mission_destroy_sentries.h">
+      <Filter>Source Files\TF\Bot\Behavior\Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\missions\tf_bot_mission_reprogrammed.h">
+      <Filter>Source Files\TF\Bot\Behavior\Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\missions\tf_bot_mission_suicide_bomber.h">
+      <Filter>Source Files\TF\Bot\Behavior\Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\nav_entities\tf_bot_nav_ent_destroy_entity.h">
+      <Filter>Source Files\TF\Bot\Behavior\NavEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\nav_entities\tf_bot_nav_ent_move_to.h">
+      <Filter>Source Files\TF\Bot\Behavior\NavEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\nav_entities\tf_bot_nav_ent_wait.h">
+      <Filter>Source Files\TF\Bot\Behavior\NavEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\capture_point\tf_bot_capture_point.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CapturePoint</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\capture_point\tf_bot_defend_point.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CapturePoint</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\capture_point\tf_bot_defend_point_block_capture.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CapturePoint</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\capture_the_flag\tf_bot_attack_flag_defenders.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CaptureTheFlag</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\capture_the_flag\tf_bot_deliver_flag.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CaptureTheFlag</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\capture_the_flag\tf_bot_escort_flag_carrier.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CaptureTheFlag</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\capture_the_flag\tf_bot_fetch_flag.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CaptureTheFlag</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\creep_wave\tf_bot_creep_wave.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CreepWave</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\payload\tf_bot_payload_block.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Payload</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\payload\tf_bot_payload_guard.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Payload</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\payload\tf_bot_payload_push.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Payload</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\raid\tf_bot_companion.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Raid</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\raid\tf_bot_guard_area.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Raid</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\raid\tf_bot_mob_rush.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Raid</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\raid\tf_bot_squad_attack.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Raid</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\scenario\raid\tf_bot_wander.h">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Raid</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\sniper\tf_bot_sniper_attack.h">
+      <Filter>Source Files\TF\Bot\Behavior\Sniper</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\sniper\tf_bot_sniper_lurk.h">
+      <Filter>Source Files\TF\Bot\Behavior\Sniper</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\spy\tf_bot_spy_attack.h">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\spy\tf_bot_spy_backstab.h">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\spy\tf_bot_spy_escape.h">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\spy\tf_bot_spy_hide.h">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\spy\tf_bot_spy_infiltrate.h">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\spy\tf_bot_spy_leave_spawn_room.h">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\spy\tf_bot_spy_lurk.h">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\spy\tf_bot_spy_sap.h">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\squad\tf_bot_escort_squad_leader.h">
+      <Filter>Source Files\TF\Bot\Behavior\Squad</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\behavior\training\tf_bot_training.h">
+      <Filter>Source Files\TF\Bot\Behavior\Training</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\map_entities\tf_bot_generator.h">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\map_entities\tf_bot_hint.h">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\map_entities\tf_bot_hint_engineer_nest.h">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\map_entities\tf_bot_hint_entity.h">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\map_entities\tf_bot_hint_sentrygun.h">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\map_entities\tf_bot_hint_teleporter_exit.h">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\map_entities\tf_bot_proxy.h">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\map_entities\tf_bot_roster.h">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\map_entities\tf_spawner.h">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot\map_entities\tf_spawner_boss.h">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot_npc\bot_npc.h">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot_npc\bot_npc_archer.h">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot_npc\bot_npc_body.h">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot_npc\bot_npc_decoy.h">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot_npc\bot_npc_mini.h">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\bot_npc\bot_npc_minion.h">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\halloween_base_boss.h">
+      <Filter>Source Files\TF\Halloween</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\halloween_gift_spawn_locations.h">
+      <Filter>Source Files\TF\Halloween</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\headless_hatman.h">
+      <Filter>Source Files\TF\Halloween</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\headless_hatman_body.h">
+      <Filter>Source Files\TF\Halloween</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\halloween_behavior\headless_hatman_attack.h">
+      <Filter>Source Files\TF\Halloween\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\halloween_behavior\headless_hatman_dying.h">
+      <Filter>Source Files\TF\Halloween\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\halloween_behavior\headless_hatman_emerge.h">
+      <Filter>Source Files\TF\Halloween\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\halloween_behavior\headless_hatman_terrify.h">
+      <Filter>Source Files\TF\Halloween\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\eyeball_boss\eyeball_boss.h">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\halloween\eyeball_boss\teleport_vortex.h">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_approach_target.h">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_behavior.h">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_emerge.h">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_emote.h">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_idle.h">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_launch_rockets.h">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_notice.h">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_stunned.h">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_teleport.h">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\ghost\ghost.h">
+      <Filter>Source Files\TF\Halloween\Ghost</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus.h">
+      <Filter>Source Files\TF\Halloween\Merasmus</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_body.h">
+      <Filter>Source Files\TF\Halloween\Merasmus</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_dancer.h">
+      <Filter>Source Files\TF\Halloween\Merasmus</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_trick_or_treat_prop.h">
+      <Filter>Source Files\TF\Halloween\Merasmus</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_behavior\merasmus_aoe_attack.h">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_behavior\merasmus_attack.h">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_behavior\merasmus_disguise.h">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_behavior\merasmus_dying.h">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_behavior\merasmus_reveal.h">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_behavior\merasmus_staff_attack.h">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_behavior\merasmus_stunned.h">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_behavior\merasmus_teleport.h">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_behavior\merasmus_throwing_grenade.h">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\merasmus\merasmus_behavior\merasmus_zap.h">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\spell\tf_spell_pickup.h">
+      <Filter>Source Files\TF\Halloween\Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\halloween\tf_weapon_spellbook.h">
+      <Filter>Source Files\TF\Halloween\Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\zombie\zombie.h">
+      <Filter>Source Files\TF\Halloween\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\zombie\zombie_spawner.h">
+      <Filter>Source Files\TF\Halloween\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\zombie\zombie_behavior\zombie_attack.h">
+      <Filter>Source Files\TF\Halloween\Zombie\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\zombie\zombie_behavior\zombie_spawn.h">
+      <Filter>Source Files\TF\Halloween\Zombie\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\halloween\zombie\zombie_behavior\zombie_special_attack.h">
+      <Filter>Source Files\TF\Halloween\Zombie\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\lobby.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\server\tf\tf_gc_server.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_gc_shared.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_lobby_server.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_lobby_shared.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_match_description.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_match_description_shared.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_matchmaking_shared.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_party.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_progression.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_progression_description.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_progression_description_casual.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_progression_description_comp.h">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\minigames\tf_duel.h">
+      <Filter>Source Files\TF\MiniGames</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\nav_mesh\tf_nav_area.h">
+      <Filter>Source Files\TF\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\nav_mesh\tf_nav_mesh.h">
+      <Filter>Source Files\TF\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\nav_mesh\tf_nav_mesh_edit.h">
+      <Filter>Source Files\TF\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\nav_mesh\tf_path_follower.h">
+      <Filter>Source Files\TF\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\archer_proxy.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\monster_resource.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\tf_base_boss.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\tf_boss_battle_logic.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\tf_mann_vs_machine_logic.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_mann_vs_machine_stats.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\tf_population_manager.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\tf_populator_spawners.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\tf_populators.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\tf_tank_boss.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\tf_tank_boss_body.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\tf_upgrades.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_upgrades_shared.h">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\boss_alpha.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_behavior.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_chase_victim.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_get_off_me.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_guard_spot.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_launch_grenades.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_launch_rockets.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_lost_victim.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_nuke_attack.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_stunned.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_tactical_monitor.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_wait_for_players.h">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\raid\tf_raid_logic.h">
+      <Filter>Source Files\TF\Raid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_dropped_weapon.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_projectile_arrow.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_projectile_energy_ball.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_projectile_energy_ring.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf_projectile_flare.h">
+      <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_bat.h">
       <Filter>Source Files\TF\Weapon</Filter>
@@ -1832,10 +2936,19 @@
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_bottle.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_buff_item.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
     <ClInclude Include="tf\tf_weapon_builder.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_club.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_compound_bow.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_dragons_fury.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_fireaxe.h">
@@ -1847,6 +2960,12 @@
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_flamethrower.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_flaregun.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_grapplinghook.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_grenade_pipebomb.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
@@ -1856,7 +2975,22 @@
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_invis.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_jar.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_jar_gas.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_knife.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_laser_pointer.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_lunchbox.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_mechanical_arm.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_medigun.h">
@@ -1865,7 +2999,13 @@
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_minigun.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_parachute.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_parse.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_particle_cannon.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_pda.h">
@@ -1877,10 +3017,16 @@
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_pistol.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_raygun.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_revolver.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_rocketlauncher.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_rocketpack.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_shotgun.h">
@@ -1889,13 +3035,22 @@
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_shovel.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_slap.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_smg.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_sniperrifle.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_sword.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_syringegun.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weapon_throwable.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weapon_wrench.h">
@@ -1913,7 +3068,19 @@
     <ClInclude Include="..\..\game\shared\tf\tf_weaponbase_melee.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_weaponbase_merasmus_grenade.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_weaponbase_rocket.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_wearable_campaign_item.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_wearable_levelable_item.h">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tf\tf_wearable_weapons.h">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="toolframework_server.h">
@@ -1921,6 +3088,21 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\game\server\generated_proto_mod_tf\tf_gcmessages.pb.cc">
+      <Filter>Protobuf Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\server\generated_proto_mod_tf\tf_proto_def_messages.pb.cc">
+      <Filter>Protobuf Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\server\generated_proto_mod_tf\base_gcmessages.pb.cc">
+      <Filter>Protobuf Files\Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\server\generated_proto_mod_tf\econ_gcmessages.pb.cc">
+      <Filter>Protobuf Files\Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\server\generated_proto_mod_tf\steammessages.pb.cc">
+      <Filter>Protobuf Files\Generated Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\achievement_saverestore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1991,9 +3173,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ai_blended_movement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_concommands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ai_condition.cpp">
@@ -2554,7 +3733,7 @@
     <ClCompile Include="globalstate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GrenadeThrown.cpp">
+    <ClCompile Include="grenadethrown.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="guntarget.cpp">
@@ -3025,6 +4204,9 @@
     <ClCompile Include="team_objectiveresource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="team_train_watcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\teamplay_gamerules.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -3059,6 +4241,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="textstatsmgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_gcmessages.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="timedeventmgr.cpp">
@@ -3106,6 +4291,9 @@
     <ClCompile Include="..\..\game\shared\voice_gamemgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\server\vote_controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="vscript_server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -3132,6 +4320,111 @@
     </ClCompile>
     <ClCompile Include="world.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\protoutils.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\attribute_manager.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_claimcode.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_dynamic_recipe.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_entity.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_entity_creation.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_holidays.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_item.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_item_constants.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_item_interface.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_item_inventory.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_item_preset.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_item_schema.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_item_schema_sdk.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_item_system.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_item_tools.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_item_view.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_paintkit.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_quests.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\econ_wearable.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\gc_clientsystem.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\gc_replicated_convars.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\item_selection_criteria.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\econ\localization_provider.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_item_inventory.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_item_schema.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_item_system.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_item_wearable.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_ladder_data.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_proto_script_obj_def.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_quest_map.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_quest_map_node.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_quest_map_utils.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_quest_restriction.cpp">
+      <Filter>Source Files\Economy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_wardata.cpp">
+      <Filter>Source Files\Economy</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\weapon_ifmbase.cpp">
       <Filter>Source Files\IFM</Filter>
@@ -3178,8 +4471,65 @@
     <ClCompile Include="nav_simplify.cpp">
       <Filter>Source Files\Nav Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="NextBot\NextBot.cpp">
+      <Filter>Source Files\NextBot</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\NextBotGroundLocomotion.cpp">
+      <Filter>Source Files\NextBot</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\NextBotManager.cpp">
+      <Filter>Source Files\NextBot</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\simple_bot.cpp">
+      <Filter>Source Files\NextBot</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\NextBotBodyInterface.cpp">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\NextBotComponentInterface.cpp">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\NextBotIntentionInterface.cpp">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\NextBotInterface.cpp">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\NextBotLocomotionInterface.cpp">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\NextBotVisionInterface.cpp">
+      <Filter>Source Files\NextBot\NextBotInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\NavMeshEntities\func_nav_prerequisite.cpp">
+      <Filter>Source Files\NextBot\NextBotNavMeshEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\Path\NextBotChasePath.cpp">
+      <Filter>Source Files\NextBot\NextBotPath</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\Path\NextBotPath.cpp">
+      <Filter>Source Files\NextBot\NextBotPath</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\Path\NextBotPathFollow.cpp">
+      <Filter>Source Files\NextBot\NextBotPath</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\Player\NextBotPlayer.cpp">
+      <Filter>Source Files\NextBot\NextBotPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\Player\NextBotPlayerBody.cpp">
+      <Filter>Source Files\NextBot\NextBotPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBot\Player\NextBotPlayerLocomotion.cpp">
+      <Filter>Source Files\NextBot\NextBotPlayer</Filter>
+    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files\Precompiled Header</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\server\tf\workshop\maps_workshop.cpp">
+      <Filter>Source Files\Steam Workshop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\workshop\ugc_utils.cpp">
+      <Filter>Source Files\Steam Workshop</Filter>
     </ClCompile>
     <ClCompile Include="basetempentity.cpp">
       <Filter>Source Files\temporary entities</Filter>
@@ -3343,6 +4693,42 @@
     <ClCompile Include="..\..\game\shared\tf\achievements_tf.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_demoman.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_engineer.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_halloween.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_heavy.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_maps.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_medic.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_mvm.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_pyro.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_scout.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_sniper.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_soldier.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\achievements_tf_spy.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\baseobject_shared.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
@@ -3352,7 +4738,16 @@
     <ClCompile Include="tf\entity_armor.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="tf\entity_bird.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\entity_bonuspack.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\entity_capture_flag.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\entity_currencypack.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\entity_forcerespawn.cpp">
@@ -3361,16 +4756,34 @@
     <ClCompile Include="tf\entity_game_text_tf.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\entity_halloween_pickup.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\entity_healthkit.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\entity_intermission.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="tf\entity_passtime_ball_spawn.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\entity_roundwin.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="tf\entity_rune.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\entity_soldier_statue.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\entity_tfstart.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\entity_training_annotations.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\func_achievement.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\func_capture_zone.cpp">
@@ -3379,19 +4792,76 @@
     <ClCompile Include="tf\func_changeclass.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="tf\func_croc.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\func_flag_alert.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\func_forcefield.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\func_no_build.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\func_nogrenades.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="tf\func_passtime_goal.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\func_passtime_goalie_zone.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\func_passtime_no_ball_zone.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\func_powerupvolume.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\func_regenerate.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\func_respawnflag.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\func_respawnroom.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="tf\func_suggested_build.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\Multiplayer\multiplayer_animstate.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\passtime_ballcontroller.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\passtime_ballcontroller_homing.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\passtime_ballcontroller_playerseek.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\passtime_convars.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\passtime_game_events.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\quest_objective_manager.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\quest_objective_trackers.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\server\tf\serverbenchmark_tf.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\shared_object_tracker.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\steamworks_gamestats_sdk.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\te_tfblood.cpp">
@@ -3400,16 +4870,37 @@
     <ClCompile Include="tf\tf_ammo_pack.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="tf\tf_autobalance.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\tf_bot_temp.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_classdata.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\tf_client.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_condition.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_duckleaderboard.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_entity_spawner.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\tf_eventlog.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="tf\tf_extra_map_entity.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\tf_filters.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_flame.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\tf_fx.cpp">
@@ -3433,16 +4924,49 @@
     <ClCompile Include="..\..\game\shared\tf\tf_gamestats_shared.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_generic_bomb.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_glow.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_halloween_souls_pickup.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\tf_hltvdirector.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_item.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_item_constants.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_item_powerup_bottle.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_logic_halloween_2014.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_logic_on_holiday.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_logic_player_destruction.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_logic_robot_destruction.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_mapinfo.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\tf_obj.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_obj_baseupgrade_shared.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_obj_catapult.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\tf_obj_dispenser.cpp">
@@ -3454,10 +4978,19 @@
     <ClCompile Include="tf\tf_obj_sentrygun.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="tf\tf_obj_spy_trap.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\tf_obj_teleporter.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\tf_objective_resource.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_passtime_ball.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_passtime_logic.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\tf_player.cpp">
@@ -3484,10 +5017,16 @@
     <ClCompile Include="tf\tf_playermove.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_point_manager.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\tf_powerup.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_projectile_base.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_projectile_dragons_fury.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_projectile_nail.cpp">
@@ -3496,10 +5035,37 @@
     <ClCompile Include="tf\tf_projectile_rocket.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="tf\tf_props.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_pumpkin_bomb.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_pushentity.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_revive.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_robot_destruction_robot.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_shareddefs.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="tf\tf_tactical_mission.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_target_dummy.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_taunt_prop.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
     <ClCompile Include="tf\tf_team.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_triggers.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
     <ClCompile Include="tf\tf_turret.cpp">
@@ -3511,6 +5077,582 @@
     <ClCompile Include="..\..\game\shared\tf\tf_viewmodel.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\server\tf\tf_voteissues.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_wartracker.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_passtime_gun.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_wheel_of_doom.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\trigger_catapult.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\trigger_catapult_shared.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\trigger_passtime_ball.cpp">
+      <Filter>Source Files\TF</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\tf_bot.cpp">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\tf_bot_body.cpp">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\tf_bot_locomotion.cpp">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\tf_bot_manager.cpp">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\tf_bot_squad.cpp">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\tf_bot_vision.cpp">
+      <Filter>Source Files\TF\Bot</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_approach_object.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_attack.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_behavior.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_dead.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_destroy_enemy_sentry.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_escort.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_get_ammo.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_get_health.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_melee_attack.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_move_to_vantage_point.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_mvm_deploy_bomb.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_retreat_to_cover.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_scenario_monitor.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_seek_and_destroy.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_tactical_monitor.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_taunt.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_use_item.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\tf_bot_use_teleporter.cpp">
+      <Filter>Source Files\TF\Bot\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\demoman\tf_bot_prepare_stickybomb_trap.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Demoman</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\demoman\tf_bot_stickybomb_sentrygun.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Demoman</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\engineer\tf_bot_engineer_build.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\engineer\tf_bot_engineer_build_dispenser.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\engineer\tf_bot_engineer_build_sentrygun.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\engineer\tf_bot_engineer_build_teleport_entrance.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\engineer\tf_bot_engineer_build_teleport_exit.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\engineer\tf_bot_engineer_building.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\engineer\tf_bot_engineer_move_to_build.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\engineer\mvm_engineer\tf_bot_mvm_engineer_build_sentry.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer\MvMEngineer</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\engineer\mvm_engineer\tf_bot_mvm_engineer_build_teleporter.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer\MvMEngineer</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\engineer\mvm_engineer\tf_bot_mvm_engineer_idle.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer\MvMEngineer</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\engineer\mvm_engineer\tf_bot_mvm_engineer_teleport_spawn.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Engineer\MvMEngineer</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\medic\tf_bot_medic_heal.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Medic</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\medic\tf_bot_medic_retreat.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Medic</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\missions\tf_bot_mission_destroy_sentries.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\missions\tf_bot_mission_reprogrammed.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\missions\tf_bot_mission_suicide_bomber.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\nav_entities\tf_bot_nav_ent_destroy_entity.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\NavEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\nav_entities\tf_bot_nav_ent_move_to.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\NavEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\nav_entities\tf_bot_nav_ent_wait.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\NavEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\capture_point\tf_bot_capture_point.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CapturePoint</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\capture_point\tf_bot_defend_point.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CapturePoint</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\capture_point\tf_bot_defend_point_block_capture.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CapturePoint</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\capture_the_flag\tf_bot_attack_flag_defenders.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CaptureTheFlag</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\capture_the_flag\tf_bot_deliver_flag.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CaptureTheFlag</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\capture_the_flag\tf_bot_escort_flag_carrier.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CaptureTheFlag</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\capture_the_flag\tf_bot_fetch_flag.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CaptureTheFlag</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\creep_wave\tf_bot_creep_wave.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\CreepWave</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\payload\tf_bot_payload_block.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Payload</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\payload\tf_bot_payload_guard.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Payload</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\payload\tf_bot_payload_push.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Payload</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\raid\tf_bot_companion.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Raid</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\raid\tf_bot_guard_area.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Raid</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\raid\tf_bot_mob_rush.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Raid</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\raid\tf_bot_squad_attack.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Raid</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\scenario\raid\tf_bot_wander.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Scenario\Raid</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\sniper\tf_bot_sniper_attack.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Sniper</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\sniper\tf_bot_sniper_lurk.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Sniper</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\spy\tf_bot_spy_attack.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\spy\tf_bot_spy_backstab.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\spy\tf_bot_spy_escape.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\spy\tf_bot_spy_hide.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\spy\tf_bot_spy_infiltrate.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\spy\tf_bot_spy_leave_spawn_room.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\spy\tf_bot_spy_lurk.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\spy\tf_bot_spy_sap.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Spy</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\squad\tf_bot_escort_squad_leader.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Squad</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\behavior\training\tf_bot_training.cpp">
+      <Filter>Source Files\TF\Bot\Behavior\Training</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\map_entities\tf_bot_generator.cpp">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\map_entities\tf_bot_hint.cpp">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\map_entities\tf_bot_hint_engineer_nest.cpp">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\map_entities\tf_bot_hint_entity.cpp">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\map_entities\tf_bot_hint_sentrygun.cpp">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\map_entities\tf_bot_hint_teleporter_exit.cpp">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\map_entities\tf_bot_proxy.cpp">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\map_entities\tf_bot_roster.cpp">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\map_entities\tf_spawner.cpp">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot\map_entities\tf_spawner_boss.cpp">
+      <Filter>Source Files\TF\Bot\MapEntities</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot_npc\bot_npc.cpp">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot_npc\bot_npc_archer.cpp">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot_npc\bot_npc_body.cpp">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot_npc\bot_npc_decoy.cpp">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot_npc\bot_npc_mini.cpp">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\bot_npc\bot_npc_minion.cpp">
+      <Filter>Source Files\TF\Bot NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\halloween_base_boss.cpp">
+      <Filter>Source Files\TF\Halloween</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\halloween_gift_spawn_locations.cpp">
+      <Filter>Source Files\TF\Halloween</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\headless_hatman.cpp">
+      <Filter>Source Files\TF\Halloween</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\headless_hatman_body.cpp">
+      <Filter>Source Files\TF\Halloween</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\halloween_behavior\headless_hatman_attack.cpp">
+      <Filter>Source Files\TF\Halloween\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\halloween_behavior\headless_hatman_dying.cpp">
+      <Filter>Source Files\TF\Halloween\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\halloween_behavior\headless_hatman_emerge.cpp">
+      <Filter>Source Files\TF\Halloween\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\halloween_behavior\headless_hatman_terrify.cpp">
+      <Filter>Source Files\TF\Halloween\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\eyeball_boss\eyeball_boss.cpp">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\halloween\eyeball_boss\teleport_vortex.cpp">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_approach_target.cpp">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_behavior.cpp">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_emerge.cpp">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_emote.cpp">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_idle.cpp">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_launch_rockets.cpp">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_notice.cpp">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_stunned.cpp">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\eyeball_boss\eyeball_behavior\eyeball_boss_teleport.cpp">
+      <Filter>Source Files\TF\Halloween\Eyeball Boss\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\ghost\ghost.cpp">
+      <Filter>Source Files\TF\Halloween\Ghost</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_body.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_dancer.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_trick_or_treat_prop.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_behavior\merasmus_aoe_attack.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_behavior\merasmus_attack.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_behavior\merasmus_disguise.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_behavior\merasmus_dying.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_behavior\merasmus_reveal.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_behavior\merasmus_staff_attack.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_behavior\merasmus_stunned.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_behavior\merasmus_teleport.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_behavior\merasmus_throwing_grenade.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\merasmus\merasmus_behavior\merasmus_zap.cpp">
+      <Filter>Source Files\TF\Halloween\Merasmus\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\spell\tf_spell_pickup.cpp">
+      <Filter>Source Files\TF\Halloween\Spell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\halloween\tf_weapon_spellbook.cpp">
+      <Filter>Source Files\TF\Halloween\Spell</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\zombie\zombie.cpp">
+      <Filter>Source Files\TF\Halloween\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\zombie\zombie_spawner.cpp">
+      <Filter>Source Files\TF\Halloween\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\zombie\zombie_behavior\zombie_attack.cpp">
+      <Filter>Source Files\TF\Halloween\Zombie\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\zombie\zombie_behavior\zombie_spawn.cpp">
+      <Filter>Source Files\TF\Halloween\Zombie\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\halloween\zombie\zombie_behavior\zombie_special_attack.cpp">
+      <Filter>Source Files\TF\Halloween\Zombie\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\lobby.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\server\tf\tf_gc_server.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_gc_shared.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_lobby_server.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_lobby_shared.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_match_description.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_match_description_casual.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_match_description_comp.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_match_description_mvm.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_match_description_shared.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_matchmaking_shared.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_party.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_progression.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_progression_description.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_progression_description_casual.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_progression_description_comp.cpp">
+      <Filter>Source Files\TF\Matchmaking</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\minigames\tf_duel.cpp">
+      <Filter>Source Files\TF\MiniGames</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\nav_mesh\tf_nav_area.cpp">
+      <Filter>Source Files\TF\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\nav_mesh\tf_nav_interface.cpp">
+      <Filter>Source Files\TF\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\nav_mesh\tf_nav_mesh.cpp">
+      <Filter>Source Files\TF\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\nav_mesh\tf_nav_mesh_edit.cpp">
+      <Filter>Source Files\TF\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\nav_mesh\tf_path_follower.cpp">
+      <Filter>Source Files\TF\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\archer_proxy.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\monster_resource.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\tf_base_boss.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\tf_boss_battle_logic.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\tf_mann_vs_machine_logic.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_mann_vs_machine_stats.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\tf_point_weapon_mimic.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\tf_population_manager.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\tf_populator_interface.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\tf_populator_spawners.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\tf_populators.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\tf_tank_boss.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\tf_tank_boss_body.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\tf_upgrades.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_upgrades_shared.cpp">
+      <Filter>Source Files\TF\PvE</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\boss_alpha.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_behavior.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_chase_victim.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_get_off_me.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_guard_spot.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_launch_grenades.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_launch_rockets.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_lost_victim.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_nuke_attack.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_stunned.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_tactical_monitor.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\player_vs_environment\boss_alpha\behavior\boss_alpha_wait_for_players.cpp">
+      <Filter>Source Files\TF\PvE\Boss Alpha\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\raid\tf_raid_logic.cpp">
+      <Filter>Source Files\TF\Raid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_dropped_weapon.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_projectile_arrow.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_projectile_energy_ball.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_projectile_energy_ring.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="tf\tf_projectile_flare.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_bat.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
@@ -3520,10 +5662,19 @@
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_bottle.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_buff_item.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
     <ClCompile Include="tf\tf_weapon_builder.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_club.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_compound_bow.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_dragons_fury.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_fireaxe.cpp">
@@ -3535,6 +5686,12 @@
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_flamethrower.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_flaregun.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_grapplinghook.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_grenade_pipebomb.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
@@ -3544,7 +5701,22 @@
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_invis.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_jar.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_jar_gas.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_knife.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_laser_pointer.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_lunchbox.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_mechanical_arm.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_medigun.cpp">
@@ -3553,7 +5725,13 @@
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_minigun.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_parachute.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_parse.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_particle_cannon.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_pda.cpp">
@@ -3565,10 +5743,16 @@
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_pistol.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_raygun.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_revolver.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_rocketlauncher.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_rocketpack.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_shotgun.cpp">
@@ -3577,13 +5761,22 @@
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_shovel.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_slap.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_smg.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_sniperrifle.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_sword.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_syringegun.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weapon_throwable.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weapon_wrench.cpp">
@@ -3601,7 +5794,19 @@
     <ClCompile Include="..\..\game\shared\tf\tf_weaponbase_melee.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_weaponbase_merasmus_grenade.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_weaponbase_rocket.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_wearable_campaign_item.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_wearable_levelable_item.cpp">
+      <Filter>Source Files\TF\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\tf\tf_wearable_weapons.cpp">
       <Filter>Source Files\TF\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="entity_tools_server.cpp">
@@ -3614,6 +5819,21 @@
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="..\..\game\shared\base_gcmessages.proto">
+      <Filter>Protobuf Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\game\shared\econ\econ_gcmessages.proto">
+      <Filter>Protobuf Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\gcsdk\steammessages.proto">
+      <Filter>Protobuf Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\game\shared\tf\tf_gcmessages.proto">
+      <Filter>Protobuf Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\game\shared\tf\tf_proto_def_messages.proto">
+      <Filter>Protobuf Files</Filter>
+    </CustomBuild>
     <CustomBuild Include="server_tf.vpc">
       <Filter>VPC Scripts</Filter>
     </CustomBuild>
@@ -3625,13 +5845,31 @@
     <None Include="vscript_server.nut">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\..\game\shared\base_gcmessages_include.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
+    <None Include="..\..\game\shared\econ_gcmessages_include.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
+    <None Include="..\..\gcsdk\gcsdk_game_include.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
     <None Include="..\..\vpc_scripts\loadaddress.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
+    <None Include="..\..\game\server\nav_mesh.vpc">
       <Filter>VPC Scripts</Filter>
     </None>
     <None Include="..\..\vpc_scripts\platform_dirs.vpc">
       <Filter>VPC Scripts</Filter>
     </None>
+    <None Include="..\..\vpc_scripts\protobuf_builder.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
     <None Include="..\..\game\server\server_base.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
+    <None Include="..\..\game\server\server_econ_base.vpc">
       <Filter>VPC Scripts</Filter>
     </None>
     <None Include="..\..\vpc_scripts\source_base.vpc">
@@ -3653,6 +5891,15 @@
       <Filter>VPC Scripts</Filter>
     </None>
     <None Include="..\..\vpc_scripts\source_win32_base.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
+    <None Include="..\..\gcsdk\steammessages_include.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
+    <None Include="..\..\game\shared\tf\tf_gcmessages_include.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
+    <None Include="..\..\game\shared\tf\tf_proto_def_messages_include.vpc">
       <Filter>VPC Scripts</Filter>
     </None>
     <None Include="..\..\vpc_scripts\version.vpc">

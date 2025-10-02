@@ -1278,17 +1278,8 @@ void CControlPointProgressBar::SetupForPoint( CControlPointIcon *pIcon )
 
 		if ( !bCapBlocked && iCappingTeam != TEAM_UNASSIGNED && iCappingTeam != iOwnerTeam && iCappingTeam == iPlayerTeam )
 		{
-
-#if defined ( TF_CLIENT_DLL )
-			// In TF-Swarm, switching these fixes a bug where the progress bar looks like you own the team, but that the owning team's color is loading.
-			// It's hard to describe, but you'll have to see for yourself if you want to know what I mean.
-			m_pBar->SetBgImage( ObjectiveResource()->GetGameSpecificCPBarFG( iCP, iOwnerTeam ) );
-			m_pBar->SetFgImage( ObjectiveResource()->GetGameSpecificCPBarBG( iCP, iCappingTeam ) );
-#else
 			m_pBar->SetBgImage( ObjectiveResource()->GetGameSpecificCPBarBG( iCP, iCappingTeam ) );
 			m_pBar->SetFgImage( ObjectiveResource()->GetGameSpecificCPBarFG( iCP, iOwnerTeam ) );
-#endif
-
 			m_pBar->SetVisible( true );
 			m_pBlocked->SetVisible( false );
 			m_pBarText->SetVisible( false );

@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. ========//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: TF Pipebomb Grenade.
 //
@@ -16,6 +16,21 @@
 #define CTFGrenadePipebombProjectile C_TFGrenadePipebombProjectile
 #endif
 
+//-----------------------------------------------------------------------------
+// Grenade Launcher mode (for pipebombs).
+//-----------------------------------------------------------------------------
+enum
+{
+	TF_GL_MODE_REGULAR = 0,
+	TF_GL_MODE_REMOTE_DETONATE,
+	TF_GL_MODE_REMOTE_DETONATE_PRACTICE,
+	TF_GL_MODE_CANNONBALL,
+
+	//
+	// ADD NEW ITEMS HERE TO AVOID BREAKING DEMOS
+	//
+};
+
 //=============================================================================
 //
 // TF Pipebomb Grenade
@@ -31,12 +46,15 @@ public:
 	~CTFGrenadePipebombProjectile();
 
 	// Unique identifier.
-	virtual int			GetWeaponID( void ) const	{ return ( m_iType == TF_GL_MODE_REMOTE_DETONATE ) ? TF_WEAPON_GRENADE_PIPEBOMB : TF_WEAPON_GRENADE_DEMOMAN; }
+	virtual int			GetWeaponID( void ) const OVERRIDE;
 
-	int GetType( void ){ return m_iType; } 
+	int GetType( void ) const { return m_iType; } 
 	virtual int			GetDamageType();
+	bool				HasStickyEffects() const { return m_iType == TF_GL_MODE_REMOTE_DETONATE || m_iType == TF_GL_MODE_REMOTE_DETONATE_PRACTICE; }
 
-	void			SetChargeTime( float flChargeTime )				{ m_flChargeTime = flChargeTime; }
+	bool				ShouldMiniCritOnReflect() const;
+
+	void				SetChargeTime( float flChargeTime )				{ m_flChargeTime = flChargeTime; }
 
 	CNetworkVar( bool, m_bTouched );
 	CNetworkVar( int, m_iType ); // TF_GL_MODE_REGULAR or TF_GL_MODE_REMOTE_DETONATE
@@ -45,18 +63,37 @@ public:
 	bool		m_bPulsed;
 	float		m_flFullDamage;
 
-	CNetworkHandle( CBaseEntity, m_hLauncher );
+	void SetFullDamage( float flFullDamage ) { m_flFullDamage = flFullDamage; }
+
+	CNetworkVar( bool, m_bDefensiveBomb );
 
 	virtual void	UpdateOnRemove( void );
 
+	virtual void	SetCustomPipebombModel() {}
 
+	virtual float	GetLiveTime( void );
+	virtual float	GetDamageRadius() OVERRIDE;
+
+	void			SetDetonateOnPulse( bool bDet ) { m_bDetonateOnPulse = bDet; }
 
 #ifdef CLIENT_DLL
 
 	virtual void OnDataChanged( DataUpdateType_t updateType );
 	virtual const char *GetTrailParticleName( void );
-	virtual int DrawModel( int flags, const RenderableInstance_t &instance );
-	virtual bool Simulate( void );
+	virtual int DrawModel( int flags );
+	virtual void	Simulate( void );
+	virtual void	CreateTrailParticles( void );
+
+	void			SetHighlight( bool bHighlight ) { if ( m_bPulsed ) m_bHighlight = bHighlight; }
+	bool			IsHighlighted( void ) { return m_bHighlight; }
+
+	int		m_iCachedDeflect;
+	CNewParticleEffect	*pEffectTrail;
+	CNewParticleEffect	*pEffectCrit;
+	bool		m_bHighlight;
+	bool		m_bDetonateOnPulse;
+
+	CGlowObject			*m_pGlowEffect;
 
 #else
 
@@ -64,7 +101,9 @@ public:
 
 	// Creation.
 	static CTFGrenadePipebombProjectile *Create( const Vector &position, const QAngle &angles, const Vector &velocity, 
-		                                         const AngularImpulse &angVelocity, CBaseCombatCharacter *pOwner, const CTFWeaponInfo &weaponInfo, bool bRemoteDetonate );
+		                                         const AngularImpulse &angVelocity, CBaseCombatCharacter *pOwner, const CTFWeaponInfo &weaponInfo, int iPipeBombType, float flMultDmg );
+
+	static const char* GetPipebombClass( int iPipeBombType );
 
 	// Overrides.
 	virtual void	Spawn();
@@ -73,23 +112,50 @@ public:
 	virtual void	BounceSound( void );
 	virtual void	Detonate();
 	virtual void	Fizzle();
+	virtual bool	DetonateStickies( void );
+	bool			CanTakeDamage() const { return m_bCanTakeDamage; }
+	void			SetCanTakeDamage( bool bCanTakeDamage ) { m_bCanTakeDamage = bCanTakeDamage; }
 
-	virtual void	SetLauncher( CBaseEntity *pLauncher ) { m_hLauncher = pLauncher; }
-
-	void			SetPipebombMode( bool bRemoteDetonate );
+	virtual void	SetPipebombMode( int iPipebombMode = TF_GL_MODE_REGULAR );
+	bool			IsFizzle() { return m_bFizzle; }
 
 	virtual void	PipebombTouch( CBaseEntity *pOther );
+	virtual void	StickybombTouch( CBaseEntity *pOther );
 	virtual void	VPhysicsCollision( int index, gamevcollisionevent_t *pEvent );
 
-	virtual int		OnTakeDamage( const CTakeDamageInfo &info );
+	virtual int		OnTakeDamage( const CTakeDamageInfo &info ) OVERRIDE;
+	virtual void	IncrementDeflected( void );
+	virtual void	DetonateThink( void );
+	virtual void	PreArmThink( void );
+	virtual void	ArmThink( void );
 
+	void			CreatePipebombGibs( void );
 
-private:
+	virtual bool	IsDeflectable( void ) OVERRIDE { return true; }
+	virtual void	Deflected( CBaseEntity *pDeflectedBy, Vector& vecDir );
 
-	
+	virtual int		GetDamageCustom();
+	float			GetTouchedTime()	{ return m_flTouchedTime; }
+	bool			IsTouched()			{ return m_bTouched; }
+
+	virtual int		UpdateTransmitState() OVERRIDE;
+	virtual int		ShouldTransmit( const CCheckTransmitInfo *pInfo ) OVERRIDE;
+public:
+
 	bool		m_bFizzle;
-
+	bool		m_bWallShatter;
+private:
+	
 	float		m_flMinSleepTime;
+	float		m_flDeflectedTime;
+	bool		m_bSendPlayerDestroyedEvent;
+	bool		m_bDetonateOnPulse;
+	bool		m_bCanTakeDamage;
+	float		m_flTouchedTime;
+	float		GetDamageScaleOnWorldContact();
+
+	CUtlVector < CHandle <CTFPlayer> > m_CritMedics;
+	CUtlVector < CHandle <CBaseEntity> > m_penetratedEntities;
 #endif
 };
 

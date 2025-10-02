@@ -359,7 +359,7 @@ int CBreakableSurface::OnTakeDamage( const CTakeDamageInfo &info )
 //------------------------------------------------------------------------------
 // Purpose: Accepts damage and breaks if health drops below zero.
 //------------------------------------------------------------------------------
-void CBreakableSurface::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
+void CBreakableSurface::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
 {
 	// Decrease health
 	m_iHealth -= info.GetDamage();

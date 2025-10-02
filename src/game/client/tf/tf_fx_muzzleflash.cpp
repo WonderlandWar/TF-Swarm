@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -8,29 +8,29 @@
 #include "particles_simple.h"
 #include "particles_localspace.h"
 #include "c_te_effect_dispatch.h"
-#include "precache_register.h"
+#include "clienteffectprecachesystem.h"
 #include "tier0/vprof.h"
 #include "fx.h"
 #include "r_efx.h"
-#include "tier1/keyvalues.h"
+#include "tier1/KeyValues.h"
 #include "dlight.h"
 #include "tf_shareddefs.h"
 #include "tf_fx_muzzleflash.h"
 #include "toolframework/itoolframework.h"
-#include "ieffects.h"
-#include "FX_Sparks.h"
+#include "IEffects.h"
+#include "fx_sparks.h"
 #include "iefx.h"
 #include "fx_quad.h"
 #include "fx.h"
 #include "toolframework_client.h"
 
 // Precache our effects
-PRECACHE_REGISTER_BEGIN( GLOBAL, PrecacheEffect_TF_MuzzleFlash )
-PRECACHE( MATERIAL, "effects/muzzleflash1" )
-PRECACHE( MATERIAL, "effects/muzzleflash2" )
-PRECACHE( MATERIAL, "effects/muzzleflash3" )
-PRECACHE( MATERIAL, "effects/muzzleflash4" )
-PRECACHE_REGISTER_END()
+CLIENTEFFECT_REGISTER_BEGIN( PrecacheEffect_TF_MuzzleFlash )
+	CLIENTEFFECT_MATERIAL( "effects/muzzleflash1" )
+	CLIENTEFFECT_MATERIAL( "effects/muzzleflash2" )
+	CLIENTEFFECT_MATERIAL( "effects/muzzleflash3" )
+	CLIENTEFFECT_MATERIAL( "effects/muzzleflash4" )
+CLIENTEFFECT_REGISTER_END()
 
 ConVar cl_muzzleflash_dlight_1st( "cl_muzzleflash_dlight_1st", "1" );
 
@@ -49,7 +49,6 @@ void TF_3rdPersonMuzzleFlashCallback( const CEffectData &data )
 	
 	CSmartPtr<CLocalSpaceEmitter> pSimple = CLocalSpaceEmitter::Create( "MuzzleFlash", data.m_hEntity, attachmentIndex, 0 );
 	
-	SimpleParticle *pParticle;
 	Vector			forward(1,0,0), offset, right(0,1,0);
 
 	//
@@ -64,12 +63,11 @@ void TF_3rdPersonMuzzleFlashCallback( const CEffectData &data )
 		scale *= 4;
 		float flScale = random->RandomFloat( scale-0.1f, scale+0.1f );
 
-		int i;
-		for ( i = 1; i < 9; i++ )
+		for ( int i = 1; i < 9; i++ )
 		{
 			offset = (forward * (i*2.0f*scale));
 
-			pParticle = (SimpleParticle *) pSimple->AddParticle( sizeof( SimpleParticle ), pSimple->GetPMaterial( VarArgs( "effects/muzzleflash%d", random->RandomInt(1,4) ) ), offset );
+			SimpleParticle *pParticle = (SimpleParticle *) pSimple->AddParticle( sizeof( SimpleParticle ), pSimple->GetPMaterial( VarArgs( "effects/muzzleflash%d", random->RandomInt(1,4) ) ), offset );
 				
 			if ( pParticle == NULL )
 				return;
@@ -97,12 +95,11 @@ void TF_3rdPersonMuzzleFlashCallback( const CEffectData &data )
 		scale *= 4;
 		float flScale = random->RandomFloat( scale-0.1f, scale+0.1f );
 		
-		int i;
-		for ( i = 1; i < 9; i++ )
+		for ( int i = 1; i < 9; i++ )
 		{
 			offset = (forward * (i*2.0f*scale));
 
-			pParticle = (SimpleParticle *) pSimple->AddParticle( sizeof( SimpleParticle ), pSimple->GetPMaterial( VarArgs( "effects/muzzleflash%d", random->RandomInt(1,4) ) ), offset );
+			SimpleParticle *pParticle = (SimpleParticle *) pSimple->AddParticle( sizeof( SimpleParticle ), pSimple->GetPMaterial( VarArgs( "effects/muzzleflash%d", random->RandomInt(1,4) ) ), offset );
 				
 			if ( pParticle == NULL )
 				return;
@@ -168,7 +165,7 @@ void TF_3rdPersonMuzzleFlashCallback_SentryGun( const CEffectData &data )
 		// The created entity kills itself
 		//C_MuzzleFlashModel::CreateMuzzleFlashModel( "models/effects/sentry1_muzzle/sentry1_muzzle.mdl", pEnt, iMuzzleFlashAttachment );
 
-		char *pszMuzzleFlashParticleEffect = NULL;
+		const char *pszMuzzleFlashParticleEffect = NULL;
 		switch( iUpgradeLevel )
 		{
 		case 1:
@@ -186,8 +183,8 @@ void TF_3rdPersonMuzzleFlashCallback_SentryGun( const CEffectData &data )
 }
 
 //TODO: Come back and make this guy a nice particle.
-DECLARE_CLIENT_EFFECT( TF_3rdPersonMuzzleFlash, TF_3rdPersonMuzzleFlashCallback );
-DECLARE_CLIENT_EFFECT( TF_3rdPersonMuzzleFlash_SentryGun, TF_3rdPersonMuzzleFlashCallback_SentryGun );
+DECLARE_CLIENT_EFFECT( "TF_3rdPersonMuzzleFlash", TF_3rdPersonMuzzleFlashCallback );
+DECLARE_CLIENT_EFFECT( "TF_3rdPersonMuzzleFlash_SentryGun", TF_3rdPersonMuzzleFlashCallback_SentryGun );
 
 
 //-----------------------------------------------------------------------------
@@ -216,7 +213,7 @@ C_MuzzleFlashModel *C_MuzzleFlashModel::CreateMuzzleFlashModel( const char *pszM
 bool C_MuzzleFlashModel::InitializeMuzzleFlash( const char *pszModelName, C_BaseEntity *pParent, int iAttachment, float flLifetime )
 {
 	AddEffects( EF_NORECEIVESHADOW | EF_NOSHADOW );
-	if ( InitializeAsClientEntity( pszModelName, false ) == false )
+	if ( InitializeAsClientEntity( pszModelName, RENDER_GROUP_OPAQUE_ENTITY ) == false )
 	{
 		Release();
 		return false;
@@ -260,7 +257,7 @@ void C_MuzzleFlashModel::ClientThink( void )
 	{
 		// Pick a new anim frame
 		float flDelta = RandomFloat(0.2,0.4) * (RandomInt(0,1) == 1 ? 1 : -1);
-		float flCycle = clamp( GetCycle() + flDelta, 0, 1 );
+		float flCycle = clamp( GetCycle() + flDelta, 0.f, 1.f );
 		SetCycle( flCycle );
 
 		SetLocalAngles( QAngle(0,0,RandomFloat(0,360)) );
@@ -278,7 +275,7 @@ void C_MuzzleFlashModel::SetIs3rdPersonFlash( bool bEnable )
 }
 
 					   
-bool C_MuzzleFlashModel::SetupBones( matrix3x4a_t *pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime )
+bool C_MuzzleFlashModel::SetupBones( matrix3x4_t *pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime )
 {
 	// FIXME: This is an incredibly brutal hack to get muzzle flashes positioned correctly for recording
 	// NOTE: The correct, long-term solution, is to make weapon models

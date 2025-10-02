@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2006, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -10,10 +10,8 @@
 #include <vgui/IScheme.h>
 #include <vgui/ISurface.h>
 #include <vgui/ISystem.h>
-#include <vgui/IScheme.h>
 #include <vgui_controls/AnimationController.h>
 #include <vgui_controls/EditablePanel.h>
-#include <vgui_controls/ImagePanel.h>
 #include <vgui/ISurface.h>
 #include <vgui/IImage.h>
 #include <vgui_controls/Label.h>
@@ -28,7 +26,7 @@ DECLARE_BUILD_FACTORY( CTFImagePanel );
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-CTFImagePanel::CTFImagePanel( Panel *parent, const char *name ) : ImagePanel( parent, name )
+CTFImagePanel::CTFImagePanel( Panel *parent, const char *name ) : ScalableImagePanel( parent, name )
 {
 	for ( int i = 0; i < TF_TEAM_COUNT; i++ )
 	{
@@ -49,6 +47,11 @@ void CTFImagePanel::ApplySettings( KeyValues *inResourceData )
 	for ( int i = 0; i < TF_TEAM_COUNT; i++ )
 	{
 		Q_strncpy( m_szTeamBG[i], inResourceData->GetString( VarArgs("teambg_%d", i), "" ), sizeof( m_szTeamBG[i] ) );
+
+		if ( m_szTeamBG[i] && m_szTeamBG[i][0] )
+		{
+			PrecacheMaterial( VarArgs( "vgui/%s", m_szTeamBG[i] ) );
+		}
 	}
 
 	BaseClass::ApplySettings( inResourceData );
@@ -81,15 +84,4 @@ void CTFImagePanel::FireGameEvent( IGameEvent * event )
 		m_iBGTeam = pPlayer ? pPlayer->GetTeamNumber() : TEAM_UNASSIGNED;
 		UpdateBGImage();
 	}
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
-Color CTFImagePanel::GetDrawColor( void )
-{
-	Color tempColor = GetFgColor();
-	tempColor[3] = GetAlpha();
-
-	return tempColor;
 }

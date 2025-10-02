@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,7 +13,7 @@
 #include "ienginevgui.h"
 #include <vgui/ILocalize.h>
 #include <vgui/ISurface.h>
-#include <vgui/IVGUI.h>
+#include <vgui/IVGui.h>
 #include <vgui_controls/Label.h>
 #include <vgui_controls/EditablePanel.h>
 #include "tf_imagepanel.h"
@@ -57,7 +57,7 @@ DECLARE_HUDELEMENT( CHudStalemate );
 //-----------------------------------------------------------------------------
 CHudStalemate::CHudStalemate( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudStalemate" )
 {
-	Panel *pParent = GetClientMode()->GetViewport();
+	Panel *pParent = g_pClientMode->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );
@@ -150,20 +150,35 @@ const char *pszStalemateReasons[NUM_STALEMATE_REASONS] =
 //-----------------------------------------------------------------------------
 void CHudStalemate::SetupStalematePanel( int iReason )
 {
-	if ( m_pStalemateLabel )
+	if ( TFGameRules() && TFGameRules()->IsInArenaMode() == true )
 	{
-		if ( iReason == STALEMATE_JOIN_MID )
+		if ( m_pStalemateLabel )
 		{
-			m_pStalemateLabel->SetText( g_pVGuiLocalize->Find( "#TF_suddendeath_mode" ) );
+			m_pStalemateLabel->SetText( g_pVGuiLocalize->Find( "#TF_Arena_SuddenDeathPanel" ) );
 		}
-		else
+
+		if ( m_pReasonLabel && iReason == STALEMATE_JOIN_MID )
 		{
-			m_pStalemateLabel->SetText( g_pVGuiLocalize->Find( "#TF_suddendeath" ) );
+			m_pReasonLabel->SetText( g_pVGuiLocalize->Find( "#TF_Arena_SuddenDeathPanelReason" ) );
 		}
 	}
-
-	if ( m_pReasonLabel && iReason >= 0 && iReason < NUM_STALEMATE_REASONS )
+	else
 	{
-		m_pReasonLabel->SetText( g_pVGuiLocalize->Find( pszStalemateReasons[iReason] ) );
+		if ( m_pStalemateLabel )
+		{
+			if ( iReason == STALEMATE_JOIN_MID )
+			{
+				m_pStalemateLabel->SetText( g_pVGuiLocalize->Find( "#TF_suddendeath_mode" ) );
+			}
+			else
+			{
+				m_pStalemateLabel->SetText( g_pVGuiLocalize->Find( "#TF_suddendeath" ) );
+			}
+		}
+
+		if ( m_pReasonLabel && iReason >= 0 && iReason < NUM_STALEMATE_REASONS )
+		{
+			m_pReasonLabel->SetText( g_pVGuiLocalize->Find( pszStalemateReasons[iReason] ) );
+		}
 	}
 }

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,7 +13,7 @@
 #include "ienginevgui.h"
 #include <vgui/ILocalize.h>
 #include <vgui/ISurface.h>
-#include <vgui/IVGUI.h>
+#include <vgui/IVGui.h>
 #include <vgui_controls/Label.h>
 #include <vgui_controls/EditablePanel.h>
 #include "tf_imagepanel.h"
@@ -56,7 +56,7 @@ DECLARE_HUDELEMENT( CHudTeamGoal );
 //-----------------------------------------------------------------------------
 CHudTeamGoal::CHudTeamGoal( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudTeamGoal" )
 {
-	Panel *pParent = GetClientMode()->GetViewport();
+	Panel *pParent = g_pClientMode->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );
@@ -101,7 +101,15 @@ void CHudTeamGoal::ApplySchemeSettings( IScheme *pScheme )
 //-----------------------------------------------------------------------------
 bool CHudTeamGoal::ShouldDraw( void )
 {
-	bool bCouldSee = ( TFGameRules() && TFGameRules()->ShouldShowTeamGoal() );
+	if ( !TFGameRules() )
+		return false;
+
+	bool bCouldSee = TFGameRules()->ShouldShowTeamGoal();
+
+	if ( TFGameRules()->IsInTournamentMode() && !TFGameRules()->IsMatchTypeCasual() )
+	{
+		bCouldSee = false;
+	}
 
 	if ( m_flHideAt && m_flHideAt < gpGlobals->curtime )
 	{
@@ -137,7 +145,7 @@ bool CHudTeamGoal::ShouldDraw( void )
 				}
 
 				// Don't appear if the team switch alert is there
-				CHudElement *pHudSwitch = GetHud().FindElement( "CHudTeamSwitch" );
+				CHudElement *pHudSwitch = gHUD.FindElement( "CHudTeamSwitch" );
 				if ( pHudSwitch && pHudSwitch->ShouldDraw() )
 					return false;
 
@@ -189,17 +197,32 @@ void CHudTeamGoal::SetupGoalPanel( const char *pszGoal )
 	C_TFTeam *pLocalTeam = GetGlobalTFTeam( GetLocalPlayerTeam() );
 	if ( pLocalTeam )
 	{
-		int iRole = pLocalTeam->GetRole();
-		if ( iRole >= 0 && iRole < NUM_TEAM_ROLES )
-		{
-			m_pGoalImage->SetImage( pszTeamRoleIcons[iRole] );
 
-			if ( m_pSwitchLabel )
+//=============================================================================
+// HPE_BEGIN:
+// [msmith]	If we're in training, we want to use a different icon here.
+//=============================================================================
+		if ( TFGameRules()->IsInTraining() )
+		{
+			m_pGoalImage->SetImage( "../hud/hud_icon_training" );
+		}
+//=============================================================================
+// HPE_END
+//=============================================================================
+		else
+		{
+			int iRole = pLocalTeam->GetRole();
+			if ( iRole >= 0 && iRole < NUM_TEAM_ROLES )
 			{
-				if ( TFGameRules() && TFGameRules()->SwitchedTeamsThisRound() )
+				m_pGoalImage->SetImage( pszTeamRoleIcons[iRole] );
+
+				if ( m_pSwitchLabel )
 				{
-					m_pSwitchLabel->SetText( g_pVGuiLocalize->Find( pszTeamRoleSwitch[iRole] ) );
-					m_pSwitchLabel->SetVisible( true );
+					if ( TFGameRules() && TFGameRules()->SwitchedTeamsThisRound() )
+					{
+						m_pSwitchLabel->SetText( g_pVGuiLocalize->Find( pszTeamRoleSwitch[iRole] ) );
+						m_pSwitchLabel->SetVisible( true );
+					}
 				}
 			}
 		}

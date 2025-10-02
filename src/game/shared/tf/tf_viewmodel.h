@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -18,6 +18,7 @@
 #include "tf_weaponbase.h"
 
 #if defined( CLIENT_DLL )
+#include "c_baseanimating.h"
 #define CTFViewModel C_TFViewModel
 #endif
 
@@ -44,17 +45,23 @@ public:
 		return BaseClass::ShouldPredict();
 	}
 
-	virtual	void StandardBlendingRules( CStudioHdr *pStudioHdr, Vector pos[], QuaternionAligned q[], float currentTime, int boneMask );
-
+	virtual void StandardBlendingRules( CStudioHdr *hdr, Vector pos[], Quaternion q[], float currentTime, int boneMask );
 	virtual void ProcessMuzzleFlashEvent( void );
 
 	virtual int GetSkin();
 	BobState_t	&GetBobState() { return m_BobState; }
 
-	virtual int DrawModel( int flags, const RenderableInstance_t &instance );
+	virtual int DrawModel( int flags );
+	virtual bool OnInternalDrawModel( ClientModelRenderInfo_t *pInfo ) OVERRIDE;
+	virtual bool OnPostInternalDrawModel( ClientModelRenderInfo_t *pInfo );
+
+	virtual const char* ModifyEventParticles( const char* token );
 #endif
 
+	bool m_bBodygroupsDirty;
+
 private:
+	void RecalculatePlayerBodygroups();
 
 #if defined( CLIENT_DLL )
 

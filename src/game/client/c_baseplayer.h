@@ -26,6 +26,12 @@
 #include "C_PostProcessController.h"
 #include "C_ColorCorrection.h"
 
+#if defined USES_ECON_ITEMS
+#include "econ_item.h"
+#include "game_item_schema.h"
+#include "econ_item_view.h"
+#endif
+
 class C_BaseCombatWeapon;
 class C_BaseViewModel;
 class C_FuncLadder;

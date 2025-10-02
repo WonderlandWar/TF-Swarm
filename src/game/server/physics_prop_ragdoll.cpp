@@ -820,13 +820,13 @@ void CRagdollProp::RecheckCollisionFilter( void )
 }
 
 
-void CRagdollProp::TraceAttack( const CTakeDamageInfo &info, const Vector &dir, trace_t *ptr )
+void CRagdollProp::TraceAttack( const CTakeDamageInfo &info, const Vector &dir, trace_t *ptr, CDmgAccumulator *pAccumulator )
 {
 	if ( ptr->physicsbone >= 0 && ptr->physicsbone < m_ragdoll.listCount )
 	{
 		VPhysicsSwapObject( m_ragdoll.list[ptr->physicsbone].pObject );
 	}
-	BaseClass::TraceAttack( info, dir, ptr );
+	BaseClass::TraceAttack( info, dir, ptr, pAccumulator );
 }
 
 void CRagdollProp::SetupBones( matrix3x4a_t *pBoneToWorld, int boneMask )

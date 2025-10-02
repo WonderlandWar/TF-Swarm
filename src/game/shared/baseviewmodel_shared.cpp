@@ -83,9 +83,10 @@ void CBaseViewModel::Spawn( void )
 	SetSolid( SOLID_NONE );
 }
 
-#if defined ( TF_DLL )
-#define VGUI_CONTROL_PANELS
-#endif
+
+
+
+
 
 //-----------------------------------------------------------------------------
 // Purpose: 

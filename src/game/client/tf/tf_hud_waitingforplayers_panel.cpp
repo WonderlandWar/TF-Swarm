@@ -1,5 +1,5 @@
 
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -50,7 +50,7 @@ DECLARE_HUDELEMENT_DEPTH( CTFWaitingForPlayersPanel, 1 );
 CTFWaitingForPlayersPanel::CTFWaitingForPlayersPanel( const char *pElementName )
 	: EditablePanel( NULL, "WaitingForPlayersPanel" ), CHudElement( pElementName )
 {
-	Panel *pParent = GetClientMode()->GetViewport();
+	Panel *pParent = g_pClientMode->GetViewport();
 	SetParent( pParent );
 	SetScheme( "ClientScheme" );
 }

@@ -27,10 +27,10 @@ namespace vgui
 //-----------------------------------------------------------------------------
 class Button : public Label
 {
-public:
 	DECLARE_CLASS_SIMPLE( Button, Label );
 	DECLARE_DMXELEMENT_UNPACK_NAMESPACE(vgui);
 
+public:
 	// You can optionally pass in the panel to send the click message to and the name of the command to send to that panel.
 	Button(Panel *parent, const char *panelName, const char *text, Panel *pActionSignalTarget=NULL, const char *pCmd=NULL);
 	Button(Panel *parent, const char *panelName, const wchar_t *text, Panel *pActionSignalTarget=NULL, const char *pCmd=NULL);

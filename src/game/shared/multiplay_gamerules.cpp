@@ -82,9 +82,8 @@ ConVar tv_delaymapchange( "tv_delaymapchange", "0", 0, "Delays map change until 
 ConVar mp_restartgame( "mp_restartgame", "0", FCVAR_GAMEDLL, "If non-zero, game will restart in the specified number of seconds" );
 
 
-#ifndef TF_DLL		// TF overrides the default value of this convar
 ConVar mp_waitingforplayers_time( "mp_waitingforplayers_time", "0", FCVAR_GAMEDLL, "WaitingForPlayers time length in seconds" );
-#endif
+
 
 ConVar mp_waitingforplayers_restart( "mp_waitingforplayers_restart", "0", FCVAR_GAMEDLL, "Set to 1 to start or restart the WaitingForPlayers period." );
 ConVar mp_waitingforplayers_cancel( "mp_waitingforplayers_cancel", "0", FCVAR_GAMEDLL, "Set to 1 to end the WaitingForPlayers period." );
@@ -94,12 +93,9 @@ ConVar mp_clan_ready_signal( "mp_clan_ready_signal", "ready", FCVAR_GAMEDLL, "Te
 ConVar nextlevel( "nextlevel", 
 				  "", 
 				  FCVAR_GAMEDLL | FCVAR_NOTIFY,
-				  
-#if defined( CSTRIKE_DLL ) || defined( TF_DLL )
-				  "If set to a valid map name, will trigger a changelevel to the specified map at the end of the round" );
-#else
+
 				  "If set to a valid map name, will change to this map during the next changelevel" );
-#endif // CSTRIKE_DLL || TF_DLL
+
 					  					  
 #endif
 
@@ -292,10 +288,10 @@ CMultiplayRules::CMultiplayRules()
 	// override some values for multiplay.
 
 		// suitcharger
-#ifndef TF_DLL
+
 		ConVarRef suitcharger( "sk_suitcharger" );
 		suitcharger.SetValue( 30 );
-#endif
+
 	}
 
 

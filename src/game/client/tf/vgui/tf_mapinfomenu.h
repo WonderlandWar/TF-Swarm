@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2006, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,8 +12,7 @@
 #endif
 
 #include <vgui_controls/Frame.h>
-#include "game/client/iviewport.h"
-#include "tf_shareddefs.h"
+#include "vgui_controls/KeyRepeat.h"
 
 //-----------------------------------------------------------------------------
 // Purpose: displays the MapInfo menu
@@ -41,9 +40,7 @@ public:
 	virtual bool IsVisible(){ return BaseClass::IsVisible(); }
 	virtual void SetParent( vgui::VPANEL parent ){ BaseClass::SetParent( parent ); }
 
-	static const char *GetMapType( const char *mapName );
-	
-	virtual bool WantsBackgroundBlurred( void ) { return false; }
+	virtual GameActionSet_t GetPreferredActionSet() { return GAME_ACTION_SET_IN_GAME_HUD; }
 
 protected:
 	virtual void OnKeyCodePressed(vgui::KeyCode code);
@@ -54,7 +51,7 @@ protected:
 	
 private:
 	// helper functions
-	void LoadMapPage( const char *mapName );
+	void LoadMapPage();
 	void SetMapTitle();
 	bool HasViewedMovieForMap();
 	bool CheckForIntroMovie();
@@ -63,20 +60,25 @@ private:
 
 protected:
 	IViewPort			*m_pViewPort;
-	CTFLabel			*m_pTitle;
-	CTFRichText			*m_pMapInfo;
+	CExLabel			*m_pTitle;
+	CExRichText			*m_pMapInfo;
 
 #ifdef _X360
 	CTFFooter			*m_pFooter;
 #else
-	CTFButton			*m_pContinue;
-	CTFButton			*m_pBack;
-	CTFButton			*m_pIntro;
+	CExButton			*m_pContinue;
+	CExButton			*m_pBack;
+	CExButton			*m_pIntro;
+	CSCHintIcon			*m_pContinueHintIcon;
+	CSCHintIcon			*m_pBackHintIcon;
+	CSCHintIcon			*m_pIntroHintIcon;
 #endif
 
 	vgui::ImagePanel	*m_pMapImage;
 
 	char				m_szMapName[MAX_PATH];
+
+	vgui::CKeyRepeatHandler	m_KeyRepeat;
 };
 
 

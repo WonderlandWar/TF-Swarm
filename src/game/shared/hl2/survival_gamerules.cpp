@@ -1,4 +1,4 @@
-//No need it in ASW [str]
+//========= Copyright Valve Corporation, All rights reserved. ============//
 #include "cbase.h"
 
 #ifdef HL2_EPISODIC
@@ -241,7 +241,7 @@ void CHalfLife2Survival::ParseSurvivalAmmo( KeyValues *pSubKey )
 void CHalfLife2Survival::ReadSurvivalScriptFile( void )
 {
 	char szFullName[512];
-	Q_snprintf( szFullName, sizeof( szFullName ), "maps/%s_survival.txt", gpGlobals->mapname );
+	Q_snprintf( szFullName, sizeof( szFullName ), "maps/%s_survival.txt", STRING(gpGlobals->mapname) );
 
 	KeyValues *pkvFile = new KeyValues( "Survival" );
 	if ( pkvFile->LoadFromFile( filesystem, szFullName, "MOD" ) )

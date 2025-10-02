@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2006, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -90,7 +90,7 @@ class CBuildingStatusItem : public vgui::EditablePanel
 public:
 
 	// actual panel constructor
-	CBuildingStatusItem( Panel *parent, const char *szLayout, int iObjectType );
+	CBuildingStatusItem( Panel *parent, const char *szLayout, int iObjectType, int iObjectMode );
 
 	virtual void ApplySchemeSettings( vgui::IScheme *pScheme );
 	virtual void Paint( void );
@@ -105,6 +105,7 @@ public:
 	void SetPositioned(bool val) { bPositioned = val; }
 
 	int GetRepresentativeObjectType();
+	int GetRepresentativeObjectMode();
 	C_BaseObject *GetRepresentativeObject();
 
 	virtual int GetObjectPriority();
@@ -131,6 +132,7 @@ private:
 	char m_szLayout[128];
 
 	int m_iObjectType;
+	int m_iObjectMode;
 	bool m_bActive;
 
 	// Two main subpanels
@@ -148,6 +150,10 @@ private:
 	CBuildingStatusAlertTray *m_pAlertTray;
 	CIconPanel *m_pWrenchIcon;
 	CIconPanel *m_pSapperIcon;
+
+	CIconPanel *m_pUpgradeIcons[3];
+
+	int m_iUpgradeLevel;
 
 	// children of buildingPanel
 	vgui::ContinuousProgressBar *m_pBuildingProgress;
@@ -180,9 +186,8 @@ private:
 
 	CIconPanel *m_pSentryIcons[3];
 
-	CTFLabel *m_pRocketsLabel;
-	CTFLabel *m_pUpgradeLabel;
-	CTFLabel *m_pKillsLabel;
+	vgui::ImagePanel *m_pRocketIcon;
+	CIconPanel *m_pUpgradeIcon;
 
 	vgui::ContinuousProgressBar *m_pShellsProgress;
 	vgui::ContinuousProgressBar *m_pRocketsProgress;
@@ -190,13 +195,38 @@ private:
 
 	int m_iUpgradeLevel;
 
-	// Kills
-	int m_iKills;
+	// Ammo
+	Color m_cLowAmmoColor;
+	Color m_cNormalAmmoColor;
+};
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+class CBuildingStatusItem_SentryGun_Disposable : public CBuildingStatusItem
+{
+	DECLARE_CLASS_SIMPLE( CBuildingStatusItem_SentryGun_Disposable, CBuildingStatusItem );
+
+public:
+	CBuildingStatusItem_SentryGun_Disposable( Panel *parent );
+
+	virtual void OnTick( void );
+	virtual void PerformLayout( void );
+	virtual void ApplySchemeSettings( vgui::IScheme *scheme );
+
+	virtual const char *GetBackgroundImage( void );
+	virtual const char *GetInactiveBackgroundImage( void );
+
+private:
+
+	CIconPanel *m_pSentryIcons[3];
+	CIconPanel *m_pUpgradeIcon;
+
+	vgui::ContinuousProgressBar *m_pShellsProgress;
+
+	int m_iUpgradeLevel;
 
 	// Ammo
-	bool m_bLowShells;
-	bool m_bLowRockets;
-
 	Color m_cLowAmmoColor;
 	Color m_cNormalAmmoColor;
 };
@@ -215,8 +245,10 @@ public:
 
 private:
 
-	// ammo
+	CIconPanel *m_pUpgradeIcon;
+
 	vgui::ContinuousProgressBar *m_pAmmoProgress;
+	vgui::ContinuousProgressBar *m_pUpgradeProgress;
 
 };
 
@@ -244,6 +276,10 @@ private:
 	// local state
 	int m_iTeleporterState;
 	int m_iTimesUsed;
+
+	CIconPanel *m_pUpgradeIcon;
+
+	vgui::ContinuousProgressBar *m_pUpgradeProgress;
 };
 
 //-----------------------------------------------------------------------------
@@ -255,7 +291,14 @@ class CBuildingStatusItem_TeleporterExit : public CBuildingStatusItem
 
 public:
 	CBuildingStatusItem_TeleporterExit( Panel *parent );
+	virtual void PerformLayout( void );
+
+private:
+
+	CIconPanel *m_pUpgradeIcon;
+	vgui::ContinuousProgressBar *m_pUpgradeProgress;
 };
+
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -295,11 +338,11 @@ public:
 
 	virtual void LevelInit( void );
 
-	void AddBuildingPanel( int iBuildingType );
-	CBuildingStatusItem *CreateItemPanel( int iObjectType );
+	void AddBuildingPanel( int iBuildingType, int iBuildingMode=0 );
+	CBuildingStatusItem *CreateItemPanel( int iObjectType, int iObjectMode );
 
 	void UpdateAllBuildings( void );
-	void OnBuildingChanged( int iBuildingType, bool bBuildingIsDead );
+	void OnBuildingChanged( int iBuildingType, int iBuildingMode, bool bBuildingIsDead );
 
 	void RepositionObjectPanels();
 
@@ -307,10 +350,12 @@ public:
 
 	void RecalculateAlertState( void );
 
-private:
+protected:
 
 	// a list of CBuildingStatusItems that we're showing
 	CUtlPriorityQueue< CBuildingStatusItem * > m_BuildingPanels;
+
+private:
 
 	BuildingHudAlert_t m_AlertLevel;
 	float m_flNextBeep;
@@ -341,6 +386,8 @@ public:
 	CHudBuildingStatusContainer_Engineer( const char *pElementName );
 
 	virtual bool ShouldDraw( void );
+
+	virtual void OnTick( void );
 };
 
 #endif //TF_HUD_BUILDING_STATUS_H

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2006, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -37,6 +37,9 @@ protected:
 private:
 	
 	void UpdateAmmoLabels( bool bPrimary, bool bReserve, bool bNoClip );
+	void ShowLowAmmoIndicator( void );
+	void SizeLowAmmoIndicator( float flCurrentAmount, float flMaxAmount );
+	void HideLowAmmoIndicator( void );
 
 private:
 
@@ -46,12 +49,18 @@ private:
 	int								m_nAmmo;
 	int								m_nAmmo2;
 
-	CTFLabel						*m_pInClip;
-	CTFLabel						*m_pInClipShadow;
-	CTFLabel						*m_pInReserve;
-	CTFLabel						*m_pInReserveShadow;
-	CTFLabel						*m_pNoClip;
-	CTFLabel						*m_pNoClipShadow;
+	int								m_nLowAmmoImageOrigX;
+	int								m_nLowAmmoImageOrigY;
+	int								m_nLowAmmoImageOrigW;
+	int								m_nLowAmmoImageOrigH;
+
+	CExLabel						*m_pInClip;
+	CExLabel						*m_pInClipShadow;
+	CExLabel						*m_pInReserve;
+	CExLabel						*m_pInReserveShadow;
+	CExLabel						*m_pNoClip;
+	CExLabel						*m_pNoClipShadow;
+	vgui::ImagePanel				*m_pLowAmmoImage;
 };
 
 #endif	// TF_HUD_AMMOSTATUS_H

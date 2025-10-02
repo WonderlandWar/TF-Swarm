@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2004, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,7 +13,7 @@
 
 #include <vgui_controls/Panel.h>
 #include <vgui_controls/EditablePanel.h>
-#include "UtlVector.h"
+#include "utlvector.h"
 
 
 class CPanelEffect;
@@ -30,7 +30,7 @@ class C_TFRootPanel : public vgui::Panel
 {
 	typedef vgui::Panel BaseClass;
 public:
-						C_TFRootPanel( vgui::VPANEL parent, int slot );
+						C_TFRootPanel( vgui::VPANEL parent );
 	virtual				~C_TFRootPanel( void );
 
 	// Draw Panel effects here
@@ -42,10 +42,6 @@ public:
 
 	// Run effects and let them decide whether to remove themselves
 	void				OnTick( void );
-	
-	virtual void		PaintTraverse( bool Repaint, bool allowForce = true );
-	
-	virtual void		OnThink();
 
 private:
 
@@ -54,7 +50,6 @@ private:
 
 	// List of current panel effects
 	CUtlVector< CPanelEffect *> m_Effects;
-	int			m_nSplitSlot;
 };
 
 

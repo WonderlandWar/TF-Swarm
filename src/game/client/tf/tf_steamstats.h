@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -10,9 +10,6 @@
 #ifdef _WIN32
 #pragma once
 #endif
-
-// Let's just not do this...
-#if 0
 
 #include "steam/steam_api.h"
 #include "GameEventListener.h"
@@ -33,5 +30,5 @@ private:
 };
 
 extern CTFSteamStats g_TFSteamStats;
-#endif
+
 #endif //TF_STEAMSTATS_H

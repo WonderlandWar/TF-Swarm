@@ -68,9 +68,7 @@ CBaseCombatWeapon::CBaseCombatWeapon()
 
 	m_hWeaponFileInfo = GetInvalidWeaponInfoHandle();
 
-#if defined( TF_DLL )
-	UseClientSideAnimation();
-#endif
+
 }
 
 //-----------------------------------------------------------------------------
@@ -2305,6 +2303,83 @@ Activity CBaseCombatWeapon::ActivityOverride( Activity baseAct, bool *pRequired 
 	return baseAct;
 }
 
+
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+CDmgAccumulator::CDmgAccumulator( void )
+{
+#ifdef GAME_DLL
+	SetDefLessFunc( m_TargetsDmgInfo );
+#endif // GAME_DLL
+
+	m_bActive = false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+CDmgAccumulator::~CDmgAccumulator()
+{
+	// Did a weapon get deleted while aggregating CTakeDamageInfo events?
+	Assert( !m_bActive );
+}
+
+#ifdef GAME_DLL
+//-----------------------------------------------------------------------------
+// Collect trace attacks for weapons that fire multiple bullets per attack that also penetrate
+//-----------------------------------------------------------------------------
+void CDmgAccumulator::AccumulateMultiDamage( const CTakeDamageInfo &info, CBaseEntity *pEntity )
+{
+	if ( !pEntity )
+		return;
+
+	Assert( m_bActive );
+
+#if defined( GAME_DLL )
+	int iIndex = m_TargetsDmgInfo.Find( pEntity->entindex() );
+	if ( iIndex == m_TargetsDmgInfo.InvalidIndex() )
+	{
+		m_TargetsDmgInfo.Insert( pEntity->entindex(), info );
+	}
+	else
+	{
+		CTakeDamageInfo *pInfo = &m_TargetsDmgInfo[iIndex];
+		if ( pInfo )
+		{
+			// Update
+			m_TargetsDmgInfo[iIndex].AddDamageType( info.GetDamageType() );
+			m_TargetsDmgInfo[iIndex].SetDamage( pInfo->GetDamage() + info.GetDamage() );
+			m_TargetsDmgInfo[iIndex].SetDamageForce( pInfo->GetDamageForce() + info.GetDamageForce() );
+			m_TargetsDmgInfo[iIndex].SetDamagePosition( info.GetDamagePosition() );
+			m_TargetsDmgInfo[iIndex].SetReportedPosition( info.GetReportedPosition() );
+			m_TargetsDmgInfo[iIndex].SetMaxDamage( MAX( pInfo->GetMaxDamage(), info.GetDamage() ) );
+			m_TargetsDmgInfo[iIndex].SetAmmoType( info.GetAmmoType() );
+		}
+
+	}
+#endif	// GAME_DLL
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Send aggregate info
+//-----------------------------------------------------------------------------
+void CDmgAccumulator::Process( void )
+{
+	FOR_EACH_MAP( m_TargetsDmgInfo, i )
+	{
+		CBaseEntity *pEntity = UTIL_EntityByIndex( m_TargetsDmgInfo.Key( i ) );
+		if ( pEntity )
+		{
+			AddMultiDamage( m_TargetsDmgInfo[i], pEntity );
+		}
+	}
+
+	m_bActive = false;
+	m_TargetsDmgInfo.Purge();
+}
+#endif // GAME_DLL
+
 class CWeaponList : public CAutoGameSystem
 {
 public:
@@ -2582,10 +2657,8 @@ BEGIN_NETWORK_TABLE_NOBASE( CBaseCombatWeapon, DT_LocalActiveWeaponData )
 	SendPropTime( SENDINFO( m_flNextSecondaryAttack ) ),
 	SendPropInt( SENDINFO( m_nNextThinkTick ) ),
 	SendPropTime( SENDINFO( m_flTimeWeaponIdle ) ),
-	
-#if defined( TF_DLL )
-	SendPropExclude( "DT_AnimTimeMustBeFirst" , "m_flAnimTime" ),
-#endif
+
+
 
 #else
 	RecvPropTime( RECVINFO( m_flNextPrimaryAttack ) ),
@@ -2606,10 +2679,8 @@ BEGIN_NETWORK_TABLE_NOBASE( CBaseCombatWeapon, DT_LocalWeaponData )
 	SendPropInt( SENDINFO(m_iSecondaryAmmoType ), 8 ),
 
 	SendPropInt( SENDINFO( m_nViewModelIndex ), VIEWMODEL_INDEX_BITS, SPROP_UNSIGNED ),
-	
-#if defined( TF_DLL )
-	SendPropExclude( "DT_AnimTimeMustBeFirst" , "m_flAnimTime" ),
-#endif
+
+
 
 #else
 	RecvPropIntWithMinusOneFlag( RECVINFO(m_iClip1 )),

@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2007, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: VGUI panel which can play back video, in-engine
 //
@@ -10,7 +10,7 @@
 #include <KeyValues.h>
 #include "vgui_video.h"
 #include "tf_vgui_video.h"
-#include "engine/ienginesound.h"
+#include "engine/IEngineSound.h"
 
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -32,6 +32,7 @@ CTFVideoPanel::CTFVideoPanel( vgui::Panel *parent, const char *panelName ) : Vid
 
 	m_flStartAnimDelay = 0.0f;
 	m_flEndAnimDelay = 0.0f;
+	m_bLoop = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -50,10 +51,10 @@ void CTFVideoPanel::ReleaseVideo()
 	enginesound->NotifyEndMoviePlayback();
 
 	// Destroy any previously allocated video
-	if ( m_BIKHandle != BIKHANDLE_INVALID )
+	if ( g_pVideo && m_VideoMaterial != NULL )
 	{
-		bik->DestroyMaterial( m_BIKHandle );
-		m_BIKHandle = BIKHANDLE_INVALID;
+		g_pVideo->DestroyVideoMaterial( m_VideoMaterial );
+		m_VideoMaterial = NULL;
 	}
 }
 
@@ -67,6 +68,7 @@ void CTFVideoPanel::ApplySettings( KeyValues *inResourceData )
 	SetExitCommand( inResourceData->GetString( "command", "" ) );
 	m_flStartAnimDelay = inResourceData->GetFloat( "start_delay", 0.0 );
 	m_flEndAnimDelay = inResourceData->GetFloat( "end_delay", 0.0 );
+	m_bLoop = inResourceData->GetBool( "loop", false );
 }
 
 //-----------------------------------------------------------------------------
@@ -109,4 +111,19 @@ void CTFVideoPanel::Shutdown()
 {
 	OnClose();
 	ReleaseVideo();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool CTFVideoPanel::BeginPlayback( const char *pFilename )
+{
+	bool bSuccess = BaseClass::BeginPlayback( pFilename );
+
+	if ( m_VideoMaterial && m_bLoop )
+	{
+		m_VideoMaterial->SetLooping( true );
+	}
+
+	return bSuccess;
 }

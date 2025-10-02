@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: TF Base Rockets.
 //
@@ -7,6 +7,7 @@
 #include "tf_projectile_base.h"
 #include "effect_dispatch_data.h"
 #include "tf_shareddefs.h"
+#include "tf_gamerules.h"
 
 #ifdef GAME_DLL
 #include "te_effect_dispatch.h"
@@ -19,17 +20,24 @@
 #include "c_te_effect_dispatch.h"
 #include "input.h"
 #include "c_tf_player.h"
+#define CRecipientFilter C_RecipientFilter
 #else
 #include "tf_player.h"
 #endif
+
+#ifdef _DEBUG
+ConVar tf_debug_projectile( "tf_debug_projectile", "0", FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY | FCVAR_CHEAT );
+#endif // _DEBUG
 
 IMPLEMENT_NETWORKCLASS_ALIASED( TFBaseProjectile, DT_TFBaseProjectile )
 
 BEGIN_NETWORK_TABLE( CTFBaseProjectile, DT_TFBaseProjectile )
 #ifdef CLIENT_DLL
-	RecvPropVector( RECVINFO( m_vInitialVelocity ) )
+	RecvPropVector( RECVINFO( m_vInitialVelocity ) ),
+	RecvPropEHandle( RECVINFO( m_hLauncher ) )
 #else
-	SendPropVector( SENDINFO( m_vInitialVelocity ), 20 /*nbits*/, 0 /*flags*/, -3000 /*low value*/, 3000 /*high value*/	)
+	SendPropVector( SENDINFO( m_vInitialVelocity ), 20 /*nbits*/, 0 /*flags*/, -3000 /*low value*/, 3000 /*high value*/	),
+	SendPropEHandle( SENDINFO( m_hLauncher ) )
 #endif
 END_NETWORK_TABLE()
 
@@ -92,6 +100,7 @@ void CTFBaseProjectile::Spawn( void )
 #ifdef CLIENT_DLL
 
 	m_flSpawnTime = gpGlobals->curtime;
+
 	BaseClass::Spawn();
 
 	// Server specific.
@@ -127,7 +136,7 @@ void CTFBaseProjectile::Spawn( void )
 //-----------------------------------------------------------------------------
 CTFBaseProjectile *CTFBaseProjectile::Create( const char *pszClassname, const Vector &vecOrigin, 
 											 const QAngle &vecAngles, CBaseEntity *pOwner, float flVelocity, short iProjModelIndex, const char *pszDispatchEffect,
-											CBaseEntity *pScorer, bool bCritical )
+											CBaseEntity *pScorer, bool bCritical, Vector vColor1, Vector vColor2 )
 {
 	CTFBaseProjectile *pProjectile = NULL;
 
@@ -172,19 +181,37 @@ CTFBaseProjectile *CTFBaseProjectile::Create( const char *pszClassname, const Ve
 		// if it crosses contents, we'll just broadcast the projectile. Otherwise, just send to PVS
 		// of the trace's endpoint. 
 		trace_t tr;
-		UTIL_TraceLine( vecOrigin, vecOrigin + vecForward * MAX_COORD_RANGE, (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_GRATE), pOwner, COLLISION_GROUP_NONE, &tr );
-		bool bBroadcast = ( UTIL_PointContents( vecOrigin, MASK_ALL ) != UTIL_PointContents( tr.endpos, MASK_ALL ) );
-		IRecipientFilter *pFilter;
+		CTraceFilterSimple traceFilter( pOwner, COLLISION_GROUP_NONE );
+		ITraceFilter *pFilterChain = NULL;
+
+		CTraceFilterIgnoreFriendlyCombatItems traceFilterCombatItem( pOwner, COLLISION_GROUP_NONE, pOwner->GetTeamNumber() );
+		if ( TFGameRules() && TFGameRules()->GameModeUsesUpgrades() )
+		{
+			// Ignore teammates and their (physical) upgrade items in MvM
+			pFilterChain = &traceFilterCombatItem;
+		}
+
+		CTraceFilterChain traceFilterChain( &traceFilter, pFilterChain );
+		UTIL_TraceLine( vecOrigin, vecOrigin + vecForward * MAX_COORD_RANGE, (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_GRATE), &traceFilterChain, &tr );
+
+		bool bBroadcast = ( UTIL_PointContents( vecOrigin ) != UTIL_PointContents( tr.endpos ) );
+
+		// Josh: This logic was never hooked up -- it only ever used
+		// the vecOrigin for PAS and leaked pFilter, but now it
+		// has been fixed to also do PAS for start + end
+		// instead of just the end/start!
+		CRecipientFilter filter;
 		if ( bBroadcast )
 		{
 			// The projectile is going to cross content types 
 			// (which will block PVS/PAS). Send to every client
-			pFilter = new CReliableBroadcastRecipientFilter();
+			filter.AddAllPlayers();
 		}
 		else
 		{
-			// just the PVS of where the projectile will hit.
-			pFilter = new CPASFilter( tr.endpos );
+			// just the PVS of where the projectile will start and hit.
+			filter.AddRecipientsByPAS( vecOrigin );
+			filter.AddRecipientsByPAS( tr.endpos );
 		}
 
 		CEffectData data;
@@ -196,6 +223,8 @@ CTFBaseProjectile *CTFBaseProjectile::Create( const char *pszClassname, const Ve
 		{
 			data.m_nDamageType |= DMG_CRITICAL;
 		}
+		data.m_CustomColors.m_vecColor1 = vColor1;
+		data.m_CustomColors.m_vecColor2 = vColor2;
 	#ifdef GAME_DLL
 		data.m_nMaterial = pProjectile->GetModelIndex();
 		data.m_nEntIndex = pOwner->entindex();
@@ -203,7 +232,7 @@ CTFBaseProjectile *CTFBaseProjectile::Create( const char *pszClassname, const Ve
 		data.m_nMaterial = iProjModelIndex;
 		data.m_hEntity = ClientEntityList().EntIndexToHandle( pOwner->entindex() );
 	#endif
-		DispatchEffect( pszDispatchEffect, data );
+		DispatchEffect( pszDispatchEffect, data, filter );
 	}
 
 	return pProjectile;
@@ -260,13 +289,13 @@ void CTFBaseProjectile::PostDataUpdate( DataUpdateType_t type )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int CTFBaseProjectile::DrawModel( int flags, const RenderableInstance_t &instance )
+int CTFBaseProjectile::DrawModel( int flags )
 {
 	// During the first 0.2 seconds of our life, don't draw ourselves.
 	if ( gpGlobals->curtime - m_flSpawnTime < 0.1f )
 		return 0;
 
-	return BaseClass::DrawModel( flags, instance );
+	return BaseClass::DrawModel( flags );
 }
 
 //-----------------------------------------------------------------------------
@@ -279,7 +308,7 @@ C_LocalTempEntity *ClientsideProjectileCallback( const CEffectData &data, float 
 
 	if ( !pEnt || pEnt->IsDormant() )
 	{
-		Assert( 0 );
+		//Assert( 0 );
 		return NULL;
 	}
 
@@ -289,7 +318,7 @@ C_LocalTempEntity *ClientsideProjectileCallback( const CEffectData &data, float 
 	if ( pEnt && pEnt->IsPlayer() )
 	{
 		C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
-		if ( pLocalPlayer != pEnt || ::input->CAM_IsThirdPerson() )
+		if ( pLocalPlayer != pEnt || C_BasePlayer::ShouldDrawLocalPlayer() )
 		{
 			CTFPlayer *pTFPlayer = ToTFPlayer( pEnt );
 			if ( pTFPlayer->GetActiveWeapon() )
@@ -297,6 +326,16 @@ C_LocalTempEntity *ClientsideProjectileCallback( const CEffectData &data, float 
 				pTFPlayer->GetActiveWeapon()->GetAttachment( "muzzle", vecSrc );
 			}
 		}
+
+		// Josh: Below is legacy code from when syringes used to come from the muzzle of the local player.
+		// They don't anymore, so this obstruction check is just wrong.
+		// This is only incorrect and gives false positives compared to the server state.
+		// This is problematic when the player has minimal viewmodels enabled, as it can make it look
+		// like needles haven't gone through when in fact they have on the server side.
+		//
+		// No check is needed anymore given the needles come from inside the player's head
+		// and that cannot be obstructed.
+#if 0
 		else
 		{
 			C_BaseEntity *pViewModel = pLocalPlayer->GetViewModel();
@@ -304,18 +343,23 @@ C_LocalTempEntity *ClientsideProjectileCallback( const CEffectData &data, float 
 			if ( pViewModel )
 			{
 				QAngle vecAngles;
+				Vector vecMuzzleOrigin;
 				int iMuzzleFlashAttachment = pViewModel->LookupAttachment( "muzzle" );
-				pViewModel->GetAttachment( iMuzzleFlashAttachment, vecSrc, vecAngles );
+				pViewModel->GetAttachment( iMuzzleFlashAttachment, vecMuzzleOrigin, vecAngles );
 
 				Vector vForward;
 				AngleVectors( vecAngles, &vForward );
 
 				trace_t trace;	
-				UTIL_TraceLine( vecSrc + vForward * -50, vecSrc, MASK_SOLID, pEnt, COLLISION_GROUP_NONE, &trace );
+				UTIL_TraceLine( vecMuzzleOrigin + vForward * -50, vecMuzzleOrigin, MASK_SOLID, pEnt, COLLISION_GROUP_NONE, &trace );
 
-				vecSrc = trace.endpos;
+				if ( trace.fraction != 1.0 )
+				{
+					vecSrc = trace.endpos;
+				}
 			}
 		}
+#endif
 	}
 
 
@@ -364,6 +408,13 @@ void CTFBaseProjectile::ProjectileTouch( CBaseEntity *pOther )
 	if( pTrace->surface.flags & CONTENTS_LADDER )
 		return;
 
+	if ( TFGameRules() && TFGameRules()->GameModeUsesUpgrades() )
+	{
+		// Projectile shields
+		if ( InSameTeam( pOther ) && pOther->IsCombatItem() )
+			return;
+	}
+
 	if ( pOther->IsWorld() )
 	{
 		SetAbsVelocity( vec3_origin	);
@@ -375,20 +426,12 @@ void CTFBaseProjectile::ProjectileTouch( CBaseEntity *pOther )
 	}
 
 	// determine the inflictor, which is the weapon which fired this projectile
-	CBaseEntity *pInflictor = NULL;
-	CBaseEntity *pOwner = GetOwnerEntity();
-	if ( pOwner )
-	{
-		CTFPlayer *pTFPlayer = ToTFPlayer( pOwner );
-		if ( pTFPlayer )
-		{
-			pInflictor = pTFPlayer->Weapon_OwnsThisID( GetWeaponID() );
-		}
-	}
+	CBaseEntity *pInflictor = GetLauncher();
 
 	CTakeDamageInfo info;
 	info.SetAttacker( GetOwnerEntity() );		// the player who operated the thing that emitted nails
 	info.SetInflictor( pInflictor );	// the weapon that emitted this projectile
+	info.SetWeapon( pInflictor );
 	info.SetDamage( GetDamage() );
 	info.SetDamageForce( GetDamageForce() );
 	info.SetDamagePosition( GetAbsOrigin() );
@@ -399,6 +442,21 @@ void CTFBaseProjectile::ProjectileTouch( CBaseEntity *pOther )
 
 	pOther->DispatchTraceAttack( info, dir, pNewTrace );
 	ApplyMultiDamage();
+
+	if ( pOther && pOther->IsPlayer() )
+	{
+		int iMadMilkSyringes = 0;
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOwnerEntity(), iMadMilkSyringes, mad_milk_syringes );
+		if ( iMadMilkSyringes )
+		{
+			CTFPlayer *pTFVictim = ToTFPlayer( pOther );
+			CTFPlayer *pTFOwner = ToTFPlayer( GetOwnerEntity() );
+			if ( pTFVictim && pTFOwner && pTFVictim->GetTeamNumber() != pTFOwner->GetTeamNumber() )
+			{
+				pTFVictim->m_Shared.AddCond( TF_COND_MAD_MILK, 1.f, pTFOwner );
+			}
+		}
+	}
 
 	UTIL_Remove( this );
 }
@@ -419,6 +477,13 @@ void CTFBaseProjectile::FlyThink( void )
 	SetAbsAngles( angles );
 
 	SetNextThink( gpGlobals->curtime + 0.1f );
+
+#ifdef _DEBUG
+	if ( tf_debug_projectile.GetBool() )
+	{
+		NDebugOverlay::Box( GetAbsOrigin(), Vector( 0.5, 0.5, 0.5 ), -Vector( 0.5, 0.5, 0.5 ), 0, 255, 0, 100, 0.1 );
+	}
+#endif // _DEBUG
 }
 
 void CTFBaseProjectile::SetScorer( CBaseEntity *pScorer )

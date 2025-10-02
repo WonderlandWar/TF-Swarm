@@ -144,13 +144,8 @@ bool CAchievementMgr::Init()
 		usermessages->HookMessage( "AchievementEvent", MsgFunc_AchievementEvent );
 	}
 #endif // CLIENT_DLL
-	
-#ifdef TF_CLIENT_DLL
-	ListenForGameEvent( "localplayer_changeclass" );
-	ListenForGameEvent( "localplayer_changeteam" );
-	ListenForGameEvent( "teamplay_round_start" );	
-	ListenForGameEvent( "teamplay_round_win" );
-#endif // TF_CLIENT_DLL
+
+
 
 	g_pMatchFramework->GetEventsSubscription()->Subscribe( this );
 

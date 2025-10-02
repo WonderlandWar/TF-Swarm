@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -14,12 +14,23 @@
 
 class CFuncRespawnRoomVisualizer;
 
+// This class is to get around the fact that DEFINE_FUNCTION doesn't like multiple inheritance
+class CFuncRespawnRoomShim : public CBaseTrigger
+{
+	virtual void RespawnRoomTouch( CBaseEntity *pOther ) = 0;
+public:
+	void	Touch( CBaseEntity *pOther ) { return RespawnRoomTouch( pOther ) ; }
+};
+
 //-----------------------------------------------------------------------------
 // Purpose: Defines an area considered inside a respawn room
 //-----------------------------------------------------------------------------
-class CFuncRespawnRoom : public CBaseTrigger
+DECLARE_AUTO_LIST( IFuncRespawnRoomAutoList );
+
+
+class CFuncRespawnRoom : public CFuncRespawnRoomShim, public IFuncRespawnRoomAutoList
 {
-	DECLARE_CLASS( CFuncRespawnRoom, CBaseTrigger );
+	DECLARE_CLASS( CFuncRespawnRoom, CFuncRespawnRoomShim );
 
 public:
 
@@ -30,9 +41,11 @@ public:
 
 	virtual void Spawn( void );
 	virtual void Activate( void );
-	virtual void ChangeTeam( int iTeamNum );
+	virtual void ChangeTeam( int iTeamNum ) OVERRIDE;
 
-	void	RespawnRoomTouch( CBaseEntity *pOther );
+	virtual void RespawnRoomTouch( CBaseEntity *pOther ) OVERRIDE;
+	virtual void StartTouch(CBaseEntity *pOther) OVERRIDE;
+	virtual void EndTouch(CBaseEntity *pOther) OVERRIDE;
 
 	// Inputs
 	void	InputSetActive( inputdata_t &inputdata );
@@ -42,8 +55,6 @@ public:
 
 	void	SetActive( bool bActive );
 	bool	GetActive() const;
-
-	bool	PointIsWithin( const Vector &vecPoint );
 
 	void	AddVisualizer( CFuncRespawnRoomVisualizer *pViz );
 	
@@ -57,6 +68,7 @@ private:
 //-----------------------------------------------------------------------------
 // Is a given point contained within a respawn room?
 //-----------------------------------------------------------------------------
-bool PointInRespawnRoom( CBaseEntity *pEntity, const Vector &vecOrigin );
+bool PointInRespawnRoom( const CBaseEntity *pEntity, const Vector &vecOrigin, bool bTouching_SameTeamOnly = false );
 
+bool PointsCrossRespawnRoomVisualizer( const Vector& vecStart, const Vector &vecEnd, int nTeamToIgnore = TEAM_UNASSIGNED );
 #endif // FUNC_RESPAWNROOM_H

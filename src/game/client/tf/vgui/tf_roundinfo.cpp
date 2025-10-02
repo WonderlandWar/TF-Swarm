@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2007, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -14,8 +14,8 @@
 #include <vgui_controls/Frame.h>
 #include <game/client/iviewport.h>
 #include <KeyValues.h>
-#include <FileSystem.h>
-#include "materialsystem/IMaterialVar.h"
+#include <filesystem.h>
+#include "materialsystem/imaterialvar.h"
 #include "IGameUIFuncs.h" // for key bindings
 
 #include "tf_controls.h"
@@ -28,14 +28,14 @@
 #include "tf_roundinfo.h"
 
 
-#include "vgui/isurface.h"
+#include "vgui/ISurface.h"
 #include <vgui/ILocalize.h>
-#include <vgui/IVGUI.h>
+#include <vgui/IVGui.h>
 #include "engine/IEngineSound.h"
 
 using namespace vgui;
 
-const char *GetMapDisplayName( const char *mapName );
+const char *GetMapDisplayName( const char *mapName, bool bTitleCase = false );
 
 class RoundInfoOverlay : public vgui::EditablePanel
 {
@@ -63,6 +63,30 @@ public:
 		m_iNextRoundPoints[1] = -1;
 
 		m_iLastCappedPoint = -1;
+	}
+
+	virtual ~RoundInfoOverlay( void )
+	{
+		if ( vgui::surface() )
+		{
+			if ( m_iBlueTeamTexture != -1 )
+			{
+				vgui::surface()->DestroyTextureID( m_iBlueTeamTexture );
+				m_iBlueTeamTexture = -1;
+			}
+
+			if ( m_iRedTeamTexture != -1 )
+			{
+				vgui::surface()->DestroyTextureID( m_iRedTeamTexture );
+				m_iRedTeamTexture = -1;
+			}
+
+			if ( m_iCapArrowTexture != -1 )
+			{
+				vgui::surface()->DestroyTextureID( m_iCapArrowTexture );
+				m_iCapArrowTexture = -1;
+			}
+		}
 	}
 
 	void Update( const char *szMapName );
@@ -134,7 +158,7 @@ void RoundInfoOverlay::Paint( void )
 			{
 				if ( i != m_iLastCappedPoint )
 				{
-					bool bBlueTeam = ( ( m_iPrevState & (1<<i) ) != 0);
+					bool bBlueTeam = ( m_iPrevState & (1<<i) );
 					DrawTeamIcon( x, y, bBlueTeam );
 				}
 			}
@@ -142,7 +166,7 @@ void RoundInfoOverlay::Paint( void )
 
 		case 1:	// Animate the point being capped
 			{
-				bool bWasBlueTeam = ( ( m_iPrevState & (1<<i) ) != 0 );
+				bool bWasBlueTeam = ( m_iPrevState & (1<<i) );
 
 				if ( i == m_iLastCappedPoint )
 				{
@@ -166,7 +190,7 @@ void RoundInfoOverlay::Paint( void )
 			{
 				bool bPointInContention = (m_iNextRoundPoints[0] == i || m_iNextRoundPoints[1] == i );
 
-				bool bBlueTeam = ( ( m_iCurrentState & (1<<i) ) != 0 );
+				bool bBlueTeam = ( m_iCurrentState & (1<<i) );
 				DrawTeamIcon( x, y, bBlueTeam, bPointInContention ? 1.4 : 1.0 );	// rescale? pop looks weird
 			}
 			break;
@@ -270,7 +294,7 @@ void RoundInfoOverlay::Update( const char *szMapName )
 				{
 					roundinfo_control_point_t point;
 
-					Q_snprintf( point.m_szName, sizeof(point.m_szName), pData->GetName() );
+					Q_snprintf( point.m_szName, sizeof(point.m_szName), "%s", pData->GetName() );
 
 					// These x,y coords are relative to a 640x480 parent panel.
 					int wide, tall;
@@ -423,15 +447,14 @@ CTFRoundInfo::CTFRoundInfo( IViewPort *pViewPort ) : Frame( NULL, PANEL_ROUNDINF
 	SetProportional( true );
 	SetVisible( false );
 	SetKeyBoardInputEnabled( true );
-	SetMouseInputEnabled( true );
 
-	m_pTitle = new CTFLabel( this, "RoundTitle", " " );
+	m_pTitle = new CExLabel( this, "RoundTitle", " " );
 	m_pMapImage = new ImagePanel( this, "MapImage" );
 
 #ifdef _X360
 	m_pFooter = new CTFFooter( this, "Footer" );
 #else
-	m_pContinue = new CTFButton( this, "RoundContinue", "#TF_Continue" );
+	m_pContinue = new CExButton( this, "RoundContinue", "#TF_Continue" );
 #endif
 
 	m_pOverlay = new RoundInfoOverlay( this, "Overlay" );
@@ -478,18 +501,15 @@ void CTFRoundInfo::ShowPanel( bool bShow )
 		if ( pMapMaterial && !IsErrorMaterial( pMapMaterial ) )
 		{
 			Activate();
-			SetMouseInputEnabled( true );
 		}
 		else
 		{
 			SetVisible( false );
-			SetMouseInputEnabled( false );
 		}
 	}
 	else
 	{
 		SetVisible( false );
-		SetMouseInputEnabled( false );
 	}
 }
 
@@ -567,7 +587,9 @@ void CTFRoundInfo::OnKeyCodePressed( KeyCode code )
 	if( code == KEY_SPACE ||
 		code == KEY_ENTER ||
 		code == KEY_XBUTTON_A ||
-		code == KEY_XBUTTON_B )
+		code == KEY_XBUTTON_B ||
+		code == STEAMCONTROLLER_A ||
+		code == STEAMCONTROLLER_B )
 	{
 		OnCommand( "continue" );
 	}

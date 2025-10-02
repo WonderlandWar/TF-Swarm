@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2003, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Game-specific impact effect hooks
 //
@@ -8,18 +8,18 @@
 #include "c_te_effect_dispatch.h"
 #include "tier0/vprof.h"
 #include "clientsideeffects.h"
-#include "precache_register.h"
+#include "clienteffectprecachesystem.h"
 #include "view.h"
-#include "CollisionUtils.h"
+#include "collisionutils.h"
 #include "SoundEmitterSystem/isoundemittersystembase.h"
 #include "engine/IEngineSound.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-PRECACHE_REGISTER_BEGIN( GLOBAL, PrecacheTFTracers )
-PRECACHE( MATERIAL, "effects/spark" )
-PRECACHE_REGISTER_END()
+CLIENTEFFECT_REGISTER_BEGIN( PrecacheTFTracers )
+	CLIENTEFFECT_MATERIAL( "effects/spark" )
+CLIENTEFFECT_REGISTER_END()
 
 #define LISTENER_HEIGHT 24
 
@@ -37,8 +37,7 @@ void FX_TFTracerSound( const Vector &start, const Vector &end, int iTracerType )
 	
 	const char *pszSoundName = "Bullets.DefaultNearmiss";
 	float flWhizDist = 64;
-	ASSERT_LOCAL_PLAYER_RESOLVABLE();
-	Vector vecListenOrigin = MainViewOrigin( GET_ACTIVE_SPLITSCREEN_SLOT() );
+	Vector vecListenOrigin = MainViewOrigin();
 
 	switch( iTracerType )
 	{
@@ -57,7 +56,7 @@ void FX_TFTracerSound( const Vector &start, const Vector &end, int iTracerType )
 
 			float s, t;
 			IntersectRayWithRay( bullet, listener, s, t );
-			t = clamp( t, 0, 1 );
+			t = clamp( t, 0.f, 1.f );
 			vecListenOrigin.z -= t * LISTENER_HEIGHT;
 		}
 		break;
@@ -85,7 +84,7 @@ void FX_TFTracerSound( const Vector &start, const Vector &end, int iTracerType )
 
 		CLocalPlayerFilter filter;
 		enginesound->EmitSound(	filter, SOUND_FROM_WORLD, CHAN_STATIC, params.soundname, 
-			params.volume, SNDLVL_TO_ATTN(params.soundlevel), 0, params.pitch, &start, &shotDir, false);
+			params.volume, SNDLVL_TO_ATTN(params.soundlevel), 0, params.pitch, 0, &start, &shotDir, NULL);
 	}
 
 	// Don't play another bullet whiz for this client until this time has run out
@@ -123,4 +122,4 @@ void BrightTracerCallback( const CEffectData &data )
 	FX_BrightTracer( (Vector&)data.m_vStart, (Vector&)data.m_vOrigin );
 }
 
-DECLARE_CLIENT_EFFECT( BrightTracer, BrightTracerCallback );
+DECLARE_CLIENT_EFFECT( "BrightTracer", BrightTracerCallback );

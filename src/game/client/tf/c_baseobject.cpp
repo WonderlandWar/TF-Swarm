@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Clients CBaseObject
 //
@@ -11,13 +11,13 @@
 #include "c_tf_team.h"
 #include "engine/IEngineSound.h"
 #include "particles_simple.h"
-#include "FunctionProxy.h"
-#include "ieffects.h"
+#include "functionproxy.h"
+#include "IEffects.h"
 #include "model_types.h"
 #include "particlemgr.h"
 #include "particle_collision.h"
 #include "c_tf_weapon_builder.h"
-#include "IVRenderView.h"
+#include "ivrenderview.h"
 #include "ObjectControlPanel.h"
 #include "engine/ivmodelinfo.h"
 #include "c_te_effect_dispatch.h"
@@ -25,23 +25,37 @@
 #include "tf_hud_building_status.h"
 #include "cl_animevent.h"
 #include "eventlist.h"
-#include "imaterialproxydict.h"
+#include "c_obj_sapper.h"
+#include "tf_gamerules.h"
+#include "tf_hud_spectator_extras.h"
+#include "tf_proxyentity.h"
+
+// NVNT for building forces
+#include "haptics/haptic_utils.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+
+// forward declarations
+void ToolFramework_RecordMaterialParams( IMaterial *pMaterial );
 
 #define MAX_VISIBLE_BUILDPOINT_DISTANCE		(400 * 400)
 
 // Remove aliasing of name due to shared code
 #undef CBaseObject
 
+IMPLEMENT_AUTO_LIST( IBaseObjectAutoList );
+
 IMPLEMENT_CLIENTCLASS_DT(C_BaseObject, DT_BaseObject, CBaseObject)
 	RecvPropInt(RECVINFO(m_iHealth)),
 	RecvPropInt(RECVINFO(m_iMaxHealth)),
 	RecvPropInt(RECVINFO(m_bHasSapper)),
 	RecvPropInt(RECVINFO(m_iObjectType)),
-	RecvPropInt(RECVINFO(m_bBuilding)),
-	RecvPropInt(RECVINFO(m_bPlacing)),
+	RecvPropBool(RECVINFO(m_bBuilding)),
+	RecvPropBool(RECVINFO(m_bPlacing)),
+	RecvPropBool(RECVINFO(m_bCarried)),
+	RecvPropBool(RECVINFO(m_bCarryDeploy)),
+	RecvPropBool(RECVINFO(m_bMiniBuilding)),
 	RecvPropFloat(RECVINFO(m_flPercentageConstructed)),
 	RecvPropInt(RECVINFO(m_fObjectFlags)),
 	RecvPropEHandle(RECVINFO(m_hBuiltOnEntity)),
@@ -51,6 +65,14 @@ IMPLEMENT_CLIENTCLASS_DT(C_BaseObject, DT_BaseObject, CBaseObject)
 	RecvPropVector( RECVINFO( m_vecBuildMins ) ),
 	RecvPropInt( RECVINFO( m_iDesiredBuildRotations ) ),
 	RecvPropInt( RECVINFO( m_bServerOverridePlacement ) ),
+	RecvPropInt( RECVINFO(m_iUpgradeLevel) ),
+	RecvPropInt( RECVINFO(m_iUpgradeMetal) ),
+	RecvPropInt( RECVINFO(m_iUpgradeMetalRequired) ),
+	RecvPropInt( RECVINFO(m_iHighestUpgradeLevel) ),
+	RecvPropInt( RECVINFO(m_iObjectMode) ),
+	RecvPropBool( RECVINFO( m_bDisposableBuilding ) ),
+	RecvPropBool( RECVINFO( m_bWasMapPlaced ) ),
+	RecvPropBool( RECVINFO( m_bPlasmaDisable ) ),
 END_RECV_TABLE()
 
 ConVar cl_obj_test_building_damage( "cl_obj_test_building_damage", "-1", FCVAR_CHEAT, "debug building damage", true, -1, true, BUILDING_DAMAGE_LEVEL_CRITICAL );
@@ -65,12 +87,32 @@ C_BaseObject::C_BaseObject(  )
 	m_bPlacing = false;
 	m_flPercentageConstructed = 0;
 	m_fObjectFlags = 0;
+	m_iOldUpgradeLevel = 0;
 
 	m_flCurrentBuildRotation = 0;
 
 	m_damageLevel = BUILDING_DAMAGE_LEVEL_NONE;
 
 	m_iLastPlacementPosValid = -1;
+
+	m_iObjectMode = 0;
+
+	m_bCarryDeploy = false;
+	m_bOldCarryDeploy = false;
+
+	m_bMiniBuilding = false;
+	m_bDisposableBuilding = false;
+
+	m_vecBuildForward = vec3_origin;
+	m_flBuildDistance = 0.0f;
+
+	m_flInvisibilityPercent = 0.f;
+
+	m_bWasMapPlaced = false;
+
+	m_hDamageEffects = NULL;
+
+	m_bPlasmaDisable = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -96,6 +138,14 @@ void C_BaseObject::Spawn( void )
 void C_BaseObject::UpdateOnRemove( void )
 {
 	StopAnimGeneratedSounds();
+
+	DestroyBoneAttachments();
+
+	CTFHudSpectatorExtras *pSpectatorExtras = GET_HUDELEMENT( CTFHudSpectatorExtras );
+	if ( pSpectatorExtras )
+ 	{
+		pSpectatorExtras->RemoveEntity( entindex() );
+ 	}
 
 	BaseClass::UpdateOnRemove();
 }
@@ -125,14 +175,29 @@ void C_BaseObject::OnDataChanged( DataUpdateType_t updateType )
 	if (updateType == DATA_UPDATE_CREATED)
 	{
 		CreateBuildPoints();
+		// NVNT if the local player created this send a created effect
+		if(IsOwnedByLocalPlayer() &&haptics)
+		{
+			haptics->ProcessHapticEvent(3, "Game", "Build", GetClassname());
+		}
 	}
 
 	BaseClass::OnDataChanged( updateType );
+
+	// did we just pick up the object?
+	if ( !m_bWasPlacing && m_bPlacing )
+	{
+		m_iLastPlacementPosValid = -1;
+	}
 
 	// Did we just finish building?
 	if ( m_bWasBuilding && !m_bBuilding )
 	{
 		FinishedBuilding();
+	}
+	else if ( !m_bWasBuilding && m_bBuilding )
+	{
+		ResetClientsideFrame();
 	}
 
 	// Did we just go active?
@@ -171,6 +236,16 @@ void C_BaseObject::OnDataChanged( DataUpdateType_t updateType )
 		}
 	}
 
+	if ( m_bCarryDeploy != m_bOldCarryDeploy )
+	{
+		m_bOldCarryDeploy = m_bCarryDeploy;
+		if ( !m_bCarryDeploy )
+		{
+			// Update our damage effects when we're done redeploying.
+			UpdateDamageEffects( CalculateDamageLevel() );
+		}
+	}
+
 	if ( m_iHealth > m_iOldHealth && m_iHealth == m_iMaxHealth )
 	{
 		// If we were just fully healed, remove all decals
@@ -183,6 +258,7 @@ void C_BaseObject::OnDataChanged( DataUpdateType_t updateType )
 		if ( event )
 		{
 			event->SetInt( "building_type", GetType() );
+			event->SetInt( "object_mode", GetObjectMode() );
 			gameeventmanager->FireEventClientSide( event );
 		}
 	}
@@ -191,6 +267,20 @@ void C_BaseObject::OnDataChanged( DataUpdateType_t updateType )
 	{
 		// Ignore server sequences while placing
 		OnPlacementStateChanged( m_iLastPlacementPosValid > 0 );
+	}
+
+	if ( m_iOldUpgradeLevel != m_iUpgradeLevel )
+	{
+		UpgradeLevelChanged();
+		m_iOldUpgradeLevel = m_iUpgradeLevel;
+	}
+	// NVNT building status
+	if(IsOwnedByLocalPlayer()) {
+		if(m_bWasBuilding!=m_bBuilding) {
+			if(m_bBuilding && haptics) {
+				haptics->ProcessHapticEvent(3, "Game", "Building", GetClassname());
+			}
+		}
 	}
 }
 
@@ -229,19 +319,19 @@ void C_BaseObject::FireEvent( const Vector& origin, const QAngle& angles, int ev
 		break;
 	case TF_OBJ_ENABLEBODYGROUP:
 		{
-			int index = FindBodygroupByName( options );
-			if ( index >= 0 )
+			int index_ = FindBodygroupByName( options );
+			if ( index_ >= 0 )
 			{
-				SetBodygroup( index, TF_OBJ_BODYGROUPTURNON );
+				SetBodygroup( index_, TF_OBJ_BODYGROUPTURNON );
 			}
 		}
 		break;
 	case TF_OBJ_DISABLEBODYGROUP:
 		{
-			int index = FindBodygroupByName( options );
-			if ( index >= 0 )
+			int index_ = FindBodygroupByName( options );
+			if ( index_ >= 0 )
 			{
-				SetBodygroup( index, TF_OBJ_BODYGROUPTURNOFF );
+				SetBodygroup( index_, TF_OBJ_BODYGROUPTURNOFF );
 			}
 		}
 		break;
@@ -274,15 +364,7 @@ void C_BaseObject::FireEvent( const Vector& origin, const QAngle& angles, int ev
 
 const char* C_BaseObject::GetStatusName() const
 {
-	return GetObjectInfo( GetType() )->m_pStatusName;
-}
-
-void C_BaseObject::GetStatusText( wchar_t *pStatus, int iMaxStatusLen )
-{
-	wchar_t wszName[128];
-	g_pVGuiLocalize->ConvertANSIToUnicode( GetStatusName(),  wszName, sizeof(wszName) );
-
-	g_pVGuiLocalize->ConstructString( pStatus, iMaxStatusLen, L"%s1", 1, wszName );
+	return GetObjectInfo( GetType() )->m_AltModes[GetObjectMode()].pszStatusName;
 }
 
 //-----------------------------------------------------------------------------
@@ -292,6 +374,11 @@ void C_BaseObject::OnPlacementStateChanged( bool bValidPlacement )
 {
 	if ( bValidPlacement )
 	{
+		// NVNT if the local player placed this send a created effect
+		if(IsOwnedByLocalPlayer()&&haptics)
+		{
+			haptics->ProcessHapticEvent(3, "Game", "Placed", GetClassname());
+		}
 		SetActivity( ACT_OBJ_PLACING );
 	}
 	else
@@ -303,7 +390,7 @@ void C_BaseObject::OnPlacementStateChanged( bool bValidPlacement )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-bool C_BaseObject::Simulate( void )
+void C_BaseObject::Simulate( void )
 {
 	if ( IsPlacing() && !MustBeBuiltOnAttachmentPoint() )
 	{
@@ -330,13 +417,23 @@ bool C_BaseObject::Simulate( void )
 
 		CInterpolatedVar<QAngle> &rotInterpolator = GetRotationInterpolator();
 		rotInterpolator.ClearHistory();
-		
-		//TODO: Improper fix?
-		BaseClass::Simulate();
-		return true;
-	}	
+	}
+	else if ( !IsPlacing() && !IsCarried() && m_iLastPlacementPosValid == 0 )
+	{
+		// HACK HACK: This sentry has been placed, but was placed on the server before the client updated
+		// from the carry position to see that was a valid placement.
+		// It missed its chance to set the correct activity, so we're doing it now.
+		SetActivity( ACT_OBJ_RUNNING );
 
-	return BaseClass::Simulate();
+		// Check if the activity was valid because it might have still been using the older placement model
+		if ( GetActivity() != ACT_INVALID )
+		{
+			// Remember to retest our placement, but don't keep forcing the running activity
+			m_iLastPlacementPosValid = -1;
+		}
+	}
+
+	BaseClass::Simulate();
 }
 
 //-----------------------------------------------------------------------------
@@ -361,23 +458,37 @@ bool C_BaseObject::WasLastPlacementPosValid( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int C_BaseObject::DrawModel( int flags, const RenderableInstance_t &instance )
+int C_BaseObject::DrawModel( int flags )
 {
 	int drawn;
 
 	// If we're a brush-built, map-defined object chain up to baseentity draw
 	if ( modelinfo->GetModelType( GetModel() ) == mod_brush )
 	{
-		drawn = CBaseEntity::DrawModel(flags, instance);
+		drawn = CBaseEntity::DrawModel(flags);
 	}
 	else
 	{
-		drawn = BaseClass::DrawModel(flags, instance);
+		drawn = BaseClass::DrawModel(flags);
 	}
 
 	HighlightBuildPoints( flags );
 
 	return drawn;
+}
+
+float C_BaseObject::GetReversesBuildingConstructionSpeed( void )
+{
+	if ( HasSapper() )
+	{
+		C_ObjectSapper *pSapper = dynamic_cast< C_ObjectSapper* >( FirstMoveChild() );
+		if ( pSapper )
+		{
+			return pSapper->GetReversesBuildingConstructionSpeed();
+		}
+	}
+
+	return 0.0f;
 }
 
 //-----------------------------------------------------------------------------
@@ -623,6 +734,11 @@ void C_BaseObject::Select( void )
 	pPlayer->SetSelectedObject( this );
 }
 
+void C_BaseObject::ResetClientsideFrame( void )
+{
+	SetCycle( GetReversesBuildingConstructionSpeed() != 0.0f ? 1.0f : 0.0f );
+}
+
 //-----------------------------------------------------------------------------
 // Sends client commands back to the server: 
 //-----------------------------------------------------------------------------
@@ -645,7 +761,7 @@ const char *C_BaseObject::GetTargetDescription( void ) const
 //-----------------------------------------------------------------------------
 // Purpose: Get a text description for the object target (more verbose)
 //-----------------------------------------------------------------------------
-char *C_BaseObject::GetIDString( void )
+const char *C_BaseObject::GetIDString( void )
 {
 	m_szIDString[0] = 0;
 	RecalculateIDString();
@@ -727,11 +843,36 @@ void C_BaseObject::DisplayHintTo( C_BasePlayer *pPlayer )
 }
 
 //-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void C_BaseObject::GetGlowEffectColor( float *r, float *g, float *b )
+{
+	if ( TFGameRules() )
+	{
+		TFGameRules()->GetTeamGlowColor( GetTeamNumber(), *r, *g, *b );
+	}
+	else
+	{
+		*r = 0.76f;
+		*g = 0.76f;
+		*b = 0.76f;
+	}
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: Does this object have a sapper on it
 //-----------------------------------------------------------------------------
 bool C_BaseObject::HasSapper( void )
 {
 	return m_bHasSapper;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool C_BaseObject::IsPlasmaDisabled( void )
+{
+	return m_bPlasmaDisable;
 }
 
 void C_BaseObject::OnStartDisabled()
@@ -745,23 +886,40 @@ void C_BaseObject::OnEndDisabled()
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
-void C_BaseObject::GetTargetIDString( wchar_t *sIDString, int iMaxLenInBytes )
+void C_BaseObject::GetTargetIDString( OUT_Z_BYTECAP( iMaxLenInBytes ) wchar_t *sIDString, int iMaxLenInBytes, bool bSpectator )
 {
+	Assert( iMaxLenInBytes >= sizeof(sIDString[0]) );
 	sIDString[0] = '\0';
 
 	C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
 
 	if ( !pLocalPlayer )
 		return;
-
-	int iTeamNumber = GetTeamNumber();
-
-	if ( iTeamNumber == pLocalPlayer->GetTeamNumber() )
+	
+	if ( pLocalPlayer->InSameDisguisedTeam( this ) || pLocalPlayer->IsPlayerClass( TF_CLASS_SPY ) || bSpectator )
 	{
 		wchar_t wszBuilderName[ MAX_PLAYER_NAME_LENGTH ];
 
 		const char *pszStatusName = GetStatusName();
-		wchar_t *wszObjectName = g_pVGuiLocalize->Find( pszStatusName );
+		const wchar_t *wszObjectName = g_pVGuiLocalize->Find( pszStatusName );
+
+		bool bHasMode = false;
+		const char *printFormatString = "#TF_playerid_object";
+
+		if ( IsMiniBuilding() && !IsDisposableBuilding() )
+		{
+			printFormatString = "#TF_playerid_object_mini";
+		}
+
+		const wchar_t *wszModeName = L"";
+		const CObjectInfo* pObjectInfo = GetObjectInfo( GetType() );
+		if ( pObjectInfo && (pObjectInfo->m_iNumAltModes > 0) )
+		{
+			const char *pszModeName = pObjectInfo->m_AltModes[GetObjectMode()].pszModeName;
+			wszModeName = g_pVGuiLocalize->Find( pszModeName );
+			printFormatString = "TF_playerid_object_mode";
+			bHasMode = true;
+		}
 
 		if ( !wszObjectName )
 		{
@@ -780,21 +938,93 @@ void C_BaseObject::GetTargetIDString( wchar_t *sIDString, int iMaxLenInBytes )
 		}
 
 		// building or live, show health
-		const char *printFormatString = "#TF_playerid_object";
+		wchar_t * localizedString = g_pVGuiLocalize->Find( printFormatString );
+		if ( localizedString )
+		{
+			if ( bHasMode )
+			{
+				g_pVGuiLocalize->ConstructString( sIDString, iMaxLenInBytes, localizedString,
+					3, wszObjectName, wszBuilderName, wszModeName );
+			}
+			else
+			{
+				g_pVGuiLocalize->ConstructString( sIDString, iMaxLenInBytes, localizedString,
+					2, wszObjectName, wszBuilderName );
+			}
+		}
 
-		g_pVGuiLocalize->ConstructString( sIDString, iMaxLenInBytes, g_pVGuiLocalize->Find(printFormatString),
-			3,
-			wszObjectName,
-			wszBuilderName );
 	}
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void C_BaseObject::GetTargetIDDataString( wchar_t *sDataString, int iMaxLenInBytes )
+void C_BaseObject::GetTargetIDDataString( OUT_Z_BYTECAP(iMaxLenInBytes) wchar_t *sDataString, int iMaxLenInBytes )
 {
+	Assert( iMaxLenInBytes >= sizeof(sDataString[0]) );
 	sDataString[0] = '\0';
+
+	C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
+	if ( !pLocalPlayer )
+		return;
+
+	// Sentryguns have models for each level, so we don't show it in their target ID.
+	bool bShowLevel = ( GetType() != OBJ_SENTRYGUN );
+
+	wchar_t wszLevel[32];
+	if ( bShowLevel )
+	{
+		_snwprintf( wszLevel, ARRAYSIZE(wszLevel) - 1, L"%d", m_iUpgradeLevel );
+		wszLevel[ ARRAYSIZE(wszLevel)-1 ] = '\0';
+	}
+
+	if ( m_iUpgradeLevel >= 3 )
+	{
+		if ( bShowLevel )
+		{
+			g_pVGuiLocalize->ConstructString( sDataString, iMaxLenInBytes, g_pVGuiLocalize->Find("#TF_playerid_object_level"),
+				1,
+				wszLevel );
+		}
+		return;
+	}
+
+	wchar_t wszBuilderName[ MAX_PLAYER_NAME_LENGTH ];
+	wchar_t wszObjectName[ 32 ];
+	wchar_t wszUpgradeProgress[ 32 ];
+
+	g_pVGuiLocalize->ConvertANSIToUnicode( GetStatusName(), wszObjectName, sizeof(wszObjectName) );
+
+	C_BasePlayer *pBuilder = GetOwner();
+
+	if ( pBuilder )
+	{
+		g_pVGuiLocalize->ConvertANSIToUnicode( pBuilder->GetPlayerName(), wszBuilderName, sizeof(wszBuilderName) );
+	}
+	else
+	{
+		wszBuilderName[0] = '\0';
+	}
+
+	// level 1 and 2 show upgrade progress
+	if ( !IsMiniBuilding() && !IsDisposableBuilding() )
+	{
+		_snwprintf( wszUpgradeProgress, ARRAYSIZE(wszUpgradeProgress) - 1, L"%d / %d", m_iUpgradeMetal, GetUpgradeMetalRequired() );
+		wszUpgradeProgress[ ARRAYSIZE(wszUpgradeProgress)-1 ] = '\0';
+		if ( bShowLevel )
+		{
+			g_pVGuiLocalize->ConstructString( sDataString, iMaxLenInBytes, g_pVGuiLocalize->Find("#TF_playerid_object_upgrading_level"),
+				2,
+				wszLevel,
+				wszUpgradeProgress );
+		}
+		else
+		{
+			g_pVGuiLocalize->ConstructString( sDataString, iMaxLenInBytes, g_pVGuiLocalize->Find("#TF_playerid_object_upgrading"),
+				1,
+				wszUpgradeProgress );
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -849,6 +1079,35 @@ BuildingHudAlert_t C_BaseObject::GetBuildingAlertLevel( void )
 }
 
 //-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+ShadowType_t C_BaseObject::ShadowCastType( void ) 
+{
+	if ( GetInvisibilityLevel() == 1.f )
+		return SHADOWS_NONE;
+
+	return BaseClass::ShadowCastType();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+float C_BaseObject::GetInvisibilityLevel( void )
+{
+
+	return m_flInvisibilityPercent;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void C_BaseObject::SetInvisibilityLevel( float flValue )
+{
+	m_flPrevInvisibilityPercent = m_flInvisibilityPercent;
+	m_flInvisibilityPercent = clamp( flValue, 0.f, 1.f );
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: find the anim events that may have started sounds, and stop them.
 //-----------------------------------------------------------------------------
 void C_BaseObject::StopAnimGeneratedSounds( void )
@@ -860,16 +1119,17 @@ void C_BaseObject::StopAnimGeneratedSounds( void )
 		return;
 
 	mstudioseqdesc_t &seqdesc = pStudioHdr->pSeqdesc( GetSequence() );
+	if ( seqdesc.numevents == 0 )
+		return;
 
 	float flCurrentCycle = GetCycle();
-
 	mstudioevent_t *pevent = GetEventIndexForSequence( seqdesc );
 
 	for (int i = 0; i < (int)seqdesc.numevents; i++)
 	{
 		if ( pevent[i].cycle < flCurrentCycle )
 		{
-			if ( pevent[i].Event() == CL_EVENT_SOUND || pevent[i].Event() == AE_CL_PLAYSOUND )
+			if ( pevent[i].event == CL_EVENT_SOUND || pevent[i].event == AE_CL_PLAYSOUND )
 			{
 				StopSound( entindex(), pevent[i].options );
 			}
@@ -911,9 +1171,14 @@ void CObjectPowerProxy::OnBind( void *pRenderable )
 		return;
 
 	SetFloatResult(  m_Factor.GetFloat() );
+
+	if ( ToolsEnabled() )
+	{
+		ToolFramework_RecordMaterialParams( GetMaterial() );
+	}
 }
 
-EXPOSE_MATERIAL_PROXY( CObjectPowerProxy, ObjectPower );
+EXPOSE_INTERFACE( CObjectPowerProxy, IMaterialProxy, "ObjectPower" IMATERIAL_PROXY_INTERFACE_VERSION );
 
 //-----------------------------------------------------------------------------
 // Control screen 
@@ -937,3 +1202,41 @@ CBasicControlPanel::CBasicControlPanel( vgui::Panel *parent, const char *panelNa
 	: BaseClass( parent, "CBasicControlPanel" ) 
 {
 }
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Used for spy invisiblity material
+//-----------------------------------------------------------------------------
+class CBuildingInvisProxy : public CBaseInvisMaterialProxy
+{
+public:
+	virtual void OnBind( C_BaseEntity *pBaseEntity ) OVERRIDE;
+};
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input :
+//-----------------------------------------------------------------------------
+void CBuildingInvisProxy::OnBind( C_BaseEntity *pBaseEntity )
+{
+	if ( !m_pPercentInvisible )
+		return;
+
+	if ( !pBaseEntity->IsBaseObject() )
+		return;
+
+	C_BaseObject *pObject = static_cast< C_BaseObject* >( pBaseEntity );
+	if ( !pObject )
+		return;
+
+	CTFPlayer *pOwner = ToTFPlayer( pObject->GetOwner() );
+	if ( !pOwner )
+	{
+		m_pPercentInvisible->SetFloatValue( 0.0f );
+		return;
+	}
+
+	m_pPercentInvisible->SetFloatValue( pObject->GetInvisibilityLevel() );
+}
+
+EXPOSE_INTERFACE( CBuildingInvisProxy, IMaterialProxy, "building_invis" IMATERIAL_PROXY_INTERFACE_VERSION );

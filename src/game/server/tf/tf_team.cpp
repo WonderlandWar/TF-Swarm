@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 //=============================================================================
 #include "cbase.h"
@@ -6,6 +6,7 @@
 #include "entitylist.h"
 #include "util.h"
 #include "tf_obj.h"
+#include "tf_gamerules.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -32,7 +33,6 @@ int SendProxyArrayLength_TeamObjects( const void *pStruct, int objectID )
 {
 	CTFTeam *pTeam = (CTFTeam*)pStruct;
 	int iObjects = pTeam->GetNumObjects();
-	Assert( iObjects <= MAX_OBJECTS_PER_PLAYER );
 	return iObjects;
 }
 
@@ -52,6 +52,8 @@ IMPLEMENT_SERVERCLASS_ST( CTFTeam, DT_TFTeam )
 	0, 
 	"team_object_array"
 	),
+
+	SendPropEHandle( SENDINFO( m_hLeader ) ),
 
 END_SEND_TABLE()
 
@@ -92,6 +94,8 @@ bool CTFTeamManager::Init( void )
 	// Create the team list.
 	for ( int iTeam = 0; iTeam < TF_TEAM_COUNT; ++iTeam )
 	{
+		COMPILE_TIME_ASSERT( TF_TEAM_COUNT == ARRAYSIZE( g_aTeamNames ) );
+		COMPILE_TIME_ASSERT( TF_TEAM_COUNT == ARRAYSIZE( g_aTeamColors ) );
 		int index = Create( g_aTeamNames[iTeam], g_aTeamColors[iTeam] );
 		Assert( index == iTeam );
 		if ( index != iTeam )
@@ -275,6 +279,11 @@ CTFTeam::CTFTeam()
 	m_TeamColor.a = 0;
 
 	m_nFlagCaptures = 0;
+	m_nTotalFlagCaptures = 0;
+	m_flTotalSecondsKOTHPointOwned = 0.f;
+	m_flTotalPLRTrackPercentTraveled = 0.f;
+
+	m_hLeader = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -406,4 +415,68 @@ CTFTeam *GetGlobalTFTeam( int iIndex )
 		return NULL;
 
 	return ( dynamic_cast< CTFTeam* >( g_Teams[iIndex] ) );
+}
+
+//-----------------------------------------------------------------------------
+// Set the team leader
+//-----------------------------------------------------------------------------
+bool CTFTeam::SetTeamLeader( CBasePlayer *pPlayer )
+{
+	Assert ( pPlayer );
+
+	// player must be on this team
+	if ( m_aPlayers.Find(pPlayer) == m_aPlayers.InvalidIndex() )
+	{
+		Assert( !"can't set a player as leader of a team he's not on" );
+		return false;
+	}
+
+	m_hLeader = pPlayer;
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Get Leader
+//-----------------------------------------------------------------------------
+CBasePlayer *CTFTeam::GetTeamLeader( void )
+{
+	return m_hLeader.Get();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Add the specified player to this team. Remove them from their current team, if any.
+//-----------------------------------------------------------------------------
+void CTFTeam::AddPlayer( CBasePlayer *pPlayer )
+{
+	BaseClass::AddPlayer( pPlayer );
+
+	if ( GetTeamLeader() == NULL )
+	{
+		SetTeamLeader( pPlayer );
+	}
+
+	TFGameRules()->TeamPlayerCountChanged( this );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Remove this player from the team
+//-----------------------------------------------------------------------------
+void CTFTeam::RemovePlayer( CBasePlayer *pPlayer )
+{
+	BaseClass::RemovePlayer( pPlayer );
+
+	if ( pPlayer == m_hLeader.Get() )
+	{
+		m_hLeader = NULL;
+
+		if ( m_aPlayers.Count() > 0 )
+		{
+			// pick a new leader randomly
+			int iLeader = random->RandomInt( 0, m_aPlayers.Count()-1 );
+			SetTeamLeader( m_aPlayers.Element(iLeader) );
+		}
+	}
+
+	TFGameRules()->TeamPlayerCountChanged( this );
 }

@@ -83,11 +83,11 @@ bool CBaseMultiplayerPlayer::SpeakIfAllowed( AIConcept_t concept, SpeechPriority
 //-----------------------------------------------------------------------------
 // Purpose: Fill out given response with the appropriate one for this concept
 //-----------------------------------------------------------------------------
-bool CBaseMultiplayerPlayer::SpeakConcept( AI_Response &outResponse, int iConcept )
+void CBaseMultiplayerPlayer::SpeakConcept( AI_Response &outResponse, int iConcept )
 {
 	m_iCurrentConcept = iConcept;
 	AIConcept_t concept( g_pszMPConcepts[iConcept] );
-	return FindResponse( outResponse, concept );
+	FindResponse( outResponse, concept );
 }
 
 

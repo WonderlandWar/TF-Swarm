@@ -2,7 +2,7 @@ $Group "game"
 {
 	"client"
 	"server"
-	"missionchooser" [$SWARM]
+	"missionchooser"
 }
 
 $Group "shaders"

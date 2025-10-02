@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2003, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -156,6 +156,14 @@ void CTFWeaponInfo::Parse( KeyValues *pKeyValuesData, const char *szWeaponName )
 	else if ( !Q_strcmp( pszWeaponType, "pda" ) )
 	{
 		m_iWeaponType = TF_WPN_TYPE_PDA;
+	}
+	else if ( !Q_strcmp( pszWeaponType, "item1" ) )
+	{
+		m_iWeaponType = TF_WPN_TYPE_ITEM1;
+	}
+	else if ( !Q_strcmp( pszWeaponType, "item2" ) )
+	{
+		m_iWeaponType = TF_WPN_TYPE_ITEM2;
 	}
 
 	// Grenade data.

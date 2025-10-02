@@ -23,9 +23,9 @@
 #endif
 
 // Hacky
-#if defined ( USES_PERSISTENT_ITEMS )
-#include "item_base.h"
-#endif // USES_PERSISTENT_ITEMS
+#if defined ( TF_CLIENT_DLL ) || defined ( TF_DLL )
+#include "econ_entity.h"
+#endif // TF_CLIENT_DLL || TF_DLL
 
 #if !defined( CLIENT_DLL )
 extern void OnBaseCombatWeaponCreated( CBaseCombatWeapon * );
@@ -121,11 +121,35 @@ namespace vgui2
 // Purpose: Base weapon class, shared on client and server
 //-----------------------------------------------------------------------------
 
-#if defined USES_PERSISTENT_ITEMS
-#define BASECOMBATWEAPON_DERIVED_FROM		CBaseAttributableItem
+#if defined USES_ECON_ITEMS
+#define BASECOMBATWEAPON_DERIVED_FROM		CEconEntity
 #else 
 #define BASECOMBATWEAPON_DERIVED_FROM		CBaseAnimating
 #endif 
+
+//-----------------------------------------------------------------------------
+// Collect trace attacks for weapons that fire multiple projectiles per attack that also penetrate
+//-----------------------------------------------------------------------------
+class CDmgAccumulator
+{
+public:
+	CDmgAccumulator( void );
+	~CDmgAccumulator();
+
+#ifdef GAME_DLL
+	virtual void Start( void ) { m_bActive = true; }
+	virtual void AccumulateMultiDamage( const CTakeDamageInfo &info, CBaseEntity *pEntity );
+	virtual void Process( void );
+
+private:
+	CTakeDamageInfo					m_updatedInfo;
+	CUtlMap< int, CTakeDamageInfo >	m_TargetsDmgInfo;
+#endif	// GAME_DLL
+
+private:
+	bool							m_bActive;
+
+};
 
 //-----------------------------------------------------------------------------
 // Purpose: Client side rep of CBaseTFCombatWeapon 
@@ -410,6 +434,8 @@ public:
 
 	void					InputHideWeapon( inputdata_t &inputdata );
 	void					Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
+
+	virtual CDmgAccumulator	*GetDmgAccumulator( void ) { return NULL; }
 
 	virtual void			MakeWeaponNameFromEntity( CBaseEntity *pOther );
 
