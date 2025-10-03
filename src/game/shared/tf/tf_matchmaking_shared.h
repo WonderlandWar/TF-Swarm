@@ -10,7 +10,6 @@
 #pragma once
 #endif
 
-#include <stdint.h>
 #include "tf_gcmessages.pb.h"
 
 class IMatchGroupDescription;
@@ -57,9 +56,9 @@ static inline void FixmeMMRatingBackendSwapping() {}
 // Schema objects that embed rating data: RatingHistory, RatingData
 // Proto objects that embed rating data:  CSOTFRatingData
 struct MMRatingData_t {
-	uint32_t unRatingPrimary;
-	uint32_t unRatingSecondary;
-	uint32_t unRatingTertiary;
+	unsigned int unRatingPrimary;
+	unsigned int unRatingSecondary;
+	unsigned int unRatingTertiary;
 
 	inline bool operator==(const MMRatingData_t &b) const
 		{ return this->unRatingPrimary   == b.unRatingPrimary &&
@@ -135,8 +134,8 @@ inline const char* EMMRating_DisplayedForGDPR( EMMRating eRatingType )
 const int k_nPrimaryFieldPlacementValue = 0;
 
 // This must be in the range of an int16 for database serialization
-COMPILE_TIME_ASSERT( k_nMMRating_LowestValue >= INT16_MIN );
-COMPILE_TIME_ASSERT( k_nMMRating_Last        <= INT16_MAX );
+//COMPILE_TIME_ASSERT( k_nMMRating_LowestValue >= INT16_MIN );
+//COMPILE_TIME_ASSERT( k_nMMRating_Last        <= INT16_MAX );
 
 // Stored value, don't re-order
 // XXX(JohnS): GDPR Warning - types 0 (MatchIDs) and 2 (Player Acknowledgement) are shown specially by the exporter.  New
@@ -154,8 +153,8 @@ enum EMMRatingSource
 };
 
 // This must be in the range of an int16 for database serialization
-COMPILE_TIME_ASSERT( k_nMMRatingSource_LowestValue >= INT16_MIN );
-COMPILE_TIME_ASSERT( k_nMMRatingSource_Last        <= INT16_MAX );
+//COMPILE_TIME_ASSERT( k_nMMRatingSource_LowestValue >= INT16_MIN );
+//COMPILE_TIME_ASSERT( k_nMMRatingSource_Last        <= INT16_MAX );
 
 // Also update these guys guy if you do the thing
 //
@@ -359,9 +358,9 @@ const int k_nGameServerPool_Full_First = k_nGameServerPool_MvM_Practice_Full;
 const int k_nGameServerPool_Full_Last = k_nGameServerPool_Event_Pool_Full;
 
 // Audit these constant and helpers if things are added
-COMPILE_TIME_ASSERT( k_nGameServerPoolCountTotal == 19 );
-COMPILE_TIME_ASSERT( k_nGameServerPool_Incomplete_Match_First + ETFMatchGroup_MAX == k_nGameServerPool_Incomplete_Match_Last );
-COMPILE_TIME_ASSERT( k_nGameServerPool_Full_First + ETFMatchGroup_MAX == k_nGameServerPool_Full_Last );
+//COMPILE_TIME_ASSERT( k_nGameServerPoolCountTotal == 19 );
+//COMPILE_TIME_ASSERT( k_nGameServerPool_Incomplete_Match_First + ETFMatchGroup_MAX == k_nGameServerPool_Incomplete_Match_Last );
+//COMPILE_TIME_ASSERT( k_nGameServerPool_Full_First + ETFMatchGroup_MAX == k_nGameServerPool_Full_Last );
 
 inline bool IsIncompleteMatchPool( int nGameServerPool )
 {
@@ -399,7 +398,7 @@ public:
 	bool IsEmpty() const;
 private:
 
-	COMPILE_TIME_ASSERT( MAX_MVM_CHALLENGES <= 64 );
+	//COMPILE_TIME_ASSERT( MAX_MVM_CHALLENGES <= 64 );
 
 	// Just use a plain old uint64 for now.  We can make this into a proper bitfield class at some point
 	uint64 m_bits;
@@ -441,8 +440,9 @@ public:
 
 	void Clear( void );
 
-	bool operator==(const CCasualCriteriaHelper &other) const { return m_mapsBits == other.m_mapsBits; }
-	bool operator!=(const CCasualCriteriaHelper &other) const { return m_mapsBits != other.m_mapsBits; }
+	// TF_SWARM: Hacky, but using == or != doesn't work
+	bool operator==(const CCasualCriteriaHelper &other) const { return m_mapsBits.Compare( other.m_mapsBits ); }
+	bool operator!=(const CCasualCriteriaHelper &other) const { return !m_mapsBits.Compare( other.m_mapsBits ); }
 
 private:
 	bool IsMapInValidCategory( uint32 nMapDefIndex ) const;

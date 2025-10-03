@@ -47,7 +47,7 @@ static ConVar hud_low_ammo_warning_max_pos_adjust( "hud_lowammowarning_maxposadj
 //-----------------------------------------------------------------------------
 CTFHudWeaponAmmo::CTFHudWeaponAmmo( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudWeaponAmmo" ) 
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD );
@@ -205,7 +205,7 @@ void CTFHudWeaponAmmo::ShowLowAmmoIndicator( void )
 		m_pLowAmmoImage->SetBounds( m_nLowAmmoImageOrigX, m_nLowAmmoImageOrigY, m_nLowAmmoImageOrigW, m_nLowAmmoImageOrigH );
 		m_pLowAmmoImage->SetVisible( true );
 		m_pLowAmmoImage->SetFgColor( Color( 255, 0, 0, 255 ) );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudLowAmmoPulse" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudLowAmmoPulse" );
 	}
 }
 
@@ -238,7 +238,7 @@ void CTFHudWeaponAmmo::HideLowAmmoIndicator( void )
 	{
 		m_pLowAmmoImage->SetBounds( m_nLowAmmoImageOrigX, m_nLowAmmoImageOrigY, m_nLowAmmoImageOrigW, m_nLowAmmoImageOrigH );
 		m_pLowAmmoImage->SetVisible( false );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudLowAmmoPulseStop" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudLowAmmoPulseStop" );
 	}
 }
 

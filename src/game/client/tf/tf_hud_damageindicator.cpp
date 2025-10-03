@@ -19,7 +19,7 @@
 #include "materialsystem/imaterialvar.h"
 #include "IEffects.h"
 #include "hudelement.h"
-#include "clienteffectprecachesystem.h"
+#include "precache_register.h"
 
 using namespace vgui;
 
@@ -90,7 +90,7 @@ DECLARE_HUD_MESSAGE( CHudDamageIndicator, Damage );
 CHudDamageIndicator::CHudDamageIndicator( const char *pElementName ) :
 	CHudElement( pElementName ), BaseClass(NULL, "HudDamageIndicator")
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_HEALTH );

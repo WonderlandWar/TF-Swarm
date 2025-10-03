@@ -996,7 +996,7 @@ DECLARE_HUD_MESSAGE( CHudVote, VoteSetup );
 
 CHudVote::CHudVote( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "CHudVote" )
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 #ifdef TF_CLIENT_DLL
@@ -1483,7 +1483,7 @@ void CHudVote::MsgFunc_VoteStart( bf_read &msg )
 	pVotePanel->m_pVotePassed->SetVisible( false );
 	pVotePanel->m_pCallVoteFailed->SetVisible( false );
 	m_pVoteSetupDialog->SetVisible( false );
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pVotePanel->m_pVoteActive, "HideVoteBackgrounds" );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pVotePanel->m_pVoteActive, "HideVoteBackgrounds" );
 
 	pVotePanel->m_voteBar->SetVisible( pVotePanel->m_bIsYesNoVote );
 
@@ -2071,23 +2071,23 @@ void CHudVotePanel::FireGameEvent( IGameEvent *event )
 		int vote_option = event->GetInt( "vote_option", TEAM_UNASSIGNED );
 		if( vote_option == VOTE_OPTION1 )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "PulseOption1" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "PulseOption1" );
 		}
 		else if( vote_option == VOTE_OPTION2 )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "PulseOption2" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "PulseOption2" );
 		}
 		else if( vote_option == VOTE_OPTION3 )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "PulseOption3" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "PulseOption3" );
 		}
 		else if( vote_option == VOTE_OPTION4 )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "PulseOption4" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "PulseOption4" );
 		}
 		else if( vote_option == VOTE_OPTION5 )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "PulseOption5" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "PulseOption5" );
 		}
 
 		m_bPlayerVoted = true;
@@ -2135,7 +2135,7 @@ void CHudVotePanel::OnThink()
 			m_pVoteActive->SetVisible( false );
 			m_pVoteFailed->SetVisible( !m_bVotePassed && bShowToPlayer );
 			m_pVotePassed->SetVisible( m_bVotePassed && bShowToPlayer );
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "HideVoteBackgrounds" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pVoteActive, "HideVoteBackgrounds" );
 
 			m_flVoteResultCycleTime = -1;
 			m_bPlayerVoted = false;

@@ -224,15 +224,15 @@ void CScrollableQuestList::PositionQuestItemPanels()
 		// This is the selected panel
 		if ( pSelected == m_vecQuestItemPanels[ i ] )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_vecQuestItemPanels[ i ], folderCommands[i].m_pszSelected );	
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_vecQuestItemPanels[ i ], folderCommands[i].m_pszSelected );	
 		}
 		else if ( pSelected )	// Some other panel is selected
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_vecQuestItemPanels[ i ], folderCommands[i].m_pszOtherIsSelected );	
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_vecQuestItemPanels[ i ], folderCommands[i].m_pszOtherIsSelected );	
 		}
 		else // No panel is selected
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_vecQuestItemPanels[ i ], folderCommands[i].m_pszNoneSelected );	
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_vecQuestItemPanels[ i ], folderCommands[i].m_pszNoneSelected );	
 		}
 	}
 }

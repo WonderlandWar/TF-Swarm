@@ -1245,7 +1245,7 @@ void CTFClassMenu::Go()
 		g_pVGuiLocalize->ConvertUnicodeToANSI( wText, szText, sizeof( szText ) );
 
 		extern ConVar replay_msgduration_connectrecording;
-		g_pClientMode->DisplayReplayMessage( szText, replay_msgduration_connectrecording.GetFloat(), false, NULL, true );
+		GetClientMode()->DisplayReplayMessage( szText, replay_msgduration_connectrecording.GetFloat(), false, NULL, true );
 
 		// Don't execute this clause next time the player spawns, unless the cache has been cleared
 		++nDisplayedConnectedRecording;

@@ -816,6 +816,13 @@ public:
 	// Here so that derived classes can use the expresser
 	virtual CAI_Expresser *GetExpresser() { return NULL; };
 
+#if !defined(NO_STEAM)
+	//----------------------------
+	// Steam handling
+	bool		GetSteamID( CSteamID *pID );
+	uint64		GetSteamIDAsUInt64( void );
+#endif
+
 	void				IncrementEFNoInterpParity();
 	int					GetEFNoInterpParity() const;
 

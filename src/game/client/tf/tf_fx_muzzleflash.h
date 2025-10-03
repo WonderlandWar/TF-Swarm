@@ -43,8 +43,8 @@ public:
 	void	SetLifetime( float flLifetime );
 
 	// Recording
-	virtual void GetToolRecordingState( KeyValues *msg );
-	virtual bool SetupBones( matrix3x4_t *pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime );
+	virtual void GetToolRecordingState( KeyValues *msg ) OVERRIDE;
+	virtual bool SetupBones( matrix3x4a_t *pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime ) OVERRIDE;
 
 	void	SetIs3rdPersonFlash( bool bEnable );
 

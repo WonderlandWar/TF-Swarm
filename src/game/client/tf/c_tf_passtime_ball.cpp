@@ -88,12 +88,12 @@ void C_PasstimeBall::OnDataChanged( DataUpdateType_t updateType )
 }
 
 //-----------------------------------------------------------------------------
-int C_PasstimeBall::DrawModel( int flags )
+int C_PasstimeBall::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	if( gpGlobals->curtime < m_fDrawTime )
 	{
 		return 0;
 	}
 
-	return BaseClass::DrawModel( flags );
+	return BaseClass::DrawModel( flags, instance );
 }

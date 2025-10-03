@@ -223,7 +223,7 @@ private:
 		if ( pMapChoice )
 		{
 			// Play animation on the map that got voted on
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pMapChoice, "MapVoted" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pMapChoice, "MapVoted" );
 		}
 	}
 
@@ -263,10 +263,10 @@ private:
 				// Update the label with the % total
 				pMapChoicePanel->SetDialogVariable( "votes", CFmtStr( "%3.0f%%", flPercent ) );
 				// Do a color change animation
-				if ( g_pClientMode && g_pClientMode->GetViewport() )
+				if ( g_pClientMode && GetClientMode()->GetViewport() )
 				{
-					g_pClientMode->GetViewportAnimationController()->StopAnimationSequence( pMapChoicePanel, i == eWinningVote ? "LosingNextMapVote" : "WinningNextMapVote" );
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pMapChoicePanel, i == eWinningVote ? "WinningNextMapVote" : "LosingNextMapVote" );
+					GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( pMapChoicePanel, i == eWinningVote ? "LosingNextMapVote" : "WinningNextMapVote" );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pMapChoicePanel, i == eWinningVote ? "WinningNextMapVote" : "LosingNextMapVote" );
 				}
 			}
 		}

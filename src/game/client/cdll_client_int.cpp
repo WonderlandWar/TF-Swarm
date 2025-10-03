@@ -98,6 +98,13 @@
 #include "cdll_bounded_cvars.h"
 #include "matsys_controls/matsyscontrols.h"
 #include "GameStats.h"
+#if defined( TF_CLIENT_DLL )
+#include "rtime.h"
+#include "tf_hud_disconnect_prompt.h"
+#include "../engine/audio/public/sound.h"
+#include "tf_shared_content_manager.h"
+#include "tf_gamerules.h"
+#endif
 #include "videocfg/videocfg.h"
 #include "tier2/tier2_logging.h"
 #include "vscript/ivscript.h"
@@ -125,7 +132,19 @@
 #include "c_rumble.h"
 #include "viewpostprocess.h"
 
+#if defined( TF_CLIENT_DLL )
+#include "tf_gc_client.h"
+#include "abuse_report.h"
+#endif
 
+#ifdef USES_ECON_ITEMS
+#include "econ_item_system.h"
+#endif // USES_ECON_ITEMS
+
+#if defined( TF_CLIENT_DLL )
+#include "econ/tool_items/custom_texture_cache.h"
+
+#endif
 
 #ifdef INFESTED_PARTICLES
 #include "c_asw_generic_emitter.h"
@@ -234,6 +253,11 @@ INetworkStringTable *g_StringTableVguiScreen = NULL;
 INetworkStringTable *g_pStringTableMaterials = NULL;
 INetworkStringTable *g_pStringTableInfoPanel = NULL;
 INetworkStringTable *g_pStringTableClientSideChoreoScenes = NULL;
+
+#ifdef TF_CLIENT_DLL
+INetworkStringTable *g_pStringTableServerPopFiles = NULL;
+INetworkStringTable *g_pStringTableServerMapCycleMvM = NULL;
+#endif
 
 static CGlobalVarsBase dummyvars( true );
 // So stuff that might reference gpGlobals during DLL initialization won't have a NULL pointer.
@@ -958,6 +982,18 @@ bool InitGameSystems( CreateInterfaceFn appSystemFactory )
 	IGameSystem::Add( ClientThinkList() );
 	IGameSystem::Add( ClientSoundscapeSystem() );
 	IGameSystem::Add( PerfVisualBenchmark() );
+	
+	#if defined( TF_CLIENT_DLL )
+	IGameSystem::Add( CustomTextureToolCacheGameSystem() );
+	IGameSystem::Add( TFSharedContentManager() );
+	#endif
+
+#if defined( TF_CLIENT_DLL )
+	if ( g_AbuseReportMgr != NULL )
+	{
+		IGameSystem::Add( g_AbuseReportMgr );
+	}
+#endif
 
 #if defined( CLIENT_DLL ) && defined( COPY_CHECK_STRESSTEST )
 	IGameSystem::Add( GetPredictionCopyTester() );
@@ -1060,7 +1096,19 @@ bool InitGameSystems( CreateInterfaceFn appSystemFactory )
 	g_pGameSaveRestoreBlockSet->AddBlockHandler( GetViewEffectsRestoreBlockHandler() );
 
 	ClientWorldFactoryInit();
+#if 0
+	FnUnsafeCmdLineProcessor *pfnUnsafeCmdLineProcessor =
+#ifndef TF_CLIENT_DLL
+		&UnsafeCmdLineProcessor;
+#else
+		&TFUnsafeCmdLineProcessor;
+#endif
 
+	if ( pfnUnsafeCmdLineProcessor )
+	{
+		RegisterSecureLaunchProcessFunc( pfnUnsafeCmdLineProcessor );
+	}
+#endif
 	return true;
 }
 
@@ -1374,6 +1422,10 @@ void CHLClient::HudProcessInput( bool bActive )
 void CHLClient::HudUpdate( bool bActive )
 {
 	float frametime = gpGlobals->frametime;
+
+#if defined( TF_CLIENT_DLL )
+	CRTime::UpdateRealTime();
+#endif
 
 	GetClientVoiceMgr()->Frame( frametime );
 
@@ -1895,6 +1947,11 @@ void CHLClient::ResetStringTablePointers()
 	g_pStringTableMaterials = NULL;
 	g_pStringTableInfoPanel = NULL;
 	g_pStringTableClientSideChoreoScenes = NULL;
+
+#ifdef TF_CLIENT_DLL
+	g_pStringTableServerPopFiles = NULL;
+	g_pStringTableServerMapCycleMvM = NULL;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1965,7 +2022,11 @@ void CHLClient::LevelShutdown( void )
 	messagechars->Clear();
 
 	g_pParticleSystemMgr->LevelShutdown();
+#ifndef TF_CLIENT_DLL
+	// don't want to do this for TF2 because we have particle systems in our
+	// character loadout screen that can be viewed when we're not connected to a server
 	g_pParticleSystemMgr->UncacheAllParticleSystems();
+#endif
 	UncacheAllMaterials();
 
 #ifdef _XBOX
@@ -2165,6 +2226,16 @@ void CHLClient::InstallStringTableCallback( const char *tableName )
 		// When the particle system list changes, we need to know immediately
 		g_pStringTableExtraParticleFiles->SetStringChangedCallback( NULL, OnPrecacheParticleFile );
 	}
+#ifdef TF_CLIENT_DLL
+	else if ( !Q_strcasecmp( tableName, "ServerPopFiles" ) )
+	{
+		g_pStringTableServerPopFiles = networkstringtable->FindTable( tableName );
+	}
+	else if ( !Q_strcasecmp( tableName, "ServerMapCycleMvM" ) )
+	{
+		g_pStringTableServerMapCycleMvM = networkstringtable->FindTable( tableName );
+	}
+#endif
 	else
 	{
 		// Pass tablename to gamerules last if all other checks fail

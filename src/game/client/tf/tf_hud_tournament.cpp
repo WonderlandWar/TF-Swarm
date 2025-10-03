@@ -70,7 +70,7 @@ static const wchar_t* GetSCGlyph( const char* action )
 //-----------------------------------------------------------------------------
 CHudTournament::CHudTournament( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudTournament" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );
@@ -395,11 +395,11 @@ void CHudTournament::PreparePanel( void )
 
 			if ( m_bCountDownVisible )
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence(this, m_bCompetitiveMode ? "HudTournament_ShowTimerCompetitive" : "HudTournament_ShowTimerDefault", false);
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence(this, m_bCompetitiveMode ? "HudTournament_ShowTimerCompetitive" : "HudTournament_ShowTimerDefault", false);
 			}
 			else
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence(this, "HudTournament_HideTimer", false);
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence(this, "HudTournament_HideTimer", false);
 			}
 		}	
 	}
@@ -537,7 +537,7 @@ void CHudTournament::FireGameEvent( IGameEvent * event )
 		{
 			if ( m_bReadyTextBlinking )
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudReadyPulse" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "HudReadyPulse" );
 			}
 		}
 	}
@@ -549,14 +549,14 @@ void CHudTournament::FireGameEvent( IGameEvent * event )
 		{
 			if ( event->GetInt( "time" ) == 10 )
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudTournament_MoveTimerDown", false );
-				//g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTournament_MoveChatWindow", false );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudTournament_MoveTimerDown", false );
+				//GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "HudTournament_MoveChatWindow", false );
 			}
 		}
 	}
 	else if ( FStrEq( "competitive_victory", pEventName ) )
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudTournament_DoorsCloseEndRound", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudTournament_DoorsCloseEndRound", false );
 	}
 }
 
@@ -636,12 +636,12 @@ void CHudTournament::OnTick( void )
 				// Ready text animation
 				if ( !TFGameRules()->IsPlayerReady( GetLocalPlayerIndex() ) && !m_bReadyTextBlinking )
 				{
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudReadyPulse" );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "HudReadyPulse" );
 					m_bReadyTextBlinking = true;
 				}
 				else if ( TFGameRules()->IsPlayerReady( GetLocalPlayerIndex() ) && m_bReadyTextBlinking )
 				{
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudReadyPulseEnd" );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "HudReadyPulseEnd" );
 					m_bReadyTextBlinking = false;
 				}
 			}
@@ -681,7 +681,7 @@ void CHudTournament::SetVisible( bool state )
 		{
 			if ( m_bReadyTextBlinking )
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudReadyPulse" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "HudReadyPulse" );
 			}
 		}
 
@@ -1035,7 +1035,7 @@ bool TournamentHudElementKeyInput( int down, ButtonCode_t keynum, const char *ps
 //-----------------------------------------------------------------------------
 CHudTournamentSetup::CHudTournamentSetup( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudTournamentSetup" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );
@@ -1210,7 +1210,7 @@ void CHudTournamentSetup::OnTick( void )
 			if ( !IsVisible() )
 			{
 				SetVisible( true );
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTournamentSetupPanelClose" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "HudTournamentSetupPanelClose" );
 			}
 		}
 		else
@@ -1262,7 +1262,7 @@ void CHudTournamentSetup::EnableInput( void )
 
 	engine->ClientCmd_Unrestricted( "gameui_preventescapetoshow\n" );
 
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTournamentSetupPanelOpen" );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "HudTournamentSetupPanelOpen" );
 }
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -1277,7 +1277,7 @@ void CHudTournamentSetup::DisableInput( void )
 	
 	engine->ClientCmd_Unrestricted( "gameui_allowescapetoshow\n" );
 
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTournamentSetupPanelClose" );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "HudTournamentSetupPanelClose" );
 }
 
 //-----------------------------------------------------------------------------
@@ -1319,7 +1319,7 @@ DECLARE_HUDELEMENT( CHudStopWatch );
 //-----------------------------------------------------------------------------
 CHudStopWatch::CHudStopWatch( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudStopWatch" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );

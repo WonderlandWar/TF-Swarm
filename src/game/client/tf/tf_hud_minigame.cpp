@@ -22,7 +22,7 @@ DECLARE_HUDELEMENT( CHudMiniGame );
 CHudMiniGame::CHudMiniGame( const char *pElementName ) :
 	CHudElement( pElementName ), BaseClass( NULL, "HudMiniGame" )
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_pActiveMinigame = NULL;

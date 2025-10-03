@@ -62,7 +62,7 @@ DECLARE_HUDELEMENT( CHudArenaCapPointCountdown );
 //-----------------------------------------------------------------------------
 CHudArenaCapPointCountdown::CHudArenaCapPointCountdown( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudArenaCapPointCountdown" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );

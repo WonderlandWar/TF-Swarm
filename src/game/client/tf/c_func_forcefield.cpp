@@ -20,7 +20,7 @@ class C_FuncForceField : public C_BaseEntity
 public:
 	DECLARE_CLIENTCLASS();
 
-	virtual int DrawModel( int flags ) OVERRIDE;
+	virtual int DrawModel( int flags, const RenderableInstance_t &instance ) OVERRIDE;
 	virtual bool ShouldCollide( int collisionGroup, int contentsMask ) const OVERRIDE;
 };
 
@@ -30,7 +30,7 @@ END_RECV_TABLE()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int C_FuncForceField::DrawModel( int flags )
+int C_FuncForceField::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	// Don't draw for anyone during a team win
 	if ( TFGameRules()->State_Get() == GR_STATE_TEAM_WIN )

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -64,30 +64,30 @@ public:
 
 	virtual void Precache( void );
 
-	virtual bool ClientCommand( CBaseEntity *pEdict, const CCommand &args );
-	virtual void ClientSettingsChanged( CBasePlayer *pPlayer );
-	virtual bool IsTeamplay( void );
-	virtual bool FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker );
-	virtual int PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget );
-	virtual bool PlayerCanHearChat( CBasePlayer *pListener, CBasePlayer *pSpeaker );
-	virtual const char *GetTeamID( CBaseEntity *pEntity );
-	virtual bool ShouldAutoAim( CBasePlayer *pPlayer, edict_t *target );
-	virtual int IPointsForKill( CBasePlayer *pAttacker, CBasePlayer *pKilled );
-	virtual void InitHUD( CBasePlayer *pl );
-	virtual void DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info );
-	virtual const char *GetGameDescription( void ) { return "Teamplay"; }  // this is the game name that gets seen in the server browser
-	virtual void PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &info );
-	virtual void Think ( void );
-	virtual int GetTeamIndex( const char *pTeamName );
-	virtual const char *GetIndexedTeamName( int teamIndex );
-	virtual bool IsValidTeam( const char *pTeamName );
-	virtual const char *SetDefaultPlayerTeam( CBasePlayer *pPlayer );
-	virtual void ChangePlayerTeam( CBasePlayer *pPlayer, const char *pTeamName, bool bKill, bool bGib );
-	virtual void ClientDisconnected( edict_t *pClient );
+	virtual bool ClientCommand( CBaseEntity *pEdict, const CCommand &args ) OVERRIDE;
+	virtual void ClientSettingsChanged( CBasePlayer *pPlayer ) OVERRIDE;
+	virtual bool IsTeamplay( void ) OVERRIDE;
+	virtual bool FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker, const CTakeDamageInfo &info ) OVERRIDE;
+	virtual int PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget ) OVERRIDE;
+	virtual bool PlayerCanHearChat( CBasePlayer *pListener, CBasePlayer *pSpeaker ) OVERRIDE;
+	virtual const char *GetTeamID( CBaseEntity *pEntity ) OVERRIDE;
+	virtual bool ShouldAutoAim( CBasePlayer *pPlayer, edict_t *target ) OVERRIDE;
+	virtual int IPointsForKill( CBasePlayer *pAttacker, CBasePlayer *pKilled ) OVERRIDE;
+	virtual void InitHUD( CBasePlayer *pl ) OVERRIDE;
+	virtual void DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info ) OVERRIDE;
+	virtual const char *GetGameDescription( void ) OVERRIDE { return "Teamplay"; }  // this is the game name that gets seen in the server browser
+	virtual void PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &info ) OVERRIDE;
+	virtual void Think ( void ) OVERRIDE;
+	virtual int GetTeamIndex( const char *pTeamName ) OVERRIDE;
+	virtual const char *GetIndexedTeamName( int teamIndex ) OVERRIDE;
+	virtual bool IsValidTeam( const char *pTeamName ) OVERRIDE;
+	virtual const char *SetDefaultPlayerTeam( CBasePlayer *pPlayer ) OVERRIDE;
+	virtual void ChangePlayerTeam( CBasePlayer *pPlayer, const char *pTeamName, bool bKill, bool bGib ) OVERRIDE;
+	virtual void ClientDisconnected( edict_t *pClient ) OVERRIDE;
 	virtual bool TimerMayExpire( void ) { return true; }
 
 	// A game has been won by the specified team
-	virtual void SetWinningTeam( int team, int iWinReason, bool bForceMapReset = true, bool bSwitchTeams = false, bool bDontAddScore = false ) { return; }
+	virtual void SetWinningTeam( int team, int iWinReason, bool bForceMapReset = true, bool bSwitchTeams = false, bool bDontAddScore = false, bool bFinal = false ) { return; }
 	virtual void SetStalemate( int iReason, bool bForceMapReset = true, bool bSwitchTeams = false ) { return; }
 
 	// Used to determine if all players should switch teams
@@ -100,6 +100,8 @@ public:
 	virtual bool ShouldScrambleTeams( void ){ return m_bScrambleTeams; }
 	virtual void HandleScrambleTeams( void ){ return; }
 
+	virtual bool PointsMayAlwaysBeBlocked(){ return false; }
+	
 protected:
 	bool m_DisableDeathMessages;
 

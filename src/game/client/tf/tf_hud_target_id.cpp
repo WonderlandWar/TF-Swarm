@@ -117,7 +117,7 @@ bool ShouldHealthBarBeVisible( CBaseEntity *pTarget, CTFPlayer *pLocalPlayer )
 CTargetID::CTargetID( const char *pElementName ) :
 	CHudElement( pElementName ), BaseClass( NULL, pElementName )
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_hFont = g_hFontTrebuchet24;
@@ -1433,7 +1433,7 @@ void CFloatingHealthIcon::SetEntity( C_BaseEntity *pEntity )
 //-----------------------------------------------------------------------------
 CFloatingHealthIcon* CFloatingHealthIcon::AddFloatingHealthIcon( C_BaseEntity *pEntity )
 {
-	CFloatingHealthIcon *pHealthIcon = new CFloatingHealthIcon( g_pClientMode->GetViewport(), "HealthIcon" );
+	CFloatingHealthIcon *pHealthIcon = new CFloatingHealthIcon( GetClientMode()->GetViewport(), "HealthIcon" );
 	vgui::SETUP_PANEL( pHealthIcon );
 	pHealthIcon->SetEntity( pEntity );
 

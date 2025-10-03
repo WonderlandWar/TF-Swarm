@@ -12,6 +12,10 @@
 #include "fx.h"
 #include "fx_impact.h"
 #include "view.h"
+#ifdef TF_CLIENT_DLL
+#include "cdll_util.h"
+#include "tf_gamerules.h"
+#endif
 #include "engine/IStaticPropMgr.h"
 #include "datacache/imdlcache.h"
 #include "debugoverlay_shared.h"
@@ -136,14 +140,30 @@ bool Impact( Vector &vecOrigin, Vector &vecStart, int iMaterial, int iDamageType
 		if ( decalNumber == -1 )
 			return false;
 
-		if ( (pEntity->entindex() == 0) && (iHitbox != 0) )
+		bool bSkipDecal = false;
+
+#ifdef TF_CLIENT_DLL
+		// Don't show blood decals if we're filtering them out (Pyro Goggles)
+		if ( IsLocalPlayerUsingVisionFilterFlags( TF_VISION_FILTER_PYRO ) || UTIL_IsLowViolence() || ( TFGameRules() && TFGameRules()->IsTruceActive() ) )
 		{
-			staticpropmgr->AddDecalToStaticProp( vecStart, traceExt, iHitbox - 1, decalNumber, true, tr );
+			if ( V_strstr( pchDecalName, "Flesh" ) )
+			{
+				bSkipDecal = true;
+			}
 		}
-		else if ( pEntity )
+#endif
+
+		if ( !bSkipDecal )
 		{
-			// Here we deal with decals on entities.
-			pEntity->AddDecal( vecStart, traceExt, vecOrigin, iHitbox, decalNumber, true, tr, maxLODToDecal );
+			if ( (pEntity->entindex() == 0) && (iHitbox != 0) )
+			{
+				staticpropmgr->AddDecalToStaticProp( vecStart, traceExt, iHitbox - 1, decalNumber, true, tr );
+			}
+			else if ( pEntity )
+			{
+				// Here we deal with decals on entities.
+				pEntity->AddDecal( vecStart, traceExt, vecOrigin, iHitbox, decalNumber, true, tr, maxLODToDecal );
+			}
 		}
 	}
 	else

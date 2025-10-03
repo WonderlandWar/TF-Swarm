@@ -51,7 +51,7 @@ DECLARE_HUDELEMENT( CHudBowChargeMeter );
 //-----------------------------------------------------------------------------
 CHudBowChargeMeter::CHudBowChargeMeter( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudBowCharge" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_pChargeMeter = new ContinuousProgressBar( this, "ChargeMeter" );

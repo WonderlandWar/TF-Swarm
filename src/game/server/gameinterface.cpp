@@ -112,11 +112,30 @@
 #include "asw_gamerules.h"
 #endif
 
+#ifdef TF_DLL
+#include "gc_clientsystem.h"
+#include "econ_item_inventory.h"
+#include "steamworks_gamestats.h"
+#include "tf/tf_gc_server.h"
+#include "tf_gamerules.h"
+#include "player_vs_environment/tf_population_manager.h"
+#include "workshop/maps_workshop.h"
 
+extern ConVar tf_mm_trusted;
+extern ConVar tf_mm_servermode;
+#endif
 
+#ifdef USE_NAV_MESH
+#include "nav_mesh.h"
+#endif
 
+#ifdef NEXT_BOT
+#include "NextBotManager.h"
+#endif
 
-
+#ifdef USES_ECON_ITEMS
+#include "econ_item_system.h"
+#endif // USES_ECON_ITEMS
 
 #ifdef _WIN32
 #include "IGameUIFuncs.h"
@@ -243,6 +262,11 @@ INetworkStringTable *g_pStringTableMaterials = NULL;
 INetworkStringTable *g_pStringTableInfoPanel = NULL;
 INetworkStringTable *g_pStringTableClientSideChoreoScenes = NULL;
 INetworkStringTable *g_pStringTableExtraParticleFiles = NULL;
+
+#ifdef TF_DLL
+INetworkStringTable *g_pStringTableServerPopFiles = NULL;
+INetworkStringTable *g_pStringTableServerMapCycleMvM = NULL;
+#endif
 
 CStringTableSaveRestoreOps g_VguiScreenStringOps;
 
@@ -926,10 +950,12 @@ void CServerGameDLL::DLLShutdown( void )
 float CServerGameDLL::GetTickInterval( void ) const
 {
 	float tickinterval = DEFAULT_TICK_INTERVAL;
-
-
-
-
+//=============================================================================
+// HPE_BEGIN:
+// [Forrest] For Counter-Strike, set default tick rate of 66 and removed -tickrate command line parameter.
+//=============================================================================
+// Ignoring this for now, server ops are abusing it
+#if !defined( TF_DLL ) && !defined( CSTRIKE_DLL ) && !defined( DOD_DLL )
 	// override if tick rate specified in command line
 	if ( CommandLine()->CheckParm( "-tickrate" ) )
 	{
@@ -937,7 +963,7 @@ float CServerGameDLL::GetTickInterval( void ) const
 		if ( tickrate > 10 )
 			tickinterval = 1.0f / tickrate;
 	}
-
+#endif
 
 	return tickinterval;
 }
@@ -1232,7 +1258,12 @@ void CServerGameDLL::GameServerSteamAPIActivated( void )
 #if !defined( NO_STEAM )
 	steamgameserverapicontext->Init();
 #endif
-	
+
+#ifdef TF_DLL
+	GCClientSystem()->GameServerActivate();
+	InventoryManager()->GameServerSteamAPIActivated();
+	TFMapsWorkshop()->GameServerSteamAPIActivated();
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1491,13 +1522,26 @@ void CServerGameDLL::CreateNetworkStringTables( void )
 	g_pStringTableInfoPanel = networkstringtable->CreateStringTable( "InfoPanel", MAX_INFOPANEL_STRINGS );
 	g_pStringTableClientSideChoreoScenes = networkstringtable->CreateStringTable( "Scenes", MAX_CHOREO_SCENES_STRINGS, 0, 0, NSF_DICTIONARY_ENABLED );
 
+#ifdef TF_DLL
+	g_pStringTableServerPopFiles = networkstringtable->CreateStringTable( "ServerPopFiles", 128 );
+	g_pStringTableServerMapCycleMvM = networkstringtable->CreateStringTable( "ServerMapCycleMvM", 128 );
+#endif
+
+	bool bPopFilesValid = true;
+	(void)bPopFilesValid; // Avoid unreferenced variable warning
+
+#ifdef TF_DLL
+	bPopFilesValid = ( g_pStringTableServerPopFiles != NULL );
+#endif
+
 	Assert( g_pStringTableParticleEffectNames &&
 			g_pStringTableEffectDispatch &&
 			g_pStringTableVguiScreen &&
 			g_pStringTableMaterials &&
 			g_pStringTableInfoPanel &&
 			g_pStringTableClientSideChoreoScenes &&
-			g_pStringTableExtraParticleFiles );
+			g_pStringTableExtraParticleFiles && 
+			bPopFilesValid );
 
 	// Need this so we have the error material always handy
 	PrecacheMaterial( "debug/debugempty" );
@@ -1818,6 +1862,11 @@ bool CServerGameDLL::ShouldHideServer( void )
 
 	if ( gpGlobals && gpGlobals->eLoadType == MapLoad_Background )
 		return true;
+
+	#if defined( TF_DLL )
+		if ( GTFGCClientSystem()->ShouldHideServer() )
+			return true;
+	#endif
 
 	return false;
 }
@@ -2680,6 +2729,27 @@ void CServerGameClients::ClientActive( edict_t *pEdict, bool bLoadGame )
 	CBasePlayer *pPlayer = ( CBasePlayer * )CBaseEntity::Instance( pEdict );
 	CSoundEnvelopeController::GetController().CheckLoopingSoundsForPlayer( pPlayer );
 	SceneManager_ClientActive( pPlayer );
+
+	#if defined( TF_DLL )
+		Assert( pPlayer );
+		if ( pPlayer && !pPlayer->IsFakeClient() && !pPlayer->IsHLTV() && !pPlayer->IsReplay() )
+		{
+			CSteamID steamID;
+			if ( pPlayer->GetSteamID( &steamID ) )
+			{
+				GTFGCClientSystem()->ClientActive( steamID );
+			}
+#if 0 // TF_SWARM: Log ain't a function
+			else
+			{
+				if ( !pPlayer->IsReplay() && !pPlayer->IsHLTV() )
+				{
+					Log("WARNING: ClientActive, but we don't know his SteamID?\n");
+				}
+			}
+#endif
+		}
+	#endif
 }
 
 
@@ -2739,6 +2809,25 @@ void CServerGameClients::ClientDisconnect( edict_t *pEdict )
 		// Make sure anything we "own" is simulated by the server from now on
 		player->ClearPlayerSimulationList();
 #endif
+		#if defined( TF_DLL )
+			if ( !player->IsFakeClient() )
+			{
+				CSteamID steamID;
+				if ( player->GetSteamID( &steamID ) )
+				{
+					GTFGCClientSystem()->ClientDisconnected( steamID );
+				}
+#if 0 // TF_SWARM: Log ain't a function
+				else
+				{
+					if ( !player->IsReplay() && !player->IsHLTV() )
+					{
+						Log("WARNING: ClientDisconnected, but we don't know his SteamID?\n");
+					}
+				}
+#endif
+			}
+		#endif
 	}
 }
 

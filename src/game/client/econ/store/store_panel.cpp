@@ -1674,7 +1674,7 @@ void CStoreCart::AddToCart( const econ_store_entry_t *pEntry, const char* pszPag
 	CExButton *pCartButton = dynamic_cast< CExButton * >( EconUI()->GetStorePanel()->GetActivePage()->FindChildByName( "CartButton", true ) );
 	if ( pCartButton )
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pCartButton->GetParent(), "AddToCartBlink" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pCartButton->GetParent(), "AddToCartBlink" );
 	}
 }
 

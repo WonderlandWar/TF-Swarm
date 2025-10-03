@@ -12,6 +12,14 @@
 #include "engine/IEngineSound.h"
 #include "iservervehicle.h"
 #include "physics_saverestore.h"
+#include "world.h"
+
+#ifdef TF_DLL
+#include "tf_player.h"
+#include "entity_healthkit.h"
+#include "particle_parse.h"
+#include "tf_obj_teleporter.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -92,6 +100,11 @@ BEGIN_DATADESC( CItem )
 	DEFINE_ENTITYFUNC( ItemTouch ),
 	DEFINE_THINKFUNC( Materialize ),
 	DEFINE_THINKFUNC( ComeToRest ),
+
+#if defined( HL2MP ) || defined( TF_DLL )
+	DEFINE_FIELD( m_flNextResetCheckTime, FIELD_TIME ),
+	DEFINE_THINKFUNC( FallThink ),
+#endif
 
 	// Outputs
 	DEFINE_OUTPUT( m_OnPlayerTouch, "OnPlayerTouch" ),
@@ -212,6 +225,11 @@ void CItem::Spawn( void )
 	NetworkQuantize( origin, angles );
 	SetAbsOrigin( origin );
 	SetAbsAngles( angles );
+
+#if defined( HL2MP ) || defined( TF_DLL )
+	SetThink( &CItem::FallThink );
+	SetNextThink( gpGlobals->curtime + 0.1f );
+#endif
 }
 
 void CItem::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
@@ -273,6 +291,66 @@ void CItem::ComeToRest( void )
 	}
 }
 
+#if defined( HL2MP ) || defined( TF_DLL )
+
+//-----------------------------------------------------------------------------
+// Purpose: Items that have just spawned run this think to catch them when 
+//			they hit the ground. Once we're sure that the object is grounded, 
+//			we change its solid type to trigger and set it in a large box that 
+//			helps the player get it.
+//-----------------------------------------------------------------------------
+void CItem::FallThink ( void )
+{
+	SetNextThink( gpGlobals->curtime + 0.1f );
+
+#if defined( HL2MP )
+	bool shouldMaterialize = false;
+	IPhysicsObject *pPhysics = VPhysicsGetObject();
+	if ( pPhysics )
+	{
+		shouldMaterialize = pPhysics->IsAsleep();
+	}
+	else
+	{
+		shouldMaterialize = (GetFlags() & FL_ONGROUND) ? true : false;
+	}
+
+	if ( shouldMaterialize )
+	{
+		SetThink ( NULL );
+
+		m_vOriginalSpawnOrigin = GetAbsOrigin();
+		m_vOriginalSpawnAngles = GetAbsAngles();
+
+		HL2MPRules()->AddLevelDesignerPlacedObject( this );
+	}
+#endif // HL2MP
+
+#if defined( TF_DLL )
+	// We only come here if ActivateWhenAtRest() is never called,
+	// which is the case when creating currencypacks in MvM
+	if ( !( GetFlags() & FL_ONGROUND ) )
+	{
+		if ( !GetAbsVelocity().Length() && GetMoveType() == MOVETYPE_FLYGRAVITY )
+		{
+			// Mr. Game, meet Mr. Hammer.  Mr. Hammer, meet the uncooperative Mr. Physics.
+			// Mr. Physics really doesn't want to give our friend the FL_ONGROUND flag.
+			// This means our wonderfully helpful radius currency collection code will be sad.
+			// So in the name of justice, we ask that this flag be delivered unto him.
+
+			SetMoveType( MOVETYPE_NONE );
+			SetGroundEntity( GetWorldEntity() );
+		}
+	}
+	else
+	{
+		SetThink( &CItem::ComeToRest );
+	}
+#endif // TF
+}
+
+#endif // HL2MP, TF
+
 
 //-----------------------------------------------------------------------------
 // Purpose: Used to tell whether an item may be picked up by the player.  This
@@ -305,6 +383,17 @@ bool UTIL_ItemCanBeTouchedByPlayer( CBaseEntity *pItem, CBasePlayer *pPlayer )
 		vecStartPos = pItem->CollisionProp()->WorldSpaceCenter();
 	}
 
+#ifdef TF_DLL
+	//Plague powerup carrier collects health kits in a radius so we want to skip the occlusion trace
+	CTFPlayer *pTFPlayer = dynamic_cast<CTFPlayer*>( pPlayer );
+	if ( pTFPlayer && ( pTFPlayer->m_Shared.GetCarryingRuneType() == RUNE_PLAGUE ) )
+	{
+		CHealthKit *pHealthKit = dynamic_cast<CHealthKit*>( pItem );
+		if ( pHealthKit )
+			return true;
+	}
+#endif
+
 	Vector vecEndPos = pPlayer->EyePosition();
 
 	// FIXME: This is the simple first try solution towards the problem.  We need to take edges and shape more into account
@@ -314,11 +403,19 @@ bool UTIL_ItemCanBeTouchedByPlayer( CBaseEntity *pItem, CBasePlayer *pPlayer )
 	trace_t tr;
 	CTraceFilterSkipTwoEntities filter( pPlayer, pItem, COLLISION_GROUP_PLAYER_MOVEMENT );
 	UTIL_TraceLine( vecStartPos, vecEndPos, MASK_SOLID, &filter, &tr );
-
+	
 	// Occluded
 	// FIXME: For now, we exclude starting in solid because there are cases where this doesn't matter
 	if ( tr.fraction < 1.0f )
+	{
+#ifdef TF_DLL
+		CObjectTeleporter *pTeleporter = dynamic_cast<CObjectTeleporter *>( tr.m_pEnt );
+		if ( !pTeleporter )
+			return false;
+#else
 		return false;
+#endif
+	}
 
 	return true;
 }
@@ -376,6 +473,18 @@ void CItem::ItemTouch( CBaseEntity *pOther )
 	{
 		m_OnPlayerTouch.FireOutput(pOther, this);
 
+#if TF_DLL
+		CHealthKit *pHealthKit = dynamic_cast<CHealthKit*>( this );
+		if ( pHealthKit )
+		{
+			CTFPlayer *pTFPlayer = ToTFPlayer( pPlayer );
+			if ( pTFPlayer && ( pTFPlayer->m_Shared.GetCarryingRuneType() == RUNE_PLAGUE ) )
+			{
+				DispatchParticleEffect( "plague_healthkit_pickup", GetAbsOrigin(), GetAbsAngles() );
+			}
+		}
+#endif
+
 		SetTouch( NULL );
 		SetThink( NULL );
 
@@ -411,9 +520,9 @@ CBaseEntity* CItem::Respawn( void )
 	UTIL_SetOrigin( this, g_pGameRules->VecItemRespawnSpot( this ) );// blip to whereever you should respawn.
 	SetAbsAngles( g_pGameRules->VecItemRespawnAngles( this ) );// set the angles.
 
-
+#if !defined( TF_DLL )
 	UTIL_DropToFloor( this, MASK_SOLID );
-
+#endif
 
 	RemoveAllDecals(); //remove any decals
 

@@ -94,6 +94,7 @@ class CEntityMapData;
 class CWorld;
 typedef unsigned int UtlHashHandle_t;
 class INextBot;
+class IHasAttributes;
 class CGlobalEvent;
 
 typedef CUtlVector< CBaseEntity* > EntityList_t;
@@ -900,6 +901,12 @@ public:
 	virtual bool	IsBaseTrain( void ) const { return false; }
 	bool			IsBSPModel() const;
 	bool			IsInWorld( void ) const;
+	virtual bool	IsCombatItem( void ) const { return false; }
+#ifdef TF_DLL
+	virtual bool	IsProjectileCollisionTarget( void ) const { return false; }	
+	virtual bool	IsFuncLOD( void ) const { return false; }
+	virtual bool	IsBaseProjectile( void ) const { return false; }
+#endif // TF_DLL
 
 	virtual bool	IsBaseCombatWeapon( void ) const { return false; }
 	virtual CBaseCombatWeapon *MyCombatWeaponPointer( void ) { return NULL; }
@@ -1596,6 +1603,11 @@ public:
 	// was pev->rendermode
 	CNetworkVar( unsigned char, m_nRenderMode );
 	CNetworkVar( short, m_nModelIndex );
+	
+#ifdef TF_DLL
+	CNetworkArray( int, m_nModelIndexOverrides, MAX_VISION_MODES ); // used to override the base model index on the client if necessary
+#endif
+
 	// was pev->rendercolor
 	CNetworkColor32( m_clrRender );
 
@@ -1886,6 +1898,10 @@ public:
 	{
 		return s_bAbsQueriesValid;
 	}
+
+#ifdef TF_DLL
+	virtual float GetDefaultItemChargeMeterValue( void ) const { return 100.f; }
+#endif // TF_DLL
 
 public:
 

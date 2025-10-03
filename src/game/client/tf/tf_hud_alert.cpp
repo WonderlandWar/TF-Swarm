@@ -56,7 +56,7 @@ DECLARE_HUDELEMENT( CHudAlert );
 //-----------------------------------------------------------------------------
 CHudAlert::CHudAlert( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudAlert" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_flHideAt = 0;

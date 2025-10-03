@@ -99,7 +99,7 @@ public:
 	void Touch( CBaseEntity *pOther );
 
 	virtual Vector GetObserverCamOrigin( void );
-	virtual int DrawModel( int flags );
+	virtual int DrawModel( int flags, const RenderableInstance_t &instance );
 
 	virtual void ApplyBoneMatrixTransform( matrix3x4_t& transform );
 	virtual void BuildTransformations( CStudioHdr *hdr, Vector *pos, Quaternion q[], const matrix3x4_t& cameraTransform, int boneMask, CBoneBitList &boneComputed );
@@ -121,7 +121,7 @@ public:
 	bool IsActiveTFWeapon( CEconItemDefinition *weaponHandle ) const;
 	bool IsActiveTFWeapon( const CSchemaItemDefHandle &weaponHandle ) const;
 
-	virtual void Simulate( void );
+	virtual bool Simulate( void ) OVERRIDE;
 	virtual void FireEvent( const Vector& origin, const QAngle& angles, int event, const char *options ) OVERRIDE;
 	virtual void UpdateStepSound( surfacedata_t *psurface, const Vector &vecOrigin, const Vector &vecVelocity ) OVERRIDE;
 
@@ -211,7 +211,7 @@ public:
 
 	float GetPercentInvisible( void );
 	float GetEffectiveInvisibilityLevel( void );	// takes viewer into account
-	virtual bool IsTransparent( void ) OVERRIDE { return GetPercentInvisible() > 0.f; }
+	virtual RenderableTranslucencyType_t ComputeTranslucencyType( void ) OVERRIDE { return GetPercentInvisible() > 0.f ? RENDERABLE_IS_TRANSLUCENT : RENDERABLE_IS_OPAQUE; }
 
 	virtual void AddDecal( const Vector& rayStart, const Vector& rayEnd,
 		const Vector& decalCenter, int hitbox, int decalIndex, bool doTrace, trace_t& tr, int maxLODToDecal = ADDDECAL_TO_ALL_LODS );

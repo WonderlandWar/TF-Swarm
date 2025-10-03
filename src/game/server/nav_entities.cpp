@@ -19,7 +19,10 @@
 #include "props_shared.h"
 #include "func_breakablesurf.h"
 
-
+#ifdef TF_DLL
+#include "tf_player.h"
+#include "bot/tf_bot.h"
+#endif
 
 #include "Color.h"
 #include "collisionutils.h"

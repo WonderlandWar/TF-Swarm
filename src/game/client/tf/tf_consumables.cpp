@@ -770,7 +770,7 @@ public:
 		GCClientSystem()->BSendMessage( msg );
 
 		PlaySoundEntry( "UI.WarPaintApplyStart" );
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pWorkingLogoPanel, "velocity", 200, 0.0f, 0.f, vgui::AnimationController::INTERPOLATOR_ACCEL, 0.75f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pWorkingLogoPanel, "velocity", 200, 0.0f, 0.f, vgui::AnimationController::INTERPOLATOR_ACCEL, 0.75f, true, false );
 		SetControlVisible( "RedeemingPanel", true );
 		SetControlVisible( "Shade", true );
 		PostMessage( this, new KeyValues( "NoResponse" ), 5.f );
@@ -819,11 +819,11 @@ public:
 		Color creditsGreen = GetColor( "CreditsGreen" );
 		Color brightGreen = creditsGreen;
 		BrigthenColor( brightGreen, 50 );
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pSuccessLogoPanel, "fgcolor", brightGreen, 0.f, 0.f, vgui::AnimationController::INTERPOLATOR_ACCEL, 0.75f, true, false );
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pSuccessLogoPanel, "fgcolor", creditsGreen, 0.f, 1.5f, vgui::AnimationController::INTERPOLATOR_DEACCEL, 0.75f, false, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pSuccessLogoPanel, "fgcolor", brightGreen, 0.f, 0.f, vgui::AnimationController::INTERPOLATOR_ACCEL, 0.75f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pSuccessLogoPanel, "fgcolor", creditsGreen, 0.f, 1.5f, vgui::AnimationController::INTERPOLATOR_DEACCEL, 0.75f, false, false );
 
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pSuccessLogoPanel, "radius", 40, 0.f, 0.05f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pSuccessLogoPanel, "radius", 30, 0.05f, 0.2f, vgui::AnimationController::INTERPOLATOR_DEACCEL, 0.75f, false, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pSuccessLogoPanel, "radius", 40, 0.f, 0.05f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pSuccessLogoPanel, "radius", 30, 0.05f, 0.2f, vgui::AnimationController::INTERPOLATOR_DEACCEL, 0.75f, false, false );
 	}
 
 	virtual void SOCreated( const CSteamID & steamIDOwner, const GCSDK::CSharedObject *pObject, GCSDK::ESOCacheEvent eEvent ) OVERRIDE
@@ -842,7 +842,7 @@ public:
 		PlaySoundEntry( "UI.WarPaintApplyStop" );
 
 		// This is what we were waiting for
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pWorkingLogoPanel, "velocity", 1000, 0.0f, 2.f, vgui::AnimationController::INTERPOLATOR_BIAS, 0.01f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pWorkingLogoPanel, "velocity", 1000, 0.0f, 2.f, vgui::AnimationController::INTERPOLATOR_BIAS, 0.01f, true, false );
 		PostMessage( this, new KeyValues( "ShowSuccess" ), 3.f );
 		PostMessage( this, new KeyValues( "AckItems" ), 6.f );
 		m_bSuccess = true;

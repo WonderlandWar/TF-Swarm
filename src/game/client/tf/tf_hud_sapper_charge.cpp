@@ -48,7 +48,7 @@ private:
 //-----------------------------------------------------------------------------
 CHudSapperChargeMeter::CHudSapperChargeMeter( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudSapperCharge" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_pChargeMeter = new ContinuousProgressBar( this, "ChargeMeter" );

@@ -676,7 +676,7 @@ void CQuestMapRegionPanel::NodeSelected( KeyValues *pParams )
 	m_pQuestMapNodeView->SetVisible( true );
 	
 	// Bring up the dimmer so it's a bit easier to read the node view panel
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pDimmer, "alpha", 200, 0.0f, 0.2f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pDimmer, "alpha", 200, 0.0f, 0.2f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
 }
 
 void CQuestMapRegionPanel::NodeCursorEntered( KeyValues *pParams )
@@ -736,7 +736,7 @@ void CQuestMapRegionPanel::NodeViewClosed()
 	}
 
 	// Lower the dimmer
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pDimmer, "alpha", 0, 0.0f, 0.2f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pDimmer, "alpha", 0, 0.0f, 0.2f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
 }
 
 void CQuestMapRegionPanel::CreateClickCircle()
@@ -1085,20 +1085,20 @@ void CQuestMapRegionPanel::StartZoomTo( float flX, float flY, bool bZoomingIn )
 		if ( bZoomingIn )
 		{
 			const Color& colorActive =  vgui::scheme()->GetIScheme( GetScheme() )->GetColor( "QuestMap_ActiveOrange", Color( 255, 255, 255, 255 ) );
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "ypos", GetTall() / 2 - pRegionName->GetTall() / 2, 0.0f, 0.0f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "ypos", YRES(15), tf_quest_map_zoom_transition_in_time, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, false, false );
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "fgcolor", colorActive, tf_quest_map_zoom_transition_in_time * 2.f, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "ypos", GetTall() / 2 - pRegionName->GetTall() / 2, 0.0f, 0.0f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "ypos", YRES(15), tf_quest_map_zoom_transition_in_time, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, false, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "fgcolor", colorActive, tf_quest_map_zoom_transition_in_time * 2.f, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
 		}
 
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "alpha", 255, 0, 0, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "alpha", 255, 0, 0, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
 	}
 
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_scale", bZoomingIn ? tf_quest_map_zoom_out_scale : tf_quest_map_zoom_in_scale, 0.0f, 0.0f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_scale", bZoomingIn ? tf_quest_map_zoom_out_scale : tf_quest_map_zoom_in_scale, 0.0f, 0.0f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
 
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_x", flX, 0.f, 0.f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.35f );
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_y", flY, 0.f, 0.f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.35f );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_x", flX, 0.f, 0.f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.35f );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_y", flY, 0.f, 0.f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.35f );
 	
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_scale", tf_quest_map_zoom_rest_scale, tf_quest_map_zoom_transition_in_time, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, false, false );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_scale", tf_quest_map_zoom_rest_scale, tf_quest_map_zoom_transition_in_time, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, false, false );
 }
 
 void CQuestMapRegionPanel::StartZoomAway( float flX, float flY, bool bZoomingIn )
@@ -1118,21 +1118,21 @@ void CQuestMapRegionPanel::StartZoomAway( float flX, float flY, bool bZoomingIn 
 	{
 		if ( bZoomingIn )
 		{
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "alpha", 0, 0, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "alpha", 0, 0, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
 		}
 		else
 		{
 			const Color& colorNeutral =  vgui::scheme()->GetIScheme( GetScheme() )->GetColor( "TanLight", Color( 255, 255, 255, 255 ) );
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "ypos", GetTall() / 2 - pRegionName->GetTall() / 2, 0.0f, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "fgcolor", colorNeutral, 0.0f, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "ypos", GetTall() / 2 - pRegionName->GetTall() / 2, 0.0f, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.75f, true, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pRegionName, "fgcolor", colorNeutral, 0.0f, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
 		}
 	}
 
 	// Tell the current region to animate
 	{
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_scale", bZoomingIn ? tf_quest_map_zoom_in_scale : tf_quest_map_zoom_out_scale, 0.f, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.35f, true, false );
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_x", flX, 0.f, 0.f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.7f, true, false );
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_y", flY, 0.f, 0.f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.7f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_scale", bZoomingIn ? tf_quest_map_zoom_in_scale : tf_quest_map_zoom_out_scale, 0.f, tf_quest_map_zoom_transition_in_time, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.35f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_x", flX, 0.f, 0.f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.7f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "zoom_y", flY, 0.f, 0.f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.7f, true, false );
 	}
 
 }

@@ -43,6 +43,8 @@ public:
 
 	virtual void	Spawn( void );
 
+	virtual CBaseEntity* GetEntity( void ) OVERRIDE { return this; }
+
 	virtual bool	IsBaseObject( void ) const { return true; }
 	virtual bool	IsAnUpgrade(void ) const { return false; }
 
@@ -100,9 +102,9 @@ public:
 	bool IsOwnedByLocalPlayer() const;
 	C_TFPlayer *GetOwner();
 
-	virtual void	Simulate();
+	virtual bool	Simulate();
 
-	virtual int		DrawModel( int flags );
+	virtual int		DrawModel( int flags, const RenderableInstance_t &instance );
 
 	float			GetPercentageConstructed( void ) { return m_flPercentageConstructed; }
 

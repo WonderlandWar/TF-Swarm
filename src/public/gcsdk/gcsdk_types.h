@@ -8,13 +8,16 @@
 #pragma once
 
 typedef uint64 GID_t;
-constexpr GID_t k_GIDNil = 0xffffffffffffffffull;
+//constexpr GID_t k_GIDNil = 0xffffffffffffffffull;
+//GID_t k_GIDNil = 0xffffffffffffffffull;
 
 typedef uint64 JobID_t;			// Each Job has a unique ID
-constexpr JobID_t k_JobIDNil = 0xffffffffffffffffull;
+//constexpr JobID_t k_JobIDNil = 0xffffffffffffffffull;
+JobID_t k_JobIDNil = 0xffffffffffffffffull;
 
 typedef uint32 PartnerId_t;
-constexpr PartnerId_t k_uPartnerIdInvalid = 0;
+//constexpr PartnerId_t k_uPartnerIdInvalid = 0;
+PartnerId_t k_uPartnerIdInvalid = 0;
 
 namespace GCSDK
 {

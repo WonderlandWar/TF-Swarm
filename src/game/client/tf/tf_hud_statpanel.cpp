@@ -186,7 +186,7 @@ CTFStatPanel::CTFStatPanel( const char *pElementName )
 	m_bStatsChanged = false;
 	m_bLocalFileTrusted = false;
 	m_flTimeLastSpawn = 0;
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 	m_bShouldBeVisible = false;
 	SetScheme( "ClientScheme" );

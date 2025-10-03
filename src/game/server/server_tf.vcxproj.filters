@@ -1169,6 +1169,9 @@
     <ClInclude Include="..\..\game\shared\baseplayer_shared.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\baseprojectile.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="BasePropDoor.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -1194,9 +1197,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="cbase.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cbaseprojectile.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game\shared\choreoactor.h">
@@ -3379,6 +3379,9 @@
     <ClCompile Include="..\..\game\shared\baseplayer_shared.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\shared\baseprojectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="baseviewmodel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -3404,9 +3407,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cbase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cbaseprojectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="client.cpp">

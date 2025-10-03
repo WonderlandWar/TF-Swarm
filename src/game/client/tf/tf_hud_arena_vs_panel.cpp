@@ -36,7 +36,7 @@ DECLARE_HUDELEMENT( CHudArenaVsPanel );
 //-----------------------------------------------------------------------------
 CHudArenaVsPanel::CHudArenaVsPanel( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudArenaVsPanel" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	vgui::SETUP_PANEL( this );
@@ -121,7 +121,7 @@ void CHudArenaVsPanel::FireGameEvent( IGameEvent * event )
 
 		if ( m_bVisible )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "ArenaVsPanelOnShow" );			
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "ArenaVsPanelOnShow" );			
 
 			m_flHideTime = gpGlobals->curtime + 10.0f;
 

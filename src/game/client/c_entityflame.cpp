@@ -84,7 +84,12 @@ void C_EntityFlame::CreateEffect( void )
 	if ( pEntity && !pEntity->IsAbleToHaveFireEffect() )
 		return;
 
-	m_hEffect = ParticleProp()->Create( m_bCheapEffect ? "burning_gib_01" : "burning_character", PATTACH_ABSORIGIN_FOLLOW );
+#ifdef TF_CLIENT_DLL
+	m_hEffect = ParticleProp()->Create( "burningplayer_red", PATTACH_ABSORIGIN_FOLLOW );
+#else
+	m_hEffect = ParticleProp()->Create( "burning_character", PATTACH_ABSORIGIN_FOLLOW );
+#endif
+
 	if ( m_hEffect )
 	{
 		m_hOldAttached = m_hEntAttached;

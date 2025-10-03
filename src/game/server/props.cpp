@@ -44,7 +44,9 @@
 #include "vehicle_base.h"
 #include "tier0/icommandline.h"
 
-
+#ifdef TF_DLL
+#include "nav_mesh/tf_nav_mesh.h"
+#endif
 
 #include "vstdlib/ikeyvaluessystem.h"
 
@@ -2017,6 +2019,18 @@ void CDynamicProp::Spawn( )
 	}
 
 	//m_debugOverlays |= OVERLAY_ABSBOX_BIT;
+
+#ifdef TF_DLL
+	const char *pszModelName = modelinfo->GetModelName( GetModel() );
+	if ( pszModelName && pszModelName[0] )
+	{
+		if ( FStrEq( pszModelName, "models/bots/boss_bot/carrier_parts.mdl" ) )
+		{
+			SetModelIndexOverride( VISION_MODE_NONE, modelinfo->GetModelIndex( pszModelName ) );
+			SetModelIndexOverride( VISION_MODE_ROME, modelinfo->GetModelIndex( "models/bots/tw2/boss_bot/twcarrier_addon.mdl" ) );
+		}
+	}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -5271,6 +5285,10 @@ void CPropDoorRotating::Spawn()
 	{
 		V_swap( m_angRotationOpenForward, m_angRotationOpenBack );
 	}
+
+#ifdef TF_DLL
+	TheTFNavMesh()->OnDoorCreated( this );
+#endif
 
 	// Figure out our volumes of movement as this door opens
 	CalculateDoorVolume( GetLocalAngles(), m_angRotationOpenForward, &m_vecForwardBoundsMin, &m_vecForwardBoundsMax );

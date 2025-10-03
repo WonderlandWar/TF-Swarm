@@ -317,16 +317,16 @@ void CTFItemCardPanel::PinCard( bool bPin )
 
 	if ( bDiff && bPin )
 	{
-		g_pClientMode->GetViewportAnimationController()->CancelAnimationsForPanel( this );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "ItemCard_HidePinHint" );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "ItemCard_ShowCloseButton" );
+		GetClientMode()->GetViewportAnimationController()->CancelAnimationsForPanel( this );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "ItemCard_HidePinHint" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "ItemCard_ShowCloseButton" );
 		SetVisible( true );
 	}
 	else if ( bDiff && !bPin )
 	{
-		g_pClientMode->GetViewportAnimationController()->CancelAnimationsForPanel( this );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "ItemCard_ShowPinHint" );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "ItemCard_HideCloseButton" );
+		GetClientMode()->GetViewportAnimationController()->CancelAnimationsForPanel( this );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "ItemCard_ShowPinHint" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "ItemCard_HideCloseButton" );
 		SetVisible( false );
 	}
 

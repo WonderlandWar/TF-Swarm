@@ -356,7 +356,7 @@ void CWarLandingPanel::SetVisible( bool bVisible )
 	EditablePanel* pSceneContainer = FindControl< EditablePanel >( "SceneContainer", true );
 	if ( pSceneContainer )
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pSceneContainer, m_strSceneAnimName, false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pSceneContainer, m_strSceneAnimName, false );
 	}
 }
 

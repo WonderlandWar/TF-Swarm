@@ -113,7 +113,7 @@ private:
 //-----------------------------------------------------------------------------
 CTFStreakNotice::CTFStreakNotice( const char *pName ) : CHudElement( pName ), vgui::EditablePanel( NULL, pName )
 {
-	SetParent( g_pClientMode->GetViewport() );
+	SetParent( GetClientMode()->GetViewport() );
 
 	m_pBackground = new EditablePanel( this, "Background" );
 	m_pLabel = new CExLabel( this, "SplashLabel", "" );

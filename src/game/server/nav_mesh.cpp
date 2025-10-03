@@ -18,6 +18,10 @@
 #include "tier0/vprof.h"
 //#include "shared_util.h"
 
+#ifdef TF_DLL
+#include "tf/nav_mesh/tf_nav_area.h"
+#endif
+
 #include "functorutils.h"
 
 // NOTE: This has to be the last file included!

@@ -657,7 +657,7 @@ public:
 		, BaseClass( NULL, "CoachedByPanel" )
 		, m_bCanLikeCoach( false )
 	{
-		vgui::Panel *pParent = g_pClientMode->GetViewport();
+		vgui::Panel *pParent = GetClientMode()->GetViewport();
 		SetParent( pParent );
 
 		SetHiddenBits( HIDEHUD_MISCSTATUS );

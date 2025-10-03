@@ -17,6 +17,7 @@
 #include "engine/IEngineTrace.h"
 #include "engine/IStaticPropMgr.h"
 #include "shared_classnames.h"
+#include "steam/steamclientpublic.h"
 
 #ifdef CLIENT_DLL
 #include "cdll_client_int.h"
@@ -862,6 +863,9 @@ EXTERN_SEND_TABLE(DT_Timeline);
 char* ReadAndAllocStringValue( KeyValues *pSub, const char *pName, const char *pFilename = NULL );
 
 int UTIL_StringFieldToInt( const char *szValue, const char **pValueStrings, int iNumStrings );
+
+// Global econ-level helper functionality.
+EUniverse GetUniverse();
 
 int UTIL_CountNumBitsSet( unsigned int nVar );
 int UTIL_CountNumBitsSet( uint64 nVar );

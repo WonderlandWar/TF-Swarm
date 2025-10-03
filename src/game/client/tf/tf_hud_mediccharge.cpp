@@ -81,7 +81,7 @@ static ResistIcons_t g_ResistIcons[MEDIGUN_NUM_RESISTS] =
 //-----------------------------------------------------------------------------
 CHudMedicChargeMeter::CHudMedicChargeMeter( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudMedicCharge" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_pChargeMeter = new ContinuousProgressBar( this, "ChargeMeter" );
@@ -262,7 +262,7 @@ void CHudMedicChargeMeter::OnTick( void )
 		{
 			if ( flCharge >= 1.0 )
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudMedicCharged" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudMedicCharged" );
 				m_bCharged = true;
 			}
 		}
@@ -271,7 +271,7 @@ void CHudMedicChargeMeter::OnTick( void )
 			// we've got invuln charge or we're using our invuln
 			if ( !pMedigun->IsReleasingCharge() )
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudMedicChargedStop" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudMedicChargedStop" );
 				m_bCharged = false;
 			}
 		}

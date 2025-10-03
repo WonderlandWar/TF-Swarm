@@ -2671,7 +2671,7 @@ inline ETFCond GetConditionFromRuneType( RuneTypes_t rt )
 	case RUNE_PLAGUE:		return TF_COND_RUNE_PLAGUE;
 	case RUNE_SUPERNOVA:	return TF_COND_RUNE_SUPERNOVA;
 	default:
-		AssertMsg( 0, "Unexpected rune_type rt (%d) in GetConditionFromRuneType", rt );	
+		AssertMsg1( 0, "Unexpected rune_type rt (%d) in GetConditionFromRuneType", rt );	
 	}
 
 	return TF_COND_INVALID;

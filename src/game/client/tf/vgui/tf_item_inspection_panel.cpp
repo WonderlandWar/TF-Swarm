@@ -225,7 +225,7 @@ void CTFItemInspectionPanel::ApplySchemeSettings( IScheme *pScheme )
 	PostMessage( m_pPaintkitPreviewContainer, msg);
 
 	// Start spinning
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "spin_vel", 1.f, 0.f, 2.f, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "spin_vel", 1.f, 0.f, 2.f, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
 }
 
 //-----------------------------------------------------------------------------
@@ -332,7 +332,7 @@ void CTFItemInspectionPanel::OnThink()
 		{
 			if ( m_flLastManipulatedTime == 0.f )
 			{
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "spin_vel", 0.f, 0.f, 0.0f, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "spin_vel", 0.f, 0.f, 0.0f, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
 			}
 
 			m_flLastManipulatedTime = Plat_FloatTime();
@@ -343,7 +343,7 @@ void CTFItemInspectionPanel::OnThink()
 			float flTimeSinceManip = Plat_FloatTime() - m_flLastManipulatedTime;
 			if ( flTimeSinceManip > 2.f && m_flLastManipulatedTime != 0.f )
 			{
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "spin_vel", 1.f, 0.f, 2.f, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "spin_vel", 1.f, 0.f, 2.f, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
 				m_flLastManipulatedTime = 0.f;
 			}
 		}

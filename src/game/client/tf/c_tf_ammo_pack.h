@@ -30,7 +30,7 @@ public:
 	C_TFAmmoPack( void );
 	~C_TFAmmoPack( void );
 
-	virtual int		DrawModel( int flags );
+	virtual int		DrawModel( int flags, const RenderableInstance_t &instance );
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 	virtual int		GetWorldModelIndex( void );
 	virtual void	ValidateModelIndex( void );

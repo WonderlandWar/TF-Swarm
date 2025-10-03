@@ -432,7 +432,7 @@ CTFHudEscort::CTFHudEscort( Panel *parent, const char *name ) : EditablePanel( p
 	m_pStatus = new CEscortStatusTeardrop( m_pEscortItemPanel );
 
 	m_pHilightSwoop = new CControlPointIconSwoop( this, "EscortHilightSwoop" );
-	m_pHilightSwoop->SetParent( g_pClientMode->GetViewport() );
+	m_pHilightSwoop->SetParent( GetClientMode()->GetViewport() );
 	m_pHilightSwoop->SetZPos( 10 );
 	m_pHilightSwoop->SetShouldScaleImage( true );
 
@@ -666,7 +666,7 @@ void CTFHudEscort::UpdateAlarmAnimations( void )
 					m_pEscortItemImageAlert->SetVisible( true );
 				}
 
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pEscortItemPanel, "HudCartAlarmPulse" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pEscortItemPanel, "HudCartAlarmPulse" );
 			}
 			else
 			{
@@ -675,7 +675,7 @@ void CTFHudEscort::UpdateAlarmAnimations( void )
 					m_pEscortItemImageAlert->SetVisible( false );
 				}
 
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pEscortItemPanel, "eventHudCartAlarmPulseStop" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pEscortItemPanel, "eventHudCartAlarmPulseStop" );
 			}
 		}
 	}
@@ -686,7 +686,7 @@ void CTFHudEscort::UpdateAlarmAnimations( void )
 			m_pEscortItemImageAlert->SetVisible( false );
 		}
 
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pEscortItemPanel, "eventHudCartAlarmPulseStop" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pEscortItemPanel, "eventHudCartAlarmPulseStop" );
 	}
 }
 

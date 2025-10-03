@@ -84,7 +84,7 @@ DECLARE_HUDELEMENT( CCriticalPanel );
 //-----------------------------------------------------------------------------
 CCriticalPanel::CCriticalPanel( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "CriticalPanel" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 	SetScheme( "ClientScheme" );
 

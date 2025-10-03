@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -28,7 +28,6 @@ static int team_scores[MAX_TEAMS];
 static int num_teams = 0;
 
 extern bool		g_fGameOver;
-extern ConVar sv_allchat;
 
 REGISTER_GAMERULES_CLASS( CTeamplayRules );
 
@@ -54,8 +53,6 @@ CTeamplayRules::CTeamplayRules()
 //-----------------------------------------------------------------------------
 void CTeamplayRules::Precache( void )
 {
-	BaseClass::Precache();
-
 	// Call the Team Manager's precaches
 	for ( int i = 0; i < GetNumberOfTeams(); i++ )
 	{
@@ -347,9 +344,9 @@ bool CTeamplayRules::IsTeamplay( void )
 	return true;
 }
 
-bool CTeamplayRules::FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker )
+bool CTeamplayRules::FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker, const CTakeDamageInfo &info )
 {
-	if ( pAttacker && PlayerRelationship( pPlayer, pAttacker ) == GR_TEAMMATE )
+	if ( pAttacker && PlayerRelationship( pPlayer, pAttacker ) == GR_TEAMMATE && !info.IsForceFriendlyFire() )
 	{
 		// my teammate hit me.
 		if ( (friendlyfire.GetInt() == 0) && (pAttacker != pPlayer) )
@@ -359,7 +356,7 @@ bool CTeamplayRules::FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pA
 		}
 	}
 
-	return BaseClass::FPlayerCanTakeDamage( pPlayer, pAttacker );
+	return BaseClass::FPlayerCanTakeDamage( pPlayer, pAttacker, info );
 }
 
 //=========================================================
@@ -387,14 +384,6 @@ int CTeamplayRules::PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarg
 //-----------------------------------------------------------------------------
 bool CTeamplayRules::PlayerCanHearChat( CBasePlayer *pListener, CBasePlayer *pSpeaker )
 {
-	if ( sv_allchat.GetBool() )
-	{
-		if ( !pSpeaker->IsAlive() )
-		{
-			return !pListener->IsAlive();
-		}
-	}
-
 	return ( PlayerRelationship( pListener, pSpeaker ) == GR_TEAMMATE );
 }
 

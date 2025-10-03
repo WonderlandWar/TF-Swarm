@@ -184,11 +184,11 @@ bool CTFTeamStatusPlayerPanel::Update( void )
 
 				if ( bAlive )
 				{
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "TeamStatus_PlayerAlive", false );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "TeamStatus_PlayerAlive", false );
 				}
 				else
 				{
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "TeamStatus_PlayerDead", false );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "TeamStatus_PlayerDead", false );
 				}
 			}
 

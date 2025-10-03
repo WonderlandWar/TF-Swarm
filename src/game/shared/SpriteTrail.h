@@ -65,6 +65,8 @@ public:
 	virtual void OnDataChanged( DataUpdateType_t updateType );
 	virtual void GetRenderBounds( Vector& mins, Vector& maxs );
 	virtual void ClientThink();
+
+	virtual bool ValidateEntityAttachedToPlayer( bool &bShouldRetry );
 #else
 	// Server only code
 	static CSpriteTrail *SpriteTrailCreate( const char *pSpriteName, const Vector &origin, bool animate );

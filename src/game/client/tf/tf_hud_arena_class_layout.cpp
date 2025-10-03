@@ -74,7 +74,7 @@ bool ArenaClassLayoutKeyInput( int down, ButtonCode_t keynum, const char *pszCur
 //-----------------------------------------------------------------------------
 CHudArenaClassLayout::CHudArenaClassLayout( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudArenaClassLayout" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	vgui::SETUP_PANEL( this );

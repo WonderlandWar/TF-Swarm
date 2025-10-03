@@ -97,11 +97,11 @@ void CTFBaseStorePanel::OnThink()
 		m_pNotificationsPresentPanel->SetVisible( bShouldBeVisible );
 		if ( bShouldBeVisible )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "NotificationsPresentBlink" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "NotificationsPresentBlink" );
 		}
 		else
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "NotificationsPresentBlinkStop" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "NotificationsPresentBlinkStop" );
 		}		
 	}
 }

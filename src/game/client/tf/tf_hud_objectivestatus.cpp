@@ -61,7 +61,7 @@ CTFHudObjectiveStatus::CTFHudObjectiveStatus( const char *pElementName )
 	, m_pTrainingPanel( NULL )
 	, m_pRobotDestructionPanel( NULL )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_pFlagPanel = new CTFHudFlagObjectives( this, "ObjectiveStatusFlagPanel" );

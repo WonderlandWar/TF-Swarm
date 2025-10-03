@@ -66,7 +66,7 @@ DECLARE_HUDELEMENT( CHudArenaNotification );
 //-----------------------------------------------------------------------------
 CHudArenaNotification::CHudArenaNotification( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudArenaNotification" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );

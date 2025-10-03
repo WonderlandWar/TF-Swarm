@@ -58,7 +58,8 @@ public:
 
 	static void * operator new( size_t size )
 	{
-		CThreadSafeMemoryPool *pNode = (CThreadSafeMemoryPool *)MemAlloc_AllocAligned( size, 8, __FILE__, __LINE__ 
+		// TF_SWARM: using MemAlloc_AllocAlignedFileLine instead of MemAlloc_AllocAligned
+		CThreadSafeMemoryPool *pNode = (CThreadSafeMemoryPool *)MemAlloc_AllocAlignedFileLine( size, 8, __FILE__, __LINE__ 
 #ifdef STEAM
 			, true // new operator
 #endif
@@ -68,7 +69,8 @@ public:
 	
 	static void * operator new( size_t size, int nBlockUse, const char *pFileName, int nLine )
 	{
-		CThreadSafeMemoryPool *pNode = (CThreadSafeMemoryPool *)MemAlloc_AllocAligned( size, 8, pFileName, nLine
+		// TF_SWARM: using MemAlloc_AllocAlignedFileLine instead of MemAlloc_AllocAligned
+		CThreadSafeMemoryPool *pNode = (CThreadSafeMemoryPool *)MemAlloc_AllocAlignedFileLine( size, 8, pFileName, nLine
 #ifdef STEAM
 			, true // new operator
 #endif

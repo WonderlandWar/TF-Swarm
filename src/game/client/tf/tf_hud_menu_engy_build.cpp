@@ -103,7 +103,7 @@ DECLARE_HUDELEMENT_DEPTH( CHudMenuEngyBuild, 40 );	// in front of engy building 
 CHudMenuEngyBuild::CHudMenuEngyBuild( const char *pElementName ) 
 	: CHudBaseBuildMenu( pElementName, "HudMenuEngyBuild" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );

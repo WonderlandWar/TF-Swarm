@@ -87,6 +87,8 @@ int		GetSpectatorTarget();
 int		GetSpectatorMode( void );
 bool	IsPlayerIndex( int index );
 int		GetLocalPlayerIndex( void );
+int		GetLocalPlayerVisionFilterFlags( bool bWeaponsCheck = false );
+bool	IsLocalPlayerUsingVisionFilterFlags( int nFlags, bool bWeaponsCheck = false );
 int		GetLocalPlayerTeam( void );
 bool	IsLocalPlayerSpectator( void );
 void	NormalizeAngles( QAngle& angles );

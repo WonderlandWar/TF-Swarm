@@ -34,7 +34,7 @@ DECLARE_HUDELEMENT( CHudArenaPlayerCount );
 //-----------------------------------------------------------------------------
 CHudArenaPlayerCount::CHudArenaPlayerCount( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudArenaPlayerCount" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	vgui::SETUP_PANEL( this );

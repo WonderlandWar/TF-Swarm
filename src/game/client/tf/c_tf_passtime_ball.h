@@ -27,7 +27,7 @@ public:
 	C_PasstimeBall();
 	virtual ~C_PasstimeBall();
 	virtual void OnDataChanged( DataUpdateType_t updateType ) OVERRIDE;
-	virtual int DrawModel( int flags ) OVERRIDE;
+	virtual int DrawModel( int flags, const RenderableInstance_t &instance ) OVERRIDE;
 	virtual unsigned int PhysicsSolidMaskForEntity() const OVERRIDE;
 	virtual bool ShouldCollide( int collisionGroup, int contentsMask ) const OVERRIDE;
 	

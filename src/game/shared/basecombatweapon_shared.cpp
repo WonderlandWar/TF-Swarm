@@ -24,6 +24,10 @@
 
 #endif
 
+#if defined ( TF_DLL ) || defined ( TF_CLIENT_DLL )
+#include "tf_shareddefs.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -36,6 +40,15 @@
 #define HIDEWEAPON_THINK_CONTEXT			"BaseCombatWeapon_HideThink"
 
 extern bool UTIL_ItemCanBeTouchedByPlayer( CBaseEntity *pItem, CBasePlayer *pPlayer );
+
+#if defined ( TF_CLIENT_DLL ) || defined ( TF_DLL )
+#ifdef _DEBUG
+ConVar tf_weapon_criticals_force_random( "tf_weapon_criticals_force_random", "0", FCVAR_REPLICATED | FCVAR_CHEAT );
+#endif // _DEBUG
+ConVar tf_weapon_criticals_bucket_cap( "tf_weapon_criticals_bucket_cap", "1000.0", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar tf_weapon_criticals_bucket_bottom( "tf_weapon_criticals_bucket_bottom", "-250.0", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar tf_weapon_criticals_bucket_default( "tf_weapon_criticals_bucket_default", "300.0", FCVAR_REPLICATED | FCVAR_CHEAT );
+#endif // TF
 
 CBaseCombatWeapon::CBaseCombatWeapon()
 {
@@ -68,7 +81,15 @@ CBaseCombatWeapon::CBaseCombatWeapon()
 
 	m_hWeaponFileInfo = GetInvalidWeaponInfoHandle();
 
+#if defined( TF_DLL )
+	UseClientSideAnimation();
+#endif
 
+#if defined ( TF_CLIENT_DLL ) || defined ( TF_DLL )
+	m_flCritTokenBucket = tf_weapon_criticals_bucket_default.GetFloat();
+	m_nCritChecks = 1;
+	m_nCritSeedRequests = 0;
+#endif // TF
 }
 
 //-----------------------------------------------------------------------------
@@ -219,6 +240,15 @@ void CBaseCombatWeapon::Precache( void )
 			{
 				Msg("ERROR: Weapon (%s) using undefined primary ammo type (%s)\n",GetClassname(), GetWpnData().szAmmo1);
 			}
+ #if defined ( TF_DLL ) || defined ( TF_CLIENT_DLL )
+			// Ammo override
+			int iModUseMetalOverride = 0;
+			CALL_ATTRIB_HOOK_INT( iModUseMetalOverride, mod_use_metal_ammo_type );
+			if ( iModUseMetalOverride )
+			{
+				m_iPrimaryAmmoType = (int)TF_AMMO_METAL;
+			}
+#endif
 		}
 		if ( GetWpnData().szAmmo2[0] )
 		{
@@ -318,6 +348,13 @@ const char *CBaseCombatWeapon::GetPrintName( void ) const
 //-----------------------------------------------------------------------------
 int CBaseCombatWeapon::GetMaxClip1( void ) const
 {
+#if defined ( TF_DLL ) || defined ( TF_CLIENT_DLL )
+	int iModMaxClipOverride = 0;
+	CALL_ATTRIB_HOOK_INT( iModMaxClipOverride, mod_max_primary_clip_override );
+	if ( iModMaxClipOverride != 0 )
+		return iModMaxClipOverride;
+#endif
+
 	return GetWpnData().iMaxClip1;
 }
 
@@ -1471,6 +1508,56 @@ void CBaseCombatWeapon::HideThink( void )
 	}
 }
 
+#if defined ( TF_CLIENT_DLL ) || defined ( TF_DLL )
+//-----------------------------------------------------------------------------
+// Purpose: Anti-hack
+//-----------------------------------------------------------------------------
+void CBaseCombatWeapon::AddToCritBucket( float flAmount )
+{
+	float flCap = tf_weapon_criticals_bucket_cap.GetFloat();
+
+	// Regulate crit frequency to reduce client-side seed hacking
+	if ( m_flCritTokenBucket < flCap )
+	{
+		// Treat raw damage as the resource by which we add or subtract from the bucket
+		m_flCritTokenBucket += flAmount;
+		m_flCritTokenBucket = Min( m_flCritTokenBucket, flCap );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Anti-hack
+//-----------------------------------------------------------------------------
+bool CBaseCombatWeapon::IsAllowedToWithdrawFromCritBucket( float flDamage )
+{
+	// Note: If we're in this block of code, the assumption is that the
+	// seed said we should grant a random crit.  If allowed, the cost
+	// will be deducted here.
+
+	// Track each seed request - in cases where a player is hacking, we'll 
+	// see a silly ratio.
+	m_nCritSeedRequests++;
+
+	// Adjust token cost based on the ratio of requests vs granted, except
+	// melee, which crits much more than ranged (as high as 60% chance)
+	float flMult = ( IsMeleeWeapon() ) ? 0.5f : RemapValClamped( ( (float)m_nCritSeedRequests / (float)m_nCritChecks ), 0.1f, 1.f, 1.f, 3.f );
+
+	// Would this take us below our limit?
+	float flCost = ( flDamage * TF_DAMAGE_CRIT_MULTIPLIER ) * flMult;
+	if ( flCost > m_flCritTokenBucket )
+		return false;
+
+	// Withdraw
+	RemoveFromCritBucket( flCost );
+
+	float flBottom = tf_weapon_criticals_bucket_bottom.GetFloat();
+	if ( m_flCritTokenBucket < flBottom )
+		m_flCritTokenBucket = flBottom;
+
+	return true;
+}
+#endif // TF_DLL
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -1870,6 +1957,27 @@ bool CBaseCombatWeapon::DefaultReload( int iClipSize1, int iClipSize2, int iActi
 	m_bInReload = true;
 
 	return true;
+}
+
+bool CBaseCombatWeapon::ReloadsSingly( void ) const
+{
+#if defined ( TF_DLL ) || defined ( TF_CLIENT_DLL )
+	float fHasReload = 1.0f;
+	CALL_ATTRIB_HOOK_FLOAT( fHasReload, mod_no_reload_display_only );
+	if ( fHasReload != 1.0f )
+	{
+		return false;
+	}
+
+	int iWeaponMod = 0;
+	CALL_ATTRIB_HOOK_INT( iWeaponMod, set_scattergun_no_reload_single );
+	if ( iWeaponMod == 1 )
+	{
+		return false;
+	}
+#endif // TF_DLL || TF_CLIENT_DLL
+
+	return m_bReloadsSingly;
 }
 
 //-----------------------------------------------------------------------------
@@ -2658,7 +2766,9 @@ BEGIN_NETWORK_TABLE_NOBASE( CBaseCombatWeapon, DT_LocalActiveWeaponData )
 	SendPropInt( SENDINFO( m_nNextThinkTick ) ),
 	SendPropTime( SENDINFO( m_flTimeWeaponIdle ) ),
 
-
+#if defined( TF_DLL )
+	SendPropExclude( "DT_AnimTimeMustBeFirst" , "m_flAnimTime" ),
+#endif
 
 #else
 	RecvPropTime( RECVINFO( m_flNextPrimaryAttack ) ),
@@ -2680,7 +2790,9 @@ BEGIN_NETWORK_TABLE_NOBASE( CBaseCombatWeapon, DT_LocalWeaponData )
 
 	SendPropInt( SENDINFO( m_nViewModelIndex ), VIEWMODEL_INDEX_BITS, SPROP_UNSIGNED ),
 
-
+#if defined( TF_DLL )
+	SendPropExclude( "DT_AnimTimeMustBeFirst" , "m_flAnimTime" ),
+#endif
 
 #else
 	RecvPropIntWithMinusOneFlag( RECVINFO(m_iClip1 )),

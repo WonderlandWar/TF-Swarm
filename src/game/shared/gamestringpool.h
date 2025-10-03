@@ -21,6 +21,7 @@ class IGameSystem;
 //-----------------------------------------------------------------------------
 string_t AllocPooledString( const char *pszValue );
 string_t FindPooledString( const char *pszValue );
+void PurgeDeferredPooledStrings();
 
 #define AssertIsValidString( s )	AssertMsg( s == NULL_STRING || s == FindPooledString( STRING(s) ), "Invalid string " #s );
 		 

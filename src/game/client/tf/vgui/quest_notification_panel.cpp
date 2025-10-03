@@ -194,7 +194,7 @@ CQuestNotificationPanel::CQuestNotificationPanel( const char *pszElementName )
 	, m_bInitialized( false )
 	, m_pMainContainer( NULL )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	g_pQuestNotificationPanel = this;
@@ -437,7 +437,7 @@ void CQuestNotificationPanel::Update()
 	{
 		m_flTimeSinceLastShown = Plat_FloatTime();
 		// Play the slide-out animation
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "QuestNotification_Hide" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "QuestNotification_Hide" );
 		m_bIsPresenting = false;
 	}
 	else if ( m_bIsPresenting ) // We are presenting a notification

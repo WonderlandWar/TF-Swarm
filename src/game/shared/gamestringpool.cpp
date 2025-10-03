@@ -7,6 +7,7 @@
 
 #include "cbase.h"
 
+#include "utlhashtable.h"
 #include "stringpool.h"
 #include "igamesystem.h"
 #include "gamestringpool.h"
@@ -23,11 +24,37 @@ class CGameStringPool : public CStringPool,	public CBaseGameSystem
 
 	virtual void LevelShutdownPostEntity() 
 	{
-		FreeAll();
+		Cleanup();
 		CGameString::IncrementSerialNumber();
 	}
 
 public:
+	~CGameStringPool()
+	{
+		Cleanup();
+	}
+
+	void Cleanup()
+	{
+		FreeAll();
+		PurgeDeferredDeleteList();
+		PurgeKeyLookupCache();
+	}
+
+	void PurgeDeferredDeleteList()
+	{
+		for ( int i = 0; i < m_DeferredDeleteList.Count(); ++ i )
+		{
+			free( ( void * )m_DeferredDeleteList[ i ] );
+		}
+		m_DeferredDeleteList.Purge();
+	}
+
+	void PurgeKeyLookupCache()
+	{
+		m_KeyLookupCache.Purge();
+	}
+
 	void Dump( void )
 	{
 		for ( int i = m_Strings.FirstInorder(); i != m_Strings.InvalidIndex(); i = m_Strings.NextInorder(i) )
@@ -37,6 +64,31 @@ public:
 		DevMsg( "\n" );
 		DevMsg( "Size:  %d items\n", m_Strings.Count() );
 	}
+
+	void Remove( const char *pszValue )
+	{
+		int i = m_Strings.Find( pszValue );
+		if ( i != m_Strings.InvalidIndex() )
+		{
+			m_DeferredDeleteList.AddToTail( m_Strings[ i ] );
+			m_Strings.RemoveAt( i );
+		}
+	}
+	
+	const char *AllocateWithKey(const char *string, const void* key)
+	{
+		const char * &cached = m_KeyLookupCache[ m_KeyLookupCache.Insert( key, NULL ) ];
+		if ( cached == NULL )
+		{
+			cached = Allocate( string );
+		}
+		return cached;
+	}
+
+private:
+	CUtlVector< const char * > m_DeferredDeleteList;
+
+	CUtlHashtable< const void*, const char* > m_KeyLookupCache;
 };
 
 static CGameStringPool g_GameStringPool;
@@ -61,9 +113,25 @@ string_t AllocPooledString( const char * pszValue )
 	return NULL_STRING;
 }
 
+string_t AllocPooledString_StaticConstantStringPointer( const char * pszGlobalConstValue )
+{
+	Assert(pszGlobalConstValue && *pszGlobalConstValue);
+	return MAKE_STRING( g_GameStringPool.AllocateWithKey( pszGlobalConstValue, pszGlobalConstValue ) );
+}
+
 string_t FindPooledString( const char *pszValue )
 {
 	return MAKE_STRING( g_GameStringPool.Find( pszValue ) );
+}
+
+void RemovePooledString( const char *pszValue )
+{
+	g_GameStringPool.Remove( pszValue );
+}
+
+void PurgeDeferredPooledStrings()
+{
+	g_GameStringPool.PurgeDeferredDeleteList();
 }
 
 int CGameString::gm_iSerialNumber = 1;

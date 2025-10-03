@@ -133,6 +133,9 @@
 #define VPROF_BUDGETGROUP_CVAR_FIND					_T("Cvar_Find") 
 #define VPROF_BUDGETGROUP_CLIENTLEAFSYSTEM			_T("ClientLeafSystem")
 #define VPROF_BUDGETGROUP_JOBS_COROUTINES			_T("Jobs/Coroutines")
+#define VPROF_BUDGETGROUP_ATTRIBUTES				_T("Attributes")
+#define VPROF_BUDGETGROUP_FINDATTRIBUTE				_T("FindAttribute")
+#define VPROF_BUDGETGROUP_FINDATTRIBUTEUNSAFE		_T("FindAttributeUnsafe")
 	
 #ifdef _X360
 // update flags

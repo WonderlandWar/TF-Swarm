@@ -35,7 +35,7 @@ DECLARE_HUDELEMENT( CHudTeamGoalTournament );
 //-----------------------------------------------------------------------------
 CHudTeamGoalTournament::CHudTeamGoalTournament( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudTeamGoalTournament" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );

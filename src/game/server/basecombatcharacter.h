@@ -22,6 +22,10 @@
 #include <limits.h>
 #include "weapon_proficiency.h"
 
+#ifdef TF_DLL
+#include "tf_shareddefs.h"
+#endif // TF_DLL
+
 
 // HACK, Should come from game specific enum...
 #define WEAPON_MAX 32   
@@ -436,6 +440,10 @@ public:
 	// Notification from INextBots.
 	// -----------------------
 	virtual void OnPursuedBy( INextBot * RESTRICT pPursuer ){} // called every frame while pursued by a bot in DirectChase.
+
+#ifdef TF_DLL
+	virtual HalloweenBossType GetBossType() const { return HALLOWEEN_BOSS_INVALID; }
+#endif // TF_DLL
 
 
 public:

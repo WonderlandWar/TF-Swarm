@@ -40,7 +40,7 @@ using namespace vgui;
 CHudBaseDeathNotice::CHudBaseDeathNotice( const char *pElementName ) :
 	CHudElement( pElementName ), BaseClass( NULL, "HudDeathNotice" )
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 }
@@ -746,7 +746,7 @@ void CHudBaseDeathNotice::FireGameEvent( IGameEvent *event )
 		
 		wchar_t wzCount[10];
 		_snwprintf( wzCount, ARRAYSIZE( wzCount ), L"%d", ++msg.iCount );
-		g_pVGuiLocalize->ConstructString_safe( msg.wzInfoText, g_pVGuiLocalize->Find( "#SpecialScore_Count" ), 1, wzCount );
+		g_pVGuiLocalize->ConstructString( msg.wzInfoText, sizeof( msg.wzInfoText ), g_pVGuiLocalize->Find( "#SpecialScore_Count" ), 1, wzCount );
 	}
 	else if ( FStrEq( "team_leader_killed", pszEventName ) )
 	{
@@ -847,7 +847,7 @@ void CHudBaseDeathNotice::DrawText( int x, int y, HFont hFont, Color clr, const 
 	surface()->DrawSetTextPos( x, y );
 	surface()->DrawSetTextColor( clr );
 	surface()->DrawSetTextFont( hFont );	//reset the font, draw icon can change it
-	surface()->DrawUnicodeString( szText, vgui::FONT_DRAW_NONADDITIVE );
+	surface()->DrawUnicodeString( szText, FONT_DRAW_NONADDITIVE );
 }
 
 //-----------------------------------------------------------------------------
@@ -905,7 +905,7 @@ CHudTexture *CHudBaseDeathNotice::GetIcon( const char *szIcon, EDeathNoticeIconF
 		V_strncpy( szIconTmp, cszNewPrefix, kIconTempStringLen );
 		V_strncat( szIconTmp, szIcon + 2, kIconTempStringLen - iNewPrefixLen );
 		
-		CHudTexture *pIcon = gHUD.GetIcon( szIconTmp );
+		CHudTexture *pIcon = HudIcons().GetIcon( szIconTmp );
 
 		// return inverted version if found
 		if ( pIcon )
@@ -914,7 +914,7 @@ CHudTexture *CHudBaseDeathNotice::GetIcon( const char *szIcon, EDeathNoticeIconF
 
 	// we either requested the default style or we requested an alternate style but
 	// didn't have the art for it; either way, we can't, so fall back to our default
-	return gHUD.GetIcon( szIcon );
+	return HudIcons().GetIcon( szIcon );
 }
 
 //-----------------------------------------------------------------------------

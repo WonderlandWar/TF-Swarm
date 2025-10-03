@@ -32,7 +32,7 @@ DECLARE_HUDELEMENT( CTFHudSpectatorExtras );
 //-----------------------------------------------------------------------------
 CTFHudSpectatorExtras::CTFHudSpectatorExtras( const char *pszElementName ) : CHudElement( pszElementName ), EditablePanel( NULL, "HudSpectatorExtras" )
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( 0 );

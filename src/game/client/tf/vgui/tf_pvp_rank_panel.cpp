@@ -535,7 +535,7 @@ void CPvPRankPanel::UpdateRankControls( const LevelInfo_t& levelCurrent )
 		if ( m_pBGPanel )
 		{
 			m_pBGPanel->SetAlpha( 0 );
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pBGPanel, "alpha", 255, 2.f, 1.f, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false ); 
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pBGPanel, "alpha", 255, 2.f, 1.f, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false ); 
 		}
 	}
 }
@@ -595,7 +595,7 @@ void CPvPRankPanel::OnCommand( const char *command )
 		m_pModelPanel->PlaySequence( pszSeqName );
 		PlaySoundEntry( pszSoundName );
 
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pModelContainer, "PvPRankModelClicked", false);
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pModelContainer, "PvPRankModelClicked", false);
 		
 		return;
 	}
@@ -854,11 +854,11 @@ void CPvPRankPanel::PlayLevelUpEffects( const LevelInfo_t& level ) const
 		EditablePanel* pModelContainer = const_cast< CPvPRankPanel* >( this )->FindControl< EditablePanel >( "ModelContainer" );
 		if ( pModelContainer )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pModelContainer, "PvPRankLevelUpModel", false );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pModelContainer, "PvPRankLevelUpModel", false );
 		}
 	}
 
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pXPBar, "PvPRankLevelUpXPBar", false);
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pXPBar, "PvPRankLevelUpXPBar", false);
 
 	wchar_t wszOutString[ 128 ];
 	m_pProgressionDesc->GetLocalizedLevelTitle( level, wszOutString, 128 );
@@ -872,12 +872,12 @@ void CPvPRankPanel::PlayLevelDownEffects( const LevelInfo_t& level ) const
 {
 	if ( m_bShowModel )
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pXPBar, "PvPRankLevelDownXPBar", false);
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pXPBar, "PvPRankLevelDownXPBar", false);
 		m_pModelPanel->PlaySequence( "level_down" );
 		EditablePanel* pModelContainer = const_cast< CPvPRankPanel* >( this )->FindControl< EditablePanel >( "ModelContainer" );
 		if ( pModelContainer )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pModelContainer, "PvPRankLevelDownModel", false );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pModelContainer, "PvPRankLevelDownModel", false );
 		}
 	}
 

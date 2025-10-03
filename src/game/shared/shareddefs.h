@@ -21,9 +21,11 @@
 #define ROUND_TO_TICKS( t )		( TICK_INTERVAL * TIME_TO_TICKS( t ) )
 #define TICK_NEVER_THINK		(-1)
 
-
+#if defined( TF_DLL )
+#define ANIMATION_CYCLE_BITS		10
+#else
 #define ANIMATION_CYCLE_BITS		15
-
+#endif
 #define ANIMATION_CYCLE_MINFRAC		(1.0f / (1<<ANIMATION_CYCLE_BITS))
 
 // Matching the high level concept is significantly better than other criteria
@@ -94,10 +96,11 @@ public:
 #define WATERJUMP_HEIGHT			8
 
 #define MAX_CLIMB_SPEED		200
-
-
+#if defined(TF_DLL) || defined(TF_CLIENT_DLL)
+	#define TIME_TO_DUCK_MSECS		200
+#else
 	#define TIME_TO_DUCK_MSECS		400
- 
+#endif
 #define TIME_TO_UNDUCK_MSECS		200
 
 inline float FractionDucked( int msecs )
@@ -214,7 +217,18 @@ enum CastVote
 #define HIDEHUD_INVEHICLE			( 1<<10 )
 #define HIDEHUD_BONUS_PROGRESS		( 1<<11 )	// Hide bonus progress display (for bonus map challenges)
 
+#if defined( TF_DLL ) || defined ( TF_CLIENT_DLL )
+#define HIDEHUD_BUILDING_STATUS		        ( 1<<12 )	// Hide Engineer building status
+#define HIDEHUD_CLOAK_AND_FEIGN             ( 1<<13 )	// Hide item effect meter (cloak, etc)
+#define HIDEHUD_PIPES_AND_CHARGE            ( 1<<14 )	// Hide demo hud
+#define HIDEHUD_METAL                       ( 1<<15 )	// Metal/account hud
+#define HIDEHUD_TARGET_ID                   ( 1<<16 )	// Target ID
+#define HIDEHUD_MATCH_STATUS				( 1<<17 )	// Hide match status
+#define HIDEHUD_BITCOUNT			18
+#else
 #define HIDEHUD_BITCOUNT			12
+#endif
+
 
 //===================================================================================================================
 // suit usage bits
@@ -236,9 +250,23 @@ enum CastVote
 //You might be wondering why these aren't multiple of 2. Well the reason is that if servers decide to have HLTV or Replay enabled we need the extra slot.
 //This is ok since MAX_PLAYERS is used for code specific things like arrays and loops, but it doesn't really means that this is the max number of players allowed
 //Since this is decided by the gamerules (and it can be whatever number as long as its less than MAX_PLAYERS).
-
+#if defined( TF_DLL ) || defined ( TF_CLIENT_DLL ) || defined( HL2MP )
+	#define MAX_PLAYERS				101
+#else
 	#define MAX_PLAYERS				33  // Absolute max players supported
+#endif
 
+// Josh: Accounts for code that may index this array by an entindex
+// of player rather than the player index... :s
+#define MAX_PLAYERS_ARRAY_SAFE		( MAX_PLAYERS + 1 )
+
+inline bool IsIndexIntoPlayerArrayValid( int iIndex )
+{
+	if ( iIndex < 0 || iIndex >= MAX_PLAYERS_ARRAY_SAFE )
+		return false;
+		
+	return true;
+}
 
 #define MAX_PLACE_NAME_LENGTH		18
 
@@ -888,6 +916,19 @@ enum
 #define CELL_COUNT_BITS( bits ) MINIMUM_BITS_NEEDED( CELL_COUNT( bits ) ) // How many bits are necessary to respresent that cell
 #define CELL_BASEENTITY_ORIGIN_CELL_BITS 5 // default amount of entropy bits for base entity
 
+//-----------------------------------------------------------------------------
+// Commentary Mode
+//-----------------------------------------------------------------------------
+#if defined(TF_DLL) || defined(TF_CLIENT_DLL)
+#define GAME_HAS_NO_USE_KEY
+
+#if defined( SPROP_COORD )
+#undef SPROP_COORD
+#endif
+
+#define SPROP_COORD SPROP_COORD_MP
+
+#endif
 
 // The player's method of starting / stopping commentary
 #ifdef GAME_HAS_NO_USE_KEY
@@ -895,6 +936,18 @@ enum
 #else
 #define COMMENTARY_BUTTONS		(IN_USE)
 #endif
+
+#define TEAM_TRAIN_MAX_TEAMS			4
+#define TEAM_TRAIN_MAX_HILLS			5
+#define TEAM_TRAIN_FLOATS_PER_HILL		2
+#define TEAM_TRAIN_HILLS_ARRAY_SIZE		TEAM_TRAIN_MAX_TEAMS * TEAM_TRAIN_MAX_HILLS * TEAM_TRAIN_FLOATS_PER_HILL
+
+enum
+{
+	HILL_TYPE_NONE = 0,
+	HILL_TYPE_UPHILL,
+	HILL_TYPE_DOWNHILL,
+};
 
 bool IsHeadTrackingEnabled();
 
@@ -962,5 +1015,36 @@ enum Class_T
 #define FACTION_NONE				0					// Not assigned a faction.  Entities not assigned a faction will not do faction tests.
 #define LAST_SHARED_FACTION			(FACTION_NONE)
 #define NUM_SHARED_FACTIONS			(FACTION_NONE + 1)
+
+
+#if defined(TF_DLL) || defined(TF_CLIENT_DLL)
+//-----------------------------------------------------------------------------
+// Vision Filters.
+//-----------------------------------------------------------------------------
+// Also used in the item schema to define vision filter or vision mode opt in
+#define TF_VISION_FILTER_NONE			0
+#define TF_VISION_FILTER_PYRO			(1<<0)		// 1
+#define TF_VISION_FILTER_HALLOWEEN		(1<<1)		// 2
+#define TF_VISION_FILTER_ROME			(1<<2)		// 4
+
+// THIS ENUM SHOULD MATCH THE ORDER OF THE FLAGS ABOVE
+enum
+{
+	VISION_MODE_NONE = 0,
+	VISION_MODE_PYRO,
+	VISION_MODE_HALLOWEEN,
+	VISION_MODE_ROME,
+
+	MAX_VISION_MODES
+};
+#endif // TF_DLL || TF_CLIENT_DLL
+
+class CPhysCollide;
+struct collidelist_t
+{
+	const CPhysCollide	*pCollide;
+	Vector			origin;
+	QAngle			angles;
+};
 
 #endif // SHAREDDEFS_H

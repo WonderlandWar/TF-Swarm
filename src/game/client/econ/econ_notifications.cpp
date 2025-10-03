@@ -718,7 +718,7 @@ public:
 		, m_flInvalidateTime( 0.0f )
 		, m_bInvalidated( false )
 	{
-		vgui::Panel *pParent = g_pClientMode->GetViewport();
+		vgui::Panel *pParent = GetClientMode()->GetViewport();
 		SetParent( pParent );
 
 		SetHiddenBits( HIDEHUD_MISCSTATUS );

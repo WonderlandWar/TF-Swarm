@@ -1,8 +1,8 @@
 [vpc crc file version 2]
-8209bbc3 E:\coding_stuff\New-TF-Swarm\src\devtools\bin\vpc.exe
+8209bbc3 E:\Program Files (x86)\Steam\steamapps\git\TF-Swarm\src\devtools\bin\vpc.exe
 _Nc_VS2013/vpcgame:tf_
 48f1ce24 server_tf.vpc
-5479eef3 ..\..\game\server\server_base.vpc
+631f818a ..\..\game\server\server_base.vpc
 9a02405f ..\..\vpc_scripts\source_dll_base.vpc
 d752cf80 ..\..\vpc_scripts\platform_dirs.vpc
 6c4a5ff1 ..\..\vpc_scripts\source_base.vpc

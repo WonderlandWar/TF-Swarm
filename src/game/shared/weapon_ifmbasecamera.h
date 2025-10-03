@@ -40,7 +40,7 @@ public:
 public:
 	virtual void	ViewModelDrawn( CBaseViewModel *pBaseViewModel );
 	virtual void	DrawCrosshair( );
-	virtual int		DrawModel( int flags );
+	virtual int		DrawModel( int flags, const RenderableInstance_t &instance ) OVERRIDE;
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 
 protected:

@@ -85,6 +85,48 @@ int GetLocalPlayerIndex( void )
 		return  0;	// game not started yet
 }
 
+// NOTE: cache these because this gets executed hundreds of times per frame
+static int g_nLocalPlayerVisionFlagsWeaponsCheck = 0;
+static int g_nLocalPlayerVisionFlags = 0;
+int GetLocalPlayerVisionFilterFlags( bool bWeaponsCheck /*= false */ )
+{
+	return bWeaponsCheck ? g_nLocalPlayerVisionFlagsWeaponsCheck : g_nLocalPlayerVisionFlags;
+}
+
+void UpdateLocalPlayerVisionFlags()
+{
+	g_nLocalPlayerVisionFlagsWeaponsCheck = 0;
+	g_nLocalPlayerVisionFlags = 0;
+	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+	if ( pPlayer )
+	{
+		g_nLocalPlayerVisionFlagsWeaponsCheck = pPlayer->GetVisionFilterFlags( true );
+		g_nLocalPlayerVisionFlags = pPlayer->GetVisionFilterFlags( false );
+	}
+}
+
+bool IsLocalPlayerUsingVisionFilterFlags( int nFlags, bool bWeaponsCheck /* = false */ )
+{
+	int nLocalPlayerFlags = GetLocalPlayerVisionFilterFlags( bWeaponsCheck );
+
+	if ( !bWeaponsCheck )
+	{
+		// We can only modify the RJ flags with normal checks that won't take the forced kill cam flags that can happen in weapon checks
+		int nRJShaderFlags = nLocalPlayerFlags;
+		if ( nRJShaderFlags != 0 && GameRules() && !GameRules()->AllowMapVisionFilterShaders() )
+		{
+			nRJShaderFlags = 0;
+		}
+
+		if ( nRJShaderFlags != localplayer_visionflags.GetInt() )
+		{
+			localplayer_visionflags.SetValue( nRJShaderFlags );
+		}
+	}
+
+	return ( nLocalPlayerFlags & nFlags ) == nFlags;
+}
+
 bool IsLocalPlayerSpectator( void )
 {
 	C_BasePlayer * player = C_BasePlayer::GetLocalPlayer();
@@ -1154,9 +1196,11 @@ bool UTIL_GetMapLoadCountFileName( int iController, const char *pszFilePrependNa
 	return true;
 }
 
-
+#ifdef TF_CLIENT_DLL
+#define MAP_KEY_FILE "viewed.res"
+#else
 #define MAP_KEY_FILE "mapkeys.res"
-
+#endif	
 
 void UTIL_IncrementMapKey( const char *pszCustomKey )
 {

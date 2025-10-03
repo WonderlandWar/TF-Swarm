@@ -30,9 +30,6 @@
 #include "tf_hud_spectator_extras.h"
 #include "tf_proxyentity.h"
 
-// NVNT for building forces
-#include "haptics/haptic_utils.h"
-
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -175,11 +172,13 @@ void C_BaseObject::OnDataChanged( DataUpdateType_t updateType )
 	if (updateType == DATA_UPDATE_CREATED)
 	{
 		CreateBuildPoints();
+#if 0
 		// NVNT if the local player created this send a created effect
 		if(IsOwnedByLocalPlayer() &&haptics)
 		{
 			haptics->ProcessHapticEvent(3, "Game", "Build", GetClassname());
 		}
+#endif
 	}
 
 	BaseClass::OnDataChanged( updateType );
@@ -274,6 +273,7 @@ void C_BaseObject::OnDataChanged( DataUpdateType_t updateType )
 		UpgradeLevelChanged();
 		m_iOldUpgradeLevel = m_iUpgradeLevel;
 	}
+#if 0
 	// NVNT building status
 	if(IsOwnedByLocalPlayer()) {
 		if(m_bWasBuilding!=m_bBuilding) {
@@ -282,6 +282,7 @@ void C_BaseObject::OnDataChanged( DataUpdateType_t updateType )
 			}
 		}
 	}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -374,11 +375,13 @@ void C_BaseObject::OnPlacementStateChanged( bool bValidPlacement )
 {
 	if ( bValidPlacement )
 	{
+#if 0
 		// NVNT if the local player placed this send a created effect
 		if(IsOwnedByLocalPlayer()&&haptics)
 		{
 			haptics->ProcessHapticEvent(3, "Game", "Placed", GetClassname());
 		}
+#endif
 		SetActivity( ACT_OBJ_PLACING );
 	}
 	else
@@ -390,7 +393,7 @@ void C_BaseObject::OnPlacementStateChanged( bool bValidPlacement )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void C_BaseObject::Simulate( void )
+bool C_BaseObject::Simulate( void )
 {
 	if ( IsPlacing() && !MustBeBuiltOnAttachmentPoint() )
 	{
@@ -434,6 +437,8 @@ void C_BaseObject::Simulate( void )
 	}
 
 	BaseClass::Simulate();
+	
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -458,18 +463,18 @@ bool C_BaseObject::WasLastPlacementPosValid( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int C_BaseObject::DrawModel( int flags )
+int C_BaseObject::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	int drawn;
 
 	// If we're a brush-built, map-defined object chain up to baseentity draw
 	if ( modelinfo->GetModelType( GetModel() ) == mod_brush )
 	{
-		drawn = CBaseEntity::DrawModel(flags);
+		drawn = CBaseEntity::DrawModel(flags, instance);
 	}
 	else
 	{
-		drawn = BaseClass::DrawModel(flags);
+		drawn = BaseClass::DrawModel(flags, instance);
 	}
 
 	HighlightBuildPoints( flags );
@@ -1129,7 +1134,7 @@ void C_BaseObject::StopAnimGeneratedSounds( void )
 	{
 		if ( pevent[i].cycle < flCurrentCycle )
 		{
-			if ( pevent[i].event == CL_EVENT_SOUND || pevent[i].event == AE_CL_PLAYSOUND )
+			if ( pevent[i].Event() == CL_EVENT_SOUND || pevent[i].Event() == AE_CL_PLAYSOUND )
 			{
 				StopSound( entindex(), pevent[i].options );
 			}

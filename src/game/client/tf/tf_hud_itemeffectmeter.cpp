@@ -187,7 +187,7 @@ void CItemEffectMeterManager::FireGameEvent( IGameEvent *event )
 //-----------------------------------------------------------------------------
 CHudItemEffectMeter::CHudItemEffectMeter( const char *pszElementName, C_TFPlayer* pPlayer ) : CHudElement( pszElementName ), BaseClass( NULL, "HudItemEffectMeter" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_pLabel = new Label( this, "ItemEffectMeterLabel", "" );

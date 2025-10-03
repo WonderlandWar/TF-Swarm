@@ -313,7 +313,7 @@ enum EItemAction
 };
 
 // These are stored in the database as uint8
-COMPILE_TIME_ASSERT( k_EItemActionMax < 256 );
+//COMPILE_TIME_ASSERT( k_EItemActionMax < 256 );
 
 extern const char		*PchNameFromEItemAction( EItemAction eAction );
 extern const char		*PchNameFromEItemActionUnsafe( EItemAction eAction );

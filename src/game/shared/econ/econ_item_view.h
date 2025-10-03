@@ -334,7 +334,6 @@ public:
 
 #ifdef CLIENT_DLL
 	void						SetWeaponSkinBase( ITexture* pBaseTex );
-	void						SetWeaponSkinBaseCompositor( ITextureCompositor * pTexCompositor );
 	inline void					SetWeaponSkinGeneration( RTime32 nGeneration ) { m_nWeaponSkinGeneration = nGeneration; }
 	inline void					SetWeaponSkinGenerationTeam( int iTeam ) { m_iLastGeneratedTeamSkin = iTeam; }
 	inline void					SetWeaponSkinBaseCreateFlags( uint32 flags ) { m_unWeaponSkinBaseCreateFlags = flags; }
@@ -343,7 +342,6 @@ public:
 	inline void					SetWeaponSkinUseLowRes( bool bUseLowRes ) { m_bWeaponSkinUseLowRes = bUseLowRes; }
 
 	inline ITexture				*GetWeaponSkinBase() const { return m_pWeaponSkinBase; }
-	inline ITextureCompositor	*GetWeaponSkinBaseCompositor() const { return m_pWeaponSkinBaseCompositor; }
 	inline uint32				GetWeaponSkinBaseCreateFlags() const { return m_unWeaponSkinBaseCreateFlags; }
 
 	inline RTime32				GetWeaponSkinGeneration() const { return m_nWeaponSkinGeneration; }
@@ -402,7 +400,6 @@ protected:
 
 #ifdef CLIENT_DLL
 	ITexture* m_pWeaponSkinBase;
-	ITextureCompositor* m_pWeaponSkinBaseCompositor;
 	RTime32 m_nWeaponSkinGeneration;
 	uint32	m_unWeaponSkinBaseCreateFlags;
 	int		m_iLastGeneratedTeamSkin;
@@ -431,7 +428,8 @@ private:
 	virtual const Vector&	GetRenderOrigin( void ) { return vec3_origin; }
 	virtual const QAngle&	GetRenderAngles( void ) { return vec3_angle; }
 	virtual bool			ShouldDraw( void ) { return false; }
-	virtual bool			IsTransparent( void ) { return false;}
+	//virtual bool			IsTransparent( void ) OVERRIDE { return false; }
+	virtual RenderableTranslucencyType_t ComputeTranslucencyType( ) { return RENDERABLE_IS_OPAQUE; }
 	virtual const matrix3x4_t &RenderableToWorldTransform() { static matrix3x4_t mat; SetIdentityMatrix( mat ); return mat; }
 	virtual void			GetRenderBounds( Vector& mins, Vector& maxs );
 #endif

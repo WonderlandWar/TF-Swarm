@@ -8,6 +8,10 @@
 #include "cbase.h"
 #include "movevars_shared.h"
 
+#if defined( TF_CLIENT_DLL ) || defined( TF_DLL )
+#include "tf_gamerules.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -17,6 +21,18 @@
 #else
 #define DEFAULT_GRAVITY_STRING	"800"
 #endif
+
+float GetCurrentGravity( void )
+{
+#if defined( TF_CLIENT_DLL ) || defined( TF_DLL )
+	if ( TFGameRules() )
+	{
+		return ( sv_gravity.GetFloat() * TFGameRules()->GetGravityMultiplier() );
+	}
+#endif 
+
+	return sv_gravity.GetFloat();
+}
 
 ConVar	sv_gravity		( "sv_gravity",DEFAULT_GRAVITY_STRING, FCVAR_NOTIFY | FCVAR_REPLICATED, "World gravity." );
 

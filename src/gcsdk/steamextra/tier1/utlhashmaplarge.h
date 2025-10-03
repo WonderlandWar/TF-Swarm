@@ -599,12 +599,21 @@ inline bool CUtlHashMapLarge<K,T,L,H>::RemoveNodeFromBucket( IndexType_t iBucket
 template <typename K, typename T, typename L, typename H> 
 inline void CUtlHashMapLarge<K,T,L,H>::RemoveAll()
 {
+#if 0
 	FOR_EACH_MAP_FAST( *this, i )
 	{
 		Destruct( &m_memNodes[i].m_key );
 		Destruct( &m_memNodes[i].m_elem );
 	}
-
+#else
+	{
+		for ( int i = 0; i < this->MaxElement(); ++i ) if ( !this->IsValidIndex( i ) ) continue; else
+		{
+			Destruct( &m_memNodes[i].m_key );
+			Destruct( &m_memNodes[i].m_elem );
+		}
+	}
+#endif
 	m_cElements = 0;
 	m_nMaxElement = 0;
 	m_iNodeFreeListHead = InvalidIndex();

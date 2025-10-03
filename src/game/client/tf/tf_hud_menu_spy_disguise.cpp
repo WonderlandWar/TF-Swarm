@@ -40,7 +40,7 @@ DECLARE_HUDELEMENT( CHudMenuSpyDisguise );
 CHudMenuSpyDisguise::CHudMenuSpyDisguise( const char *pElementName ) 
 	: CHudBaseBuildMenu( pElementName, "HudMenuSpyDisguise" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );

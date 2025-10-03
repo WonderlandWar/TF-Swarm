@@ -585,3 +585,45 @@ CSpriteTrail *CSpriteTrail::SpriteTrailCreate( const char *pSpriteName, const Ve
 }
 
 #endif	//CLIENT_DLL == false
+
+#if defined( CLIENT_DLL )
+// It's okay to draw attached entities with these sprites.
+const char* g_spriteWhiteList[] =
+{
+	"effects/beam001_white.vmt",
+	"effects/beam001_red.vmt",
+	"effects/beam001_blu.vmt",
+};
+
+//-----------------------------------------------------------------------------
+// Purpose: TF prevents drawing of any entity attached to players that aren't items in the inventory of the player.
+//			This is to prevent servers creating fake cosmetic items and attaching them to players.
+//-----------------------------------------------------------------------------
+bool CSpriteTrail::ValidateEntityAttachedToPlayer( bool &bShouldRetry )
+{
+	bShouldRetry = false;
+	return true;
+
+	/*
+#if defined( TF_CLIENT_DLL )
+
+	const char *pszModelName = modelinfo->GetModelName( GetModel() );
+	if ( pszModelName && pszModelName[0] )
+	{
+		// We attach sprites directly to players in some cases, such as phase trails on an evading scout
+		for ( int i=0; i<ARRAYSIZE( g_spriteWhiteList ); ++i )
+		{
+			if ( FStrEq( pszModelName, g_spriteWhiteList[i] ) )
+				return true;
+		}
+	}
+	
+	return false;
+
+#else
+	return false;
+#endif
+	*/
+}
+
+#endif

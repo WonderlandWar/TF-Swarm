@@ -18,6 +18,10 @@
 #include "tools/bonelist.h"
 #include <KeyValues.h>
 #include "hltvcamera.h"
+#ifdef TF_CLIENT_DLL
+	#include "tf_weaponbase.h"
+#endif
+
 #include "r_efx.h"
 #include "dlight.h"
 #include "clientalphaproperty.h"
@@ -31,6 +35,10 @@
 
 ConVar vm_debug( "vm_debug", "0", FCVAR_CHEAT );
 ConVar vm_draw_always( "vm_draw_always", "0" );
+
+#ifdef TF_CLIENT_DLL
+	ConVar cl_flipviewmodels( "cl_flipviewmodels", "0", FCVAR_USERINFO | FCVAR_ARCHIVE | FCVAR_NOT_CONNECTED, "Flip view models." );
+#endif
 
 void PostToolMessage( HTOOLHANDLE hEntity, KeyValues *msg );
 extern float g_flMuzzleFlashScale;
@@ -201,6 +209,14 @@ bool C_BaseViewModel::Interpolate( float currentTime )
 
 inline bool C_BaseViewModel::ShouldFlipViewModel()
 {
+#ifdef TF_CLIENT_DLL
+	CBaseCombatWeapon *pWeapon = m_hWeapon.Get();
+	if ( pWeapon )
+	{
+		return pWeapon->m_bFlipViewModel != cl_flipviewmodels.GetBool();
+	}
+#endif
+
 	return false;
 }
 
@@ -307,6 +323,16 @@ int C_BaseViewModel::DrawModel( int flags, const RenderableInstance_t &instance 
 	int ret = 0;
 	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
 	C_BaseCombatWeapon *pWeapon = GetOwningWeapon();
+
+#ifdef TF_CLIENT_DLL
+	CTFWeaponBase* pTFWeapon = dynamic_cast<CTFWeaponBase*>( pWeapon );
+	if ( ( flags & STUDIO_RENDER ) && pTFWeapon && pTFWeapon->m_viewmodelStatTrakAddon )
+	{
+		pTFWeapon->m_viewmodelStatTrakAddon->RemoveEffects( EF_NODRAW );
+		pTFWeapon->m_viewmodelStatTrakAddon->DrawModel( flags, instance );
+		pTFWeapon->m_viewmodelStatTrakAddon->AddEffects( EF_NODRAW );
+	}
+#endif
 
 	// If the local player's overriding the viewmodel rendering, let him do it
 	if ( pPlayer && pPlayer->IsOverridingViewmodel() )

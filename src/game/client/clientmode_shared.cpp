@@ -40,7 +40,16 @@
 #endif
 #include "matchmaking/imatchframework.h"
 
+#if defined USES_ECON_ITEMS
+#include "econ_item_view.h"
+#endif
 
+#if defined( TF_CLIENT_DLL )
+#include "tf_gc_client.h"
+#include "c_tf_player.h"
+#include "econ_item_description.h"
+#include "c_tf_team.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -234,6 +243,10 @@ void ClientModeShared::Init()
 	ListenForGameEvent( "teamplay_broadcast_audio" );
 	ListenForGameEvent( "achievement_earned" );
 
+#if defined( TF_CLIENT_DLL )
+	ListenForGameEvent( "item_found" );
+#endif 
+
 #ifndef _XBOX
 	HLTVCamera()->Init();
 #if defined( REPLAY_ENABLED )
@@ -371,6 +384,12 @@ bool ClientModeShared::ShouldDrawEntity(C_BaseEntity *pEnt)
 
 bool ClientModeShared::ShouldDrawParticles( )
 {
+#ifdef TF_CLIENT_DLL
+	C_TFPlayer *pTFPlayer = C_TFPlayer::GetLocalTFPlayer();
+	if ( pTFPlayer && !pTFPlayer->ShouldPlayerDrawParticles() )
+		return false;
+#endif // TF_CLIENT_DLL
+
 	return true;
 }
 
@@ -663,6 +682,31 @@ void ClientModeShared::StartMessageMode( int iMessageModeType )
 	{
 		return;
 	}
+	
+#if defined( TF_CLIENT_DLL )
+	if ( iMessageModeType == MM_SAY || iMessageModeType == MM_SAY_TEAM )
+	{
+		bool bSuspensionInMatch = GTFGCClientSystem() && GTFGCClientSystem()->BHaveChatSuspensionInCurrentMatch();
+		if ( !cl_enable_text_chat.GetBool() || bSuspensionInMatch )
+		{
+			CBaseHudChat *pHUDChat = ( CBaseHudChat * ) GET_HUDELEMENT( CHudChat );
+			if ( pHUDChat )
+			{
+				const char *pszReason = "#TF_Chat_Disabled";
+				if ( bSuspensionInMatch )
+				{
+					pszReason = "#TF_Chat_Unavailable";
+				}
+
+				char szLocalized[100];
+				g_pVGuiLocalize->ConvertUnicodeToANSI( g_pVGuiLocalize->Find( pszReason ), szLocalized, sizeof( szLocalized ) );
+				pHUDChat->ChatPrintf( 0, CHAT_FILTER_NONE, "%s ", szLocalized );
+			}
+			return;
+		}
+	}
+#endif // TF_CLIENT_DLL
+
 	if ( m_pChatElement )
 	{
 		m_pChatElement->StartMessageMode( iMessageModeType );
@@ -1029,7 +1073,12 @@ void ClientModeShared::FireGameEvent( IGameEvent *event )
 		{
 			wchar_t wszPlayerName[MAX_PLAYER_NAME_LENGTH];
 			g_pVGuiLocalize->ConvertANSIToUnicode( pszName, wszPlayerName, sizeof(wszPlayerName) );
-
+			bool bUsingCustomTeamName = false;
+#ifdef TF_CLIENT_DLL
+			C_TFTeam *pTeam = GetGlobalTFTeam( team );
+			const wchar_t *wszTeam = pTeam ? pTeam->Get_Localized_Name() : L"";
+			bUsingCustomTeamName = pTeam ? pTeam->IsUsingCustomTeamName() : false;
+#else
 			wchar_t wszTeam[64];
 			C_Team *pTeam = GetGlobalTeam( team );
 			if ( pTeam )
@@ -1040,17 +1089,17 @@ void ClientModeShared::FireGameEvent( IGameEvent *event )
 			{
 				_snwprintf ( wszTeam, sizeof( wszTeam ) / sizeof( wchar_t ), L"%d", team );
 			}
-
+#endif
 			if ( !IsInCommentaryMode() )
 			{
 				wchar_t wszLocalized[100];
 				if ( bAutoTeamed )
 				{
-					g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#game_player_joined_autoteam" ), 2, wszPlayerName, wszTeam );
+					g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), bUsingCustomTeamName ? g_pVGuiLocalize->Find( "#game_player_joined_autoteam_party_leader" ) : g_pVGuiLocalize->Find( "#game_player_joined_autoteam" ), 2, wszPlayerName, wszTeam );
 				}
 				else
 				{
-					g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#game_player_joined_team" ), 2, wszPlayerName, wszTeam );
+					g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), bUsingCustomTeamName ? g_pVGuiLocalize->Find( "#game_player_joined_team_party_leader" ) : g_pVGuiLocalize->Find( "#game_player_joined_team" ), 2, wszPlayerName, wszTeam );
 				}
 
 				char szLocalized[100];
@@ -1129,9 +1178,24 @@ void ClientModeShared::FireGameEvent( IGameEvent *event )
 
 		if ( bValidTeam == true )
 		{
+			EmitSound_t et;
+			et.m_pSoundName = event->GetString( "sound" );
+			et.m_nFlags = event->GetInt( "additional_flags" );
+
+#ifdef TF_CLIENT_DLL
+			int iPlayerIndex = event->GetInt( "player" );
+			if ( iPlayerIndex > 0 )
+			{
+				CTFPlayer *pTFPlayer = ToTFPlayer( UTIL_PlayerByIndex( iPlayerIndex ) );
+				if ( pTFPlayer )
+				{
+					pTFPlayer->ClientAdjustStartSoundParams( et );
+				}
+			}
+#endif // TF_CLIENT_DLL
+
 			CLocalPlayerFilter filter;
-			const char *pszSoundName = event->GetString("sound");
-			C_BaseEntity::EmitSound( filter, SOUND_FROM_LOCAL_PLAYER, pszSoundName );
+			C_BaseEntity::EmitSound( filter, SOUND_FROM_LOCAL_PLAYER, et );
 		}
 	}
 	else if ( Q_strcmp( "teamplay_broadcast_audio", eventname ) == 0 )
@@ -1225,6 +1289,128 @@ void ClientModeShared::FireGameEvent( IGameEvent *event )
 			}
 		}
 	}
+#if defined( TF_CLIENT_DLL )
+	else if ( Q_strcmp( "item_found", eventname ) == 0 )
+	{
+		int iPlayerIndex = event->GetInt( "player" );
+		entityquality_t iItemQuality = event->GetInt( "quality" );
+		int iMethod = event->GetInt( "method" );
+		int iItemDef = event->GetInt( "itemdef" );
+		bool bIsStrange = event->GetInt( "isstrange" );
+		bool bIsUnusual = event->GetInt( "isunusual" );
+		float flWear = event->GetFloat( "wear" );
+
+		C_BasePlayer *pPlayer = UTIL_PlayerByIndex( iPlayerIndex );
+		const GameItemDefinition_t *pItemDefinition = dynamic_cast<GameItemDefinition_t *>( GetItemSchema()->GetItemDefinition( iItemDef ) );
+
+		if ( !pPlayer || !pItemDefinition || pItemDefinition->IsHidden() )
+			return;
+
+		if ( g_PR )
+		{
+			wchar_t wszPlayerName[MAX_PLAYER_NAME_LENGTH];
+			g_pVGuiLocalize->ConvertANSIToUnicode( g_PR->GetPlayerName( iPlayerIndex ), wszPlayerName, sizeof( wszPlayerName ) );
+
+			if ( iMethod < 0 || iMethod >= ARRAYSIZE( g_pszItemFoundMethodStrings ) )
+			{
+				iMethod = 0;
+			}
+
+			const char *pszLocString = g_pszItemFoundMethodStrings[iMethod];
+			if ( pszLocString )
+			{
+				wchar_t wszItemFound[256];
+				_snwprintf( wszItemFound, ARRAYSIZE( wszItemFound ), L"%ls", g_pVGuiLocalize->Find( pszLocString ) );
+
+				wchar_t *colorMarker = wcsstr( wszItemFound, L"::" );
+				const CEconItemRarityDefinition* pItemRarity = GetItemSchema()->GetRarityDefinition( pItemDefinition->GetRarity() );
+
+				if ( colorMarker )
+				{	
+					if ( pItemRarity )
+					{
+						attrib_colors_t colorRarity = pItemRarity->GetAttribColor();
+						vgui::HScheme scheme = vgui::scheme()->GetScheme( "ClientScheme" );
+						vgui::IScheme *pScheme = vgui::scheme()->GetIScheme( scheme );
+						Color color = pScheme->GetColor( GetColorNameForAttribColor( colorRarity ), Color( 255, 255, 255, 255 ) );
+						hudChat->SetCustomColor( color );
+					}
+					else
+					{
+						const char *pszQualityColorString = EconQuality_GetColorString( (EEconItemQuality)iItemQuality );
+						if ( pszQualityColorString )
+						{
+							hudChat->SetCustomColor( pszQualityColorString );
+						}
+					}
+
+					*(colorMarker+1) = COLOR_CUSTOM;
+				}
+
+				// TODO: Update the localization strings to only have two format parameters since that's all we need.
+				locchar_t wszLocalizedString[256];
+
+				locchar_t szItemname[64] = LOCCHAR( "" );
+				locchar_t szRarity[64] = LOCCHAR( "" );
+				locchar_t szWear[64] = LOCCHAR( "" );
+				locchar_t szStrange[64] = LOCCHAR( "" );
+				locchar_t szUnusual[64] = LOCCHAR( "" );
+
+				loc_scpy_safe(
+					szItemname, 
+					CConstructLocalizedString(g_pVGuiLocalize->Find("TFUI_InvTooltip_ItemFound_Itemname"), 
+					CEconItemLocalizedFullNameGenerator(GLocalizationProvider(), pItemDefinition, iItemQuality).GetFullName() )
+				);
+
+				/*g_pVGuiLocalize->ConstructString_safe( 
+					szItemname, 
+					LOCCHAR( "%s1 " ),
+					1, 
+					CEconItemLocalizedFullNameGenerator( GLocalizationProvider(), pItemDefinition, iItemQuality ).GetFullName()
+				);*/
+
+				locchar_t tempName[MAX_ITEM_NAME_LENGTH];
+				// If items have rarity
+				if ( pItemRarity )
+				{
+					// Weapon Wear
+					if ( !IsWearableSlot( pItemDefinition->GetDefaultLoadoutSlot() ) )
+					{
+						loc_scpy_safe(szWear, CConstructLocalizedString( g_pVGuiLocalize->Find("TFUI_InvTooltip_ItemFound_Wear"), g_pVGuiLocalize->Find(GetWearLocalizationString(flWear) ) ) );
+					}
+
+					// Rarity / grade
+					loc_scpy_safe(szRarity, CConstructLocalizedString(g_pVGuiLocalize->Find("TFUI_InvTooltip_ItemFound_Rarity"), g_pVGuiLocalize->Find(pItemRarity->GetLocKey() ) ) );
+				}
+
+				if ( bIsUnusual )
+				{
+					loc_scpy_safe(szUnusual, CConstructLocalizedString(g_pVGuiLocalize->Find("TFUI_InvTooltip_ItemFound_Unusual"), g_pVGuiLocalize->Find("rarity4")));
+				}
+
+				if ( bIsStrange )
+				{
+					loc_scpy_safe(szStrange, CConstructLocalizedString(g_pVGuiLocalize->Find("TFUI_InvTooltip_ItemFound_Strange"), g_pVGuiLocalize->Find("strange")));
+				}
+
+				// // Strange Unusual Item Grade 		
+				loc_scpy_safe( wszLocalizedString, CConstructLocalizedString( g_pVGuiLocalize->Find( "TFUI_InvTooltip_ItemFound" ), szStrange, szUnusual, szItemname, szRarity, szWear ) );
+
+				loc_scpy_safe( tempName, wszLocalizedString );
+				g_pVGuiLocalize->ConstructString_safe(
+					wszLocalizedString,
+					wszItemFound,
+					3,
+					wszPlayerName, tempName, L"" );
+
+				char szLocalized[256];
+				g_pVGuiLocalize->ConvertUnicodeToANSI( wszLocalizedString, szLocalized, sizeof( szLocalized ) );
+
+				hudChat->ChatPrintf( iPlayerIndex, CHAT_FILTER_SERVERMSG, "%s", szLocalized );
+			}
+		}		
+	}
+#endif
 	else
 	{
 		DevMsg( 2, "Unhandled GameEvent in ClientModeShared::FireGameEvent - %s\n", event->GetName()  );

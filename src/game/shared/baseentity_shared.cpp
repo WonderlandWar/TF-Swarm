@@ -42,7 +42,10 @@ ConVar hl2_episodic( "hl2_episodic", "1", FCVAR_REPLICATED );
 ConVar hl2_episodic( "hl2_episodic", "0", FCVAR_REPLICATED );
 #endif//HL2_EPISODIC
 
-
+#ifdef TF_DLL
+#include "tf_gamerules.h"
+#include "tf_weaponbase.h"
+#endif // TF_DLL
 
 #include "rumble_shared.h"
 
@@ -1787,9 +1790,20 @@ void CBaseEntity::FireBullets( const FireBulletsInfo_t &info )
 		}
 		else
 		{
-
+#if TF_DLL
+			CTraceFilterIgnoreFriendlyCombatItems traceFilterCombatItem( this, COLLISION_GROUP_NONE, GetTeamNumber() );
+			if ( TFGameRules() && TFGameRules()->GameModeUsesUpgrades() )
+			{
+				CTraceFilterChain traceFilterChain( &traceFilter, &traceFilterCombatItem );
+				AI_TraceLine(info.m_vecSrc, vecEnd, MASK_SHOT, &traceFilterChain, &tr);
+			}
+			else
+			{
+				AI_TraceLine(info.m_vecSrc, vecEnd, MASK_SHOT, &traceFilter, &tr);
+			}
+#else
 			AI_TraceLine(info.m_vecSrc, vecEnd, MASK_SHOT, &traceFilter, &tr);
-
+#endif
 		}
 
 		// Tracker 70354/63250:  ywb 8/2/07

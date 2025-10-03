@@ -81,7 +81,7 @@ DECLARE_HUDELEMENT( CDisguiseStatus );
 CDisguiseStatus::CDisguiseStatus( const char *pElementName ) :
 	CHudElement( pElementName ), BaseClass( NULL, "DisguiseStatus" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );

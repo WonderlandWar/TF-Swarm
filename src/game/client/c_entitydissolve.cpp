@@ -504,16 +504,26 @@ float C_EntityDissolve::GetModelFadeOutPercentage( void )
 //-----------------------------------------------------------------------------
 void C_EntityDissolve::ClientThink( void )
 {
+	C_BaseEntity *pEnt = GetMoveParent();
+	if ( !pEnt )
+		return;
+
+	bool bIsRagdoll;
+#ifdef TF_CLIENT_DLL
+	bIsRagdoll = true;
+#else
 	C_BaseAnimating *pAnimating = GetMoveParent() ? GetMoveParent()->GetBaseAnimating() : NULL;
 	if (!pAnimating)
 		return;
+	bIsRagdoll = pAnimating->IsRagdoll();
+#endif
 
 	// NOTE: IsRagdoll means *client-side* ragdoll. We shouldn't be trying to fight
 	// the server ragdoll (or any server physics) on the client
-	if (( !m_pController ) && ( m_nDissolveType == ENTITY_DISSOLVE_NORMAL ) && pAnimating->IsRagdoll())
+	if (( !m_pController ) && ( m_nDissolveType == ENTITY_DISSOLVE_NORMAL ) && bIsRagdoll )
 	{
 		IPhysicsObject *ppList[VPHYSICS_MAX_OBJECT_LIST_COUNT];
-		int nCount = pAnimating->VPhysicsGetObjectList( ppList, ARRAYSIZE(ppList) );
+		int nCount = pEnt->VPhysicsGetObjectList( ppList, ARRAYSIZE(ppList) );
 		if ( nCount > 0 )
 		{
 			m_pController = physenv->CreateMotionController( this );
@@ -530,9 +540,9 @@ void C_EntityDissolve::ClientThink( void )
 	color.a = GetModelFadeOutPercentage() * 255.0f;
 
 	// Setup the entity fade
-	pAnimating->SetRenderMode( kRenderTransColor );
-	pAnimating->SetRenderColor( color.r, color.g, color.b );
-	pAnimating->SetRenderAlpha( color.a );
+	pEnt->SetRenderMode( kRenderTransColor );
+	pEnt->SetRenderColor( color.r, color.g, color.b );
+	pEnt->SetRenderAlpha( color.a );
 
 	if ( GetModelFadeOutPercentage() <= 0.2f )
 	{
@@ -556,12 +566,21 @@ void C_EntityDissolve::ClientThink( void )
 		{
 			Release();
 
-			C_ClientRagdoll *pRagdoll = dynamic_cast <C_ClientRagdoll *> ( pAnimating );
+			C_ClientRagdoll *pRagdoll = dynamic_cast <C_ClientRagdoll *> ( pEnt );
 
 			if ( pRagdoll )
 			{
 				pRagdoll->ReleaseRagdoll();
 			}
+#ifdef TF_CLIENT_DLL
+			else
+			{
+				// Hide the ragdoll -- don't actually delete it or else things get unhappy when
+				// we get a message from the server telling us to delete it
+				pEnt->AddEffects( EF_NODRAW );
+				pEnt->ParticleProp()->StopEmission();
+			}
+#endif
 		}
 	}
 }

@@ -37,7 +37,7 @@ static const float LIFE_TIME = 1.0f;
 CTFAnnotationsPanel::CTFAnnotationsPanel( const char *pElementName )
 	: EditablePanel( NULL, "AnnotationsPanel" ), CHudElement( pElementName )
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 	m_bShouldBeVisible = false;
 	SetScheme( "ClientScheme" );
@@ -130,7 +130,7 @@ CTFAnnotationsPanelCallout *CTFAnnotationsPanel::TestAndAddCallout( int id, Vect
 		}
 	}
 
-	CTFAnnotationsPanelCallout *pCallout = new CTFAnnotationsPanelCallout( g_pClientMode->GetViewport(), "AnnotationsPanelCallout", id, origin, text );
+	CTFAnnotationsPanelCallout *pCallout = new CTFAnnotationsPanelCallout( GetClientMode()->GetViewport(), "AnnotationsPanelCallout", id, origin, text );
 
 	if (-1 == insertSlot)
 	{

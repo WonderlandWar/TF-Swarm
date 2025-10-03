@@ -49,13 +49,16 @@
 #include "renderparm.h"
 #include "modelrendersystem.h"
 #include "vgui/ISurface.h"
+#ifdef TF_CLIENT_DLL
+#include "tf/c_tf_player.h"
+#endif
 
 #define PARTICLE_USAGE_DEMO									// uncomment to get particle bar thing
 
 
 
 
-#if defined( HL2_CLIENT_DLL ) || defined( INFESTED_DLL )
+#if defined( HL2_CLIENT_DLL ) || defined( CSTRIKE_DLL ) || defined( TF_CLIENT_DLL )
 #define USE_MONITORS
 #endif
 #include "rendertexture.h"
@@ -102,7 +105,11 @@ static ConVar r_drawopaqueworld( "r_drawopaqueworld", "1", FCVAR_CHEAT );
 static ConVar r_drawtranslucentworld( "r_drawtranslucentworld", "1", FCVAR_CHEAT );
 static ConVar r_3dsky( "r_3dsky","1", 0, "Enable the rendering of 3d sky boxes" );
 static ConVar r_skybox( "r_skybox","1", FCVAR_CHEAT, "Enable the rendering of sky boxes" );
+#ifdef TF_CLIENT_DLL
+ConVar r_drawviewmodel( "r_drawviewmodel","1", FCVAR_DONTRECORD );
+#else
 ConVar r_drawviewmodel( "r_drawviewmodel","1", FCVAR_CHEAT );
+#endif
 static ConVar r_drawtranslucentrenderables( "r_drawtranslucentrenderables", "1", FCVAR_CHEAT );
 static ConVar r_drawopaquerenderables( "r_drawopaquerenderables", "1", FCVAR_CHEAT );
 
@@ -196,6 +203,10 @@ static ConVar mat_clipz( "mat_clipz", "1" );
 //-----------------------------------------------------------------------------
 static ConVar cl_drawmonitors( "cl_drawmonitors", "1" );
 static ConVar r_eyewaterepsilon( "r_eyewaterepsilon", "7.0f", FCVAR_CHEAT );
+
+#ifdef TF_CLIENT_DLL
+static ConVar pyro_dof( "pyro_dof", "1", FCVAR_ARCHIVE );
+#endif
 
 extern ConVar cl_leveloverview;
 
@@ -821,6 +832,16 @@ PRECACHE_REGISTER_BEGIN( GLOBAL, PrecachePostProcessingEffects )
 	PRECACHE( MATERIAL, "dev/depth_of_field" )
 	PRECACHE( MATERIAL, "dev/blurgaussian_3x3" )
 	PRECACHE( MATERIAL, "dev/fade_blur" )
+
+#ifdef TF_CLIENT_DLL
+	PRECACHE( MATERIAL, "dev/pyro_blur_filter_y" )
+	PRECACHE( MATERIAL, "dev/pyro_blur_filter_x" )
+	PRECACHE( MATERIAL, "dev/pyro_dof" )
+	PRECACHE( MATERIAL, "dev/pyro_vignette_border" )
+	PRECACHE( MATERIAL, "dev/pyro_vignette" )
+	PRECACHE( MATERIAL, "dev/pyro_post" )
+#endif
+
 #if defined( INFESTED_DLL )
 	PRECACHE( MATERIAL, "dev/glow_color" )
 	PRECACHE( MATERIAL, "dev/glow_downsample" )
@@ -3347,17 +3368,42 @@ void CViewRender::DrawMonitors( const CViewSetup &cameraView )
 
 	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
 	
+
+#ifdef TF_CLIENT_DLL
+	CTFPlayer* pLocalTFPlayer = CTFPlayer::GetLocalTFPlayer();
+
+	bool bNeedToToggleForceDraw = !( pLocalTFPlayer && pLocalTFPlayer->m_Local.m_bForceLocalPlayerDraw );
+	bool bNeedToToggleForceDrawBack = false;
+#endif
+	
 	int cameraNum;
 	for ( cameraNum = 0; pCameraEnt != NULL; pCameraEnt = pCameraEnt->m_pNext )
 	{
 		if ( !pCameraEnt->IsActive() || pCameraEnt->IsDormant() )
 			continue;
 
+#ifdef TF_CLIENT_DLL
+		if ( bNeedToToggleForceDraw && pLocalTFPlayer )
+		{
+			pLocalTFPlayer->ForceTempForceDraw( true );
+
+			bNeedToToggleForceDrawBack = true;
+			bNeedToToggleForceDraw = false;
+		}
+#endif
+
 		if ( !DrawOneMonitor( pCameraTarget, cameraNum, pCameraEnt, cameraView, player, 0, 0, width, height ) )
 			continue;
 
 		++cameraNum;
 	}
+
+#ifdef TF_CLIENT_DLL
+	if ( bNeedToToggleForceDrawBack && pLocalTFPlayer )
+	{
+		pLocalTFPlayer->ForceTempForceDraw( false );
+	}
+#endif
 
 	if ( IsX360() && cameraNum > 0 )
 	{
@@ -5445,6 +5491,15 @@ void CBaseWorldView::DrawSetup( float waterHeight, int nSetupFlags, float waterZ
 		render->PopView( GetFrustum() );
 	}
 
+#ifdef TF_CLIENT_DLL
+	bool bVisionOverride = ( localplayer_visionflags.GetInt() & ( 0x01 ) ); // Pyro-vision Goggles
+
+	if ( savedViewID == VIEW_MAIN && bVisionOverride && pyro_dof.GetBool() )
+	{
+		SSAO_DepthPass();
+	}
+#endif
+
 	g_CurrentViewID = savedViewID;
 }
 
@@ -5497,11 +5552,27 @@ void CBaseWorldView::DrawExecute( float waterHeight, view_id_t viewID, float wat
 	{
 		if ( m_DrawFlags & DF_DRAW_ENTITITES )
 		{
+#ifdef TF_CLIENT_DLL
+			bool bVisionOverride = ( localplayer_visionflags.GetInt() & ( 0x01 ) ); // Pyro-vision Goggles
+
+			if ( g_CurrentViewID == VIEW_MAIN && bVisionOverride && pyro_dof.GetBool() ) // Pyro-vision Goggles
+			{
+				DrawDepthOfField();
+			}
+#endif
 			DrawTranslucentRenderables( false, false );
 			DrawNoZBufferTranslucentRenderables();
 		}
 		else
 		{
+#ifdef TF_CLIENT_DLL
+			bool bVisionOverride = ( localplayer_visionflags.GetInt() & ( 0x01 ) ); // Pyro-vision Goggles
+
+			if ( g_CurrentViewID == VIEW_MAIN && bVisionOverride && pyro_dof.GetBool() ) // Pyro-vision Goggles
+			{
+				DrawDepthOfField();
+			}
+#endif
 			// Draw translucent world brushes only, no entities
 			DrawTranslucentWorldInLeaves( false );
 		}

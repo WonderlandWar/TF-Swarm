@@ -33,7 +33,7 @@ ConVar cl_boss_show_stun( "cl_boss_show_stun", "0", FCVAR_DEVELOPMENTONLY );
 //-----------------------------------------------------------------------------
 CHudBossHealthMeter::CHudBossHealthMeter( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudBossHealth" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_pStunMeter = NULL;

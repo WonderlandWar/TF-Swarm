@@ -300,7 +300,8 @@ typedef unsigned int		uint;
 
 // Maximum and minimum representable values
 #ifndef PLATFORM_OSX
-
+/*
+FIXME: Enable this when we no longer fear change =)
 #define  INT8_MAX			SCHAR_MAX
 #define  INT16_MAX			SHRT_MAX
 #define  INT32_MAX			LONG_MAX
@@ -320,7 +321,7 @@ typedef unsigned int		uint;
 #define  UINT16_MIN			0
 #define  UINT32_MIN			0
 #define  UINT64_MIN			0
-
+*/
 #endif // PLATFORM_OSX
 
 #ifndef  UINT_MIN

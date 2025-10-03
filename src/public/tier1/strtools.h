@@ -22,6 +22,17 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef _WIN32
+#define CORRECT_PATH_SEPARATOR '\\'
+#define CORRECT_PATH_SEPARATOR_S "\\"
+#define INCORRECT_PATH_SEPARATOR '/'
+#define INCORRECT_PATH_SEPARATOR_S "/"
+#elif POSIX
+#define CORRECT_PATH_SEPARATOR '/'
+#define CORRECT_PATH_SEPARATOR_S "/"
+#define INCORRECT_PATH_SEPARATOR '\\'
+#define INCORRECT_PATH_SEPARATOR_S "\\"
+#endif
 
 // 3d memcpy. Copy (up-to) 3 dimensional data with arbitrary source and destination
 // strides. Optimizes to just a single memcpy when possible. For 2d data, set numslices to 1.
@@ -188,6 +199,18 @@ int V_snwprintf( wchar_t *pDest, int destLen, const wchar_t *pFormat, ... );
 char *V_strncat(char *, const char *, size_t destBufferSize, int max_chars_to_copy=COPY_ALL_CHARACTERS );
 char *V_strnlwr(char *, size_t);
 
+// Ultimate safe strcpy function, for arrays only -- buffer size is inferred by the compiler
+template <size_t maxLenInChars> void V_strcpy_safe( OUT_Z_ARRAY char (&pDest)[maxLenInChars], const char *pSrc ) 
+{ 
+	V_strncpy( pDest, pSrc, (int)maxLenInChars ); 
+}
+
+#define COPY_ALL_CHARACTERS -1
+//char *V_strncat( INOUT_Z_CAP(cchDest) char *pDest, const char *pSrc, size_t cchDest, int max_chars_to_copy=COPY_ALL_CHARACTERS );
+template <size_t cchDest> char *V_strcat_safe( INOUT_Z_ARRAY char (&pDest)[cchDest], const char *pSrc, int nMaxCharsToCopy=COPY_ALL_CHARACTERS )
+{ 
+	return V_strncat( pDest, pSrc, (int)cchDest, nMaxCharsToCopy ); 
+}
 
 // UNDONE: Find a non-compiler-specific way to do this
 #ifdef _WIN32

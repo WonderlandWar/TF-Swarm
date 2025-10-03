@@ -29,10 +29,10 @@ class CMatchMakingHUDPopupContainer : public Panel
 public:
 	DECLARE_CLASS_SIMPLE( CMatchMakingHUDPopupContainer, Panel );
 	CMatchMakingHUDPopupContainer()
-		: Panel( g_pClientMode->GetViewport(), "MMDashboardPopupContainer" )
+		: Panel( GetClientMode()->GetViewport(), "MMDashboardPopupContainer" )
 	{
 		SetProportional( true );
-		SetBounds( 0, 0, g_pClientMode->GetViewport()->GetWide(), g_pClientMode->GetViewport()->GetTall() );
+		SetBounds( 0, 0, GetClientMode()->GetViewport()->GetWide(), GetClientMode()->GetViewport()->GetTall() );
 		MakePopup();
 		SetMouseInputEnabled( true );
 		SetKeyBoardInputEnabled( false ); // This can never be true
@@ -163,7 +163,7 @@ void CMMDashboardParentManager::AttachToTopMostPopup()
 				 !vgui::surface()->IsMinimized((VPANEL)top)  )
 			{
 				Panel *pPopup = ipanel()->GetPanel( (VPANEL)top, GetControlsModuleName());
-				if ( pPopup && pPopup->GetParent() != g_pClientMode->GetViewport() )
+				if ( pPopup && pPopup->GetParent() != GetClientMode()->GetViewport() )
 				{
 					int nPanelWide, nPanelTall;
 					pPopup->GetSize( nPanelWide, nPanelTall );

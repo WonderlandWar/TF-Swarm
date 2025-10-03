@@ -31,6 +31,10 @@ struct Bitmap_t
 	Bitmap_t();
 	~Bitmap_t();
 	void Init( int nWidth, int nHeight, ImageFormat imageFormat );
+	
+	/// Return true if we have a valid size and buffer
+	bool IsValid() const;
+
 	unsigned char *GetPixel( int x, int y );
 
 	int m_nWidth;
@@ -68,6 +72,18 @@ inline void Bitmap_t::Init( int nWidth, int nHeight, ImageFormat imageFormat )
 	m_nHeight = nHeight;
 	m_ImageFormat = imageFormat;
 	m_pBits = new unsigned char[ nWidth * nHeight * ImageLoader::SizeInBytes( m_ImageFormat ) ];
+}
+
+inline bool Bitmap_t::IsValid() const
+{
+	if ( m_nWidth <= 0 || m_nHeight <= 0 || m_pBits == NULL )
+	{
+		Assert( m_nWidth == 0 );
+		Assert( m_nHeight == 0 );
+		Assert( m_pBits == NULL );
+		return false;
+	}
+	return true;
 }
 
 inline unsigned char *Bitmap_t::GetPixel( int x, int y )

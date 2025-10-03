@@ -241,7 +241,7 @@ public:
 		: CHudElement( pElementName )
 		, CAccountPanel( NULL, pElementName )
 	{
-		Panel *pParent = g_pClientMode->GetViewport();
+		Panel *pParent = GetClientMode()->GetViewport();
 		SetParent( pParent );
 		SetHiddenBits( HIDEHUD_MISCSTATUS | HIDEHUD_METAL );
 		ListenForGameEvent( "player_account_changed" );
@@ -568,7 +568,7 @@ public:
 
 			if ( pAttacker == pLocalPlayer )
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "DamagedPlayer" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "DamagedPlayer" );
 
 				bool bHitEnabled = ( tf_dingalingaling.GetBool() );
 				bool bLastHitEnabled = ( tf_dingalingaling_lasthit.GetBool() );

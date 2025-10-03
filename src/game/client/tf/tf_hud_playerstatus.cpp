@@ -139,7 +139,7 @@ void CTFHudPlayerClass::Reset()
 {
 	m_flNextThink = gpGlobals->curtime + 0.05f;
 
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudSpyDisguiseHide" );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "HudSpyDisguiseHide" );
 }
 
 //-----------------------------------------------------------------------------
@@ -540,7 +540,7 @@ void CTFHudPlayerClass::FireGameEvent( IGameEvent * event )
 			m_pSpyImage->SetVisible( true );
 			m_pSpyOutlineImage->SetVisible( true );
 
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( bFadeIn ? "HudSpyDisguiseFadeIn" : "HudSpyDisguiseFadeOut" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( bFadeIn ? "HudSpyDisguiseFadeIn" : "HudSpyDisguiseFadeOut" );
 		}
 
 		UpdateModelPanel();
@@ -777,8 +777,8 @@ void CTFHudPlayerHealth::SetHealth( int iNewHealth, int iMaxHealth, int	iMaxBuff
 
 				if ( m_bAnimate && m_iAnimState != HUD_HEALTH_BONUS_ANIM )
 				{
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthDyingPulseStop" );
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthBonusPulse" );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthDyingPulseStop" );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthBonusPulse" );
 
 					m_iAnimState = HUD_HEALTH_BONUS_ANIM;
 				}
@@ -810,8 +810,8 @@ void CTFHudPlayerHealth::SetHealth( int iNewHealth, int iMaxHealth, int	iMaxBuff
 
 				if ( m_bAnimate && m_iAnimState != HUD_HEALTH_DYING_ANIM )
 				{
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthBonusPulseStop" );
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthDyingPulse" );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthBonusPulseStop" );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthDyingPulse" );
 
 					m_iAnimState = HUD_HEALTH_DYING_ANIM;
 				}
@@ -896,8 +896,8 @@ void CTFHudPlayerHealth::HideHealthBonusImage( void )
 			m_pHealthBonusImage->SetBounds( m_nBonusHealthOrigX, m_nBonusHealthOrigY, m_nBonusHealthOrigW, m_nBonusHealthOrigH );
 		}
 		m_pHealthBonusImage->SetVisible( false );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthBonusPulseStop" );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthDyingPulseStop" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthBonusPulseStop" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudHealthDyingPulseStop" );
 
 		m_iAnimState = HUD_HEALTH_NO_ANIM;
 	}
@@ -1056,7 +1056,7 @@ DECLARE_HUDELEMENT( CTFHudPlayerStatus );
 //-----------------------------------------------------------------------------
 CTFHudPlayerStatus::CTFHudPlayerStatus( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudPlayerStatus" ) 
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_pHudPlayerClass = new CTFHudPlayerClass( this, "HudPlayerClass" );

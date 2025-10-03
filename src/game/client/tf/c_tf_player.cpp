@@ -3995,7 +3995,7 @@ C_TFPlayer::~C_TFPlayer()
 
 		if ( TFGameRules() && TFGameRules()->ShowMatchSummary() )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "CompetitiveGame_RestoreChatWindow", false );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "CompetitiveGame_RestoreChatWindow", false );
 		}
 	}
 }
@@ -6832,10 +6832,10 @@ void C_TFPlayer::RecalcBodygroupsIfDirty( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int C_TFPlayer::DrawModel( int flags )
+int C_TFPlayer::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	// If we're a dead player with a fresh ragdoll, don't draw
-	if ( m_nRenderFX == kRenderFxRagdoll )
+	if ( GetRenderFX() == kRenderFxRagdoll )
 		return 0;
 
 	RecalcBodygroupsIfDirty();
@@ -6892,7 +6892,7 @@ int C_TFPlayer::DrawModel( int flags )
 		pRenderContext->PushDeformation( &mybox );
 	}
 
-	int ret = BaseClass::DrawModel( flags );
+	int ret = BaseClass::DrawModel( flags, instance );
 
 	if ( bDoEffect )
 		pRenderContext->PopDeformation();
@@ -7873,7 +7873,7 @@ void C_TFPlayer::ClientPlayerRespawn( void )
 		m_bNotifiedWeaponInspectThisLife = false;
 
 		// make sure the chat window has been restored to the appropriate place
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "CompetitiveGame_RestoreChatWindow", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "CompetitiveGame_RestoreChatWindow", false );
 	}
 
 	UpdateVisibility();

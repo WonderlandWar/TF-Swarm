@@ -137,7 +137,7 @@ void CSurveyQuestionPanel::OnCommand( const char *command )
 			m_bResponded = true;
 		}
 
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( GetParent(), "SurveyHideSequence", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( GetParent(), "SurveyHideSequence" );
 		return;
 	}
 	else if ( FStrEq( command, "submit" ) )
@@ -147,7 +147,7 @@ void CSurveyQuestionPanel::OnCommand( const char *command )
 			Submit();
 			m_bResponded = true;
 		}
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( GetParent(), "SurveySubmitSequence", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( GetParent(), "SurveySubmitSequence",lse );
 
 		return;
 	}
@@ -167,7 +167,7 @@ void CSurveyQuestionPanel::ApplySchemeSettings( IScheme *pScheme )
 	SetProportional( true );
 	LoadControlSettings( GetResFile() );
 	InvalidateLayout( true );
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( GetParent(), "SurveyShowSequence", false );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( GetParent(), "SurveyShowSequence" );
 }
 
 void CSurveyQuestionPanel::FireGameEvent( IGameEvent *event ) 

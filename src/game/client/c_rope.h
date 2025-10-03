@@ -1,9 +1,9 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
 // $NoKeywords: $
-//===========================================================================//
+//=============================================================================//
 
 #ifndef C_ROPE_H
 #define C_ROPE_H
@@ -106,7 +106,8 @@ public:
 	bool			GetEndPointPos( int iPt, Vector &vPos );
 
 	// Get the rope material data.
-	IMaterial		*GetSolidMaterial( void )		{ return m_pMaterial; }
+	IMaterial		*GetSolidMaterial( void );
+	IMaterial		*GetBackMaterial( void );
 
 	struct BuildRopeQueuedData_t
 	{
@@ -118,16 +119,14 @@ public:
 		float	m_Slack;
 	};
 
-	void			BuildRope( RopeSegData_t *pRopeSegment, const Vector &vCurrentViewForward, const Vector &vCurrentViewOrigin, BuildRopeQueuedData_t *pQueuedData );
+	void			BuildRope( RopeSegData_t *pRopeSegment, const Vector &vCurrentViewForward, const Vector &vCurrentViewOrigin, BuildRopeQueuedData_t *pQueuedData, bool bQueued );
 
 // C_BaseEntity overrides.
 public:
 
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 	virtual void	ClientThink();
-	virtual int		DrawModel( int flags, const RenderableInstance_t &instance );
-	virtual RenderableTranslucencyType_t ComputeTranslucencyType() { return RENDERABLE_IS_OPAQUE; }
-
+	virtual int		DrawModel( int flags );
 	virtual bool	ShouldDraw();
 	virtual const Vector& WorldSpaceCenter() const;
 
@@ -190,26 +189,26 @@ private:
 	short			m_iStartAttachment;	// StartAttachment/EndAttachment are attachment points.
 	short			m_iEndAttachment;
 
-	int				m_Subdiv;			// Number of subdivions in between segments.
+	unsigned char	m_Subdiv;			// Number of subdivions in between segments.
 
 	int				m_RopeLength;		// Length of the rope, used for tension.
 	int				m_Slack;			// Extra length the rope is given.
 	float			m_TextureScale;		// pixels per inch
 	
 	int				m_fLockedPoints;	// Which points are locked down.
-	int				m_nChangeCount;
 
 	float				m_Width;
 
 	CPhysicsDelegate	m_PhysicsDelegate;
 
 	IMaterial		*m_pMaterial;
+	IMaterial		*m_pBackMaterial;			// Optional translucent background material for the rope to help reduce aliasing.
 
 	int				m_TextureHeight;	// Texture height, for texture scale calculations.
 
 	// Instantaneous force
-	Vector			m_vecImpulse;
-	Vector			m_vecPreviousImpulse;
+	Vector			m_flImpulse;
+	Vector			m_flPreviousImpulse;
 
 	// Simulated wind gusts.
 	float			m_flCurrentGustTimer;
@@ -232,6 +231,9 @@ private:
 	bool			m_bPhysicsInitted : 1;				// It waits until all required entities are 
 	// present to start simulating and rendering.
 
+	static int		s_nLastRopeIndex;
+	int				m_nRopeIndex;
+
 	friend class CRopeManager;
 };
 
@@ -251,6 +253,10 @@ public:
 	virtual void				ResetRenderCache( void ) = 0;
 	virtual void				AddToRenderCache( C_RopeKeyframe *pRope ) = 0;
 	virtual void				DrawRenderCache( bool bShadowDepth ) = 0;
+	virtual void				OnRenderStart( void ) = 0;
+	virtual void				SetHolidayLightMode( bool bHoliday ) = 0;
+	virtual bool				IsHolidayLightMode( void ) = 0;
+	virtual int					GetHolidayLightStyle( void ) = 0;
 };
 
 IRopeManager *RopeManager();

@@ -96,9 +96,9 @@ static void PhysicsCheckSweep( CBaseEntity *pEntity, const Vector& vecAbsStart, 
 }
 
 CPhysicsPushedEntities s_PushedEntities;
-
+#ifndef TF_DLL
 CPhysicsPushedEntities *g_pPushedEntities = &s_PushedEntities;
-
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -820,7 +820,9 @@ void CPhysicsPushedEntities::GenerateBlockingEntityListAddBox( const Vector &vec
 	}
 }
 
-
+#ifdef TF_DLL
+#include "tf_logic_robot_destruction.h"
+#endif
 //-----------------------------------------------------------------------------
 // Purpose: Gets a list of all entities hierarchically attached to the root 
 //-----------------------------------------------------------------------------

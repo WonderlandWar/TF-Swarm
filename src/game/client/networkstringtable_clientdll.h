@@ -23,4 +23,9 @@ extern INetworkStringTable *g_StringTableMaterials;
 extern INetworkStringTable *g_pStringTableInfoPanel;
 extern INetworkStringTable *g_pStringTableClientSideChoreoScenes;
 
+#ifdef TF_CLIENT_DLL
+extern INetworkStringTable *g_pStringTableServerPopFiles;
+extern INetworkStringTable *g_pStringTableServerMapCycleMvM;
+#endif
+
 #endif // NETWORKSTRINGTABLE_CLIENTDLL_H

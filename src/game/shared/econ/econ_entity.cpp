@@ -1832,7 +1832,7 @@ bool CEconEntity::ShouldHideForVisionFilterFlags( void )
 
 	return false;
 }
-
+#if 0
 bool CEconEntity::IsTransparent( void )
 {
 #ifdef TF_CLIENT_DLL
@@ -1845,7 +1845,28 @@ bool CEconEntity::IsTransparent( void )
 
 	return BaseClass::IsTransparent();
 }
+#else
+RenderableTranslucencyType_t CEconEntity::ComputeTranslucencyType( void )
+{
+#ifdef TF_CLIENT_DLL
+	C_TFPlayer *pPlayer = ToTFPlayer( GetOwnerEntity() );
+	if ( pPlayer )
+	{
+		RenderableTranslucencyType_t type = ComputeTranslucencyType();
+		if ( type == RENDERABLE_IS_TRANSLUCENT )
+		{
+			return RENDERABLE_IS_TRANSLUCENT;
+		}
+		else if ( type == RENDERABLE_IS_TWO_PASS )
+		{
+			return RENDERABLE_IS_TWO_PASS;
+		}
+	}
+#endif // TF_CLIENT_DLL
 
+	return BaseClass::ComputeTranslucencyType();
+}
+#endif
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------

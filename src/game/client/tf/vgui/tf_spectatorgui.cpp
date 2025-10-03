@@ -855,7 +855,7 @@ void CTFSpectatorGUI::ShowPanel(bool bShow)
 				g_pVGuiLocalize->ConstructString_safe( wText, g_pVGuiLocalize->Find( "#Replay_SaveThisLifeMsg" ), 1, wKeyBind );
 				g_pVGuiLocalize->ConvertUnicodeToANSI( wText, szText, sizeof( szText ) );
 
-				g_pClientMode->DisplayReplayMessage( szText, -1.0f, false, NULL, false );
+				GetClientMode()->DisplayReplayMessage( szText, -1.0f, false, NULL, false );
 			}
 			++nDisplaySaveReplay;
 #endif
@@ -868,7 +868,7 @@ void CTFSpectatorGUI::ShowPanel(bool bShow)
 		{
 			if ( pStatus )
 			{
-				pStatus->SetParent( g_pClientMode->GetViewport() );
+				pStatus->SetParent( GetClientMode()->GetViewport() );
 			}
 
 			if ( pEngBuilds )

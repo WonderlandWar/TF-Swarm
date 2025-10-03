@@ -345,7 +345,7 @@ void CQuestItemPanel::LoadResFileForCurrentItem()
 									// and if we've been fiddling with it, we might accidently create all child panels with mouse input disabled.
 									// Setting this to true just before the controls are made gives them a chance to be mouse enabled if they want.
 	LoadControlSettings( pszResFile, NULL, NULL, pConditions );
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, m_strReset );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, m_strReset );
 
 	m_pMainContainer = FindControl<EditablePanel>( "MainContainer" );
 	if ( m_pMainContainer )
@@ -1356,7 +1356,7 @@ void CQuestItemPanel::UpdateInvalidReasons()
 //-----------------------------------------------------------------------------
 void CQuestItemPanel::OnCollapsedGlowStart( void )
 {
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, m_strHighlightOn );	
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, m_strHighlightOn );	
 }
 
 //-----------------------------------------------------------------------------
@@ -1364,7 +1364,7 @@ void CQuestItemPanel::OnCollapsedGlowStart( void )
 //-----------------------------------------------------------------------------
 void CQuestItemPanel::OnCollapsedGlowEnd( void )
 {
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, m_strHighlightOff );	
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, m_strHighlightOff );	
 }
 
 //-----------------------------------------------------------------------------
@@ -1447,7 +1447,7 @@ void CQuestItemPanel::OnCompleteQuest( void )
 
 		PostActionSignal( new KeyValues("CompleteQuest") );
 
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, m_strTurningIn );	
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, m_strTurningIn );	
 		
 		// Get our quest theme
 		const CQuestThemeDefinition *pTheme = m_pLiveQuest->GetDefinition()->GetQuestTheme();
@@ -1544,17 +1544,17 @@ void CQuestItemPanel::SetSelected( bool bSelected, bool bImmediate )
 		if ( m_bCollapsed )
 		{
 			vgui::surface()->PlaySound( m_strCollapseSound );
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, m_strAnimCollapse );	
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, m_strAnimCollapse );	
 		}
 		else
 		{
 			vgui::surface()->PlaySound( m_strExpandSound );
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, m_strAnimExpand );	
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, m_strAnimExpand );	
 		}
 	}
 	else 
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, m_strReset );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, m_strReset );
 	}
 }
 

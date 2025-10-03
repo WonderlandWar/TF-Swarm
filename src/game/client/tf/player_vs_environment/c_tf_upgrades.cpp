@@ -308,7 +308,7 @@ DECLARE_HUDELEMENT( CHudUpgradePanel );
 //-----------------------------------------------------------------------------
 CHudUpgradePanel::CHudUpgradePanel( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudUpgradePanel" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );

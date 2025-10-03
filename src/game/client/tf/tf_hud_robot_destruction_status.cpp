@@ -532,7 +532,7 @@ void CTFHUDRobotDestruction::PerformRobotLayout( RobotVector_t& vecRobots, int n
 //-----------------------------------------------------------------------------
 void CTFHUDRobotDestruction::Reset()
 {
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "FlagOutlineHide" );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "FlagOutlineHide" );
 }
 
 //-----------------------------------------------------------------------------
@@ -1075,7 +1075,7 @@ void CTFHUDRobotDestruction::FireGameEvent( IGameEvent * pEvent )
 		bool bPositive = ( nTeam == GetLocalPlayerTeam() && nPoints > 0 ) || ( nTeam != GetLocalPlayerTeam() && nPoints < 0 );
 		const char *pszAnimName = bPositive ? "RDPositiveScorePulse" : "RDNegativeScorePulse";
 
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pPanel, pszAnimName );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pPanel, pszAnimName );
 
 		// Make the progress bar blink
 		CProgressPanel *pProgressBar = nTeam == TF_TEAM_RED ? m_pRedProgressBar : m_pBlueProgressBar;

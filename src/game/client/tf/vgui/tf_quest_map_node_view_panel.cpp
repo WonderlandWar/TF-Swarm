@@ -400,7 +400,7 @@ void CQuestViewSubPanel::FireGameEvent( IGameEvent *event )
 			if ( !m_pQuestDef || msg.quest_defindex() != m_pQuestDef->GetDefIndex() )
 				return;
 
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "QuestViewSubPanel_QuestPurchased" );	
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "QuestViewSubPanel_QuestPurchased" );	
 			HideSelectQuestInfo();
 			m_pObjectiveTooltip->HideTooltip();
 			SetTooltip( NULL, NULL );
@@ -439,7 +439,7 @@ void CQuestViewSubPanel::OnCursorEntered()
 {
 	if ( !m_pQuest )
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "QuestViewSubPanel_SelectMouseOver" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "QuestViewSubPanel_SelectMouseOver" );
 	}
 }
 
@@ -453,7 +453,7 @@ void CQuestViewSubPanel::OnCursorExited()
 
 void CQuestViewSubPanel::HideSelectQuestInfo()
 {
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "QuestViewSubPanel_SelectMouseExit" );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "QuestViewSubPanel_SelectMouseExit" );
 }
 
 CQuestNodeViewPanel::CQuestNodeViewPanel( Panel *pParent, const char *pszPanelname )
@@ -971,7 +971,7 @@ void CQuestNodeViewPanel::FireGameEvent( IGameEvent *event )
 
 		if ( nRequest == k_EMsgGC_QuestMapUnlockNode )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "QuestNodeView_QuestPurchased" );	
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "QuestNodeView_QuestPurchased" );	
 		}
 	}
 	else if ( FStrEq( event->GetName(), "quest_turn_in_state" ) )
@@ -988,8 +988,8 @@ void CQuestNodeViewPanel::FireGameEvent( IGameEvent *event )
 				Color colorGreen = GetColor( "CreditsGreen" );
 				Color colorHighlight = colorGreen;
 				BrigthenColor( colorHighlight, 60 );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pPanel, "bgcolor", colorHighlight, 0.f, 0.f, AnimationController::INTERPOLATOR_LINEAR, 0, true, false );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pPanel, "bgcolor", colorGreen, 0.2f, 1.5f, AnimationController::INTERPOLATOR_LINEAR, 0, false, false );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pPanel, "bgcolor", colorHighlight, 0.f, 0.f, AnimationController::INTERPOLATOR_LINEAR, 0, true, false );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pPanel, "bgcolor", colorGreen, 0.2f, 1.5f, AnimationController::INTERPOLATOR_LINEAR, 0, false, false );
 			}
 		};
 

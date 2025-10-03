@@ -8,7 +8,7 @@
 #include "particles_simple.h"
 #include "particles_localspace.h"
 #include "c_te_effect_dispatch.h"
-#include "clienteffectprecachesystem.h"
+#include "precache_register.h"
 #include "tier0/vprof.h"
 #include "fx.h"
 #include "r_efx.h"
@@ -25,12 +25,12 @@
 #include "toolframework_client.h"
 
 // Precache our effects
-CLIENTEFFECT_REGISTER_BEGIN( PrecacheEffect_TF_MuzzleFlash )
-	CLIENTEFFECT_MATERIAL( "effects/muzzleflash1" )
-	CLIENTEFFECT_MATERIAL( "effects/muzzleflash2" )
-	CLIENTEFFECT_MATERIAL( "effects/muzzleflash3" )
-	CLIENTEFFECT_MATERIAL( "effects/muzzleflash4" )
-CLIENTEFFECT_REGISTER_END()
+PRECACHE_REGISTER_BEGIN( GLOBAL, PrecacheEffect_TF_MuzzleFlash )
+	PRECACHE( MATERIAL, "effects/muzzleflash1" )
+	PRECACHE( MATERIAL, "effects/muzzleflash2" )
+	PRECACHE( MATERIAL, "effects/muzzleflash3" )
+	PRECACHE( MATERIAL, "effects/muzzleflash4" )
+PRECACHE_REGISTER_END()
 
 ConVar cl_muzzleflash_dlight_1st( "cl_muzzleflash_dlight_1st", "1" );
 
@@ -183,8 +183,8 @@ void TF_3rdPersonMuzzleFlashCallback_SentryGun( const CEffectData &data )
 }
 
 //TODO: Come back and make this guy a nice particle.
-DECLARE_CLIENT_EFFECT( "TF_3rdPersonMuzzleFlash", TF_3rdPersonMuzzleFlashCallback );
-DECLARE_CLIENT_EFFECT( "TF_3rdPersonMuzzleFlash_SentryGun", TF_3rdPersonMuzzleFlashCallback_SentryGun );
+DECLARE_CLIENT_EFFECT( TF_3rdPersonMuzzleFlash, TF_3rdPersonMuzzleFlashCallback );
+DECLARE_CLIENT_EFFECT( TF_3rdPersonMuzzleFlash_SentryGun, TF_3rdPersonMuzzleFlashCallback_SentryGun );
 
 
 //-----------------------------------------------------------------------------
@@ -213,7 +213,7 @@ C_MuzzleFlashModel *C_MuzzleFlashModel::CreateMuzzleFlashModel( const char *pszM
 bool C_MuzzleFlashModel::InitializeMuzzleFlash( const char *pszModelName, C_BaseEntity *pParent, int iAttachment, float flLifetime )
 {
 	AddEffects( EF_NORECEIVESHADOW | EF_NOSHADOW );
-	if ( InitializeAsClientEntity( pszModelName, RENDER_GROUP_OPAQUE_ENTITY ) == false )
+	if ( InitializeAsClientEntity( pszModelName, false ) == false )
 	{
 		Release();
 		return false;
@@ -275,7 +275,7 @@ void C_MuzzleFlashModel::SetIs3rdPersonFlash( bool bEnable )
 }
 
 					   
-bool C_MuzzleFlashModel::SetupBones( matrix3x4_t *pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime )
+bool C_MuzzleFlashModel::SetupBones( matrix3x4a_t *pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime )
 {
 	// FIXME: This is an incredibly brutal hack to get muzzle flashes positioned correctly for recording
 	// NOTE: The correct, long-term solution, is to make weapon models

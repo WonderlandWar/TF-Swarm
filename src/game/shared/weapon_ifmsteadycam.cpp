@@ -625,7 +625,7 @@ void CWeaponIFMSteadyCam::DrawCrosshair( void )
 
 	// Draw the targeting zone around the crosshair
 	int r, g, b, a;
-	gHUD.m_clrYellowish.GetColor( r, g, b, a );
+	GetHud().m_clrYellowish.GetColor( r, g, b, a );
 		 
 	Color gray( 255, 255, 255, 192 );
 	Color light( r, g, b, 255 );

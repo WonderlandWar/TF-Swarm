@@ -70,9 +70,9 @@ void CMatchMakingDashboardSidePanel::OnCommand( const char *command )
 void CMatchMakingDashboardSidePanel::SetAsActive( bool bActive )
 {
 	int nShadeAlpha = bActive ? 0 : 50;
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pShade, "alpha", nShadeAlpha, 0.0f, 0.4f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pShade, "alpha", nShadeAlpha, 0.0f, 0.4f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
 	int nGradientAlpha = bActive ? 0 : 230;
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pInnerGradient, "alpha", nGradientAlpha, 0.0f, 0.4f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pInnerGradient, "alpha", nGradientAlpha, 0.0f, 0.4f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
 
 	m_pReturnButton->SetVisible( !bActive );
 

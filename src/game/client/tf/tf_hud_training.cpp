@@ -264,7 +264,7 @@ void CTFHudTraining::SetTrainingText(char *szRawString)
 	}
 
 	//m_pMessageFlashEndTime = gpGlobals->curtime + MESSAGE_FLASH_TIME;
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "TrainingHudBounce");
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "TrainingHudBounce");
 
 	C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
 	if ( pLocalPlayer )
@@ -295,6 +295,6 @@ void CTFHudTraining::OnTick( )
 	{
 		m_pPressSpacebarToContinueLabel->SetVisible( bShouldBeVisible );
 
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( bShouldBeVisible ? "TrainingPressSpacebarBlink" : "TrainingPressSpacebarBlinkStop" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( bShouldBeVisible ? "TrainingPressSpacebarBlink" : "TrainingPressSpacebarBlinkStop" );
 	}
 }

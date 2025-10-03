@@ -41,24 +41,26 @@ enum EWebAPIValueType
 
 class CWebAPIValues;
 
+#define NO_HTTP_STATUS
+
 class CWebAPIResponse
 {
 public:
 	CWebAPIResponse();
 	~CWebAPIResponse();
-
+#ifndef NO_HTTP_STATUS
 	// Set the HTTP status code for the response
 	void SetStatusCode( EHTTPStatusCode eStatusCode ) { m_eStatusCode = eStatusCode; }
-
+#endif
 	// Set how many seconds until this response expires
 	void SetExpirationSeconds( uint32 unExpirationSeconds ) { m_unExpirationSeconds = unExpirationSeconds; }
 
 	// Set when this response was last modified
 	void SetLastModified( RTime32 rtLastModified ) { m_rtLastModified = rtLastModified; }
-
+#ifndef NO_HTTP_STATUS
 	// Get the status code for the response
 	EHTTPStatusCode GetStatusCode() const { return m_eStatusCode; }
-
+#endif
 	// Get how many seconds until this response expires
 	uint32 GetExpirationSeconds() const { return m_unExpirationSeconds; }
 
@@ -105,7 +107,9 @@ private:
 	bool BEmitParameterEncoding( CUtlBuffer &outputBuffer );
 
 	CWebAPIValues *m_pValues;
+#ifndef NO_HTTP_STATUS
 	EHTTPStatusCode m_eStatusCode;
+#endif
 	uint32 m_unExpirationSeconds;
 	RTime32 m_rtLastModified;
 	bool m_bExtendedArrays;

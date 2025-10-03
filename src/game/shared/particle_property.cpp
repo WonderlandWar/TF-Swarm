@@ -555,127 +555,173 @@ void CParticleProperty::UpdateControlPoint( ParticleEffectList_t *pEffect, int i
 		return;
 
 	Vector vecOrigin, vecForward, vecRight, vecUp;
+	
+	float flOffset = 0.0f;
+	bool bUsingHeadOrigin = false;
 
-	switch ( pPoint->iAttachType )
+#ifdef TF_CLIENT_DLL
+
+	CBaseEntity *pWearable = (CBaseEntity*) pPoint->hEntity.Get();
+	if ( pWearable && GetAttribInterface( pWearable ) && !pWearable->IsPlayer() )
 	{
-	case PATTACH_POINT:
-	case PATTACH_POINT_FOLLOW:
+		C_BaseAnimating *pAnimating = pPoint->hEntity->GetBaseAnimating();
+		if ( pAnimating )
 		{
-			C_BaseAnimating *pAnimating = pPoint->hEntity->GetBaseAnimating();
-
-			bool bValid = false;
-			Assert( pAnimating );
-			if ( pAnimating )
+			int bUseHeadOrigin = 0;
+			CALL_ATTRIB_HOOK_INT_ON_OTHER( pAnimating, bUseHeadOrigin, particle_effect_use_head_origin );
+			if ( bUseHeadOrigin > 0 )
 			{
-				matrix3x4_t attachmentToWorld;
-
-				if ( pAnimating->IsViewModel() )
+				int iBone = Studio_BoneIndexByName( pAnimating->GetModelPtr(), "bip_head" );
+				if ( iBone < 0 )
 				{
-					C_BasePlayer *pPlayer = ToBasePlayer( ((C_BaseViewModel *)pAnimating)->GetOwner() );
-					ACTIVE_SPLITSCREEN_PLAYER_GUARD( C_BasePlayer::GetSplitScreenSlotForPlayer( pPlayer ) );
-
-					if ( pAnimating->GetAttachment( pPoint->iAttachmentPoint, attachmentToWorld ) )
+					iBone = Studio_BoneIndexByName( pAnimating->GetModelPtr(), "prp_helmet" );
+					if ( iBone < 0 )
 					{
-						bValid = true;
-						MatrixVectors( attachmentToWorld, &vecForward, &vecRight, &vecUp );
-						MatrixPosition( attachmentToWorld, vecOrigin );
-
-						if ( pEffect->pParticleEffect->m_pDef->IsViewModelEffect() )
-						{
-							FormatViewModelAttachment( pPlayer, vecOrigin, true );
-						}
+						iBone = Studio_BoneIndexByName( pAnimating->GetModelPtr(), "prp_hat" );
 					}
 				}
-				else
+				if ( iBone < 0 )
 				{
-					// HACK_GETLOCALPLAYER_GUARD( "CParticleProperty::UpdateControlPoint" );
-
-					if ( pAnimating->GetAttachment( pPoint->iAttachmentPoint, attachmentToWorld ) )
-					{
-						bValid = true;
-						MatrixVectors( attachmentToWorld, &vecForward, &vecRight, &vecUp );
-#ifdef _DEBUG
-						float flTests[3] = {vecForward.Dot( vecRight ), vecRight.Dot( vecUp ), vecUp.Dot( vecForward )};
-						static float s_flMaxTest = 0.001f;
-						Assert( fabs( flTests[0] ) + fabs( flTests[1] ) + fabs( flTests[2] ) < s_flMaxTest );
-#endif
-						MatrixPosition( attachmentToWorld, vecOrigin );
-
-						if ( pEffect->pParticleEffect->m_pDef->IsViewModelEffect() )
-						{
-							HACK_GETLOCALPLAYER_GUARD( "CParticleProperty::UpdateControlPoint" );
-
-							FormatViewModelAttachment( NULL, vecOrigin, true );
-						}
-					}
+					iBone = 0;
 				}
-			}
 
-			if ( !bValid )
-			{
-				static bool bWarned = false;
-				if ( !bWarned )
-				{
-					bWarned = true;
-					DevWarning( "Attempted to attach particle effect %s to an unknown attachment on entity %s\n",
-						pEffect->pParticleEffect->m_pDef->GetName(), pAnimating->GetClassname() );
-				}
-			}
-			if ( !bValid )
-			{
-				AssertOnce( 0 );
-				return;
+				bUsingHeadOrigin = true;
+				const matrix3x4_t headBone = pAnimating->GetBone( iBone );
+				MatrixVectors( headBone, &vecForward, &vecRight, &vecUp );
+				MatrixPosition( headBone, vecOrigin );
+
+				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pAnimating, flOffset, particle_effect_vertical_offset );	
 			}
 		}
-		break;
-
-	case PATTACH_ABSORIGIN:
-	case PATTACH_ABSORIGIN_FOLLOW:
-	default:
-		{
-			vecOrigin = pPoint->hEntity->GetAbsOrigin() + pPoint->vecOriginOffset;
-			pPoint->hEntity->GetVectors( &vecForward, &vecRight, &vecUp );
-		}
-		break;
-
-	case PATTACH_EYES_FOLLOW:
-		{
-			C_BaseEntity *pEnt = pPoint->hEntity;
-
-			if ( !pEnt->IsPlayer() )
-				return;
-
-			C_BasePlayer *pPlayer = assert_cast< C_BasePlayer* >( pEnt );
-
-			bool bValid = false;
-			Assert( pPlayer );
-			if ( pPlayer )
-			{
-				bValid = true;
-				vecOrigin = pPlayer->EyePosition() + pPoint->vecOriginOffset;
-				pPlayer->EyeVectors( &vecForward, &vecRight, &vecUp );
-			}
-			if ( !bValid )
-			{
-				AssertOnce( 0 );
-				return;
-			}
-		}
-		break;
-
-	case PATTACH_CUSTOMORIGIN_FOLLOW:
-		{
-			matrix3x4_t mat;
-			MatrixMultiply( pPoint->hEntity->RenderableToWorldTransform(), pPoint->matOffset, mat );
-			MatrixVectors( mat, &vecForward, &vecRight, &vecUp );
-			vecOrigin = pPoint->hEntity->GetAbsOrigin() + pPoint->vecOriginOffset;
-		}
-		break;
 	}
+#endif
+	
+	if ( !bUsingHeadOrigin )
+	{
+		switch ( pPoint->iAttachType )
+		{
+		case PATTACH_POINT:
+		case PATTACH_POINT_FOLLOW:
+			{
+				C_BaseAnimating *pAnimating = pPoint->hEntity->GetBaseAnimating();
+
+				bool bValid = false;
+				Assert( pAnimating );
+				if ( pAnimating )
+				{
+					matrix3x4_t attachmentToWorld;
+
+					if ( pAnimating->IsViewModel() )
+					{
+						C_BasePlayer *pPlayer = ToBasePlayer( ((C_BaseViewModel *)pAnimating)->GetOwner() );
+						ACTIVE_SPLITSCREEN_PLAYER_GUARD( C_BasePlayer::GetSplitScreenSlotForPlayer( pPlayer ) );
+
+						if ( pAnimating->GetAttachment( pPoint->iAttachmentPoint, attachmentToWorld ) )
+						{
+							bValid = true;
+							MatrixVectors( attachmentToWorld, &vecForward, &vecRight, &vecUp );
+							MatrixPosition( attachmentToWorld, vecOrigin );
+
+							if ( pEffect->pParticleEffect->m_pDef->IsViewModelEffect() )
+							{
+								FormatViewModelAttachment( pPlayer, vecOrigin, true );
+							}
+						}
+					}
+					else
+					{
+						// HACK_GETLOCALPLAYER_GUARD( "CParticleProperty::UpdateControlPoint" );
+
+						if ( pAnimating->GetAttachment( pPoint->iAttachmentPoint, attachmentToWorld ) )
+						{
+							bValid = true;
+							MatrixVectors( attachmentToWorld, &vecForward, &vecRight, &vecUp );
+	#ifdef _DEBUG
+							float flTests[3] = {vecForward.Dot( vecRight ), vecRight.Dot( vecUp ), vecUp.Dot( vecForward )};
+							static float s_flMaxTest = 0.001f;
+							Assert( fabs( flTests[0] ) + fabs( flTests[1] ) + fabs( flTests[2] ) < s_flMaxTest );
+	#endif
+							MatrixPosition( attachmentToWorld, vecOrigin );
+
+							if ( pEffect->pParticleEffect->m_pDef->IsViewModelEffect() )
+							{
+								HACK_GETLOCALPLAYER_GUARD( "CParticleProperty::UpdateControlPoint" );
+
+								FormatViewModelAttachment( NULL, vecOrigin, true );
+							}
+						}
+					}
+				}
+
+				if ( !bValid )
+				{
+					static bool bWarned = false;
+					if ( !bWarned )
+					{
+						bWarned = true;
+						DevWarning( "Attempted to attach particle effect %s to an unknown attachment on entity %s\n",
+							pEffect->pParticleEffect->m_pDef->GetName(), pAnimating->GetClassname() );
+					}
+				}
+				if ( !bValid )
+				{
+					AssertOnce( 0 );
+					return;
+				}
+			}
+			break;
+
+		case PATTACH_ABSORIGIN:
+		case PATTACH_ABSORIGIN_FOLLOW:
+		default:
+			{
+				vecOrigin = pPoint->hEntity->GetAbsOrigin() + pPoint->vecOriginOffset;
+				pPoint->hEntity->GetVectors( &vecForward, &vecRight, &vecUp );
+			}
+			break;
+
+		case PATTACH_EYES_FOLLOW:
+			{
+				C_BaseEntity *pEnt = pPoint->hEntity;
+
+				if ( !pEnt->IsPlayer() )
+					return;
+
+				C_BasePlayer *pPlayer = assert_cast< C_BasePlayer* >( pEnt );
+
+				bool bValid = false;
+				Assert( pPlayer );
+				if ( pPlayer )
+				{
+					bValid = true;
+					vecOrigin = pPlayer->EyePosition() + pPoint->vecOriginOffset;
+					pPlayer->EyeVectors( &vecForward, &vecRight, &vecUp );
+				}
+				if ( !bValid )
+				{
+					AssertOnce( 0 );
+					return;
+				}
+			}
+			break;
+
+		case PATTACH_CUSTOMORIGIN_FOLLOW:
+			{
+				matrix3x4_t mat;
+				MatrixMultiply( pPoint->hEntity->RenderableToWorldTransform(), pPoint->matOffset, mat );
+				MatrixVectors( mat, &vecForward, &vecRight, &vecUp );
+				vecOrigin = pPoint->hEntity->GetAbsOrigin() + pPoint->vecOriginOffset;
+			}
+			break;
+		}
+	
+	}
+
+	Vector vecForcedOriginOffset( 0, 0, flOffset );
 	pEffect->pParticleEffect->SetControlPointOrientation( pPoint->iControlPoint, vecForward, vecRight, vecUp );
 	pEffect->pParticleEffect->SetControlPointEntity( pPoint->iControlPoint, pPoint->hEntity );
-	pEffect->pParticleEffect->SetControlPoint( pPoint->iControlPoint, vecOrigin );
-	pEffect->pParticleEffect->SetSortOrigin( vecOrigin );
+	pEffect->pParticleEffect->SetControlPoint( pPoint->iControlPoint, vecOrigin + vecForcedOriginOffset );
+	pEffect->pParticleEffect->SetSortOrigin( vecOrigin + vecForcedOriginOffset );
 }
 
 //-----------------------------------------------------------------------------

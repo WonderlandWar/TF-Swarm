@@ -39,7 +39,7 @@ public:
 #define AUTO_LOCK_WRITE( mutex ) CRWLockAutoWrite<CThreadRWLock> UNIQUE_ID( mutex )
 #define AUTO_LOCK_SPIN_WRITE( mutex ) CRWLockAutoWrite<CThreadSpinRWLock> UNIQUE_ID( mutex )
 
-inline void *MemAlloc_AllocAligned( size_t size, size_t align, bool bCanFail ) { return MemAlloc_AllocAligned( size, align ); }
+//inline void *MemAlloc_AllocAligned( size_t size, size_t align, bool bCanFail ) { return MemAlloc_AllocAligned( size, align ); }
 inline void MemAlloc_FreeAligned( void *pMemBlock, bool bOperatorNew ) { MemAlloc_FreeAligned( pMemBlock ); }
 
 #endif

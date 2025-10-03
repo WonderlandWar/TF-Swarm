@@ -188,6 +188,7 @@ PLATFORM_INTERFACE bool DoNewAssertDialog( const tchar *pFile, int line, const t
 #define  AssertFloatEquals( _exp, _expectedValue, _tol )  	AssertMsg2( fabs((_exp) - (_expectedValue)) <= (_tol), _T("Expected %f but got %f!"), (_expectedValue), (_exp) )
 #define  Verify( _exp )           							Assert( _exp )
 #define  VerifyEquals( _exp, _expectedValue )           	AssertEquals( _exp, _expectedValue )
+#define  DbgVerify( _exp )           						Assert( _exp )
 
 #define  AssertMsg(  _exp, _msg )  										AssertMsg_( _exp, _T( _msg ) )
 #define  AssertMsg1( _exp, _msg, a1 )									AssertMsg_( _exp, (const tchar *)(CDbgFmtMsg( _T( _msg ), a1 )) )
@@ -212,6 +213,7 @@ PLATFORM_INTERFACE bool DoNewAssertDialog( const tchar *pFile, int line, const t
 #define  AssertFloatEquals( _exp, _expectedValue, _tol )	((void)0)
 #define  Verify( _exp )										(_exp)
 #define  VerifyEquals( _exp, _expectedValue )           	(_exp)
+#define  DbgVerify( _exp )									(_exp)
 
 #define  AssertMsg1( _exp, _msg, a1 )									((void)0)
 #define  AssertMsg2( _exp, _msg, a1, a2 )								((void)0)

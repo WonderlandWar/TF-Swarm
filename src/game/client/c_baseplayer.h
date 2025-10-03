@@ -86,6 +86,7 @@ public:
 
 	virtual void	Spawn( void );
 	virtual void	SharedSpawn(); // Shared between client and server.
+	virtual bool	GetSteamID( CSteamID *pID );
 	Class_T		Classify( void ) { return CLASS_PLAYER; }
 
 	// IClientEntity overrides.
@@ -236,6 +237,7 @@ public:
 
 	// Global/static methods
 	virtual void				ThirdPersonSwitch( bool bThirdperson );
+	static bool					LocalPlayerInFirstPersonView();
 	bool						ShouldDrawLocalPlayer();
 	static C_BasePlayer			*GetLocalPlayer( int nSlot = -1 );
 	static void					SetRemoteSplitScreenPlayerViewsAreLocalPlayer( bool bSet ); //if true, calls to GetLocalPlayer() will return a remote splitscreen player when applicable.

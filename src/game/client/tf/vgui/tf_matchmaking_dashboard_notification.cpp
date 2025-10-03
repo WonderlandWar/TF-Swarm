@@ -54,7 +54,7 @@ void CTFDashboardNotification::SetToExpire( float flDelay )
 {
 	float flAlphaTime = Min( 1.f, flDelay );
 
-	auto pAnim = g_pClientMode->GetViewportAnimationController();
+	auto pAnim = GetClientMode()->GetViewportAnimationController();
 	pAnim->RunAnimationCommand( this,
 								"alpha",
 								0,

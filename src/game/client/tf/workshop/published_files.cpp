@@ -1580,7 +1580,7 @@ public:
 		: CHudElement( pElementName )
 		, BaseClass( NULL, "ItemTestHUDPanel" )
 	{
-		vgui::Panel *pParent = g_pClientMode->GetViewport();
+		vgui::Panel *pParent = GetClientMode()->GetViewport();
 		SetParent( pParent );
 
 		SetHiddenBits( HIDEHUD_MISCSTATUS );

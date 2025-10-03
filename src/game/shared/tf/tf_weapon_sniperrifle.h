@@ -61,8 +61,8 @@ public:
 	bool GetRenderingPositions( C_TFPlayer *pPlayer, Vector &vecAttachment, Vector &vecEndPos, float &flSize );
 
 	// Rendering.
-	virtual bool			IsTransparent( void )		{ return true; }
-	virtual RenderGroup_t	GetRenderGroup( void )		{ return RENDER_GROUP_TRANSLUCENT_ENTITY; }
+	virtual bool			IsTransparent( void ) OVERRIDE { return true; }
+	virtual RenderGroup_t	GetRenderGroup( void ) OVERRIDE { return RENDER_GROUP_TRANSLUCENT_ENTITY; }
 	virtual int				DrawModel( int flags );
 	virtual bool			ShouldDraw( void );
 

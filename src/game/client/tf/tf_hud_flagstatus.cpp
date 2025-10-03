@@ -507,7 +507,7 @@ void CTFHudFlagObjectives::ApplySchemeSettings( IScheme *pScheme )
 //-----------------------------------------------------------------------------
 void CTFHudFlagObjectives::Reset()
 {
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "FlagOutlineHide" );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "FlagOutlineHide" );
 
 	UpdateStatus();
 }
@@ -834,7 +834,7 @@ void CTFHudFlagObjectives::UpdateStatus( C_BasePlayer *pNewOwner /*= NULL*/, C_B
 		if ( !m_bFlagAnimationPlayed )
 		{
 			m_bFlagAnimationPlayed = true;
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "FlagOutline" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "FlagOutline" );
 		}
 
 		if ( m_pCapturePoint && !m_pCapturePoint->IsVisible() )
@@ -864,7 +864,7 @@ void CTFHudFlagObjectives::UpdateStatus( C_BasePlayer *pNewOwner /*= NULL*/, C_B
 		if ( m_bCarryingFlag )
 		{
 			m_bCarryingFlag = false;
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "FlagOutline" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "FlagOutline" );
 		}
 
 		m_bFlagAnimationPlayed = false;
@@ -960,7 +960,7 @@ CTFFlagCalloutPanel::CTFFlagCalloutPanel( const char *pElementName ) : CHudEleme
 {
 	m_FlagCalloutPanels.AddToTail( this );
 
-	SetParent( g_pClientMode->GetViewport() );
+	SetParent( GetClientMode()->GetViewport() );
 
 	RegisterForRenderGroup( "mid" );
 	RegisterForRenderGroup( "commentary" );

@@ -104,7 +104,7 @@ bool AbuseIncidentData_t::Poll()
 			if ( steamapicontext && steamapicontext->SteamUser() )
 			{
 
-				p->m_iSteamAvatarIndex = steamapicontext->SteamFriends()->GetLargeFriendAvatar( p->m_steamID );
+				p->m_iSteamAvatarIndex = steamapicontext->SteamFriends()->GetFriendAvatar( p->m_steamID, k_EAvatarSize64x64 );
 				if ( p->m_iSteamAvatarIndex < 0 )
 				{
 					bReady = false;

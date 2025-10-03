@@ -56,7 +56,7 @@
 #include "c_asw_marine.h"
 #endif
 
-#if defined( HL2_CLIENT_DLL ) || defined( INFESTED_DLL )
+#if defined( HL2_CLIENT_DLL ) || defined( CSTRIKE_DLL ) || defined( TF_CLIENT_DLL )
 #define USE_MONITORS
 #endif
 
@@ -107,11 +107,13 @@ extern ConVar cl_forwardspeed;
 static ConVar v_centermove( "v_centermove", "0.15");
 static ConVar v_centerspeed( "v_centerspeed","500" );
 
-
+#ifdef TF_CLIENT_DLL
 // 54 degrees approximates a 35mm camera - we determined that this makes the viewmodels
 // and motions look the most natural.
+ConVar v_viewmodel_fov( "viewmodel_fov", "54", FCVAR_ARCHIVE, "Sets the field-of-view for the viewmodel.", true, 0.1, true, 179.9 );
+#else
 ConVar v_viewmodel_fov( "viewmodel_fov", "54", FCVAR_CHEAT );
-
+#endif
 
 static ConVar mat_viewportscale( "mat_viewportscale", "1.0", FCVAR_CHEAT, "Scale down the main viewport (to reduce GPU impact on CPU profiling)",
 								  true, (1.0f / 640.0f), true, 1.0f );

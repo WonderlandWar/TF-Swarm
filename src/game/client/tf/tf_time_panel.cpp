@@ -495,11 +495,11 @@ void CTFHudTimeStatus::SetExtraTimePanels()
 		{
 			if ( bInSD )
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "SuddenDeathLabelPulseRed" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "SuddenDeathLabelPulseRed" );
 			}
 			else
 			{
-				g_pClientMode->GetViewportAnimationController()->StopAnimationSequence( this, "SuddenDeathLabelPulseRed" );
+				GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( this, "SuddenDeathLabelPulseRed" );
 			}
 		}
 
@@ -557,7 +557,7 @@ void CTFHudTimeStatus::SetExtraTimePanels()
 			{
 				m_pOvertimeBG->SetVisible( true );
 				m_pOvertimeLabel->SetVisible( true );
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "OvertimeLabelPulseRed" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "OvertimeLabelPulseRed" );
 
 				CheckClockLabelLength( m_pOvertimeLabel, m_pOvertimeBG );
 			}
@@ -566,7 +566,7 @@ void CTFHudTimeStatus::SetExtraTimePanels()
 		{
 			m_pOvertimeBG->SetVisible( false );
 			m_pOvertimeLabel->SetVisible( false );
-			g_pClientMode->GetViewportAnimationController()->StopAnimationSequence( this, "OvertimeLabelPulseRed" );
+			GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( this, "OvertimeLabelPulseRed" );
 		}
 	}
 
@@ -898,7 +898,7 @@ CTFHudKothTimeStatus::CTFHudKothTimeStatus( const char *pElementName )
 	, m_pActiveTimerBG( NULL )
 	, m_nActiveTeam( TEAM_UNASSIGNED )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_pBluePanel = new CTFHudTimeStatus( this, "BlueTimer" );
@@ -1009,8 +1009,8 @@ void CTFHudKothTimeStatus::UpdateActiveTeam( void )
 {
 	if ( ShouldUseMatchHUD() )
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pRedPanel, m_nActiveTeam == TF_TEAM_RED ? "ActiveTimerHighlight" : "ActiveTimerDim", false );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pBluePanel, m_nActiveTeam == TF_TEAM_BLUE ? "ActiveTimerHighlight" : "ActiveTimerDim", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pRedPanel, m_nActiveTeam == TF_TEAM_RED ? "ActiveTimerHighlight" : "ActiveTimerDim", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pBluePanel, m_nActiveTeam == TF_TEAM_BLUE ? "ActiveTimerHighlight" : "ActiveTimerDim", false );
 	}
 	else if ( m_pActiveTimerBG )
 	{
@@ -1033,7 +1033,7 @@ void CTFHudKothTimeStatus::UpdateActiveTeam( void )
 			m_pActiveTimerBG->GetPos( xPos, yPos );
 			m_pActiveTimerBG->SetPos( xNewPos, yPos );
 
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "ActiveTimerBGPulse" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "ActiveTimerBGPulse" );
 		}
 		else
 		{

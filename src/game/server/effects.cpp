@@ -2410,6 +2410,13 @@ PRECACHE_REGISTER_BEGIN( GLOBAL, EffectsPrecache )
 	PRECACHE( GAMESOUND, "BaseExplosionEffect.Sound" )
 	PRECACHE( GAMESOUND, "Splash.SplashSound" )
 	PRECACHE_CONDITIONAL( GAMESOUND, "HudChat.Message", gpGlobals->maxClients > 1 )
+
+#ifdef TF_DLL
+	// For tempfx.
+	PRECACHE( MODEL, "models/weapons/shells/shell_cigarrette.mdl" );
+	PRECACHE( MODEL, "models/player/gibs/soldiergib007.mdl" );
+	PRECACHE( MODEL, "models/player/gibs/soldiergib008.mdl" );
+#endif
 PRECACHE_REGISTER_END()
 
 class CEnvViewPunch : public CPointEntity

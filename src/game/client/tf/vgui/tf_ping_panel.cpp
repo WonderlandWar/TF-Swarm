@@ -261,13 +261,13 @@ void CTFPingPanel::UpdateCurrentPing()
 		int bHighLight = !bUsePingLimit || info.m_nPing <= nCurrentPingLimit;
 		if ( bHighLight )
 		{
-			g_pClientMode->GetViewportAnimationController()->StopAnimationSequence( info.m_pPanel, "HealthProgressBar_NotSelected" );
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( info.m_pPanel, "HealthProgressBar_Selected" );
+			GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( info.m_pPanel, "HealthProgressBar_NotSelected" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( info.m_pPanel, "HealthProgressBar_Selected" );
 		}
 		else
 		{
-			g_pClientMode->GetViewportAnimationController()->StopAnimationSequence( info.m_pPanel, "HealthProgressBar_Selected" );
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( info.m_pPanel, "HealthProgressBar_NotSelected" );
+			GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( info.m_pPanel, "HealthProgressBar_Selected" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( info.m_pPanel, "HealthProgressBar_NotSelected" );
 		}
 	}
 }

@@ -272,7 +272,7 @@ CTFHudMatchStatus::CTFHudMatchStatus(const char *pElementName)
 	, m_bUseMatchHUD( false )
 	, m_eMatchGroupSettings( k_eTFMatchGroup_Invalid )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent(pParent);
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS | HIDEHUD_MATCH_STATUS );
@@ -596,11 +596,11 @@ void CTFHudMatchStatus::FireGameEvent( IGameEvent * event )
 		{
 			if ( TFGameRules() && TFGameRules()->MapHasMatchSummaryStage() && ( bForceDoors || pMatchDesc->BUseMatchSummaryStage() ) )
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowMatchWinDoors", false );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowMatchWinDoors", false );
 			}
 			else
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowMatchWinDoors_NoOpen", false );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowMatchWinDoors_NoOpen", false );
 			}
 		}
 	}
@@ -627,7 +627,7 @@ void CTFHudMatchStatus::HandleCountdown( int nTime )
 		}
 		else
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowCountdown", false );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowCountdown", false );
 		}
 		break;
 	}
@@ -660,7 +660,7 @@ void CTFHudMatchStatus::ShowMatchStartDoors()
 		m_pMatchStartModelPanel->UpdateModel();
 		m_pMatchStartModelPanel->SetSkin( nSkin );
 
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowMatchStartDoors", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowMatchStartDoors", false );
 
 		bool bUsesStickyRanks = pMatchDesc->BUsesStickyRanks();
 		SetControlVisible( "RankUpLabel", bUsesStickyRanks, true );
@@ -678,7 +678,7 @@ void CTFHudMatchStatus::ShowMatchStartDoors()
 			{
 				// For exiting placement, put up a message that indicates so
 				SetDialogVariable( "rank_possibility", g_pVGuiLocalize->Find( "#TF_MM_PlacementMatch" ) );
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowRankMatch", false );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowRankMatch", false );
 			}
 			else if ( !bInPlacement && pRank && pRating )
 			{
@@ -697,7 +697,7 @@ void CTFHudMatchStatus::ShowMatchStartDoors()
 				if ( bTrendingUp && bOnRankUpThreshold )
 				{
 					SetDialogVariable( "rank_possibility", g_pVGuiLocalize->Find( "#TF_MM_RankUpMatch" ) );
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowRankMatch", false );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudMatchStatus_ShowRankMatch", false );
 				}
 			}
 		}
@@ -743,7 +743,7 @@ void CTFHudMatchStatus::ShowRoundSign( int nRoundNumber )
 		m_pRoundSignModel->SetPanelDirty();
 		m_pRoundSignModel->UpdateModel();
 		// Play the sign drop anim
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence(this, "HudTournament_ShowRoundSign", false);
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence(this, "HudTournament_ShowRoundSign", false);
 	}
 }
 

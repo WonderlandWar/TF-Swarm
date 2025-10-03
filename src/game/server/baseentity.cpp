@@ -72,6 +72,10 @@
 #include "sendprop_priorities.h"
 #include "videocfg/videocfg.h"
 
+#if defined( TF_DLL )
+#include "tf_gamerules.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -649,6 +653,10 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE( CBaseEntity, DT_BaseEntity )
 	SendPropInt( SENDINFO(m_bAnimatedEveryTick),		1, SPROP_UNSIGNED ),
 	SendPropBool( SENDINFO( m_bAlternateSorting )),
 
+#ifdef TF_DLL
+	SendPropArray3( SENDINFO_ARRAY3(m_nModelIndexOverrides), SendPropInt( SENDINFO_ARRAY(m_nModelIndexOverrides), SP_MODEL_INDEX_BITS, 0 ) ),
+#endif
+
 	// Fading
 	SendPropFloat( SENDINFO( m_fadeMinDist ),			0, SPROP_NOSCALE ),
 	SendPropFloat( SENDINFO( m_fadeMaxDist ),			0, SPROP_NOSCALE ),
@@ -971,6 +979,29 @@ void CBaseEntity::SetClassname( const char *className )
 	m_iClassname = AllocPooledString( className );
 
 
+}
+
+void CBaseEntity::ClearModelIndexOverrides( void )
+{
+#ifdef TF_DLL
+	for ( int index = 0 ; index < MAX_VISION_MODES ; index++ )
+	{
+		m_nModelIndexOverrides.Set( index, 0 );
+	}
+#endif
+}
+
+void CBaseEntity::SetModelIndexOverride( int index, int nValue )
+{
+#ifdef TF_DLL
+	if ( ( index >= VISION_MODE_NONE ) && ( index < MAX_VISION_MODES ) )
+	{
+		if ( nValue != m_nModelIndexOverrides[index] )
+		{
+			m_nModelIndexOverrides.Set( index, nValue );
+		}	
+	}
+#endif
 }
 
 // position to shoot at
@@ -1984,7 +2015,15 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 		// setup the damage force & position inside the CTakeDamageInfo (Utility functions for this are in
 		// takedamageinfo.cpp. If you think the damage shouldn't cause force (unlikely!) then you can set the 
 		// damage type to DMG_GENERIC, or | DMG_CRUSH if you need to preserve the damage type for purposes of HUD display.
+#if !defined( TF_DLL )
 		Assert( force != vec3_origin && offset != vec3_origin );
+#else
+		// this was spamming the console for Payload maps in TF (trigger_hurt entity on the front of the cart)
+		if ( !TFGameRules() || TFGameRules()->GetGameType() != TF_GAMETYPE_ESCORT )
+		{
+			Assert( force != vec3_origin && offset != vec3_origin );
+		}
+#endif
 
 		unsigned short gameFlags = VPhysicsGetObject()->GetGameFlags();
 		if ( gameFlags & FVPHYSICS_PLAYER_HELD )
@@ -2385,6 +2424,10 @@ BEGIN_DATADESC_NO_BASE( CBaseEntity )
 
 	//DEFINE_FIELD( m_DamageModifiers, FIELD_?? ), // can't save?
 	// DEFINE_FIELD( m_fDataObjectTypes, FIELD_INTEGER ),
+
+#ifdef TF_DLL
+	DEFINE_ARRAY( m_nModelIndexOverrides, FIELD_INTEGER, MAX_VISION_MODES ),
+#endif
 
 	DEFINE_KEYFIELD( m_bLagCompensate, FIELD_BOOLEAN, "LagCompensate" ),
 END_DATADESC()

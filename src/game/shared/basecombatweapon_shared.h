@@ -262,6 +262,7 @@ public:
 	virtual void			AbortReload( void );
 	virtual bool			Reload( void );
 	bool					DefaultReload( int iClipSize1, int iClipSize2, int iActivity );
+	bool					ReloadsSingly( void ) const;
 
 	// Weapon firing
 	virtual void			PrimaryAttack( void );						// do "+ATTACK"
@@ -482,6 +483,9 @@ public:
 	virtual int				GetWorldModelIndex( void );
 
 	virtual void			GetToolRecordingState( KeyValues *msg );
+
+	virtual void			GetWeaponCrosshairScale( float &flScale ) { flScale = 1.f; }
+
 	void					EnsureCorrectRenderingModel();
 	virtual void			GetToolViewModelState( KeyValues *msg ) {} // this is just a stub for viewmodels to request recording of weapon-specific effects, etc
 
@@ -514,6 +518,19 @@ public:
 private:
 	typedef CHandle< CBaseCombatCharacter > CBaseCombatCharacterHandle;
 	CNetworkVar( CBaseCombatCharacterHandle, m_hOwner );				// Player carrying this weapon
+
+protected:
+#if defined ( TF_CLIENT_DLL ) || defined ( TF_DLL )
+	// Regulate crit frequency to reduce client-side seed hacking
+	void					AddToCritBucket( float flAmount );
+	void					RemoveFromCritBucket( float flAmount ) { m_flCritTokenBucket -= flAmount; }
+	bool					IsAllowedToWithdrawFromCritBucket( float flDamage );
+
+	float					m_flCritTokenBucket;
+	int						m_nCritChecks;
+	int						m_nCritSeedRequests;
+#endif // TF
+
 public:
 	// Networked fields
 	CNetworkVar( int, m_nViewModelIndex );

@@ -270,7 +270,7 @@ CHudMainMenuOverride::~CHudMainMenuOverride( void )
 	// Stop Animation Sequences
 	if ( m_pNotificationsShowPanel )
 	{
-		g_pClientMode->GetViewportAnimationController()->CancelAnimationsForPanel( m_pNotificationsShowPanel );
+		GetClientMode()->GetViewportAnimationController()->CancelAnimationsForPanel( m_pNotificationsShowPanel );
 	}
 
 	vgui::ivgui()->RemoveTickSignal( GetVPanel() );
@@ -930,11 +930,11 @@ void CHudMainMenuOverride::PerformLayout( void )
 		m_pSafeModeContainer->SetVisible( cl_mainmenu_safemode.GetBool() );
 		if ( cl_mainmenu_safemode.GetBool() )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pSafeModeContainer, "MMenu_SafeMode_Blink" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pSafeModeContainer, "MMenu_SafeMode_Blink" );
 		}
 		else
 		{
-			g_pClientMode->GetViewportAnimationController()->CancelAnimationsForPanel( m_pSafeModeContainer );
+			GetClientMode()->GetViewportAnimationController()->CancelAnimationsForPanel( m_pSafeModeContainer );
 		}
 	}
 
@@ -944,7 +944,7 @@ void CHudMainMenuOverride::PerformLayout( void )
 		EditablePanel* pUpdateBackground = m_pEventPromoContainer->FindControl< EditablePanel >( "Background", true );
 		if ( pUpdateBackground )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pUpdateBackground, "MMenu_UpdateButton_StartGlow" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pUpdateBackground, "MMenu_UpdateButton_StartGlow" );
 		}
 	}
 
@@ -1425,11 +1425,11 @@ void CHudMainMenuOverride::SetMOTDButtonVisible( bool bVisible )
 
 		if ( bVisible && m_bHaveNewMOTDs )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pMOTDShowPanel, "HasMOTDBlink" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pMOTDShowPanel, "HasMOTDBlink" );
 		}
 		else
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pMOTDShowPanel, "HasMOTDBlinkStop" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pMOTDShowPanel, "HasMOTDBlinkStop" );
 		}
 	}
 }
@@ -1556,11 +1556,11 @@ void CHudMainMenuOverride::UpdateNotifications()
 		bool bBlinkNotifications = bHasNotifications && m_pNotificationsShowPanel->IsVisible();
 		if ( bBlinkNotifications )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pNotificationsShowPanel, "HasNotificationsBlink" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pNotificationsShowPanel, "HasNotificationsBlink" );
 		}
 		else
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pNotificationsShowPanel, "HasNotificationsBlinkStop" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pNotificationsShowPanel, "HasNotificationsBlinkStop" );
 		}
 	}
 
@@ -1779,7 +1779,7 @@ void CHudMainMenuOverride::StopUpdateGlow()
 		EditablePanel* pUpdateBackground = m_pEventPromoContainer->FindControl< EditablePanel >( "Background", true );
 		if ( pUpdateBackground )
 		{
-			g_pClientMode->GetViewportAnimationController()->StopAnimationSequence( pUpdateBackground, "MMenu_UpdateButton_StartGlow" );
+			GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( pUpdateBackground, "MMenu_UpdateButton_StartGlow" );
 			pUpdateBackground->SetControlVisible( "ViewDetailsGlow", false, true );
 			pUpdateBackground->SetControlVisible( "ViewWarButtonGlow", false, true );
 		}

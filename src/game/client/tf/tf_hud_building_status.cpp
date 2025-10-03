@@ -604,7 +604,7 @@ void CBuildingStatusAlertTray::ShowTray( void )
 	if ( m_bIsTrayOut == false )
 	{
 		m_flAlertDeployedPercent = 0.0;
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "deployed", 1.0, 0.0, 0.3, AnimationController::INTERPOLATOR_LINEAR );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "deployed", 1.0, 0.0, 0.3, AnimationController::INTERPOLATOR_LINEAR );
 
 		m_bIsTrayOut = true;
 	}
@@ -615,7 +615,7 @@ void CBuildingStatusAlertTray::HideTray( void )
 	if ( m_bIsTrayOut == true )
 	{
 		m_flAlertDeployedPercent = 1.0;
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "deployed", 0.0, 0.0, 0.3, AnimationController::INTERPOLATOR_LINEAR );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "deployed", 0.0, 0.0, 0.3, AnimationController::INTERPOLATOR_LINEAR );
 
 		m_bIsTrayOut = false;
 	}
@@ -1276,7 +1276,7 @@ static bool BuildingOrderLessFunc( const BUILDINGSTATUSITEM_PTR &left, const BUI
 CHudBuildingStatusContainer::CHudBuildingStatusContainer( const char *pElementName ) :
 CHudElement( pElementName ), BaseClass( NULL, pElementName )
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS | HIDEHUD_BUILDING_STATUS );

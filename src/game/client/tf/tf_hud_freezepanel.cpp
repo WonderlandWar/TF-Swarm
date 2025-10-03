@@ -93,7 +93,7 @@ CTFFreezePanel::CTFFreezePanel( const char *pElementName )
 	AssertMsg( !s_pFreezePanel, "There can be only one." );
 	s_pFreezePanel = this;
 
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 	SetVisible( false );
 	SetScheme( "ClientScheme" );
@@ -728,7 +728,7 @@ CTFFreezePanelCallout *CTFFreezePanel::TestAndAddCallout( Vector &origin, Vector
 
 					if ( bClear )
 					{
-						CTFFreezePanelCallout *pCallout = new CTFFreezePanelCallout( g_pClientMode->GetViewport(), "FreezePanelCallout" );
+						CTFFreezePanelCallout *pCallout = new CTFFreezePanelCallout( GetClientMode()->GetViewport(), "FreezePanelCallout" );
 						m_pCalloutPanels.AddToTail( vgui::SETUP_PANEL(pCallout) );
 						vecCalloutsTL->AddToTail( vecCalloutTL );
 						vecCalloutsBR->AddToTail( vecCalloutBR );
@@ -1014,7 +1014,7 @@ void CTFFreezePanel::ShowSnapshotPanel( bool bShow )
 
 		m_pScreenshotPanel->SetDialogVariable( "text", wLabel );
 
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "HudSnapShotReminderIn" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudSnapShotReminderIn" );
 	}
 
 	m_pScreenshotPanel->SetVisible( bShow );
@@ -1041,7 +1041,7 @@ void CTFFreezePanel::ShowSaveReplayPanel( bool bShow )
 	// Start animation if necessary
 	if ( bShow )
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pSaveReplayPanel->GetParent(), "HudReplayReminderIn2" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pSaveReplayPanel->GetParent(), "HudReplayReminderIn2" );
 	}
 
 	// Setup visibility

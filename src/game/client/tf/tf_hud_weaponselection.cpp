@@ -218,7 +218,7 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 CHudWeaponSelection::CHudWeaponSelection( const char *pElementName ) : CBaseHudWeaponSelection( pElementName ), EditablePanel( NULL, "HudWeaponSelection" )
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetPostChildPaintEnabled( true );
@@ -921,7 +921,7 @@ void CHudWeaponSelection::OpenSelection( void )
 	InvalidateLayout();
 
 	CBaseHudWeaponSelection::OpenSelection();
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("OpenWeaponSelectionMenu");
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence("OpenWeaponSelectionMenu");
 	m_iSelectedBoxPosition = 0;
 	m_iSelectedSlot = -1;
 }
@@ -941,7 +941,7 @@ void CHudWeaponSelection::HideSelection( void )
 
 	m_flSelectionTime = 0;
 	CBaseHudWeaponSelection::HideSelection();
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("CloseWeaponSelectionMenu");
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence("CloseWeaponSelectionMenu");
 }
 
 //-----------------------------------------------------------------------------

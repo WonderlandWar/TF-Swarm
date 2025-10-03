@@ -35,6 +35,15 @@
 #if defined( REPLAY_ENABLED )
 #include "replaycamera.h"
 #endif
+
+#ifdef TF_CLIENT_DLL
+#include "tf_gamerules.h"
+#endif
+
+#if defined USES_ECON_ITEMS
+#include "econ_wearable.h"
+#endif
+
 #include "toolframework/itoolframework.h"
 #include "toolframework_client.h"
 #include "view_scene.h"
@@ -96,6 +105,8 @@ ConVar	spec_freeze_time( "spec_freeze_time", "4.0", FCVAR_CHEAT | FCVAR_REPLICAT
 ConVar	spec_freeze_traveltime( "spec_freeze_traveltime", "0.4", FCVAR_CHEAT | FCVAR_REPLICATED, "Time taken to zoom in to frame a target in observer freeze cam.", true, 0.01, false, 0 );
 ConVar	spec_freeze_distance_min( "spec_freeze_distance_min", "96", FCVAR_CHEAT, "Minimum random distance from the target to stop when framing them in observer freeze cam." );
 ConVar	spec_freeze_distance_max( "spec_freeze_distance_max", "200", FCVAR_CHEAT, "Maximum random distance from the target to stop when framing them in observer freeze cam." );
+
+static ConVar	cl_first_person_uses_world_model ( "cl_first_person_uses_world_model", "0", FCVAR_NONE, "Causes the third person model to be drawn instead of the view model" );
 
 bool IsDemoPolishRecording();
 
@@ -822,6 +833,27 @@ void C_BasePlayer::PostDataUpdate( DataUpdateType_t updateType )
 
 			ConVar *pVar = (ConVar *)cvar->FindVar( "snd_soundmixer" );
 			pVar->Revert();
+
+			m_nForceVisionFilterFlags = 0;
+			CalculateVisionUsingCurrentFlags();
+		}
+		
+		// force calculate vision when the local vision flags changed
+		int nCurrentLocalPlayerVisionFlags = GetLocalPlayerVisionFilterFlags();
+		if ( m_nLocalPlayerVisionFlags != nCurrentLocalPlayerVisionFlags )
+		{
+			CalculateVisionUsingCurrentFlags();
+			m_nLocalPlayerVisionFlags = nCurrentLocalPlayerVisionFlags;
+		}
+
+		if ( m_Local.m_bPrevForceLocalPlayerDraw != m_Local.m_bForceLocalPlayerDraw )
+		{
+#ifdef TF_CLIENT_DLL
+			CTFPlayer *pTFPlayer = ToTFPlayer( this );
+			if ( pTFPlayer )
+				pTFPlayer->FlushAllPlayerVisibilityState();
+#endif
+			m_Local.m_bPrevForceLocalPlayerDraw = m_Local.m_bForceLocalPlayerDraw;
 		}
 	}
 
@@ -1824,6 +1856,40 @@ void C_BasePlayer::ThirdPersonSwitch( bool bThirdperson )
 }
 
 //-----------------------------------------------------------------------------
+// Purpose: single place to decide whether the camera is in the first-person position
+//          NOTE - ShouldDrawLocalPlayer() can be true even if the camera is in the first-person position, e.g. in VR.
+//-----------------------------------------------------------------------------
+/*static*/ bool C_BasePlayer::LocalPlayerInFirstPersonView()
+{
+	C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
+	if ( pLocalPlayer == NULL )
+	{
+		return false;
+	}
+
+	if ( pLocalPlayer->m_Local.m_bForceLocalPlayerDraw )
+	{
+		return false;
+	}
+
+#ifdef TF_CLIENT_DLL
+	if ( TFGameRules() && TFGameRules()->IsCompetitiveMode() && TFGameRules()->PlayersAreOnMatchSummaryStage() )
+	{
+		return false;
+	}
+#endif
+
+	int ObserverMode = pLocalPlayer->GetObserverMode();
+	if ( ( ObserverMode == OBS_MODE_NONE ) || ( ObserverMode == OBS_MODE_IN_EYE ) )
+	{
+		return !input->CAM_IsThirdPerson() && ( !ToolsEnabled() || !ToolFramework_IsThirdPersonCamera() );
+	}
+
+	// Not looking at the local player, e.g. in a replay in third person mode or freelook.
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: single place to decide whether the local player should draw
 //-----------------------------------------------------------------------------
 bool C_BasePlayer::ShouldDrawLocalPlayer()
@@ -1833,7 +1899,7 @@ bool C_BasePlayer::ShouldDrawLocalPlayer()
 
 
 	ACTIVE_SPLITSCREEN_PLAYER_GUARD( nSlot );
-	return input->CAM_IsThirdPerson() || ( ToolsEnabled() && ToolFramework_IsThirdPersonCamera() );
+	return !LocalPlayerInFirstPersonView() || cl_first_person_uses_world_model.GetBool();
 }
 
 //----------------------------------------------------------------------------
@@ -2801,6 +2867,26 @@ void C_BasePlayer::UpdateFogBlend( void )
 				
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool C_BasePlayer::GetSteamID( CSteamID *pID )
+{
+	// try to make this a little more efficient
+
+	player_info_t pi;
+	if ( engine->GetPlayerInfo( entindex(), &pi ) )
+	{
+		if ( pi.friendsID && steamapicontext && steamapicontext->SteamUtils() )
+		{
+			pID->InstancedSet( pi.friendsID, 1, GetUniverse(), k_EAccountTypeIndividual );
+
+			return true;
+		}
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

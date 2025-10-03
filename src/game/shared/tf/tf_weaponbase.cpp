@@ -3099,7 +3099,7 @@ void CTFWeaponBase::CreateMuzzleFlashEffects( C_BaseEntity *pAttachEnt, int nInd
 	if ( !pAttachEnt )
 		return;
 
-	if ( UsingViewModel() && !g_pClientMode->ShouldDrawViewModel() )
+	if ( UsingViewModel() && !GetClientMode()->ShouldDrawViewModel() )
 	{
 		// Prevent effects when the ViewModel is hidden with r_drawviewmodel=0
 		return;
@@ -3549,7 +3549,7 @@ bool CTFWeaponBase::ShouldDrawCrosshair( void )
 
 void CTFWeaponBase::Redraw()
 {
-	if ( ShouldDrawCrosshair() && g_pClientMode->ShouldDrawCrosshair() )
+	if ( ShouldDrawCrosshair() && GetClientMode()->ShouldDrawCrosshair() )
 	{
 		DrawCrosshair();
 	}
@@ -4849,7 +4849,7 @@ bool CTFWeaponBase::OnFireEvent( C_BaseViewModel *pViewModel, const Vector& orig
 {
 	if ( event == 6002 && ShouldEjectBrass() )
 	{
-		if ( UsingViewModel() && !g_pClientMode->ShouldDrawViewModel() )
+		if ( UsingViewModel() && !GetClientMode()->ShouldDrawViewModel() )
 		{
 			// Prevent effects when the ViewModel is hidden with r_drawviewmodel=0
 			return true;

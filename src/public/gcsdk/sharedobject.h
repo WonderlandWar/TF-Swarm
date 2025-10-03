@@ -104,7 +104,7 @@ CSharedObject *CreateSharedObjectSubclass()
 template<int nSharedObjectType>
 CSharedObject *CreateSharedObjectSubclassProhibited()
 {
-	AssertMsg( false, "Attempting to auto-create object of type %d which does not allow SO-based creation", nSharedObjectType );
+	AssertMsg1( false, "Attempting to auto-create object of type %d which does not allow SO-based creation", nSharedObjectType );
 	return NULL;
 }
 

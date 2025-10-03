@@ -286,7 +286,7 @@ extern ConVar cl_hud_minmode;
 DECLARE_HUDELEMENT_DEPTH( CHudSpellMenu, 2 );
 CHudSpellMenu::CHudSpellMenu( const char *pElementName ) : CHudElement( pElementName ), BaseClass ( NULL, "HudSpellMenu" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS | HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD );
@@ -715,7 +715,7 @@ void CTFSpellBook::ItemBusyFrame( void )
 	if ( !m_hHandEffectWeapon )
 		return;
 
-	if ( UsingViewModel() && !g_pClientMode->ShouldDrawViewModel() )
+	if ( UsingViewModel() && !GetClientMode()->ShouldDrawViewModel() )
 	{
 		// Prevent effects when the ViewModel is hidden with r_drawviewmodel=0
 		return;

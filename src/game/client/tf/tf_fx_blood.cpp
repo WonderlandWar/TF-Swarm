@@ -5,7 +5,7 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "clienteffectprecachesystem.h"
+#include "precache_register.h"
 #include "fx_sparks.h"
 #include "iefx.h"
 #include "c_te_effect_dispatch.h"
@@ -68,10 +68,12 @@ void TFBloodSprayCallback( Vector vecOrigin, Vector vecNormal, ClientEntityHandl
 	// if underwater, don't add additional spray
 	if ( bUnderwater )
 		return;
+	
+	int slot = GET_ACTIVE_SPLITSCREEN_SLOT();
 
 	// Now throw out a spray away from the view
 	// Get the distance to the view
-	float flDistance = (vecOrigin - MainViewOrigin()).Length();
+	float flDistance = (vecOrigin - MainViewOrigin(slot)).Length();
 	float flLODDistance = 0.25 * (flDistance / 512);
 
 	Vector right, up;
@@ -88,7 +90,7 @@ void TFBloodSprayCallback( Vector vecOrigin, Vector vecNormal, ClientEntityHandl
 
 	// If the normal's too close to being along the view, push it out
 	Vector vecForward, vecRight;
-	AngleVectors( MainViewAngles(), &vecForward, &vecRight, NULL );
+	AngleVectors( MainViewAngles(slot), &vecForward, &vecRight, NULL );
 	float flDot = DotProduct( vecNormal, vecForward );
 	if ( fabs(flDot) > 0.5 )
 	{
@@ -149,7 +151,7 @@ C_TETFBlood::C_TETFBlood( void )
 {
 	m_vecOrigin.Init();
 	m_vecNormal.Init();
-	m_hEntity = INVALID_EHANDLE;
+	m_hEntity = INVALID_EHANDLE_INDEX;
 }
 
 //-----------------------------------------------------------------------------
@@ -165,7 +167,7 @@ void C_TETFBlood::PostDataUpdate( DataUpdateType_t updateType )
 static void RecvProxy_BloodEntIndex( const CRecvProxyData *pData, void *pStruct, void *pOut )
 {
 	int nEntIndex = pData->m_Value.m_Int;
-	((C_TETFBlood*)pStruct)->m_hEntity = (nEntIndex < 0) ? INVALID_EHANDLE : ClientEntityList().EntIndexToHandle( nEntIndex );
+	((C_TETFBlood*)pStruct)->m_hEntity = (nEntIndex < 0) ? INVALID_EHANDLE_INDEX : ClientEntityList().EntIndexToHandle( nEntIndex );
 }
 
 IMPLEMENT_CLIENTCLASS_EVENT_DT(C_TETFBlood, DT_TETFBlood, CTETFBlood)

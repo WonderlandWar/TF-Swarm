@@ -202,17 +202,17 @@ public:
 				pMapCheckButton->SetSilentMode( false );
 			}
 
-			if ( g_pClientMode && g_pClientMode->GetViewport() )
+			if ( g_pClientMode && GetClientMode()->GetViewport() )
 			{
 				if ( bSelected )
 				{
-					g_pClientMode->GetViewportAnimationController()->StopAnimationSequence( pMapEntry, "HealthProgressBar_NotSelected" );
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pMapEntry, "HealthProgressBar_Selected" );
+					GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( pMapEntry, "HealthProgressBar_NotSelected" );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pMapEntry, "HealthProgressBar_Selected" );
 				}
 				else
 				{
-					g_pClientMode->GetViewportAnimationController()->StopAnimationSequence( pMapEntry, "HealthProgressBar_Selected" );
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pMapEntry, "HealthProgressBar_NotSelected" );
+					GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( pMapEntry, "HealthProgressBar_Selected" );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pMapEntry, "HealthProgressBar_NotSelected" );
 				}
 			}
 		}
@@ -529,13 +529,13 @@ void CCasualCriteriaPanel::WriteCategories( void )
 
 			if ( bCatSelected )
 			{
-				g_pClientMode->GetViewportAnimationController()->StopAnimationSequence( pListEntry, "CasualCategory_NotSelected" );
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pListEntry, "CasualCategory_Selected" );
+				GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( pListEntry, "CasualCategory_NotSelected" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pListEntry, "CasualCategory_Selected" );
 			}
 			else
 			{
-				g_pClientMode->GetViewportAnimationController()->StopAnimationSequence( pListEntry, "CasualCategory_Selected" );
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pListEntry, "CasualCategory_NotSelected" );
+				GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( pListEntry, "CasualCategory_Selected" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pListEntry, "CasualCategory_NotSelected" );
 			}
 
 			pListEntry->InvalidateLayout();

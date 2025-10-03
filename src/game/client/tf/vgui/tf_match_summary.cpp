@@ -63,7 +63,7 @@ CTFMatchSummary::CTFMatchSummary( const char *pElementName )
 	, EditablePanel( NULL, "MatchSummary" )
 	, m_bXPShown( false )
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_pMainStatsContainer = new EditablePanel( this, "MainStatsContainer" );
@@ -347,7 +347,7 @@ void CTFMatchSummary::SetVisible( bool state )
 			pPvPRankPanel->SetMatchGroup( TFGameRules()->GetCurrentMatchGroup() );
 		}
 
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "CompetitiveGame_LowerChatWindow", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "CompetitiveGame_LowerChatWindow", false );
 	}
 	else
 	{
@@ -1002,7 +1002,7 @@ void CTFMatchSummary::FireGameEvent( IGameEvent *event )
 			int nRedBadgeOffset = m_pPlayerListRedParent->GetParent()->GetXPos();
 			FOR_EACH_VEC( m_pRedBadgePanels, i )
 			{
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedBadgePanels[i], "xpos", m_pRedBadgePanels[i]->GetXPos() - nRedBadgeOffset, 0.25, 0.25, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedBadgePanels[i], "xpos", m_pRedBadgePanels[i]->GetXPos() - nRedBadgeOffset, 0.25, 0.25, vgui::AnimationController::INTERPOLATOR_ACCEL );
 			}
 		}
 
@@ -1011,11 +1011,11 @@ void CTFMatchSummary::FireGameEvent( IGameEvent *event )
 			int nBlueBadgeOffset = m_pPlayerListBlueParent->GetParent()->GetXPos();
 			FOR_EACH_VEC( m_pBlueBadgePanels, i )
 			{
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pBlueBadgePanels[i], "xpos", m_pBlueBadgePanels[i]->GetXPos() - nBlueBadgeOffset, 0.25, 0.25, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pBlueBadgePanels[i], "xpos", m_pBlueBadgePanels[i]->GetXPos() - nBlueBadgeOffset, 0.25, 0.25, vgui::AnimationController::INTERPOLATOR_ACCEL );
 			}
 		}
 
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pTeamScoresPanel, "HudMatchSummary_SlideInPanels", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pTeamScoresPanel, "HudMatchSummary_SlideInPanels", false );
 	}
 }
 
@@ -1180,37 +1180,37 @@ void CTFMatchSummary::OnTick()
 					m_pStatsLabelPanel->SetVisible( true );
 				}
 
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pStatsLabelPanel, "ypos", m_bLargeMatchGroup ? m_iAnimStatsLabelPanel12v12YPos : m_iAnimStatsLabelPanel6v6YPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pBlueMedalsPanel, "ypos", m_iAnimBlueMedalsYPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedMedalsPanel, "ypos", m_iAnimRedMedalsYPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamName, "ypos", m_bLargeMatchGroup ? m_iAnimBlueTeamLabel12v12YPos : m_iAnimBlueTeamLabel6v6YPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamName, "ypos", m_bLargeMatchGroup ? m_iAnimRedTeamLabel12v12YPos : m_iAnimRedTeamLabel6v6YPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pPlayerListBlueParent, "wide", m_iAnimBluePlayerListParent, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamScore, "wide", m_iAnimBlueTeamScore, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamScoreDropshadow, "wide", m_iAnimBlueTeamScoreDropshadow, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamScoreBG, "wide", m_iAnimBlueTeamScoreBG, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pBluePlayerListBG, "wide",  m_iAnimBluePlayerListBG, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScore, "wide", m_iAnimRedTeamScoreWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScore, "xpos", m_iAnimRedTeamScoreXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScoreDropshadow, "wide", m_iAnimRedTeamScoreDropshadowWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScoreDropshadow, "xpos", m_iAnimRedTeamScoreDropshadowXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScoreBG, "wide", m_iAnimRedTeamScoreBGWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScoreBG, "xpos", m_iAnimRedTeamScoreBGXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pPlayerListRedParent, "wide", m_iAnimRedPlayerListParentWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pPlayerListRedParent, "xpos", m_iAnimRedPlayerListParentXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedPlayerListBG, "wide", m_iAnimRedPlayerListBGWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedPlayerListBG, "xpos", m_iAnimRedPlayerListBGXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamWinner, "wide", m_iAnimBlueTeamScore, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamWinnerDropshadow, "wide", m_iAnimBlueTeamScoreDropshadow, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamWinner, "wide", m_iAnimRedTeamScoreWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamWinner, "xpos", m_iAnimRedTeamScoreXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamWinnerDropshadow, "wide", m_iAnimRedTeamScoreDropshadowWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamWinnerDropshadow, "xpos", m_iAnimRedTeamScoreDropshadowXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pStatsLabelPanel, "ypos", m_bLargeMatchGroup ? m_iAnimStatsLabelPanel12v12YPos : m_iAnimStatsLabelPanel6v6YPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pBlueMedalsPanel, "ypos", m_iAnimBlueMedalsYPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedMedalsPanel, "ypos", m_iAnimRedMedalsYPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamName, "ypos", m_bLargeMatchGroup ? m_iAnimBlueTeamLabel12v12YPos : m_iAnimBlueTeamLabel6v6YPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamName, "ypos", m_bLargeMatchGroup ? m_iAnimRedTeamLabel12v12YPos : m_iAnimRedTeamLabel6v6YPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pPlayerListBlueParent, "wide", m_iAnimBluePlayerListParent, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamScore, "wide", m_iAnimBlueTeamScore, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamScoreDropshadow, "wide", m_iAnimBlueTeamScoreDropshadow, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamScoreBG, "wide", m_iAnimBlueTeamScoreBG, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pBluePlayerListBG, "wide",  m_iAnimBluePlayerListBG, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScore, "wide", m_iAnimRedTeamScoreWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScore, "xpos", m_iAnimRedTeamScoreXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScoreDropshadow, "wide", m_iAnimRedTeamScoreDropshadowWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScoreDropshadow, "xpos", m_iAnimRedTeamScoreDropshadowXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScoreBG, "wide", m_iAnimRedTeamScoreBGWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamScoreBG, "xpos", m_iAnimRedTeamScoreBGXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pPlayerListRedParent, "wide", m_iAnimRedPlayerListParentWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pPlayerListRedParent, "xpos", m_iAnimRedPlayerListParentXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedPlayerListBG, "wide", m_iAnimRedPlayerListBGWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedPlayerListBG, "xpos", m_iAnimRedPlayerListBGXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamWinner, "wide", m_iAnimBlueTeamScore, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pBlueTeamWinnerDropshadow, "wide", m_iAnimBlueTeamScoreDropshadow, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamWinner, "wide", m_iAnimRedTeamScoreWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamWinner, "xpos", m_iAnimRedTeamScoreXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamWinnerDropshadow, "wide", m_iAnimRedTeamScoreDropshadowWide, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedTeamWinnerDropshadow, "xpos", m_iAnimRedTeamScoreDropshadowXPos, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
 
 				int nRedBadgeOffset = m_pPlayerListRedParent->GetXPos() - m_iAnimRedPlayerListParentXPos;
 				FOR_EACH_VEC( m_pRedBadgePanels, i )
 				{
-					g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pRedBadgePanels[i], "xpos", m_pRedBadgePanels[i]->GetXPos() - nRedBadgeOffset, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
+					GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pRedBadgePanels[i], "xpos", m_pRedBadgePanels[i]->GetXPos() - nRedBadgeOffset, 0.0, 0.1, vgui::AnimationController::INTERPOLATOR_ACCEL );
 
 				}
 
@@ -1416,7 +1416,7 @@ void CTFMatchSummary::OnTick()
 
 			if ( !m_bXPShown /*&& ( !bShowMedals || bMedalSoundTimeComplete ) */)
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "CompetitiveGame_ShowPvPRankPanel", false );	
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "CompetitiveGame_ShowPvPRankPanel", false );	
 				m_bXPShown = true;
 			}
 

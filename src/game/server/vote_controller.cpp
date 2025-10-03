@@ -1178,7 +1178,7 @@ void CVoteController::OnPlayerDisconnected( CBasePlayer *pPlayer )
 CBaseIssue::CBaseIssue( const char *pszTypeString, CVoteController *pVoteController )
 	: m_pVoteController( pVoteController )
 {
-	V_strcpy_safe( m_szTypeString, pszTypeString );
+	V_strcpy( m_szTypeString, pszTypeString );
 
 	m_iNumYesVotes = 0;
 	m_iNumNoVotes = 0;
@@ -1223,7 +1223,7 @@ const char *CBaseIssue::GetDetailsString( void )
 //-----------------------------------------------------------------------------
 void CBaseIssue::SetIssueDetails( const char *pszDetails )
 {
-	V_strcpy_safe( m_szDetailsString, pszDetails );
+	V_strcpy( m_szDetailsString, pszDetails );
 }
 
 //-----------------------------------------------------------------------------
@@ -1274,7 +1274,7 @@ void CBaseIssue::OnVoteFailed( int iEntityHoldingVote )
 		// Need to create a new one
 		FailedVote *pNewFailedVote = new FailedVote;
 		int iIndex = m_FailedVotes.AddToTail( pNewFailedVote );
-		V_strcpy_safe( m_FailedVotes[iIndex]->szFailedVoteParameter, GetDetailsString() );
+		V_strcpy( m_FailedVotes[iIndex]->szFailedVoteParameter, GetDetailsString() );
 		m_FailedVotes[iIndex]->flLockoutTime = gpGlobals->curtime + sv_vote_failure_timer.GetFloat();
 	}
 }

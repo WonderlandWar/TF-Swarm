@@ -98,7 +98,7 @@ Panel* GetBackgroundDimmer()
 			SetKeyBoardInputEnabled( false ); // This can never be true
 			SetVisible( true );
 			SetProportional( true );
-			SetBounds( 0, 0, g_pClientMode->GetViewport()->GetWide(), g_pClientMode->GetViewport()->GetTall() - YRES( 59 ) ); // Magically touch the top of the footer
+			SetBounds( 0, 0, GetClientMode()->GetViewport()->GetWide(), GetClientMode()->GetViewport()->GetTall() - YRES( 59 ) ); // Magically touch the top of the footer
 			SetZPos( 1000 );
 			Color black( 0, 0, 0, 255 );
 			SetDefaultColor( black, black );
@@ -438,16 +438,16 @@ void CTFMatchmakingDashboard::OnCommand( const char *command )
 		if ( pSpinner )
 		{
 			// Do a radius pop
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pSpinner, "radius", 15.f , 0.0f, 0.02f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, true, false );
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pSpinner, "radius", 10.f, 0.02f, 0.1f, vgui::AnimationController::INTERPOLATOR_DEACCEL, 0.8f, false, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pSpinner, "radius", 15.f , 0.0f, 0.02f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, true, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pSpinner, "radius", 10.f, 0.02f, 0.1f, vgui::AnimationController::INTERPOLATOR_DEACCEL, 0.8f, false, false );
 
 			// Speed up, then decay back
 			KeyValuesAD pkvInfo( "velocity" );
 			pSpinner->RequestInfo( pkvInfo );
 			float flVel = pkvInfo->GetFloat( "velocity" ) + 100.f;
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pSpinner, "velocity", flVel, 0.0f, 0.02f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, true, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pSpinner, "velocity", flVel, 0.0f, 0.02f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, true, false );
 			float flDecayTime = logf( 1.f + ( flVel / 50.f ) );
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pSpinner, "velocity", 100.f, 0.05f, flDecayTime, vgui::AnimationController::INTERPOLATOR_DEACCEL, 0.8f, false, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pSpinner, "velocity", 100.f, 0.05f, flDecayTime, vgui::AnimationController::INTERPOLATOR_DEACCEL, 0.8f, false, false );
 		}
 	}
 	else if ( FStrEq( command, "manage_queues" ) )
@@ -1082,10 +1082,10 @@ void CTFMatchmakingDashboard::OnNotificationCleared( Panel* pPanel )
 
 void CTFMatchmakingDashboard::PositionNotifications()
 {
-	if ( !g_pClientMode->GetViewport() )
+	if ( !GetClientMode()->GetViewport() )
 		return;
 
-	auto pAnim = g_pClientMode->GetViewportAnimationController();
+	auto pAnim = GetClientMode()->GetViewportAnimationController();
 
 	int nStartY = m_pTopBar->GetYPos() + m_pTopBar->GetTall() - YRES( 10 );
 	int nY[ CTFDashboardNotification::EAlignment::NUM_ALIGNMENTS ];
@@ -1193,13 +1193,13 @@ void CTFMatchmakingDashboard::PopStack( int nLevels, EStackSide_t eSide )
 		{
 			case k_eSideLeft:
 			{
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pPanel, "xpos", -pPanel->GetWide(), 0.f,flTransitionTime , vgui::AnimationController::INTERPOLATOR_SIMPLESPLINE, 0.8f, true, false );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pPanel, "xpos", -pPanel->GetWide(), 0.f,flTransitionTime , vgui::AnimationController::INTERPOLATOR_SIMPLESPLINE, 0.8f, true, false );
 				break;
 			}
 
 			case k_eSideRight:
 			{
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pPanel, "xpos", nSurfaceWide, 0.f, flTransitionTime, vgui::AnimationController::INTERPOLATOR_SIMPLESPLINE, 0.8f, true, false );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pPanel, "xpos", nSurfaceWide, 0.f, flTransitionTime, vgui::AnimationController::INTERPOLATOR_SIMPLESPLINE, 0.8f, true, false );
 				break;
 			}
 		}
@@ -1247,7 +1247,7 @@ void CTFMatchmakingDashboard::RepositionSidePanels( EStackSide_t eSide )
 			{
 				nX = Max( nInnerEdge, nWide );
 				nInnerEdge = Max( nInnerEdge, int( nX + YRES( tf_mm_dashboard_slide_panel_step.GetInt() ) ) );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pPanel, "xpos", nSurfaceWide - nX, 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_SIMPLESPLINE, 0.8f, true, false );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pPanel, "xpos", nSurfaceWide - nX, 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_SIMPLESPLINE, 0.8f, true, false );
 				break;
 			}
 
@@ -1255,7 +1255,7 @@ void CTFMatchmakingDashboard::RepositionSidePanels( EStackSide_t eSide )
 			{
 				nX = Min( nInnerEdge, nWide );
 				nInnerEdge = Min( nInnerEdge, int( nX - YRES( tf_mm_dashboard_slide_panel_step.GetInt() ) ) );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pPanel, "xpos", -nX, 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_SIMPLESPLINE, 0.8f, true, false );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pPanel, "xpos", -nX, 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_SIMPLESPLINE, 0.8f, true, false );
 				break;
 			}
 		}
@@ -1274,7 +1274,7 @@ void CTFMatchmakingDashboard::RepositionSidePanels( EStackSide_t eSide )
 void CTFMatchmakingDashboard::UpdateFindAGameButton()
 {
 	int nPlayButtonYPos = GetStackForSide( k_eSideRight ).IsEmpty() ? YRES( 0 ) : YRES( -50 );
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pPlayButton, "ypos", nPlayButtonYPos, 0.0f, 0.4f, vgui::AnimationController::INTERPOLATOR_SIMPLESPLINE, 0.8f, true, false );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pPlayButton, "ypos", nPlayButtonYPos, 0.0f, 0.4f, vgui::AnimationController::INTERPOLATOR_SIMPLESPLINE, 0.8f, true, false );
 }
 
 void CTFMatchmakingDashboard::UpdateDisconnectAndResume()
@@ -1324,7 +1324,7 @@ void CTFMatchmakingDashboard::UpdateDimmer()
 
 	Panel* pDimmer = GetDashboardPanel().GetPanel( k_eBGDimmer );
 	int nDimmerAlpha = bShowDimmer ? 230 : 0;
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pDimmer, "alpha", nDimmerAlpha, 0.0f, 0.4f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pDimmer, "alpha", nDimmerAlpha, 0.0f, 0.4f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
 	pDimmer->SetMouseInputEnabled( bShowDimmer );
 }
 
@@ -1370,7 +1370,7 @@ public:
 		: CHudElement( pElementName )
 		, EditablePanel( NULL, "QueueHUDStatus" )
 	{
-		Panel *pParent = g_pClientMode->GetViewport();
+		Panel *pParent = GetClientMode()->GetViewport();
 		SetParent(pParent);
 
 		ListenForGameEvent( "party_queue_state_changed" );
@@ -1409,7 +1409,7 @@ void CTFMatchmakingDashboard::UpdateQueuePanel()
 	if ( GTFPartyClient()->BInAnyMatchQueue() || GTFPartyClient()->BInStandbyQueue() )
 	{
 		// Make sure the panel is in place
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pQueuePanel, "ypos", 0, 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pQueuePanel, "ypos", 0, 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
 
 		wchar_t wszBuff[ 256 ];
 		GetQueuedString( wszBuff, sizeof( wszBuff ) );
@@ -1442,13 +1442,13 @@ void CTFMatchmakingDashboard::UpdateQueuePanel()
 		if ( pSpinner )
 		{
 			Color colorSpinner = GetColor( tf_queue_spinner_color.GetInt() == 0 ? "HUDRedTeamSolid" : "HUDBlueTeamSolid" );
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pSpinner, "fgcolor", colorSpinner, 0.0f, 0.02f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pSpinner, "fgcolor", colorSpinner, 0.0f, 0.02f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
 		}
 	}
 	else
 	{
 		// Get outta here
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pQueuePanel, "ypos", -YRES(50), 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pQueuePanel, "ypos", -YRES(50), 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
 	}
 }
 
@@ -1457,11 +1457,11 @@ void CTFMatchmakingDashboard::UpdateJoinPartyLobbyPanel()
 	if ( GTFPartyClient()->BCanQueueForStandby() )
 	{
 		// Make sure the panel is in place
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pJoinPartyLobbyPanel, "ypos", 0, 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pJoinPartyLobbyPanel, "ypos", 0, 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
 	}
 	else
 	{
 		// Get outta here
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_pJoinPartyLobbyPanel, "ypos", -YRES(50), 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_pJoinPartyLobbyPanel, "ypos", -YRES(50), 0.0f, tf_dashboard_slide_time.GetFloat(), vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
 	}
 }

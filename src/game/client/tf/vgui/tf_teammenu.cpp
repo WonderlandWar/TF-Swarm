@@ -741,12 +741,12 @@ void CTFTeamMenu::SetHighlanderTeamsFullPanels( bool bTeamsFull, bool bForce /* 
 			if ( bTeamsFull )
 			{
 				// turn on animation
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "TeamsFullArrowAnimate" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "TeamsFullArrowAnimate" );
 			}
 			else
 			{
 				// turn off animation
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "TeamsFullArrowAnimateEnd" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "TeamsFullArrowAnimateEnd" );
 			}
 		}
 	}

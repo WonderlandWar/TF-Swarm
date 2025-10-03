@@ -63,6 +63,12 @@
 #include "demo_polish/demo_polish.h"
 #endif
 
+#ifdef TF_CLIENT_DLL
+#include "c_tf_player.h"
+#include "c_baseobject.h"
+#include "tf_gamerules.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -1222,6 +1228,32 @@ void C_BaseAnimating::ParseModelEffects( KeyValues *modelKeyValues )
 					return;
 				}
 			}
+#ifdef TF_CLIENT_DLL
+			// Halloween Hack for Sentry Rockets
+			if ( !V_strcmp( "sentry_rocket", pszParticleEffect ) )
+			{
+				// Halloween Spell Effect Check
+				int iHalloweenSpell = 0;
+				if ( TF_IsHolidayActive( kHoliday_HalloweenOrFullMoon ) )
+				{
+					// if the owner is a Sentry, Check its owner
+					if ( GetOwnerEntity() && GetOwnerEntity()->IsBaseObject() )
+					{
+						CBaseObject *pSentry = assert_cast< CBaseObject* >( GetOwnerEntity() );
+						CALL_ATTRIB_HOOK_INT_ON_OTHER( pSentry->GetOwner(), iHalloweenSpell, halloween_pumpkin_explosions );
+					}
+					else
+					{
+						CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOwnerEntity(), iHalloweenSpell, halloween_pumpkin_explosions );
+					}
+				}
+
+				if ( iHalloweenSpell > 0 )
+				{
+					pszParticleEffect = "halloween_rockettrail";
+				}
+			}
+#endif // TF_CLIENT_DLL
 
 			Vector vecOffset = vec3_origin;
 
@@ -3155,6 +3187,10 @@ int C_BaseAnimating::DrawModel( int flags, const RenderableInstance_t &instance 
 
 	int drawn = 0;
 
+#ifdef TF_CLIENT_DLL
+	ValidateModelIndex();
+#endif
+
 	if ( r_drawothermodels.GetInt() )
 	{
 		MDLCACHE_CRITICAL_SECTION();
@@ -3428,7 +3464,38 @@ bool C_BaseAnimating::ComputeStencilState( ShaderStencilState_t *pStencilState )
 #endif
 }
 
+#ifdef TF_CLIENT_DLL
+// Move this elsewhere if we ever need it again.
+class MaterialOverrideRestore
+{
+public:
+	MaterialOverrideRestore() 
+	: m_bRestore( false )
+	, m_pOverrideMaterial( NULL )
+	, m_nOverrideType( OVERRIDE_NORMAL )
+	{ }
 
+	~MaterialOverrideRestore()
+	{
+		if ( m_bRestore )
+		{
+			modelrender->ForcedMaterialOverride( m_pOverrideMaterial, m_nOverrideType );
+		}
+	}
+
+	void RestoreOverride( IMaterial* pRestoreOverride, OverrideType_t overType )
+	{
+		m_bRestore = true;
+		m_pOverrideMaterial = pRestoreOverride;
+		m_nOverrideType = overType;
+	}
+
+private:
+	bool m_bRestore;
+	IMaterial* m_pOverrideMaterial;
+	OverrideType_t m_nOverrideType;
+};
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Draws the object
@@ -3437,6 +3504,57 @@ bool C_BaseAnimating::ComputeStencilState( ShaderStencilState_t *pStencilState )
 int C_BaseAnimating::InternalDrawModel( int flags, const RenderableInstance_t &instance )
 {
 	VPROF( "C_BaseAnimating::InternalDrawModel" );
+
+#ifdef TF_CLIENT_DLL
+	MaterialOverrideRestore overrideRestore;
+	// TODO: We should listen for TF_COND_TAUNTING changing and then just do this then, 
+	// rather than every frame.
+	bool bIgnoreOverride = false;
+
+	C_TFPlayer *pOwner = ToTFPlayer( GetOwnerEntity() );
+	if ( pOwner )
+	{
+		CTFPlayerInventory *pInv = pOwner->Inventory();
+		if ( pInv )
+		{
+			if ( pOwner->m_Shared.InCond( TF_COND_TAUNTING ) )
+			{
+				int iClass = pOwner->GetPlayerClass()->GetClassIndex();
+				CEconItemView *pMiscItemView = pInv->GetItemInLoadout( iClass, pOwner->GetActiveTauntSlot() );
+				if ( pMiscItemView && pMiscItemView->IsValid() )
+				{
+					if ( pMiscItemView->GetStaticData()->GetTauntData() )
+					{
+						bIgnoreOverride = pMiscItemView->GetStaticData()->GetTauntData()->GetProp( iClass ) != NULL;
+					}
+				}
+			}
+		}
+	}
+#if 0 // GetMaterialOverride is not a function in Alien Swarm
+	if ( !bIgnoreOverride )
+	{
+		// If there is some other material override, it's probably the client asking for us to render invuln or the 
+		// spy cloaking. Those are way more important than ours, so do them instead.
+		IMaterial* pOverrideMaterial = NULL;
+		OverrideType_t nDontcare = OVERRIDE_NORMAL;
+		modelrender->GetMaterialOverride( &pOverrideMaterial, &nDontcare );
+
+		bIgnoreOverride = ( pOverrideMaterial != NULL );
+	}
+#endif
+	IMaterial* pOverrideMaterial = GetEconWeaponMaterialOverride( GetTeamNumber() );
+
+	bool bUseOverride = !bIgnoreOverride && pOverrideMaterial != NULL;
+	if ( bUseOverride && ( flags & STUDIO_RENDER ) )
+	{
+		// Set us up to restore properly on exit
+		overrideRestore.RestoreOverride( NULL, OVERRIDE_NORMAL );
+
+		modelrender->ForcedMaterialOverride( pOverrideMaterial );
+		//flags |= STUDIO_NO_OVERRIDE_FOR_ATTACH; // Don't apply override materials to attachments. 
+	}
+#endif
 
 	if ( !GetModel() )
 		return 0;

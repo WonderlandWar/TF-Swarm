@@ -492,14 +492,14 @@ void CEventPlayListEntry::OnPlaylistActive()
 		float flBlinkEdgeTime = 0.175f;
 
 		// Reset
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pFlashColor, "alpha", 0, 0.0f, 0.0f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pFlashColor, "alpha", 0, 0.0f, 0.0f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, true, false );
 		// Blink 1
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pFlashColor, "alpha", 100, flWait, flBlinkEdgeTime, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, false, false );
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pFlashColor, "alpha", 0, flWait + flBlinkEdgeTime, flBlinkEdgeTime, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, false, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pFlashColor, "alpha", 100, flWait, flBlinkEdgeTime, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, false, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pFlashColor, "alpha", 0, flWait + flBlinkEdgeTime, flBlinkEdgeTime, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, false, false );
 		// Blink 2
 		flWait += flBlinkEdgeTime * 2;
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pFlashColor, "alpha", 100, flWait, flBlinkEdgeTime, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, false, false );
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( pFlashColor, "alpha", 0, flWait + flBlinkEdgeTime , flBlinkEdgeTime, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, false, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pFlashColor, "alpha", 100, flWait, flBlinkEdgeTime, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, false, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pFlashColor, "alpha", 0, flWait + flBlinkEdgeTime , flBlinkEdgeTime, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.8f, false, false );
 	}
 
 	m_bFlashedOnce = true;

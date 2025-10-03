@@ -629,7 +629,7 @@ public:
 
 	// ID Target handling
 	virtual bool					IsValidIDTarget( void ) { return false; }
-	virtual char					*GetIDString( void ) { return ""; };
+	virtual const char				*GetIDString( void ) { return ""; };
 
 	// See CSoundEmitterSystem
 	void	EmitSound( const char *soundname, float soundtime = 0.0f, float *duration = NULL );  // Override for doing the general case of CPASAttenuationFilter( this ), and EmitSound( filter, entindex(), etc. );
@@ -1097,6 +1097,7 @@ public:
 	virtual bool					IsBaseObject( void ) const { return false; }
 	virtual bool					IsBaseCombatWeapon( void ) const { return false; }
 	virtual class C_BaseCombatWeapon		*MyCombatWeaponPointer() { return NULL; }
+	virtual bool					IsCombatItem( void ) const { return false; }
 
 	// Entities like the player, weapon models, and view models have special logic per-view port related to visibility and the model to be used, etc.
 	virtual bool					ShouldDrawForSplitScreenUser( int nSlot );
@@ -1474,6 +1475,11 @@ private:
 public:
 	// Object model index
 	short							m_nModelIndex;
+
+#ifdef TF_CLIENT_DLL
+	int								m_nModelIndexOverrides[MAX_VISION_MODES];
+#endif
+
 private:
 	unsigned char					m_nRenderFX;
 	unsigned char 					m_nRenderMode;
@@ -1842,6 +1848,20 @@ protected:
 	
 	CThreadFastMutex m_CalcAbsolutePositionMutex;
 	CThreadFastMutex m_CalcAbsoluteVelocityMutex;
+
+#ifdef TF_CLIENT_DLL
+	// TF prevents drawing of any entity attached to players that aren't items in the inventory of the player.
+	// This is to prevent servers creating fake cosmetic items and attaching them to players.
+public:
+	virtual bool ValidateEntityAttachedToPlayer( bool &bShouldRetry );
+	bool EntityDeemedInvalid( void ) { return (m_bValidatedOwner && m_bDeemedInvalid); }
+protected:
+	bool m_bValidatedOwner;
+	bool m_bDeemedInvalid;
+	bool m_bWasDeemedInvalid;
+	RenderMode_t m_PreviousRenderMode;
+	color32 m_PreviousRenderColor;
+#endif
 
 private:
 	bool							m_bIsBlurred;

@@ -262,9 +262,9 @@ void CQuestMapPanel::OnCommand( const char *pCommand )
 		PlaySoundEntry( "CYOA.MapClose" );
 
 		// Do the closing anim sequence
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "DelayQuestMapClose", false );	
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "DelayQuestMapClose", false );	
 		// Send the needle off to the left
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "tuner_pos", 0.f, 0.f, 0.4f, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "tuner_pos", 0.f, 0.f, 0.4f, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
 		m_pPowerSwitch->SetSelected( true );
 		return;
 	}
@@ -289,8 +289,8 @@ void CQuestMapPanel::OnCommand( const char *pCommand )
 		engine->ClientCmd_Unrestricted( "host_writeconfig" );
 		UpdateControls();
 		m_pIntroPanel->SetVisible( false );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "QuestMap_Start", false );	
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, m_bMapLoaded ? "QuestMap_MapLoaded" : "QuestMap_LoadingLoop", false );	
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "QuestMap_Start", false );	
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, m_bMapLoaded ? "QuestMap_MapLoaded" : "QuestMap_LoadingLoop", false );	
 	}
 	else if ( FStrEq( "rewards_store", pCommand ) ) 
 	{
@@ -374,8 +374,8 @@ void CQuestMapPanel::UpdateIntroState()
 			eNewIntroState = (EIntroState)eState;
 			m_pVideoPanel->BeginPlayback( CFmtStr( "media/cyoa_intro_stage%d.vid", eState ) );
 			m_pVideoPanel->SetVisible( true );
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_IntroStages[ eState - 1 ].m_pStagePanel, "QuestMapIntro_StageReveal", false );
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pIntroPanel, "QuestMapIntro_ShowStage", false );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_IntroStages[ eState - 1 ].m_pStagePanel, "QuestMapIntro_StageReveal", false );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pIntroPanel, "QuestMapIntro_ShowStage", false );
 		}
 	}
 
@@ -383,7 +383,7 @@ void CQuestMapPanel::UpdateIntroState()
 	if ( eNewIntroState == STATE_0 && m_eIntroState != STATE_0 )
 	{
 		m_pVideoPanel->SetVisible( false );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( m_pIntroPanel, "QuestMapIntro_ClearStage", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pIntroPanel, "QuestMapIntro_ClearStage", false );
 	}
 
 	m_pIntroPanel->SetControlVisible( "IntroStage0", eNewIntroState == STATE_0 );
@@ -466,7 +466,7 @@ void CQuestMapPanel::PostChildPaint()
 		float flLerpTime = Bias( RandomFloat( 0.1f, 1.f ), 0.2f );
 		m_flNextWobbleTime = Plat_FloatTime() + flLerpTime;
 
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "tuner_wobble", RandomFloat( -1.f, 1.f ), 0.f, flLerpTime, vgui::AnimationController::INTERPOLATOR_BIAS, RandomFloat( 0.25f, 0.75f ), true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "tuner_wobble", RandomFloat( -1.f, 1.f ), 0.f, flLerpTime, vgui::AnimationController::INTERPOLATOR_BIAS, RandomFloat( 0.25f, 0.75f ), true, false );
 	}
 
 	//
@@ -519,12 +519,12 @@ void CQuestMapPanel::SetVisible( bool bVisible )
 		if ( tf_quest_map_intro_viewed.GetBool() )
 		{
 			m_pIntroPanel->SetVisible( false );
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "QuestMap_Start", false );	
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, m_bMapLoaded && GTFGCClientSystem()->BHealthyGCConnection() ? "QuestMap_MapLoaded" : "QuestMap_LoadingLoop", false );	
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "QuestMap_Start", false );	
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, m_bMapLoaded && GTFGCClientSystem()->BHealthyGCConnection() ? "QuestMap_MapLoaded" : "QuestMap_LoadingLoop", false );	
 		}
 		else 
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "QuestMap_Start", false );	
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "QuestMap_Start", false );	
 			m_pIntroPanel->SetVisible( true );
 			m_pIntroPanel->SetControlVisible( "IntroStage0", true );
 			m_bViewingTutorial = true;
@@ -540,7 +540,7 @@ void CQuestMapPanel::SetVisible( bool bVisible )
 void CQuestMapPanel::PlayTransitionScreenEffects()
 {
 	PlaySoundEntry( "CYOA.StaticFade" );
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "QuestMap_StaticFadeOut", false );	
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "QuestMap_StaticFadeOut", false );	
 }
 
 void CQuestMapPanel::QueueTurnInAnims()
@@ -817,7 +817,7 @@ void CQuestMapPanel::SetRegion( const CQuestMapRegion* pRegion, bool bZoomIn )
 	pNewRegionPanel->StartZoomTo( flLinkX, flLinkY, bZoomIn );
 
 	// Run our own animation command to manage things we need to do
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "RegionZoom" );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "RegionZoom" );
 
 	m_currentRegion.set_defindex( pRegion->GetDefIndex() );
 
@@ -826,7 +826,7 @@ void CQuestMapPanel::SetRegion( const CQuestMapRegion* pRegion, bool bZoomIn )
 		float flDestination = pRegion->GetRadioFreq();
 		float flTime = tf_quest_map_zoom_transition_in_time * 2; // 2x for zoom-away + zoom-to
 
-		g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "tuner_pos", flDestination, 0.f, flTime, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
+		GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "tuner_pos", flDestination, 0.f, flTime, vgui::AnimationController::INTERPOLATOR_BIAS, 0.75f, true, false );
 	}
 
 	UpdatePassAdPanel();
@@ -1108,7 +1108,7 @@ void CQuestMapPanel::UpdateControls( bool bIgnoreInvalidLayout )
 	// Just got the map loaded.  Transition in
 	if ( !m_bMapLoaded && IsVisible() )
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "QuestMap_MapLoaded", false );	
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "QuestMap_MapLoaded", false );	
 	}
 
 	m_bMapLoaded = true;

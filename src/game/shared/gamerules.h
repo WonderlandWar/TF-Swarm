@@ -251,7 +251,7 @@ public:
 	
 // Client damage rules
 	virtual float FlPlayerFallDamage( CBasePlayer *pPlayer ) = 0;// this client just hit the ground after a fall. How much damage?
-	virtual bool  FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker ) {return TRUE;};// can this player take damage from this attacker?
+	virtual bool  FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker, const CTakeDamageInfo &info ) {return TRUE;};// can this player take damage from this attacker?
 	virtual bool ShouldAutoAim( CBasePlayer *pPlayer, edict_t *target ) { return TRUE; }
 	virtual float GetAutoAimScale( CBasePlayer *pPlayer ) { return 1.0f; }
 	virtual int	GetAutoAimMode()	{ return AUTOAIM_ON; }
@@ -388,6 +388,10 @@ public:
 
 	virtual const char *GetGameTypeName( void ){ return NULL; }
 	virtual int GetGameType( void ){ return 0; }
+
+	virtual bool ShouldDrawHeadLabels(){ return true; }
+
+	virtual bool IsManualMapChangeOkay( const char **pszReason ){ return true; }
 
 	virtual bool ForceSplitScreenPlayersOnToSameTeam() { return true; }
 

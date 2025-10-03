@@ -194,7 +194,7 @@ void CPartyChatPanel::OnShowChatEntry( KeyValues* pParams )
 
 void CPartyChatPanel::OnToggleCollapse( bool bIsExpanded )
 {
-	auto pAnim = g_pClientMode->GetViewportAnimationController();
+	auto pAnim = GetClientMode()->GetViewportAnimationController();
 
 	if ( bIsExpanded )
 	{
@@ -267,7 +267,7 @@ void CPartyChatPanel::FireGameEvent( IGameEvent *event )
 					MakeReadyForUse();
 
 					// Initial anims
-					auto pAnim = g_pClientMode->GetViewportAnimationController();
+					auto pAnim = GetClientMode()->GetViewportAnimationController();
 					Color currentBG = GetBgColor();
 					// BG flash
 					pAnim->RunAnimationCommand( this, "bgcolor", GetColor( "TanDark" ), 0.f, 0.f, AnimationController::INTERPOLATOR_LINEAR, 0, true, false );

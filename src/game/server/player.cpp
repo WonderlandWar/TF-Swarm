@@ -935,7 +935,7 @@ void CBasePlayer::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &v
 			// Prevent team damage here so blood doesn't appear
 			if ( info.GetAttacker()->IsPlayer() )
 			{
-				if ( !g_pGameRules->FPlayerCanTakeDamage( this, info.GetAttacker() ) )
+				if ( !g_pGameRules->FPlayerCanTakeDamage( this, info.GetAttacker(), info ) )
 					return;
 			}
 		}
@@ -1138,7 +1138,7 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	// go take the damage first
 
 	
-	if ( !g_pGameRules->FPlayerCanTakeDamage( this, info.GetAttacker() ) )
+	if ( !g_pGameRules->FPlayerCanTakeDamage( this, info.GetAttacker(), inputInfo ) )
 	{
 		// Refuse the damage
 		return 0;
@@ -2474,6 +2474,7 @@ void CBasePlayer::ValidateCurrentObserverTarget( void )
 		}
 		else
 		{
+#if !defined( TF_DLL )
 			// couldn't find new target, switch to temporary mode
 			if ( mp_forcecamera.GetInt() == OBS_ALLOW_ALL )
 			{
@@ -2481,6 +2482,7 @@ void CBasePlayer::ValidateCurrentObserverTarget( void )
 				ForceObserverMode( OBS_MODE_ROAMING );
 			}
 			else
+#endif
 			{
 				// fix player view right where it is
 				ForceObserverMode( OBS_MODE_FIXED );
@@ -5037,6 +5039,7 @@ void CBasePlayer::Spawn( void )
 	m_vecSmoothedVelocity = vec3_origin;
 	InitVCollision( GetAbsOrigin(), GetAbsVelocity() );
 
+#if !defined( TF_DLL )
 	IGameEvent *event = gameeventmanager->CreateEvent( "player_spawn" );
 	
 	if ( event )
@@ -5044,7 +5047,7 @@ void CBasePlayer::Spawn( void )
 		event->SetInt("userid", GetUserID() );
 		gameeventmanager->FireEvent( event );
 	}
-
+#endif
 	RumbleEffect( RUMBLE_STOP_ALL, 0, RUMBLE_FLAGS_NONE );
 
 	// Calculate this immediately
@@ -5096,11 +5099,11 @@ void CBasePlayer::Precache( void )
 	enginesound->PrecacheSentenceGroup( "HEV" );
 
 	// These are always needed
-
+#ifndef TF_DLL
 	PrecacheParticleSystem( "slime_splash_01" );
 	PrecacheParticleSystem( "slime_splash_02" );
 	PrecacheParticleSystem( "slime_splash_03" );
-
+#endif
 
 	// in the event that the player JUST spawned, and the level node graph
 	// was loaded, fix all of the node graph pointers before the game starts.
@@ -9356,6 +9359,36 @@ void CBasePlayer::AdjustDrownDmg( int nAmount )
 		m_idrowndmg = m_idrownrestored;
 	}
 }
+
+
+
+#if !defined(NO_STEAM)
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool CBasePlayer::GetSteamID( CSteamID *pID )
+{
+	const CSteamID *pClientID = engine->GetClientSteamID( edict() );
+	if ( pClientID )
+	{
+		*pID = *pClientID;
+		return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+uint64 CBasePlayer::GetSteamIDAsUInt64( void )
+{
+	CSteamID steamIDForPlayer;
+	if ( GetSteamID( &steamIDForPlayer ) )
+		return steamIDForPlayer.ConvertToUint64();
+	return 0;
+}
+#endif // NO_STEAM
 
 void CBasePlayer::SetSplitScreenPlayer( bool bSplitScreenPlayer, CBasePlayer *pOwner )
 {

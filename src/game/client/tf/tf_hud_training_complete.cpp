@@ -96,7 +96,7 @@ DECLARE_HUDELEMENT_DEPTH( CTFTrainingComplete, 1 );
 //-----------------------------------------------------------------------------
 CTFTrainingComplete::CTFTrainingComplete( const char *pElementName ) : EditablePanel( NULL, "TrainingComplete" ), CHudElement( pElementName )
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 	m_bShouldBeVisible = false;
 	m_showButtonsTime = 0.0f;

@@ -166,11 +166,11 @@ void CEnemyCountPanel::SetFlashing( bool bState )
 
 		if (m_bFlashing)
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence(this, "SpyWarningFlash");
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence(this, "SpyWarningFlash");
 		}
 		else
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence(this, "SpyWarningFlashEnd");
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence(this, "SpyWarningFlashEnd");
 		}
 	}
 }
@@ -963,7 +963,7 @@ CCurrencyStatusPanel::CCurrencyStatusPanel( const char *pElementName )
 	: CHudElement( pElementName )
 	, vgui::EditablePanel( NULL, "CurrencyStatusPanel" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );
@@ -1546,7 +1546,7 @@ void CWaveCompleteSummaryPanel::CheckCredits()
 						{
 							pLocalTFPlayer->EmitSound( "MVM.RespecAwarded" );
 						}
-						g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "RespecEarnedPulse" );
+						GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "RespecEarnedPulse" );
 					}
 
 					if ( m_pRespecBackground->IsVisible() != bVisible )
@@ -1622,7 +1622,7 @@ DECLARE_HUDELEMENT( CTFHudMannVsMachineStatus );
 CTFHudMannVsMachineStatus::CTFHudMannVsMachineStatus( const char *pElementName ) :
 CHudElement( pElementName ), BaseClass( NULL, "HudMannVsMachineStatus" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );

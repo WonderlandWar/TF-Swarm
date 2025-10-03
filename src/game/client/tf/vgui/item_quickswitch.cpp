@@ -228,7 +228,7 @@ static ConCommand closequickswitch( "-quickswitch", IN_QuickSwitchUp );
 //-----------------------------------------------------------------------------
 CItemQuickSwitchPanel::CItemQuickSwitchPanel( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "ItemQuickSwitchPanel" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetMouseInputEnabled( true );

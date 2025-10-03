@@ -335,7 +335,7 @@ void CTFIntroMenu::UpdateCaptions( void )
 			if ( ( pCaption->m_flCaptionStart >= 0 ) && ( pCaption->m_flCaptionStart + pCaption->m_flDisplayTime < testTime ) )
 			{
 				// fade out the caption
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "VideoCaptionFadeOut" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "VideoCaptionFadeOut" );
 
 				// move to the next caption
 				m_iCurrentCaption++;
@@ -356,7 +356,7 @@ void CTFIntroMenu::UpdateCaptions( void )
 					pCaption->m_flCaptionStart = testTime;
 
 					// fade in the next caption
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "VideoCaptionFadeIn" );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "VideoCaptionFadeIn" );
 				}
 			}
 		}
@@ -474,7 +474,7 @@ void CTFIntroMenu::OnIntroFinished( void )
 	{
 		m_pReplayVideo->SetVisible( true );
 		m_pContinue->SetVisible( true );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "IntroMovieContinueBlink" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "IntroMovieContinueBlink" );
 		m_pOK->SetVisible( false );
 	}
 	else
@@ -633,7 +633,7 @@ void CTFIntroMenu::StartVideo()
 	m_pOK->SetVisible( true );
 	m_pReplayVideo->SetVisible( false );
 	m_pContinue->SetVisible( false );
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "IntroMovieContinueBlinkStop" );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "IntroMovieContinueBlinkStop" );
 	if ( m_pVideo )
 	{
 		// turn on the captions if we have them

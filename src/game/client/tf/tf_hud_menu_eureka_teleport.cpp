@@ -41,7 +41,7 @@ CHudEurekaEffectTeleportMenu::CHudEurekaEffectTeleportMenu( const char *pElement
 	, m_eSelectedTeleportTarget( EUREKA_TELEPORT_HOME )
 	, m_eCurrentBuildMenuLayout( BUILDMENU_DEFAULT )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_MISCSTATUS );

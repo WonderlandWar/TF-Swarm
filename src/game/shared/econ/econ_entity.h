@@ -103,7 +103,8 @@ public:
 	bool					ShouldDraw( void );
 	bool					ShouldHideForVisionFilterFlags( void );
 
-	virtual bool			IsTransparent( void ) OVERRIDE;
+	//virtual bool			IsTransparent( void ) OVERRIDE;
+	virtual RenderableTranslucencyType_t ComputeTranslucencyType( ) OVERRIDE;
 
 	// Viewmodel overriding
 	virtual bool			ViewModel_IsTransparent( void );

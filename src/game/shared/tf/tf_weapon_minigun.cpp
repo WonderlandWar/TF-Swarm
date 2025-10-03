@@ -1206,7 +1206,7 @@ void CTFMinigun::StartBrassEffect()
 	if ( !m_hEjectBrassWeapon )
 		return;
 
-	if ( UsingViewModel() && !g_pClientMode->ShouldDrawViewModel() )
+	if ( UsingViewModel() && !GetClientMode()->ShouldDrawViewModel() )
 	{
 		// Prevent effects when the ViewModel is hidden with r_drawviewmodel=0
 		return;
@@ -1238,7 +1238,7 @@ void CTFMinigun::StartMuzzleEffect()
 	if ( !m_hMuzzleEffectWeapon )
 		return;
 
-	if ( UsingViewModel() && !g_pClientMode->ShouldDrawViewModel() )
+	if ( UsingViewModel() && !GetClientMode()->ShouldDrawViewModel() )
 	{
 		// Prevent effects when the ViewModel is hidden with r_drawviewmodel=0
 		return;

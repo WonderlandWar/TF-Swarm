@@ -487,7 +487,7 @@ void CTFMedicCallerPanel::SetMedicCallerType( MedicCallerType nType )
 //-----------------------------------------------------------------------------
 void CTFMedicCallerPanel::AddMedicCaller( C_BaseEntity *pEntity, float flDuration, Vector &vecOffset, MedicCallerType nType /* = CALLER_TYPE_NORMAL */ )
 {
-	CTFMedicCallerPanel *pCaller = new CTFMedicCallerPanel( g_pClientMode->GetViewport(), "MedicCallerPanel" );
+	CTFMedicCallerPanel *pCaller = new CTFMedicCallerPanel( GetClientMode()->GetViewport(), "MedicCallerPanel" );
 	vgui::SETUP_PANEL(pCaller);
 	pCaller->SetBounds( 0,0, MEDICCALLER_WIDE, MEDICCALLER_TALL );
 	pCaller->SetEntity( pEntity, flDuration, vecOffset );

@@ -53,7 +53,7 @@ DECLARE_HUD_MESSAGE( CHudTrainingMsg, TrainingObjective );
 //-----------------------------------------------------------------------------
 CHudTrainingMsg::CHudTrainingMsg( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudTrainingMsg" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 	SetVisible( false );
 }

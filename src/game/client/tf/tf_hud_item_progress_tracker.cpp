@@ -213,7 +213,7 @@ int CQuestObjectiveTextPanel::GetContentTall() const
 //-----------------------------------------------------------------------------
 void CQuestObjectiveTextPanel::SetProgress( Color glowColor )
 {
-	auto pAnim = g_pClientMode->GetViewportAnimationController();
+	auto pAnim = GetClientMode()->GetViewportAnimationController();
 	UpdateText();
 
 	// Snap highlight
@@ -238,7 +238,7 @@ void CQuestObjectiveTextPanel::HighlightCompletion()
 	// Highlight
 	SetProgress( colorHighlight );
 	// Fade to disabled since we're done
-	auto pAnim = g_pClientMode->GetViewportAnimationController();
+	auto pAnim = GetClientMode()->GetViewportAnimationController();
 	pAnim->RunAnimationCommand( m_pAttribDesc, "alpha", 255, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
 	pAnim->RunAnimationCommand( m_pAttribDesc, "fgcolor", colorHighlight, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
 	pAnim->RunAnimationCommand( m_pAttribDesc, "fgcolor", m_disabledTextColor, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
@@ -819,7 +819,7 @@ void CQuestProgressTrackerPanel::FireGameEvent( IGameEvent *pEvent )
 					pScorerPanel->SetPos(m_PointsBars.m_pBarBG->GetXPos() - pScorerPanel->GetWide(),
 										  m_PointsBars.m_pBarBG->GetYPos() );
 					// Animate the label so it drifts off to the left
-					g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( pScorerPanel, "ObjectiveCompletedByUser", false );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pScorerPanel, "ObjectiveCompletedByUser", false );
 
 					// Set the color on the labels to match everything else
 					Label * pScorerLabel = pScorerPanel->FindControl< Label >( "ScorerLabel" );
@@ -860,10 +860,10 @@ void CQuestProgressTrackerPanel::FireGameEvent( IGameEvent *pEvent )
 			const float flHighlightFade = 2.f;
 
 			// Quickly turn bright
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand(m_PointsBars.m_pBarJustEarned, "BgColor", colorToUse, 0.0f, 0.1f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand(m_PointsBars.m_pBarJustEarned, "BgColor", colorToUse, 0.0f, 0.1f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
 			// Then fade away after a bit
 			colorToUse.SetColor( colorToUse.r(), colorToUse.g(), colorToUse.b(), 0 );
-			g_pClientMode->GetViewportAnimationController()->RunAnimationCommand(m_PointsBars.m_pBarJustEarned, "BgColor", colorToUse, 1.f, 2.f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, false, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand(m_PointsBars.m_pBarJustEarned, "BgColor", colorToUse, 1.f, 2.f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, false, false );
 
 			// If this scoring comes in while we're still highlighting a previous scoring, extend the
 			// just-earned to include the new scoring.  We clear the last earned progress here if it's
@@ -929,7 +929,7 @@ void CQuestProgressTrackerPanel::FireGameEvent( IGameEvent *pEvent )
 				m_PointsBars.m_pBarCommitted->SetBgColor( scheme()->GetIScheme( GetScheme() )->GetColor( "StoreGreen", Color( 255, 255, 255, 255 ) ) );
 				m_PointsBars.m_pBarCommitted->SetWide( 0 );
 				m_PointsBars.m_pBarCommitted->SetPos( 0, 0 );
-				g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "wide", m_PointsBars.m_pBarBG->GetWide(), 0.0f, k_flQuestTurnInTime, vgui::AnimationController::INTERPOLATOR_BIAS, RandomFloat( 0.1f, 0.3f ), true, false );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "wide", m_PointsBars.m_pBarBG->GetWide(), 0.0f, k_flQuestTurnInTime, vgui::AnimationController::INTERPOLATOR_BIAS, RandomFloat( 0.1f, 0.3f ), true, false );
 
 				// Tell ourselves to end after a delay
 				PostMessage( this, new KeyValues( "EndTurnInAnimation" ), k_flQuestTurnInTime + 2.5f );
@@ -950,10 +950,10 @@ void CQuestProgressTrackerPanel::FireGameEvent( IGameEvent *pEvent )
 					// Snap to exaggerated bright green
 					Color colorHighlight = scheme()->GetIScheme( GetScheme() )->GetColor( "CreditsGreen", Color( 255, 255, 255, 255 ) );
 					BrigthenColor( colorHighlight, 20 );
-					g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "BgColor", colorHighlight, 0.0f, 0, vgui::AnimationController::INTERPOLATOR_BIAS, 0.f, true, false );
+					GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "BgColor", colorHighlight, 0.0f, 0, vgui::AnimationController::INTERPOLATOR_BIAS, 0.f, true, false );
 					// Lerp down to natural color
 					Color colorNatural = scheme()->GetIScheme( GetScheme() )->GetColor( "QuestMap_ActiveOrange", Color( 255, 255, 255, 255 ) );
-					g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "BgColor", colorNatural, 0.5f, 1.0f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
+					GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "BgColor", colorNatural, 0.5f, 1.0f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
 
 					// Set them to say "Complete"
 					locchar_t* pwszCompleted = g_pVGuiLocalize->Find( "#QuestPoints_Complete" );
@@ -976,7 +976,7 @@ void CQuestProgressTrackerPanel::FireGameEvent( IGameEvent *pEvent )
 				{
 					PostMessage( this, new KeyValues( "UpdateStar", "index", nIndex ), flDelay );
 
-					auto pAnim = g_pClientMode->GetViewportAnimationController();
+					auto pAnim = GetClientMode()->GetViewportAnimationController();
 					auto pStar = m_arStarImages[ nIndex ];
 					float flScale = 1.5;
 					pAnim->RunAnimationCommand( pStar, "wide", pStar->GetWide() * flScale,	flDelay + 0.0f,	0.05f, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
@@ -1265,7 +1265,7 @@ CHudItemAttributeTracker::CHudItemAttributeTracker( const char *pElementName )
 	, EditablePanel( NULL, "ItemAttributeTracker" )
 	, m_mapTrackers( DefLessFunc( itemid_t ) )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	ListenForGameEvent( "player_spawn" );

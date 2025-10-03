@@ -187,9 +187,9 @@ void CWeaponIFMBaseCamera::TransmitRenderInfo()
 //-----------------------------------------------------------------------------
 #define FRUSTUM_SIZE 1000
 
-int CWeaponIFMBaseCamera::DrawModel( int flags )
+int CWeaponIFMBaseCamera::DrawModel( int flags, const RenderableInstance_t &instance )
 {
-	int nRetVal = BaseClass::DrawModel( flags );
+	int nRetVal = BaseClass::DrawModel( flags, instance );
 
 	CBasePlayer *pPlayer = GetPlayerOwner();
 	if ( pPlayer && !pPlayer->IsLocalPlayer() )
@@ -387,7 +387,7 @@ void CWeaponIFMBaseCamera::DrawCrosshair( void )
 
 	// Draw the targeting zone around the crosshair
 	int r, g, b, a;
-	gHUD.m_clrYellowish.GetColor( r, g, b, a );
+	GetHud().m_clrYellowish.GetColor( r, g, b, a );
 
 	Color light( r, g, b, 160 );
 

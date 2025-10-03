@@ -1892,6 +1892,9 @@
     <ClInclude Include="..\..\game\shared\basecombatweapon_shared.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\baseprojectile.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\common\blackbox_helper.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -3344,6 +3347,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\baseplayer_shared.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\baseprojectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\baseviewmodel_shared.cpp">

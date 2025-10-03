@@ -329,7 +329,7 @@ void CTFModeManager::Init()
 
 void CTFModeManager::LevelInit( const char *newmap )
 {
-	g_pClientMode->LevelInit( newmap );
+	GetClientMode()->LevelInit( newmap );
 
 	ConVarRef voice_steal( "voice_steal" );
 
@@ -341,7 +341,7 @@ void CTFModeManager::LevelInit( const char *newmap )
 
 void CTFModeManager::LevelShutdown( void )
 {
-	g_pClientMode->LevelShutdown();
+	GetClientMode()->LevelShutdown();
 
 	extern void CL_Training_LevelShutdown();
 	extern void CL_Coaching_LevelShutdown();
@@ -1958,7 +1958,7 @@ void ClientModeTFNormal::Update()
 	if ( !engine->IsInGame() )
 	{
 		// @note Tom Bui: we want this thing to always run, so we get animations at the main menu
-		g_pClientMode->GetViewportAnimationController()->UpdateAnimations( gpGlobals->curtime );
+		GetClientMode()->GetViewportAnimationController()->UpdateAnimations( gpGlobals->curtime );
 	}
 
 	if ( !engine->IsConnected() )

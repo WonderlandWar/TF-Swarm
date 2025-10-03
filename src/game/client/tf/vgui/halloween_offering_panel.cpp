@@ -80,7 +80,7 @@ void CHalloweenOfferingPanel::OnCommand( const char *command )
 		m_bWaitingForGCResponse = true;
 		m_nFoundItemID.Purge();
 		m_timerResponse.Start( 5.f );
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "CollectionCrafting_LetterSend" );	
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "CollectionCrafting_LetterSend" );	
 		return;
 	}
 

@@ -160,7 +160,7 @@ void CInviteNotification::Action( bool bConfirmed )
 		}
 
 
-		auto pAnim = g_pClientMode->GetViewportAnimationController();
+		auto pAnim = GetClientMode()->GetViewportAnimationController();
 		pAnim->RunAnimationCommand( this, "xpos", GetXPos() - YRES( 30 ), 0.f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0, true, false );
 		SetToExpire( 0.2f );
 	}

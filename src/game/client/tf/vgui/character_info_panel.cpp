@@ -422,7 +422,7 @@ void CCharacterInfoPanel::OnKeyCodePressed(vgui::KeyCode code)
 //-----------------------------------------------------------------------------
 void CCharacterInfoPanel::OnThink()
 {
-	if ( g_pClientMode && g_pClientMode->GetViewport() && g_pClientMode->GetViewportAnimationController() )
+	if ( g_pClientMode && GetClientMode()->GetViewport() && GetClientMode()->GetViewportAnimationController() )
 	{
 		bool bShouldBeVisible = NotificationQueue_GetNumNotifications() != 0;
 
@@ -433,11 +433,11 @@ void CCharacterInfoPanel::OnThink()
 			m_pNotificationsPresentPanel->SetVisible( bShouldBeVisible );
 			if ( bShouldBeVisible )
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "NotificationsPresentBlink" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "NotificationsPresentBlink" );
 			}
 			else
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( this, "NotificationsPresentBlinkStop" );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "NotificationsPresentBlinkStop" );
 			}
 		}
 	}
