@@ -20,7 +20,7 @@
 #include "c_tf_gamestats.h"
 #include "c_tf_player.h"
 // NVNT haptics system interface
-#include "haptics/ihaptics.h"
+//#include "haptics/ihaptics.h"
 #endif
 
 ConVar tf_weapon_criticals_melee( "tf_weapon_criticals_melee", "1", FCVAR_REPLICATED | FCVAR_NOTIFY, "Controls random crits for melee weapons. 0 - Melee weapons do not randomly crit. 1 - Melee weapons can randomly crit only if tf_weapon_criticals is also enabled. 2 - Melee weapons can always randomly crit regardless of the tf_weapon_criticals setting." );
@@ -557,8 +557,8 @@ bool CTFWeaponBaseMelee::OnSwingHit( trace_t &trace )
 	// NVNT if this is the client dll and the owner is the local player
 	//	Notify the haptics system the local player just hit something.
 #ifdef CLIENT_DLL
-	if(pPlayer==C_TFPlayer::GetLocalTFPlayer() && haptics)
-		haptics->ProcessHapticEvent(2,"Weapons","meleehit");
+	//if(pPlayer==C_TFPlayer::GetLocalTFPlayer() && haptics)
+	//	haptics->ProcessHapticEvent(2,"Weapons","meleehit");
 #endif
 
 	bool bHitEnemyPlayer = false;

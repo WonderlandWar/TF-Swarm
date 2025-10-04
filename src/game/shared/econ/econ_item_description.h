@@ -99,7 +99,8 @@ protected:
 // result in it appearing to be undefined.
 #define BUILD_ITEM_NAME_AND_DESC (defined( CLIENT_DLL ) || defined( GC_DLL ))
 
-#if BUILD_ITEM_NAME_AND_DESC
+//#if BUILD_ITEM_NAME_AND_DESC
+#if (defined( CLIENT_DLL ) || defined( GC_DLL ))
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------

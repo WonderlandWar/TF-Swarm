@@ -303,7 +303,7 @@ public:
 
 	virtual void			SetActivity( Activity act, float duration );
 	inline void				SetActivity( Activity eActivity ) { m_Activity = eActivity; }
-	inline Activity			GetActivity( void ) { return m_Activity; }
+	inline Activity			GetActivity( void ) const { return m_Activity; }
 
 	virtual void			AddViewKick( void );	// Add in the view kick for the weapon
 

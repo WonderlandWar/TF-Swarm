@@ -1529,6 +1529,23 @@ EUniverse GetUniverse()
 	return steamUniverse;
 }
 
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+CSteamID SteamIDFromDecimalString( const char *pszUint64InDecimal )
+{
+	uint64 ulSteamID = 0;
+	if ( sscanf( pszUint64InDecimal, "%llu", &ulSteamID ) )
+	{
+		return CSteamID( ulSteamID );
+	}
+	else
+	{
+		Assert( false );
+		return CSteamID();
+	}
+}
+
 static char s_NumBitsInNibble[ 16 ] = 
 {
 	0, // 0000 = 0
@@ -2336,4 +2353,23 @@ const char *GetCleanMapName( const char *pszUnCleanMapName, char (&pszTmp)[256])
 #endif
 
 	return pszUnCleanMapName;
+}
+
+// Leaked code...
+// Wraps the thread-safe versions of localtime
+struct tm *Plat_localtime( const time_t *timep, struct tm *result )
+{
+	if ( EINVAL == localtime_s( result, timep ) )
+		return NULL;
+	else
+		return result;
+}
+
+// Wraps the thread-safe versions of gmtime
+struct tm *Plat_gmtime( const time_t *timep, struct tm *result )
+{
+	if ( EINVAL == gmtime_s( result, timep ) )
+		return NULL;
+	else
+		return result;
 }

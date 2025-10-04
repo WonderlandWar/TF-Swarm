@@ -109,6 +109,9 @@
     <Filter Include="Tool Framework">
       <UniqueIdentifier>{C8FC1989-2499-2137-2EEA-17663813D98F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VGUI Extra">
+      <UniqueIdentifier>{5528769D-A62C-26C9-B072-5C51EB05E9CD}</UniqueIdentifier>
+    </Filter>
     <Filter Include="VPC Scripts">
       <UniqueIdentifier>{A40EE377-781A-C6B9-0C7C-B3BE118D248E}</UniqueIdentifier>
     </Filter>
@@ -3254,6 +3257,9 @@
     <ClInclude Include="toolframework_client.h">
       <Filter>Tool Framework</Filter>
     </ClInclude>
+    <ClInclude Include="vgui_extra\Tooltip.h">
+      <Filter>VGUI Extra</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mp3player.cpp">
@@ -6096,6 +6102,9 @@
     </ClCompile>
     <ClCompile Include="toolframework_client.cpp">
       <Filter>Tool Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="vgui_extra\Tooltip.cpp">
+      <Filter>VGUI Extra</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

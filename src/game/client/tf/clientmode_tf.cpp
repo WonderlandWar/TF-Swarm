@@ -1871,7 +1871,7 @@ void ClientModeTFNormal::Update()
 			}
 		} );
 
-		gHUD.ForEachHudElement( [&]( CHudElement* pElement ) {
+		GetHud().ForEachHudElement( [&]( CHudElement* pElement ) {
 			if ( pElement )
 			{
 				auto actionset = pElement->GetPreferredActionSet();

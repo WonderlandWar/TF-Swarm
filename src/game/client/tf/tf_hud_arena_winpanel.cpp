@@ -94,15 +94,15 @@ void CTFArenaWinPanel::SetVisible( bool state )
 	if ( state == IsVisible() )
 		return;
 
-	int iRenderGroup = gHUD.LookupRenderGroupIndexByName( "mid" );
+	int iRenderGroup = GetHud().LookupRenderGroupIndexByName( "mid" );
 
 	if ( state )
 	{
-		gHUD.LockRenderGroup( iRenderGroup );
+		GetHud().LockRenderGroup( iRenderGroup );
 	}
 	else
 	{
-		gHUD.UnlockRenderGroup( iRenderGroup );
+		GetHud().UnlockRenderGroup( iRenderGroup );
 	}
 
 	BaseClass::SetVisible( state );

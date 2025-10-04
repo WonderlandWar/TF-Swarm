@@ -61,7 +61,7 @@ void InspectUp()
 	// quick tap on the inspect button, try to inspect players
 	if ( gpGlobals->curtime - s_flLastInspectDownTime <= 0.2f )
 	{
-		CHudElement *pElement = gHUD.FindElement( "CHudInspectPanel" );
+		CHudElement *pElement = GetHud().FindElement( "CHudInspectPanel" );
 		if ( pElement )
 		{
 			((CHudInspectPanel *)pElement)->UserCmd_InspectTarget();
@@ -109,14 +109,14 @@ void CHudInspectPanel::ApplySchemeSettings( IScheme *pScheme )
 //-----------------------------------------------------------------------------
 void CHudInspectPanel::LockInspectRenderGroup( bool bLock )
 {
-	int iIndex = gHUD.LookupRenderGroupIndexByName( "inspect_panel" );
+	int iIndex = GetHud().LookupRenderGroupIndexByName( "inspect_panel" );
 	if ( bLock )
 	{
-		gHUD.LockRenderGroup( iIndex );
+		GetHud().LockRenderGroup( iIndex );
 	}
 	else
 	{
-		gHUD.UnlockRenderGroup( iIndex );
+		GetHud().UnlockRenderGroup( iIndex );
 	}
 }
 

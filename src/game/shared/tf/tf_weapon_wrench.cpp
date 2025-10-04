@@ -16,7 +16,7 @@
 	#include "in_buttons.h"
 	#include "tf_hud_menu_eureka_teleport.h"
 	// NVNT haptics system interface
-	#include "haptics/ihaptics.h"
+	//#include "haptics/ihaptics.h"
 // Server specific.
 #else
 	#include "tf_player.h"
@@ -187,8 +187,8 @@ void CTFWrench::Smack( void )
 #else
 		// NVNT if the local player is the owner of this wrench 
 		//   Notify the haptics system we just repaired something.
-		if(pPlayer==C_TFPlayer::GetLocalTFPlayer() && haptics)
-			haptics->ProcessHapticEvent(2,"Weapons","tf_weapon_wrench_fix");
+		//if(pPlayer==C_TFPlayer::GetLocalTFPlayer() && haptics)
+		//	haptics->ProcessHapticEvent(2,"Weapons","tf_weapon_wrench_fix");
 #endif
 	}
 	else

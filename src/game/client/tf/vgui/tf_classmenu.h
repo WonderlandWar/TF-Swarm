@@ -126,7 +126,6 @@ private:
 
 	ButtonCode_t	m_iClassMenuKey;
 	int				m_iCurrentClassIndex;
-	vgui::CKeyRepeatHandler	m_KeyRepeat;
 
 	int				m_nBaseMusicGuid;
 

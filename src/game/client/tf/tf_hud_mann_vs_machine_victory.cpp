@@ -1607,17 +1607,17 @@ void CMvMVictoryMannUpPanel::SetVisible( bool bState )
 {
 	BaseClass::SetVisible( bState );
 
-	//int iRenderGroup = gHUD.LookupRenderGroupIndexByName( "global" );
+	//int iRenderGroup = GetHud().LookupRenderGroupIndexByName( "global" );
 
 	if ( bState )
 	{		
 		// Hide all other UI
-		//gHUD.LockRenderGroup( iRenderGroup );
+		//GetHud().LockRenderGroup( iRenderGroup );
 	}
 	else
 	{
 		// Let the other UI elements show again
-	//	gHUD.UnlockRenderGroup( iRenderGroup );
+	//	GetHud().UnlockRenderGroup( iRenderGroup );
 	}
 }
 

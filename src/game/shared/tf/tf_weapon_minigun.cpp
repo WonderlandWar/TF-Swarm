@@ -22,7 +22,7 @@
 #include "clientmode_tf.h"
 #include "bone_setup.h"
 // NVNT haptics system interface
-#include "haptics/ihaptics.h"
+//#include "haptics/ihaptics.h"
 // Server specific.
 #else
 #include "tf_player.h"
@@ -360,11 +360,11 @@ void CTFMinigun::SharedAttack()
 					m_nShotsFired++;
 					if ( m_nShotsFired == 1000 ) // == and not >= so we don't keep awarding this every shot after it's achieved
 					{
-						g_AchievementMgrTF.OnAchievementEvent( ACHIEVEMENT_TF_HEAVY_FIRE_LOTS );
+						g_AchievementMgrTF.OnAchievementEvent( ACHIEVEMENT_TF_HEAVY_FIRE_LOTS, pPlayer->GetSplitScreenPlayerSlot() );
 					}
 					// NVNT the local player fired a shot. notify the haptics system.
-					if ( haptics )
-						haptics->ProcessHapticEvent(2,"Weapons","minigun_fire");
+					//if ( haptics )
+					//	haptics->ProcessHapticEvent(2,"Weapons","minigun_fire");
 				}
 #endif
 				CalcIsAttackCritical();

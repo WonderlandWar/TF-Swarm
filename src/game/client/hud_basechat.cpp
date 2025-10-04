@@ -41,6 +41,7 @@ ConVar hud_saytext_time( "hud_saytext_time", "12", 0 );
 ConVar cl_showtextmsg( "cl_showtextmsg", "1", 0, "Enable/disable text messages printing on the screen." );
 ConVar cl_chat_active( "cl_chat_active", "0" );
 ConVar cl_chatfilters( "cl_chatfilters", "31", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Stores the chat filter settings " );
+ConVar cl_enable_text_chat( "cl_enable_text_chat", "1", FCVAR_ARCHIVE, "Enable text chat in this game" );
 
 Color g_ColorBlue( 153, 204, 255, 255 );
 Color g_ColorRed( 255, 63.75, 63.75, 255 );
@@ -1776,6 +1777,9 @@ void CBaseHudChat::ChatPrintf( int iPlayerIndex, int iFilter, const char *fmt, .
 		if ( !(iFilter & GetFilterFlags() ) )
 			return;
 	}
+
+	if ( !cl_enable_text_chat.GetBool() && ( iPlayerIndex != 0 ) )
+		return;
 
 	if ( *pmsg < 32 )
 	{

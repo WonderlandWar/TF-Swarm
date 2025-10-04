@@ -196,15 +196,15 @@ void CHudArenaNotification::OnTick( void )
 //-----------------------------------------------------------------------------
 void CHudArenaNotification::SetVisible( bool state )
 {
-	int iRenderGroup = gHUD.LookupRenderGroupIndexByName( "arena_target_id" );
+	int iRenderGroup = GetHud().LookupRenderGroupIndexByName( "arena_target_id" );
 
 	if ( state == true )
 	{
-		gHUD.LockRenderGroup( iRenderGroup );
+		GetHud().LockRenderGroup( iRenderGroup );
 	}
 	else
 	{
-		gHUD.UnlockRenderGroup( iRenderGroup );
+		GetHud().UnlockRenderGroup( iRenderGroup );
 	}
 
 	BaseClass::SetVisible( state );

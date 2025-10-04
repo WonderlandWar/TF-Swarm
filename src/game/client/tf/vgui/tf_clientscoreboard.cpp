@@ -430,7 +430,7 @@ void CTFClientScoreBoardDialog::ShowPanel( bool bShow )
 		return;
 	}
 
-	int iRenderGroup = gHUD.LookupRenderGroupIndexByName( "global" );
+	int iRenderGroup = GetHud().LookupRenderGroupIndexByName( "global" );
 
 	if ( bShow )
 	{		
@@ -438,7 +438,7 @@ void CTFClientScoreBoardDialog::ShowPanel( bool bShow )
 		MoveToFront();
 		InitializeInputScheme();
 
-		gHUD.LockRenderGroup( iRenderGroup );
+		GetHud().LockRenderGroup( iRenderGroup );
 
 		// Clear the selected item, this forces the default to the local player
 		SectionedListPanel *pList = GetSelectedPlayerList();
@@ -466,7 +466,7 @@ void CTFClientScoreBoardDialog::ShowPanel( bool bShow )
 			m_pRightClickMenu = NULL;
 		}
 
-		gHUD.UnlockRenderGroup( iRenderGroup );
+		GetHud().UnlockRenderGroup( iRenderGroup );
 		m_bMouseActivated = false;
 	}
 }

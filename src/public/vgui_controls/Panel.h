@@ -395,6 +395,9 @@ public:
 	Panel *FindSiblingByName(const char *siblingName);
 	void CallParentFunction(KeyValues *message);
 
+	template < class T >
+	T *FindControl( const char *pszName, bool recurseDown = false ) { return dynamic_cast<T *>( FindChildByName( pszName, recurseDown ) ); }
+
 	virtual bool LookupElementBounds( const char *elementName, int &x, int &y, int &wide, int &tall ) { return false; }
 
 	virtual void SetAutoDelete(bool state);		// if set to true, panel automatically frees itself when parent is deleted

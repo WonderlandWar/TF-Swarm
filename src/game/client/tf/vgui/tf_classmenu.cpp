@@ -873,8 +873,6 @@ void CTFClassMenu::LoadItems()
 //-----------------------------------------------------------------------------
 void CTFClassMenu::OnKeyCodePressed( KeyCode code )
 {
-	m_KeyRepeat.KeyDown( code );
-
 	if ( code > KEY_0 && code <= KEY_9 )
 	{
 		const int iButton = code - KEY_0;
@@ -979,8 +977,6 @@ void CTFClassMenu::OnKeyCodePressed( KeyCode code )
 //-----------------------------------------------------------------------------
 void CTFClassMenu::OnKeyCodeReleased( vgui::KeyCode code )
 {
-	m_KeyRepeat.KeyUp( code );
-
 	BaseClass::OnKeyCodeReleased( code );
 }
 
@@ -989,12 +985,6 @@ void CTFClassMenu::OnKeyCodeReleased( vgui::KeyCode code )
 //-----------------------------------------------------------------------------
 void CTFClassMenu::OnThink()
 {
-	vgui::KeyCode code = m_KeyRepeat.KeyRepeated();
-	if ( code )
-	{
-		OnKeyCodePressed( code );
-	}
-
 	// Get mouse cursor position
 	int aCursorPos[2];
 	vgui::input()->GetCursorPos( aCursorPos[0], aCursorPos[1] );
@@ -1174,8 +1164,6 @@ void CTFClassMenu::OnClose()
 void CTFClassMenu::SetVisible( bool state )
 {
 	BaseClass::SetVisible( state );
-
-	m_KeyRepeat.Reset();
 
 	if ( state )
 	{

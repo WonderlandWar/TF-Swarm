@@ -35,6 +35,7 @@
 #include <vgui/KeyCode.h>
 #include <vgui_controls/Tooltip.h>
 #include <vgui_controls/CheckButton.h>
+#include "vgui_extra\Tooltip.h"
 
 wchar_t* LocalizeNumberWithToken( const char* pszLocToken, int nValue );
 wchar_t* LocalizeNumberWithToken( const char* pszLocToken, int nValue1, int nValue2 );

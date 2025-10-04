@@ -99,16 +99,8 @@ void CTFIntroMenu::ApplySchemeSettings( IScheme *pScheme )
 {
 	BaseClass::ApplySchemeSettings( pScheme );
 
-	if ( ::input->IsSteamControllerActive() )
-	{
-		LoadControlSettings( "Resource/UI/IntroMenu_SC.res" );
-		SetMouseInputEnabled( false );
-	}
-	else
-	{
-		LoadControlSettings( "Resource/UI/IntroMenu.res" );
-		SetMouseInputEnabled( true );
-	}
+	LoadControlSettings( "Resource/UI/IntroMenu.res" );
+	SetMouseInputEnabled( true );
 }
 
 //-----------------------------------------------------------------------------
@@ -378,6 +370,7 @@ void CTFIntroMenu::ShowPanel( bool bShow )
 	if ( TFGameRules() && TFGameRules()->IsInTraining() )
 	{
 		m_pBack->SetVisible( false );
+#if 0
 		if ( PendingInGameVideo() == false )
 		{			
 			VideoSystem_t  playbackSystem = VideoSystem::NONE;
@@ -388,6 +381,9 @@ void CTFIntroMenu::ShowPanel( bool bShow )
 				bShow = false;
 			}
 		}
+#else
+		
+#endif
 	}
 	//=============================================================================
 	// HPE_END
@@ -536,11 +532,11 @@ void CTFIntroMenu::OnCommand( const char *command )
 //-----------------------------------------------------------------------------
 void CTFIntroMenu::OnKeyCodePressed( KeyCode code )
 {
-	if ( code == KEY_XBUTTON_A || code == STEAMCONTROLLER_A )
+	if ( code == KEY_XBUTTON_A )
 	{
 		OnCommand( "skip" );
 	}
-	else if ( code == KEY_XBUTTON_B || code == STEAMCONTROLLER_B )
+	else if ( code == KEY_XBUTTON_B )
 	{
 		OnCommand( "back" );
 	}

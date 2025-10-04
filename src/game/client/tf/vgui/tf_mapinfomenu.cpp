@@ -22,7 +22,7 @@
 #include "tf_shareddefs.h"
 #include "tf_mapinfomenu.h"
 
-#include "video/ivideoservices.h"
+//#include "video/ivideoservices.h"
 
 using namespace vgui;
 
@@ -132,8 +132,6 @@ void CTFMapInfoMenu::ShowPanel( bool bShow )
 {
 	if ( IsVisible() == bShow )
 		return;
-
-	m_KeyRepeat.Reset();
 
 	if ( bShow )
 	{
@@ -256,8 +254,6 @@ void CTFMapInfoMenu::CheckBackContinueButtons()
 //-----------------------------------------------------------------------------
 void CTFMapInfoMenu::OnCommand( const char *command )
 {
-	m_KeyRepeat.Reset();
-
 	if ( !Q_strcmp( command, "back" ) )
 	{
 		 // only want to go back to the Welcome menu if we're not already on a team
@@ -585,8 +581,6 @@ void CTFMapInfoMenu::SetMapTitle()
 //-----------------------------------------------------------------------------
 void CTFMapInfoMenu::OnKeyCodePressed( KeyCode code )
 {
-	m_KeyRepeat.KeyDown( code );
-
 	if ( code == KEY_XBUTTON_A || code == STEAMCONTROLLER_A )
 	{
 		OnCommand( "continue" );
@@ -626,8 +620,6 @@ void CTFMapInfoMenu::OnKeyCodePressed( KeyCode code )
 //-----------------------------------------------------------------------------
 void CTFMapInfoMenu::OnKeyCodeReleased( vgui::KeyCode code )
 {
-	m_KeyRepeat.KeyUp( code );
-
 	BaseClass::OnKeyCodeReleased( code );
 }
 

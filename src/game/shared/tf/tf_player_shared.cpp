@@ -5939,7 +5939,7 @@ void CTFPlayerShared::OnAddCompetitiveWinner( void )
 #else
 	if ( m_pOuter->IsLocalPlayer() )
 	{
-		gHUD.LockRenderGroup( gHUD.LookupRenderGroupIndexByName( "mid" ) );
+		GetHud().LockRenderGroup( GetHud().LookupRenderGroupIndexByName( "mid" ) );
 		m_pOuter->UpdateVisibility();
 		m_pOuter->UpdateWearables();
 	}
@@ -5971,7 +5971,7 @@ void CTFPlayerShared::OnAddCompetitiveLoser( void )
 #else
 	if ( m_pOuter->IsLocalPlayer() )
 	{
-		gHUD.LockRenderGroup( gHUD.LookupRenderGroupIndexByName( "mid" ) );
+		GetHud().LockRenderGroup( GetHud().LookupRenderGroupIndexByName( "mid" ) );
 		m_pOuter->UpdateVisibility();
 		m_pOuter->UpdateWearables();
 	}

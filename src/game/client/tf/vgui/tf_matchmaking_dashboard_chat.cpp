@@ -20,7 +20,7 @@
 #include "tf_matchmaking_dashboard_parent_manager.h"
 #include "tf_partyclient.h"
 #include "vgui_controls/AnimationController.h"
-#include "../../vgui2/src/VPanel.h"
+//#include "../../vgui2/src/VPanel.h"
 
 using namespace vgui;
 using namespace GCSDK;
@@ -107,7 +107,7 @@ CON_COMMAND( say_party, "Send a message to the user's party, if they have one" )
 		return;
 
 	char pszMsg[ 256 ];
-	V_sprintf_safe( pszMsg, "%s", (char *)args.ArgS() );
+	sprintf( pszMsg, "%s", (char *)args.ArgS() );
 	// Comes in with quotes.  Let's get rid of those.
 	V_StripSurroundingQuotes( pszMsg );
 
@@ -176,7 +176,10 @@ void CPartyChatPanel::OnSizeChanged( int wide, int tall )
 	Color bgColor( 0, 0, 0, nBGAlpha );
 	m_pChatLog->SetBgColor( bgColor );
 
-	m_pChatLog->SetTall( GetTall() - m_pChatLog->GetYPos() - YRES( 15 ) );
+	int x, y;
+	m_pChatLog->GetPos( x, y );
+
+	m_pChatLog->SetTall( GetTall() - y - YRES( 15 ) );
 }
 
 void CPartyChatPanel::OnShowChatEntry( KeyValues* pParams )
@@ -198,13 +201,13 @@ void CPartyChatPanel::OnToggleCollapse( bool bIsExpanded )
 
 	if ( bIsExpanded )
 	{
-		pAnim->RunAnimationCommand( m_pChatEntry, "alpha", 255, 0.1f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0, true, false );
+		pAnim->RunAnimationCommand( m_pChatEntry, "alpha", 255, 0.1f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0 );
 	
 		PostMessage( this, new KeyValues( "ShowChatEntry", "visible", "1" ), 0.3f );
 	}
 	else
 	{
-		pAnim->RunAnimationCommand( m_pChatEntry, "alpha", 0, 0.0f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0, true, false );
+		pAnim->RunAnimationCommand( m_pChatEntry, "alpha", 0, 0.0f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0 );
 		PostMessage( this, new KeyValues( "ShowChatEntry", "visible", "0" ), 0.3f );
 		surface()->ReleasePanel( m_pChatEntry->GetVPanel() );
 		((VPanel*)m_pChatEntry->GetVPanel())->SetPopup( false );
@@ -270,8 +273,8 @@ void CPartyChatPanel::FireGameEvent( IGameEvent *event )
 					auto pAnim = GetClientMode()->GetViewportAnimationController();
 					Color currentBG = GetBgColor();
 					// BG flash
-					pAnim->RunAnimationCommand( this, "bgcolor", GetColor( "TanDark" ), 0.f, 0.f, AnimationController::INTERPOLATOR_LINEAR, 0, true, false );
-					pAnim->RunAnimationCommand( this, "bgcolor", currentBG, 0.15f, 0.3f, AnimationController::INTERPOLATOR_LINEAR, 0,  false, false );
+					pAnim->RunAnimationCommand( this, "bgcolor", GetColor( "TanDark" ), 0.f, 0.f, AnimationController::INTERPOLATOR_LINEAR, 0 );
+					pAnim->RunAnimationCommand( this, "bgcolor", currentBG, 0.15f, 0.3f, AnimationController::INTERPOLATOR_LINEAR, 0 );
 				}
 
 				void SetToMinSize()

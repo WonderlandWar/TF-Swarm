@@ -323,11 +323,11 @@ bool CTFMatchSummary::ShouldDraw( void )
 //-----------------------------------------------------------------------------
 void CTFMatchSummary::SetVisible( bool state )
 {
-	int iRenderGroup = gHUD.LookupRenderGroupIndexByName( "mid" );
+	int iRenderGroup = GetHud().LookupRenderGroupIndexByName( "mid" );
 
 	if ( state )
 	{
-		gHUD.LockRenderGroup( iRenderGroup );
+		GetHud().LockRenderGroup( iRenderGroup );
 
 		InvalidateLayout( true, true );
 
@@ -351,7 +351,7 @@ void CTFMatchSummary::SetVisible( bool state )
 	}
 	else
 	{
-		gHUD.UnlockRenderGroup( iRenderGroup );
+		GetHud().UnlockRenderGroup( iRenderGroup );
 	}
 
 	BaseClass::SetVisible( state );

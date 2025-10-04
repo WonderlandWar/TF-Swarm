@@ -563,13 +563,15 @@ static int SortCollectionByRarity( item_definition_index_t const *a, item_defini
 		{
 			wpszFormatString = L"%s1 %s2";
 		}
-		g_pVGuiLocalize->ConstructString_safe( pPaintKitStrA,
+		g_pVGuiLocalize->ConstructString( pPaintKitStrA,
+				sizeof( pPaintKitStrA ),
 				wpszFormatString,
 				2,
 				g_pVGuiLocalize->Find( pPaintKitDefA->GetDescriptionToken() ),
 				g_pVGuiLocalize->Find( pItemA->GetItemBaseName() ) );
 
-		g_pVGuiLocalize->ConstructString_safe( pPaintKitStrB,
+		g_pVGuiLocalize->ConstructString( pPaintKitStrB,
+				sizeof( pPaintKitStrB ),
 				wpszFormatString,
 				2,
 				g_pVGuiLocalize->Find( pPaintKitDefB->GetDescriptionToken() ),

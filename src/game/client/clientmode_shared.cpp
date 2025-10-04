@@ -63,6 +63,7 @@ ConVar cl_drawhud( "cl_drawhud", "1", FCVAR_CHEAT, "Enable the rendering of the 
 ConVar hud_takesshots( "hud_takesshots", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Auto-save a scoreboard screenshot at the end of a map." );
 
 extern ConVar v_viewmodel_fov;
+extern ConVar cl_enable_text_chat;
 
 extern bool IsInCommentaryMode( void );
 
@@ -1397,8 +1398,9 @@ void ClientModeShared::FireGameEvent( IGameEvent *event )
 				loc_scpy_safe( wszLocalizedString, CConstructLocalizedString( g_pVGuiLocalize->Find( "TFUI_InvTooltip_ItemFound" ), szStrange, szUnusual, szItemname, szRarity, szWear ) );
 
 				loc_scpy_safe( tempName, wszLocalizedString );
-				g_pVGuiLocalize->ConstructString_safe(
+				g_pVGuiLocalize->ConstructString(
 					wszLocalizedString,
+					sizeof( wszLocalizedString ),
 					wszItemFound,
 					3,
 					wszPlayerName, tempName, L"" );

@@ -579,7 +579,7 @@ bool CHudTeamGoalTournament::ShouldDraw( void )
 	{
 		if ( CHudElement::ShouldDraw() )
 		{
-			CHudElement *pHudSwitch = gHUD.FindElement( "CHudTeamSwitch" );
+			CHudElement *pHudSwitch = GetHud().FindElement( "CHudTeamSwitch" );
 			if ( pHudSwitch && pHudSwitch->ShouldDraw() )
 				return false;
 			

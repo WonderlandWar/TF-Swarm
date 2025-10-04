@@ -6,7 +6,7 @@
 #include "econ_item_tools.h"
 #include "econ_holidays.h"
 #include "econ_store.h"
-#include "tier1/ilocalize.h"
+#include "vgui/ilocalize.h"
 #include "localization_provider.h"
 #include "rtime.h"
 #include "econ_dynamic_recipe.h"
@@ -559,7 +559,8 @@ void Econ_ConcatPaintKitName( locchar_t( &out_pItemName )[MAX_ITEM_NAME_LENGTH],
 	{
 		wpszFormatString = L"%s1 %s2";
 	}
-	g_pVGuiLocalize->ConstructString_safe( out_pItemName,
+	g_pVGuiLocalize->ConstructString( out_pItemName,
+			sizeof( out_pItemName ),
 			wpszFormatString,
 			2,
 			pPaintKitStr,
@@ -576,7 +577,8 @@ void Econ_ConcatPaintKitWear( locchar_t( &out_pItemName )[MAX_ITEM_NAME_LENGTH],
 	locchar_t tempName[MAX_ITEM_NAME_LENGTH];
 	loc_scpy_safe( tempName, out_pItemName );
 
-	g_pVGuiLocalize->ConstructString_safe( out_pItemName,
+	g_pVGuiLocalize->ConstructString( out_pItemName,
+		sizeof( out_pItemName ),
 		LOCCHAR( "%s1 (%s2)" ),
 		2,
 		tempName,
@@ -923,7 +925,8 @@ static void GenerateLocalizedFullItemName
 			locchar_t szCraftNumber[ kLocalizedCraftIndexLength ];
 			loc_sprintf_safe( szCraftNumber, LOCCHAR( "%i" ), unCraftIndex );
 				
-			ILocalize::ConstructString_safe( szLocalizedCraftIndex,
+			ILocalize::ConstructString( szLocalizedCraftIndex,
+										sizeof( szLocalizedCraftIndex ),
 										pCraftNumberLocFormat,
 										1,
 										szCraftNumber );
@@ -1014,7 +1017,8 @@ static void GenerateLocalizedFullItemName
 
 	if ( pNameLocalizationFormat )
 	{
-		ILocalize::ConstructString_safe( out_pItemName,
+		ILocalize::ConstructString( out_pItemName,
+									sizeof( out_pItemName ),
 									pNameLocalizationFormat,
 									6,
 									szQuality,

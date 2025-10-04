@@ -585,6 +585,12 @@ $Project
 		$File	"toolframework_client.cpp"
 		$File	"toolframework_client.h"
 	}
+	
+	$Folder	"VGUI Extra"
+	{
+		$File	"vgui_extra\Tooltip.cpp"
+		$File	"vgui_extra\Tooltip.h"
+	}
 
 	$Folder	"Header Files"
 	{

@@ -145,7 +145,7 @@ bool CHudTeamGoal::ShouldDraw( void )
 				}
 
 				// Don't appear if the team switch alert is there
-				CHudElement *pHudSwitch = gHUD.FindElement( "CHudTeamSwitch" );
+				CHudElement *pHudSwitch = GetHud().FindElement( "CHudTeamSwitch" );
 				if ( pHudSwitch && pHudSwitch->ShouldDraw() )
 					return false;
 

@@ -6284,5 +6284,24 @@ void FrustumCache_t::Add( const CViewSetup *pView, int iSlot )
 	GeneratePerspectiveFrustum( pView->origin, pView->angles, pView->zNear, pView->zFar, pView->fov, pView->m_flAspectRatio, m_Frustums[iSlot] );
 }
 
+CMouthInfo g_ClientUIMouth;
 
+#ifndef NO_STEAM
 
+CSteamID GetSteamIDForPlayerIndex( int iPlayerIndex )
+{
+	player_info_t pi;
+	if ( steamapicontext && steamapicontext->SteamUtils() )
+	{
+		if ( engine->GetPlayerInfo( iPlayerIndex, &pi ) )
+		{
+			if ( pi.friendsID )
+			{
+				return CSteamID( pi.friendsID, 1, GetUniverse(), k_EAccountTypeIndividual );
+			}
+		}
+	}
+	return CSteamID();
+}
+
+#endif

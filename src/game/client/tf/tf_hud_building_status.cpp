@@ -495,7 +495,7 @@ CBuildingStatusAlertTray::CBuildingStatusAlertTray(Panel *parent, const char *pa
 //-----------------------------------------------------------------------------
 void CBuildingStatusAlertTray::ApplySettings( KeyValues *inResourceData )
 {
-	m_pAlertPanelHudTexture = gHUD.GetIcon( inResourceData->GetString( "icon", "" ) );
+	m_pAlertPanelHudTexture = HudIcons().GetIcon( inResourceData->GetString( "icon", "" ) );
 
 	if ( m_pAlertPanelHudTexture )
 	{

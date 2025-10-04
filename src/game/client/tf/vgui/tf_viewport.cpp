@@ -258,7 +258,7 @@ void TFViewport::ApplySchemeSettings( vgui::IScheme *pScheme )
 {
 	BaseClass::ApplySchemeSettings( pScheme );
 
-	gHUD.InitColors( pScheme );
+	GetHud().InitColors( pScheme );
 
 	SetPaintBackgroundEnabled( false );
 

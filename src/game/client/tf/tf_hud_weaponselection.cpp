@@ -622,7 +622,7 @@ void CHudWeaponSelection::PostChildPaint()
 			{
 				m_iDemoModeSlot = 0;
 				m_flDemoModeChangeTime = gpGlobals->curtime + flDemoTime;
-				gHUD.LockRenderGroup( gHUD.LookupRenderGroupIndexByName( "weapon_selection" ) );
+				GetHud().LockRenderGroup( GetHud().LookupRenderGroupIndexByName( "weapon_selection" ) );
 			}
 
 			m_flDemoStartTime = -1;
@@ -646,7 +646,7 @@ void CHudWeaponSelection::PostChildPaint()
 		if ( m_iDemoModeSlot >= m_iMaxSlots )
 		{
 			m_iDemoModeSlot = -1;
-			gHUD.UnlockRenderGroup( gHUD.LookupRenderGroupIndexByName( "weapon_selection" ) );
+			GetHud().UnlockRenderGroup( GetHud().LookupRenderGroupIndexByName( "weapon_selection" ) );
 		}
 	}	
 

@@ -1244,7 +1244,7 @@ void CHudVote::MsgFunc_CallVoteFailed( bf_read &msg )
 		case VOTE_FAILED_RATE_EXCEEDED:
 		{
 			const char *pszTimeString = ( bMinutes ) ? ( ( nTime < 2 ) ? "#GameUI_vote_failed_vote_spam_min" : "#GameUI_vote_failed_vote_spam_mins" ) : "#GameUI_vote_failed_vote_spam";
-			g_pVGuiLocalize->ConstructString_safe( wszHeaderString, g_pVGuiLocalize->Find( pszTimeString ), 1, wszTime );
+			g_pVGuiLocalize->ConstructString( wszHeaderString, sizeof( wszHeaderString ), g_pVGuiLocalize->Find( pszTimeString ), 1, wszTime );
 			pFreeVotePanel->m_pCallVoteFailed->SetDialogVariable( "FailedReason", wszHeaderString );
 			break;
 		}
@@ -1268,7 +1268,7 @@ void CHudVote::MsgFunc_CallVoteFailed( bf_read &msg )
 		case VOTE_FAILED_ON_COOLDOWN:
 		{
 			const char *pszTimeString = ( bMinutes ) ? ( ( nTime < 2 ) ? "#GameUI_vote_failed_recently_min" : "#GameUI_vote_failed_recently_mins" ) : "#GameUI_vote_failed_recently";
-			g_pVGuiLocalize->ConstructString_safe( wszHeaderString, g_pVGuiLocalize->Find( pszTimeString ), 1, wszTime );
+			g_pVGuiLocalize->ConstructString( wszHeaderString, sizeof( wszHeaderString ), g_pVGuiLocalize->Find( pszTimeString ), 1, wszTime );
 			pFreeVotePanel->m_pCallVoteFailed->SetDialogVariable( "FailedReason", wszHeaderString );
 			break;
 		}
@@ -1300,7 +1300,7 @@ void CHudVote::MsgFunc_CallVoteFailed( bf_read &msg )
 		case VOTE_FAILED_CANNOT_KICK_FOR_TIME:
 		{
 			const char *pszTimeString = ( bMinutes ) ? ( ( nTime < 2 ) ? "#GameUI_vote_failed_cannot_kick_min" : "#GameUI_vote_failed_cannot_kick_mins" ) : "#GameUI_vote_failed_cannot_kick";
-			g_pVGuiLocalize->ConstructString_safe( wszHeaderString, g_pVGuiLocalize->Find( pszTimeString ), 1, wszTime );
+			g_pVGuiLocalize->ConstructString( wszHeaderString, sizeof( wszHeaderString ), g_pVGuiLocalize->Find( pszTimeString ), 1, wszTime );
 			pFreeVotePanel->m_pCallVoteFailed->SetDialogVariable( "FailedReason", wszHeaderString );
 			break;
 		}
@@ -1514,7 +1514,7 @@ void CHudVote::MsgFunc_VoteStart( bf_read &msg )
 	g_pVGuiLocalize->ConvertANSIToUnicode( pszCallerName, wszCallerName, sizeof( wszCallerName ) );
 
 	// String
-	g_pVGuiLocalize->ConstructString_safe( wszHeaderString, g_pVGuiLocalize->Find( "#GameUI_vote_header" ), 1, wszCallerName );
+	g_pVGuiLocalize->ConstructString( wszHeaderString, sizeof( wszHeaderString ), g_pVGuiLocalize->Find( "#GameUI_vote_header" ), 1, wszCallerName );
 
 	// Final
 	pVotePanel->m_pVoteActive->SetDialogVariable( "header", wszHeaderString );
@@ -1540,7 +1540,7 @@ void CHudVote::MsgFunc_VoteStart( bf_read &msg )
 			pwcParam = wcParam;
 		}
 
-		g_pVGuiLocalize->ConstructString_safe( wcIssue, g_pVGuiLocalize->Find( szIssue ), 1, pwcParam );
+		g_pVGuiLocalize->ConstructString( wcIssue, sizeof( wcIssue ), g_pVGuiLocalize->Find( szIssue ), 1, pwcParam );
 		pwcIssue = wcIssue;
 	}
 	else
@@ -1715,7 +1715,7 @@ void CHudVote::MsgFunc_VotePass( bf_read &msg )
 			pwcParam = wcParam;
 		}
 
-		g_pVGuiLocalize->ConstructString_safe( wcIssue, g_pVGuiLocalize->Find( szResult ), 1, pwcParam );
+		g_pVGuiLocalize->ConstructString( wcIssue, sizeof( wcIssue ), g_pVGuiLocalize->Find( szResult ), 1, pwcParam );
 		pwcIssue = wcIssue;
 	}
 	else
@@ -1793,7 +1793,7 @@ void CHudVote::MsgFunc_VoteSetup( bf_read &msg )
 				// When empty, assume that we just pre-pend #Vote_ to szIssue (reduces msg size)
 				if ( !szIssueString[0] )
 				{
-					V_sprintf_safe( szIssueString, "#Vote_%s", szIssue );
+					sprintf( szIssueString, "#Vote_%s", szIssue );
 				}
 
 				VoteIssue_t issue;

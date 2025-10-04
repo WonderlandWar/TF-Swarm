@@ -1,5 +1,6 @@
 //========= Copyright Valve Corporation, All rights reserved. ============//
 // NVNT haptics for Team Fortress 2
+#define C_TF_HAPTICS_H // No haptics in Swarm
 #ifndef C_TF_HAPTICS_H
 #define C_TF_HAPTICS_H
 

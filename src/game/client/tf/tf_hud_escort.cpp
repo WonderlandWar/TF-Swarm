@@ -176,7 +176,7 @@ void CEscortStatusTeardrop::ApplySchemeSettings( IScheme *pScheme )
 
 	m_iOrgHeight = GetTall();
 
-	m_iMidGroupIndex = gHUD.LookupRenderGroupIndexByName( "mid" );
+	m_iMidGroupIndex = GetHud().LookupRenderGroupIndexByName( "mid" );
 }
 
 //-----------------------------------------------------------------------------
@@ -187,7 +187,7 @@ bool CEscortStatusTeardrop::IsVisible( void )
 	if ( IsInFreezeCam() == true )
 		return false;
 
-	if ( m_iMidGroupIndex != -1 && gHUD.IsRenderGroupLockedFor( NULL, m_iMidGroupIndex ) )
+	if ( m_iMidGroupIndex != -1 && GetHud().IsRenderGroupLockedFor( NULL, m_iMidGroupIndex ) )
 		return false;
 
 	return BaseClass::IsVisible();

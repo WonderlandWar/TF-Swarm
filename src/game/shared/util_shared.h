@@ -867,6 +867,8 @@ int UTIL_StringFieldToInt( const char *szValue, const char **pValueStrings, int 
 // Global econ-level helper functionality.
 EUniverse GetUniverse();
 
+CSteamID SteamIDFromDecimalString( const char *pszUint64InDecimal );
+
 int UTIL_CountNumBitsSet( unsigned int nVar );
 int UTIL_CountNumBitsSet( uint64 nVar );
 
@@ -931,5 +933,7 @@ inline int UTIL_EntitiesAlongRay( CBaseEntity **pList, int listMax, const Ray_t 
 	return UTIL_EntitiesAlongRay( ray, &rayEnum );
 }
 
+struct tm *		Plat_localtime( const time_t *timep, struct tm *result );
+struct tm *		Plat_gmtime( const time_t *timep, struct tm *result );
 
 #endif // UTIL_SHARED_H

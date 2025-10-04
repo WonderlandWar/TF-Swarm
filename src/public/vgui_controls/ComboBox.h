@@ -107,6 +107,8 @@ public:
 
 	virtual void SetUseFallbackFont( bool bState, HFont hFallback );
 
+	ComboBoxButton *GetComboButton( void ) { return m_pButton; }
+
 protected:
 	// overrides
 	virtual void OnMousePressed(MouseCode code);

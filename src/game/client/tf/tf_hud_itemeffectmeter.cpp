@@ -64,7 +64,7 @@ static const char *GetDefaultMeterTextForLoadoutPosition( int iLoadout )
 	hNewMeter = new CHudItemEffectMeter_Weapon< weaponClass >( pszElementName, pPlayer, weaponType, beeps, resfile ); \
 	if ( hNewMeter ) \
 	{ \
-		gHUD.AddHudElement( hNewMeter ); \
+		GetHud().AddHudElement( hNewMeter ); \
 		outMeters.AddToHead( hNewMeter ); \
 		hNewMeter->SetVisible( false ); \
 	}
@@ -94,7 +94,7 @@ void CItemEffectMeterManager::ClearExistingMeters()
 {
 	for ( int i=0; i<m_Meters.Count(); i++ )
 	{
-		gHUD.RemoveHudElement( m_Meters[i].Get() );
+		GetHud().RemoveHudElement( m_Meters[i].Get() );
 		delete m_Meters[i].Get();
 	}
 	m_Meters.RemoveAll();
@@ -259,7 +259,7 @@ void CHudItemEffectMeter::CreateHudElementsForClass( C_TFPlayer* pPlayer, CUtlVe
 			hNewMeter = new CHudItemEffectMeter_ItemAttribute( pszElementName, pPlayer, (loadout_positions_t)iLoadout, pszLabelText, bBeep );
 			if ( hNewMeter )
 			{
-				gHUD.AddHudElement( hNewMeter );
+				GetHud().AddHudElement( hNewMeter );
 				outMeters.AddToHead( hNewMeter );
 				hNewMeter->SetVisible( false );
 			}
@@ -313,7 +313,7 @@ void CHudItemEffectMeter::CreateHudElementsForClass( C_TFPlayer* pPlayer, CUtlVe
 		hNewMeter = new CHudItemEffectMeter( pszElementName, pPlayer );
 		if ( hNewMeter )
 		{
-			gHUD.AddHudElement( hNewMeter );
+			GetHud().AddHudElement( hNewMeter );
 			outMeters.AddToHead( hNewMeter );
 			hNewMeter->SetVisible( false );
 		}
@@ -354,7 +354,7 @@ void CHudItemEffectMeter::CreateHudElementsForClass( C_TFPlayer* pPlayer, CUtlVe
 	/*hNewMeter = new CHudItemEffectMeter_HalloweenSouls( pszElementName, pPlayer );
 	if ( hNewMeter )
 	{
-		gHUD.AddHudElement( hNewMeter );
+		GetHud().AddHudElement( hNewMeter );
 		outMeters.AddToHead( hNewMeter );
 		hNewMeter->SetVisible( false );
 	}*/
@@ -363,7 +363,7 @@ void CHudItemEffectMeter::CreateHudElementsForClass( C_TFPlayer* pPlayer, CUtlVe
 	hNewMeter = new CHudItemEffectMeter_Weapon< CTFPowerupBottle >( pszElementName, pPlayer, TF_WEAPON_NONE, true, "resource/UI/HudItemEffectMeter_PowerupBottle.res" );
 	if ( hNewMeter )
 	{
-		gHUD.AddHudElement( hNewMeter );
+		GetHud().AddHudElement( hNewMeter );
 		outMeters.AddToHead( hNewMeter );
 		hNewMeter->SetVisible( false );
 	}
@@ -371,7 +371,7 @@ void CHudItemEffectMeter::CreateHudElementsForClass( C_TFPlayer* pPlayer, CUtlVe
 	hNewMeter = new CHudItemEffectMeter_Rune( pszElementName, pPlayer );
 	if ( hNewMeter )
 	{
-		gHUD.AddHudElement( hNewMeter );
+		GetHud().AddHudElement( hNewMeter );
 		outMeters.AddToHead( hNewMeter );
 		hNewMeter->SetVisible( false );
 	}
