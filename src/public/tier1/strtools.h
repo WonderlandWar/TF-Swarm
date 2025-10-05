@@ -212,6 +212,44 @@ template <size_t cchDest> char *V_strcat_safe( INOUT_Z_ARRAY char (&pDest)[cchDe
 	return V_strncat( pDest, pSrc, (int)cchDest, nMaxCharsToCopy ); 
 }
 
+static wchar_t *V_wcsncat( INOUT_Z_CAP(cchDest) wchar_t *pDest, const wchar_t *pSrc, size_t cchDest, int max_chars_to_copy )
+{
+	size_t charstocopy = (size_t)0;
+
+	Assert( (ptrdiff_t)cchDest >= 0 );
+	
+	size_t len = wcslen(pDest);
+	size_t srclen = wcslen( pSrc );
+	if ( max_chars_to_copy <= COPY_ALL_CHARACTERS )
+	{
+		charstocopy = srclen;
+	}
+	else
+	{
+		charstocopy = (size_t)MIN( max_chars_to_copy, (int)srclen );
+	}
+
+	if ( len + charstocopy >= cchDest )
+	{
+		charstocopy = cchDest - len - 1;
+	}
+
+	if ( (int)charstocopy <= 0 )
+	{
+		return pDest;
+	}
+
+	ANALYZE_SUPPRESS( 6059 ); // warning C6059: : Incorrect length parameter in call to 'strncat'. Pass the number of remaining characters, not the buffer size of 'argument 1'
+	wchar_t *pOut = wcsncat( pDest, pSrc, charstocopy );
+	return pOut;
+}
+
+wchar_t *V_wcsncat( INOUT_Z_CAP(cchDest) wchar_t *pDest, const wchar_t *pSrc, size_t cchDest, int nMaxCharsToCopy=COPY_ALL_CHARACTERS );
+template <size_t cchDest> wchar_t *V_wcscat_safe( INOUT_Z_ARRAY wchar_t (&pDest)[cchDest], const wchar_t *pSrc, int nMaxCharsToCopy=COPY_ALL_CHARACTERS )
+{ 
+	return V_wcsncat( pDest, pSrc, (int)cchDest, nMaxCharsToCopy ); 
+}
+
 // UNDONE: Find a non-compiler-specific way to do this
 #ifdef _WIN32
 #ifndef _VA_LIST_DEFINED

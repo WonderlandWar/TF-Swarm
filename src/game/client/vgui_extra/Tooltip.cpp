@@ -17,6 +17,7 @@
 #include <vgui/IPanel.h>
 
 #include <vgui_controls/Tooltip.h>
+#include <vgui_extra/Tooltip.h>
 #include <vgui_controls/TextEntry.h>
 #include <vgui_controls/Controls.h>
 
@@ -35,17 +36,9 @@ static int s_iTooltipWindowCount = 0;
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-BaseTooltip::BaseTooltip(Panel *parent, const char *text) 
+BaseTooltip::BaseTooltip(Panel *parent, const char *text) : Tooltip( parent, text )
 {
-	SetText(text);
 
-	_displayOnOneLine = false;
-	_makeVisible = false;
-	_isDirty = false;
-	_enabled = true;
-
-	_tooltipDelay = 500; // default delay for opening tooltips
-	_delay = 0;
 }
 
 BaseTooltip::~BaseTooltip()
@@ -57,58 +50,7 @@ BaseTooltip::~BaseTooltip()
 //-----------------------------------------------------------------------------
 void BaseTooltip::ResetDelay()
 {
-	_isDirty = true;
-	_delay = system()->GetTimeMillis() + _tooltipDelay;
-}
 
-//-----------------------------------------------------------------------------
-// Purpose: Set the tooltip delay before a tooltip comes up.
-//-----------------------------------------------------------------------------
-void BaseTooltip::SetTooltipDelay( int tooltipDelay )
-{
-	_tooltipDelay = tooltipDelay;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: Get the tooltip delay before a tooltip comes up.
-//-----------------------------------------------------------------------------
-int BaseTooltip::GetTooltipDelay()
-{
-	return _tooltipDelay;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: Set the tool tip to display on one line only
-//			Default is multiple lines.
-//-----------------------------------------------------------------------------
-void BaseTooltip::SetTooltipFormatToSingleLine()
-{
-	_displayOnOneLine = true;
-	_isDirty = true;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: Set the tool tip to display on multiple lines.
-//-----------------------------------------------------------------------------
-void BaseTooltip::SetTooltipFormatToMultiLine()
-{
-	_displayOnOneLine = false;
-	_isDirty = true;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: Display the tooltip
-//-----------------------------------------------------------------------------
-void BaseTooltip::ShowTooltip(Panel *currentPanel)
-{
-	_makeVisible = true;
-
-	PerformLayout();
-}
-
-void BaseTooltip::SetEnabled( bool bState )
-{
-	_enabled = bState;
 }
 
 //-----------------------------------------------------------------------------
@@ -154,7 +96,7 @@ void BaseTooltip::SetText(const char *text)
 		text = "";
 	}
 
-	if (m_Text.Size() > 0)
+	if (m_Text.Count() > 0)
 	{
 		m_Text.RemoveAll();
 	}

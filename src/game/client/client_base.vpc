@@ -588,6 +588,7 @@ $Project
 	
 	$Folder	"VGUI Extra"
 	{
+		$File	"vgui_extra\vgui_added_functions.cpp"
 		$File	"vgui_extra\Tooltip.cpp"
 		$File	"vgui_extra\Tooltip.h"
 	}

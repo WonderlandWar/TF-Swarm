@@ -1976,7 +1976,7 @@ void CConfirmCustomizeTextureDialog::PerformFilter()
 	static bool bDoBlendLayers = true;
 	if ( bDoBlendLayers )
 	{
-		for ( int i = 0; i < m_vecBlendLayers.Size() ; ++i )
+		for ( int i = 0; i < m_vecBlendLayers.Count() ; ++i )
 		{
 			m_vecBlendLayers[i].Apply( m_imgFinal );
 		}
@@ -2101,7 +2101,7 @@ void CConfirmCustomizeTextureDialog::PerformStencilFilter()
 			// Determine "weight" of each swatch, from the relative sizes of the
 			// gradient widget ranges
 			CUtlVector<float> vecSwatchWeight;
-			for ( int i = 0 ; i < pal.Size() ; ++i )
+			for ( int i = 0 ; i < pal.Count() ; ++i )
 			{
 				float weight = 1.0f;
 				if ( m_pStencilGradientWidget )

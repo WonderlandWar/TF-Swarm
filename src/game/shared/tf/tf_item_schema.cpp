@@ -1653,29 +1653,29 @@ void CTFItemSchema::InitializeStringTable( const char **ppStringTable, unsigned 
 bool CTFItemSchema::BInitSchema( KeyValues *pKVRawDefinition, CUtlVector<CUtlString> *pVecErrors )
 {
 	// First time through, prepare string tables. Must happen before calling parent BInitSchema.
-	if ( m_vecClassUsabilityStrings.Size() == 0 )
+	if ( m_vecClassUsabilityStrings.Count() == 0 )
 	{
 		// Special case, since player class data is an array of structs, not an array of strings
 		for ( unsigned int i = 0; i < ARRAYSIZE( gs_PlayerClassData ); i++ )
 		{
 			m_vecClassUsabilityStrings.AddToTail( gs_PlayerClassData[i].m_pchName );
 		}
-		Assert( m_vecClassUsabilityStrings.Size() == LOADOUT_COUNT );
+		Assert( m_vecClassUsabilityStrings.Count() == LOADOUT_COUNT );
 	
 		InitializeStringTable( &g_szLoadoutStrings[0],				ARRAYSIZE(g_szLoadoutStrings),				&m_vecClassLoadoutStrings );
-		Assert( m_vecClassLoadoutStrings.Size() <= CLASS_LOADOUT_POSITION_COUNT );
+		Assert( m_vecClassLoadoutStrings.Count() <= CLASS_LOADOUT_POSITION_COUNT );
 
 		InitializeStringTable( &g_szLoadoutStringsForDisplay[0],	ARRAYSIZE(g_szLoadoutStringsForDisplay),	&m_vecClassLoadoutStringsForDisplay );
-		Assert( m_vecClassLoadoutStringsForDisplay.Size() == CLASS_LOADOUT_POSITION_COUNT );
+		Assert( m_vecClassLoadoutStringsForDisplay.Count() == CLASS_LOADOUT_POSITION_COUNT );
 
 		InitializeStringTable( &g_szAccountLoadoutStrings[0],		ARRAYSIZE(g_szAccountLoadoutStrings),				&m_vecAccountLoadoutStrings );
-		Assert( m_vecAccountLoadoutStrings.Size() <= ACCOUNT_LOADOUT_POSITION_COUNT );
+		Assert( m_vecAccountLoadoutStrings.Count() <= ACCOUNT_LOADOUT_POSITION_COUNT );
 
 		InitializeStringTable( &g_szAccountLoadoutStringsForDisplay[0],	ARRAYSIZE(g_szAccountLoadoutStringsForDisplay),	&m_vecAccountLoadoutStringsForDisplay );
-		Assert( m_vecAccountLoadoutStringsForDisplay.Size() == ACCOUNT_LOADOUT_POSITION_COUNT );
+		Assert( m_vecAccountLoadoutStringsForDisplay.Count() == ACCOUNT_LOADOUT_POSITION_COUNT );
 
 		InitializeStringTable( &g_szWeaponTypeSubstrings[0],		ARRAYSIZE(g_szWeaponTypeSubstrings),		&m_vecWeaponTypeSubstrings );
-		Assert( m_vecWeaponTypeSubstrings.Size() == TF_WPN_TYPE_COUNT );
+		Assert( m_vecWeaponTypeSubstrings.Count() == TF_WPN_TYPE_COUNT );
 	}
 	
 	SCHEMA_INIT_SUBSTEP( CEconItemSchema::BInitSchema( pKVRawDefinition, pVecErrors ) );

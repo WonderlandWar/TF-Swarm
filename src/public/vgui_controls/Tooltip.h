@@ -45,6 +45,7 @@ public:
 private:
 	Panel *m_pParent;
 	virtual void ApplySchemeSettings(IScheme *pScheme);
+protected:
 	CUtlVector<char> m_Text;
 	int _delay;			// delay that counts down
 	int _tooltipDelay;	// delay before tooltip comes up.

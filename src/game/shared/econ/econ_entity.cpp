@@ -117,7 +117,7 @@ void DrawEconEntityAttachedModels( CBaseAnimating *pEnt, CEconEntity *pAttachedM
 	}
 
 	// Draw our attached models as well
-	for ( int i = 0; i < pAttachedModelSource->m_vecAttachedModels.Size(); i++ )
+	for ( int i = 0; i < pAttachedModelSource->m_vecAttachedModels.Count(); i++ )
 	{
 		const AttachedModelData_t& attachedModel = pAttachedModelSource->m_vecAttachedModels[i];
 

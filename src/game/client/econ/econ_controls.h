@@ -24,6 +24,7 @@
 #include "utlvector.h"
 #include "vgui_controls/PHandle.h"
 #include <vgui_controls/Tooltip.h>
+#include <vgui_extra/Tooltip.h>
 #include "GameEventListener.h"
 
 //-----------------------------------------------------------------------------

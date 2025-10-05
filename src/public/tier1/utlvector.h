@@ -69,6 +69,12 @@ public:
 	// Returns the number of elements in the vector
 	int Count() const;
 
+	/// are there no elements? For compatibility with lists.
+	inline bool IsEmpty( void ) const
+	{
+		return ( Count() == 0 );
+	}
+
 	// Is element index valid?
 	bool IsValidIndex( int i ) const;
 	static int InvalidIndex();

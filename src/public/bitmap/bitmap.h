@@ -30,6 +30,15 @@ struct Bitmap_t
 {
 	Bitmap_t();
 	~Bitmap_t();
+
+	//
+	// Accessors
+	//
+	inline int Width() const { return m_nWidth; }
+	inline int Height() const { return m_nHeight; }
+	inline ImageFormat Format() const { return m_ImageFormat; }
+	inline unsigned char *GetBits() const { return m_pBits; }
+
 	void Init( int nWidth, int nHeight, ImageFormat imageFormat );
 	
 	/// Return true if we have a valid size and buffer

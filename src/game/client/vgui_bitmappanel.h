@@ -48,7 +48,10 @@ public:
 
 	// Setup for panels that aren't created by the commander overlay factory (i.e. aren't parsed from a keyvalues file)
 	virtual void SetImage( BitmapImage *pImage );
-
+#ifdef CLIENT_DLL
+	/// Set bitmap data directly
+	virtual void SetBitmap( const Bitmap_t &bitmap );
+#endif
 	const char *GetMouseOverText( void );
 
 private:

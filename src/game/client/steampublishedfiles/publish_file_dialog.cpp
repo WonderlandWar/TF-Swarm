@@ -59,7 +59,7 @@ public:
 		else
 		{
 			// Just copy file to prepared location
-			return engine->CopyLocalFile( m_strInput.Get(), m_strOutput.Get() ) ? 0 : 1;
+			return engine->CopyFile( m_strInput.Get(), m_strOutput.Get() ) ? 0 : 1;
 		}
 	}
 

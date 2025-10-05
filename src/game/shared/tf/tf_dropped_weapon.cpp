@@ -288,7 +288,7 @@ bool CTFDroppedWeapon::OnInternalDrawModel( ClientModelRenderInfo_t *pInfo )
 
 	// Draw Attached Models
 	// Draw our attached models as well
-	for ( int i = 0; i < m_vecAttachedModels.Size(); i++ )
+	for ( int i = 0; i < m_vecAttachedModels.Count(); i++ )
 	{
 		const AttachedModelData_t& attachedModel = m_vecAttachedModels[i];
 

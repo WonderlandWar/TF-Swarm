@@ -2627,9 +2627,6 @@
     <ClInclude Include="..\..\game\shared\tf\tf_point_manager.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
-    <ClInclude Include="tf\tf_presence.h">
-      <Filter>Source Files\TF</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\game\shared\tf\tf_projectile_base.h">
       <Filter>Source Files\TF</Filter>
     </ClInclude>
@@ -5425,9 +5422,6 @@
     <ClCompile Include="tf\tf_prediction.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
-    <ClCompile Include="tf\tf_presence.cpp">
-      <Filter>Source Files\TF</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\game\shared\tf\tf_projectile_base.cpp">
       <Filter>Source Files\TF</Filter>
     </ClCompile>
@@ -6104,6 +6098,9 @@
       <Filter>Tool Framework</Filter>
     </ClCompile>
     <ClCompile Include="vgui_extra\Tooltip.cpp">
+      <Filter>VGUI Extra</Filter>
+    </ClCompile>
+    <ClCompile Include="vgui_extra\vgui_added_functions.cpp">
       <Filter>VGUI Extra</Filter>
     </ClCompile>
   </ItemGroup>

@@ -84,7 +84,7 @@ void CItemMaterialCustomizationIconPanel::PaintBackground( void )
 		}
 	}
 
-	for ( int i = 0; i < m_colPaintColors.Size(); i++ )
+	for ( int i = 0; i < m_colPaintColors.Count(); i++ )
 	{
 		const Color& c = m_colPaintColors[i];
 
@@ -95,7 +95,7 @@ void CItemMaterialCustomizationIconPanel::PaintBackground( void )
 		}
 		surface()->DrawSetTexture( m_iPaintSplat );
 		surface()->DrawSetColor( c.r(), c.g(), c.b(), GetAlpha() );
-		DrawQuad( i, m_colPaintColors.Size() );
+		DrawQuad( i, m_colPaintColors.Count() );
 		surface()->DrawSetColor(COLOR_WHITE);
 	}
 

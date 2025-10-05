@@ -19,6 +19,7 @@ namespace vgui
 }
 
 class KeyValues;
+struct Bitmap_t;
 
 //-----------------------------------------------------------------------------
 // Purpose: Bitmap image
@@ -52,7 +53,13 @@ public:
 	vgui::VPANEL GetRenderSizePanel( void );
 
 	void SetViewport( bool use, float left, float top, float right, float bottom );
+#ifdef CLIENT_DLL
+	/// Set raw bitmap data
+	void SetBitmap( const Bitmap_t &bitmap );
 
+	/// Clean up vgui resources
+	void DestroyTexture();
+#endif
 private:
 	int				m_nTextureId;
 	Color		m_clr;
