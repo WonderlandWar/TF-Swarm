@@ -82,6 +82,7 @@ public:
 	// Adds an element, uses default constructor
 	int AddToHead();
 	int AddToTail();
+	T *AddToTailGetPtr();
 	int InsertBefore( int elem );
 	int InsertAfter( int elem );
 
@@ -115,6 +116,14 @@ public:
 
 	// Finds an element (element needs operator== defined)
 	int Find( const T& src ) const;
+
+	// Helper to find using std::find_if with a predicate
+	//   e.g. [] -> bool ( T &a ) { return a.IsTheThingIWant(); }
+	//
+	// Useful if your object doesn't define a ==
+	template < typename F >
+	int FindPredicate( F&& predicate ) const;
+
 	void FillWithValue( const T& src );
 
 	bool HasElement( const T& src ) const;
@@ -774,6 +783,12 @@ inline int CUtlVector<T, A>::AddToTail()
 }
 
 template< typename T, class A >
+inline T *CUtlVector<T, A>::AddToTailGetPtr()
+{
+	return &Element( AddToTail() );
+}
+
+template< typename T, class A >
 inline int CUtlVector<T, A>::InsertAfter( int elem )
 {
 	return InsertBefore( elem + 1 );
@@ -995,6 +1010,26 @@ int CUtlVector<T, A>::Find( const T& src ) const
 			return i;
 	}
 	return -1;
+}
+
+//-----------------------------------------------------------------------------
+// Finds an element using a predicate, using std::find_if
+//-----------------------------------------------------------------------------
+template< typename T, class A >
+template< class F >
+int CUtlVector<T, A>::FindPredicate( F &&predicate ) const
+{
+	const T * begin = Base();
+	const T * end = begin + Count();
+	const T * const &elem = std::find_if( begin, end, predicate );
+
+	if ( elem != end )
+	{
+		int idx = (int)std::distance( begin, elem );
+		return idx;
+	}
+
+	return InvalidIndex();
 }
 
 template< typename T, class A >

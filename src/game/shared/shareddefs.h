@@ -285,6 +285,8 @@ inline bool IsIndexIntoPlayerArrayValid( int iIndex )
 #define MAX_TEAMS				32	// Max number of teams in a game
 #define MAX_TEAM_NAME_LENGTH	32	// Max length of a team's name
 
+#define MAX_TEAMS_ARRAY_SAFE 	MAX_TEAMS
+
 // Weapon m_iState
 #define WEAPON_NOT_CARRIED				0	// Weapon is on the ground
 #define WEAPON_IS_CARRIED_BY_PLAYER		1	// This client is carrying this weapon.

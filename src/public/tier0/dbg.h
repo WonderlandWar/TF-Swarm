@@ -335,6 +335,12 @@ PLATFORM_INTERFACE void COM_TimestampedLog( char const *fmt, ... ) FMTFUNCTION( 
 #define ASSERT_INVARIANT( pred )
 #endif
 
+//-----------------------------------------------------------------------------
+// Utilities to suppress warnings or other annotations
+
+// Note a variable is possibly unused to avoid analyzer warnings
+template< typename T > static FORCEINLINE void NoteUnused( const T& foo ) { return; }
+
 #ifdef _DEBUG
 template<typename DEST_POINTER_TYPE, typename SOURCE_POINTER_TYPE>
 inline DEST_POINTER_TYPE assert_cast(SOURCE_POINTER_TYPE* pSource)

@@ -45,10 +45,13 @@ public:
 
 	// stops all animations
 	void CancelAllAnimations();
-
+#ifdef CLIENT_DLL
 	// starts an animation sequence script
 	bool StartAnimationSequence(const char *sequenceName);
 	bool StartAnimationSequence(Panel *pWithinParent, const char *sequenceName);
+#endif
+	bool StopAnimationSequence( Panel *pWithinParent, const char *sequenceName );
+	void CancelAnimationsForPanel( Panel *pWithinParent );
 
 	// gets the length of an animation sequence, in seconds
 	float GetAnimationSequenceLength(const char *sequenceName);

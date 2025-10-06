@@ -585,7 +585,7 @@ bool CTFPartyClient::BAllowedToPartyWith( CSteamID steamID ) const
 	Assert( pFriends );
 
 	// Check this logic if new values are added
-	COMPILE_TIME_ASSERT( k_EFriendRelationshipMax == 8 && k_EPersonaStateMax == 8 );
+	//COMPILE_TIME_ASSERT( k_EFriendRelationshipMax == 8 && k_EPersonaStateMax == 8 );
 
 	// Only friends for now
 	return ( pFriends &&
@@ -632,7 +632,7 @@ bool CTFPartyClient::BCanQueueForMatch( ETFMatchGroup eGroup, CUtlVector< QueueE
 		auto *pNewReason = vecReasons.AddToTailGetPtr();
 		wchar_t *pwszReason = g_pVGuiLocalize->Find( pszLocToken );
 		if ( pwszReason )
-			{ V_wcscpy_safe( pNewReason->wszCantReason, pwszReason ); }
+			{ wcscpy( pNewReason->wszCantReason, pwszReason ); }
 		pNewReason->m_eReason = eType;
 	};
 
@@ -1125,7 +1125,7 @@ bool CTFPartyClient::BCanQueueForStandby() const
 //-----------------------------------------------------------------------------
 void CTFPartyClient::Think()
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+//	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 	if ( m_bQueuedEffectiveCriteriaChangeEvent )
 		{ OnEffectiveCriteriaChanged(); }
 

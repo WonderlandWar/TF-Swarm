@@ -5,6 +5,7 @@
 #include "vgui/isurface.h"
 #include "vgui_controls/menu.h"
 #include "vgui_controls/ComboBox.h"
+#include "vgui_controls/AnimationController.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -132,4 +133,65 @@ void MenuBuilder::AddSepratorIfNeeded( const char *pszCategoryName )
 	}
 
 	m_pszLastCategory = pszCategoryName;
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: stops an animation sequence script
+//-----------------------------------------------------------------------------
+bool AnimationController::StopAnimationSequence( Panel *pWithinParent, const char *sequenceName )
+{
+	Assert( pWithinParent );
+#if 0 // TF_SWARM: FIXME!
+	// lookup the symbol for the name
+	UtlSymId_t seqName = g_ScriptSymbols.Find( sequenceName );
+	if (seqName == UTL_INVAL_SYMBOL)
+		return false;
+
+	// remove the existing command from the queue
+	RemoveQueuedAnimationCommands( seqName, pWithinParent );
+
+	return true;
+#else
+	return false;
+#endif
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Runs a custom command from code, not from a script file
+//-----------------------------------------------------------------------------
+void AnimationController::CancelAnimationsForPanel( Panel *pWithinParent )
+{
+	// Msg("Removing queued anims for sequence %s\n", g_ScriptSymbols.String(seqName));
+
+	// remove messages posted by this sequence
+	// if pWithinParent is specified, remove only messages under that parent
+	{
+		for (int i = 0; i < m_PostedMessages.Count(); i++)
+		{
+			if ( m_PostedMessages[i].parent == pWithinParent )
+			{
+				m_PostedMessages.Remove(i);
+				--i;
+			}
+		}
+	}
+
+	// remove all animations
+	// if pWithinParent is specified, remove only animations under that parent
+	for (int i = 0; i < m_ActiveAnimations.Count(); i++)
+	{
+		Panel *animPanel = m_ActiveAnimations[i].panel;
+
+		if ( !animPanel )
+			continue;
+
+		Panel *foundPanel = pWithinParent->FindChildByName(animPanel->GetName(),true);
+
+		if ( foundPanel != animPanel )
+			continue;
+
+		m_ActiveAnimations.Remove(i);
+		--i;
+	}
 }
