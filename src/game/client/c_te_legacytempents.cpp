@@ -101,7 +101,7 @@ C_LocalTempEntity::C_LocalTempEntity()
 // Input  : time - 
 //			*model - 
 //-----------------------------------------------------------------------------
-void C_LocalTempEntity::Prepare( model_t *pmodel, float time )
+void C_LocalTempEntity::Prepare( const model_t *pmodel, float time )
 {
 	Interp_SetupMappings( GetVarMapping() );
 
@@ -732,6 +732,21 @@ void CBreakableHelper::Clear()
 {
 	m_Breakables.RemoveAll();
 	m_nCurrentContext = 0;
+}
+
+C_LocalTempEntity *CTempEnts::FindTempEntByID( int nID, int nSubID )
+{
+	// HACK HACK: We're using skin and hitsounds as a hacky way to store an ID and sub-ID for later identification
+	FOR_EACH_LL( m_TempEnts, i )
+	{
+		C_LocalTempEntity *p = m_TempEnts[ i ];
+		if ( p && p->GetSkin() == nID && p->hitSound == nSubID )
+		{
+			return p;
+		}
+	}
+
+	return NULL;
 }
 
 static CBreakableHelper g_BreakableHelper;
@@ -1630,7 +1645,7 @@ void CTempEnts::Sprite_Smoke( C_LocalTempEntity *pTemp, float scale )
 //-----------------------------------------------------------------------------
 // Purpose: Create some simple physically simulated models
 //-----------------------------------------------------------------------------
-C_LocalTempEntity * CTempEnts::SpawnTempModel( model_t *pModel, const Vector &vecOrigin, const QAngle &vecAngles, const Vector &vecVelocity, float flLifeTime, int iFlags )
+C_LocalTempEntity * CTempEnts::SpawnTempModel( const model_t *pModel, const Vector &vecOrigin, const QAngle &vecAngles, const Vector &vecVelocity, float flLifeTime, int iFlags )
 {
 	Assert( pModel );
 
@@ -1875,7 +1890,7 @@ void CTempEnts::Clear( void )
 //			*model - 
 // Output : C_LocalTempEntity
 //-----------------------------------------------------------------------------
-C_LocalTempEntity *CTempEnts::TempEntAlloc( const Vector& org, model_t *model )
+C_LocalTempEntity *CTempEnts::TempEntAlloc( const Vector& org, const model_t *model )
 {
 	C_LocalTempEntity		*pTemp;
 
@@ -1988,7 +2003,7 @@ bool CTempEnts::FreeLowPriorityTempEnt()
 //			*model - 
 // Output : C_LocalTempEntity
 //-----------------------------------------------------------------------------
-C_LocalTempEntity *CTempEnts::TempEntAllocHigh( const Vector& org, model_t *model )
+C_LocalTempEntity *CTempEnts::TempEntAllocHigh( const Vector& org, const model_t *model )
 {
 	C_LocalTempEntity		*pTemp;
 

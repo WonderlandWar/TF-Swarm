@@ -1320,6 +1320,8 @@ Vector CTFPlayerModelPanel::GetZoomOffset()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+// TF_SWARM: FIXME!
+#if 0
 void CTFPlayerModelPanel::PrePaint3D( IMatRenderContext *pRenderContext )
 {
 	if ( g_PlayerPreviewEffect.GetEffect() == C_TFPlayerPreviewEffect::PREVIEW_EFFECT_UBER )
@@ -1376,7 +1378,7 @@ void CTFPlayerModelPanel::PostPaint3D( IMatRenderContext *pRenderContext )
 
 	BaseClass::PostPaint3D( pRenderContext );
 }
-
+#endif
 //-----------------------------------------------------------------------------
 // Purpose : Called by base Mdlpanel when a merged mdl has been drawn
 // For TF we use this as a way to render effects on top of model as appropriate (ie Unusual effects)
@@ -1483,7 +1485,8 @@ void CTFPlayerModelPanel::RenderingMergedModel( IMatRenderContext *pRenderContex
 		RenderStatTrack( pStudioHdr, pWorldMatrix );
 	}
 }
-
+// TF_SWARM: FIXME!
+#if 0
 IMaterial* CTFPlayerModelPanel::GetOverrideMaterial( MDLHandle_t mdlHandle ) 
 {
 	loadout_positions_t s_iPosition[] = {
@@ -1505,7 +1508,7 @@ IMaterial* CTFPlayerModelPanel::GetOverrideMaterial( MDLHandle_t mdlHandle )
 
 	return NULL;
 }
-
+#endif
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
@@ -1688,7 +1691,7 @@ void CTFPlayerModelPanel::UpdateEyeGlows(
 
 	// is this a model we care about?
 	int iAttachment = Studio_FindAttachment( pStudioHdr, pszAttach );
-	if ( iAttachment == INVALID_PARTICLE_ATTACHMENT || iAttachment == -1 )
+	if ( iAttachment == -1 || iAttachment == -1 )
 		return;
 
 	if ( m_bUpdateEyeGlows )
@@ -1758,7 +1761,7 @@ void CTFPlayerModelPanel::UpdateActionSlotEffects(
 ) {
 	// is this a model we care about?
 	int iAttachment = Studio_FindAttachment( pStudioHdr, "effect_hand_R" );
-	if ( iAttachment == INVALID_PARTICLE_ATTACHMENT || iAttachment == -1 )
+	if ( iAttachment == -1 || iAttachment == -1 )
 		return;
 
 	if ( !m_bDrawActionSlotEffects )

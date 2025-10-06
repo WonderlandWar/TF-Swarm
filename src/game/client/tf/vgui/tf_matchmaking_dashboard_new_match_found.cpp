@@ -139,7 +139,7 @@ public:
 			KeyValues* pKV = new KeyValues( nullptr );
 			pKV->SetWString( "matchtype", g_pVGuiLocalize->Find( pMatchDesc->GetNameLocToken() ) );
 			// Craft the "Your Casual match is ready" string
-			g_pVGuiLocalize->ConstructString_safe( wszBuff,
+			g_pVGuiLocalize->ConstructString( wszBuff, sizeof( wszBuff ),
 												   g_pVGuiLocalize->Find( "#TF_Matchmaking_RollingQueue_NewTypedMatchReady" ),
 												   pKV );
 			m_pBGPanel->SetDialogVariable( "match_type",

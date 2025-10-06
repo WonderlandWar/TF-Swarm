@@ -128,9 +128,9 @@ public:
 	void Show( const char *pszText, const char *pszURL = nullptr )
 	{
 		wchar_t wszExpandedURL[256] = { 0 };
-		g_pVGuiLocalize->ConstructString_safe( m_wszText, pszText, 0 );
+		g_pVGuiLocalize->ConstructString( m_wszText, sizeof( m_wszText ), pszText, 0 );
 		if ( pszURL )
-			{ g_pVGuiLocalize->ConstructString_safe( wszExpandedURL, pszURL, 0 ); }
+			{ g_pVGuiLocalize->ConstructString( wszExpandedURL, sizeof( wszExpandedURL ), pszURL, 0 ); }
 		SetDialogVariable( "url", wszExpandedURL );
 
 		BaseClass::Show();

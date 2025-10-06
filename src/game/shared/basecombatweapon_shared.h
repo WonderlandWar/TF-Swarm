@@ -264,6 +264,9 @@ public:
 	bool					DefaultReload( int iClipSize1, int iClipSize2, int iActivity );
 	bool					ReloadsSingly( void ) const;
 
+	virtual bool			AutoFiresFullClip( void ) const { return false; }
+	virtual void			UpdateAutoFire( void );
+
 	// Weapon firing
 	virtual void			PrimaryAttack( void );						// do "+ATTACK"
 	virtual void			SecondaryAttack( void ) { return; }			// do "+ATTACK2"
@@ -444,7 +447,14 @@ public:
 #else
 
 	virtual void			BoneMergeFastCullBloat( Vector &localMins, Vector &localMaxs, const Vector &thisEntityMins, const Vector &thisEntityMaxs  ) const;
-	virtual bool			OnFireEvent( C_BaseViewModel *pViewModel, const Vector& origin, const QAngle& angles, int event, const char *options ) { return false; }
+	virtual bool			OnFireEvent( C_BaseViewModel *pViewModel, const Vector& origin, const QAngle& angles, int event, const char *options ) 
+	{ 
+#if defined USES_ECON_ITEMS
+		return BaseClass::OnFireEvent( pViewModel, origin, angles, event, options );
+#else
+		return false; 
+#endif
+	}
 
 	// Should this object cast shadows?
 	virtual ShadowType_t	ShadowCastType();
@@ -489,7 +499,7 @@ public:
 	void					EnsureCorrectRenderingModel();
 	virtual void			GetToolViewModelState( KeyValues *msg ) {} // this is just a stub for viewmodels to request recording of weapon-specific effects, etc
 
-#if !defined ( USES_PERSISTENT_ITEMS )
+#if !defined ( USES_ECON_ITEMS )
 	// Viewmodel overriding
 	virtual bool			IsOverridingViewmodel( void ) { return false; };
 	virtual int				DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags, const RenderableInstance_t &instance ) { return 0; };
@@ -513,6 +523,7 @@ public:
 	virtual bool			Lower( void ) { return false; }
 
 	virtual void			HideThink( void );
+	virtual bool			CanReload( void );
 
 // FTYPEDESC_INSENDTABLE STUFF
 private:
@@ -579,6 +590,7 @@ public:
 	bool					m_bFiresUnderwater;		// true if this weapon can fire underwater
 	bool					m_bAltFiresUnderwater;		// true if this weapon can fire underwater
 	bool					m_bReloadsSingly;		// Tryue if this weapon reloads 1 round at a time
+	bool					m_bFiringWholeClip;		// Are we in the middle of firing the whole clip;
 
 
 // FTYPEDESC_INSENDTABLE STUFF (end)

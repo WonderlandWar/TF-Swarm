@@ -246,7 +246,7 @@ public:
 	bool IsAllowedToTaunt( void );
 	
 	virtual bool	IsOverridingViewmodel( void );
-	virtual int		DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags );
+	virtual int		DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags, const RenderableInstance_t &instance );
 
 	void			SetHealer( C_TFPlayer *pHealer, float flChargeLevel );
 	void			SetWasHealedByLocalPlayer( bool bState )	{ m_bWasHealedByLocalPlayer = bState; }
@@ -938,7 +938,7 @@ public:
 	int GetSkinOverride() const { return m_iPlayerSkinOverride; }
 
 	virtual void ClientAdjustStartSoundParams( EmitSound_t &params ) override;
-	virtual void ClientAdjustStartSoundParams( StartSoundParams_t& params ) override;
+	//virtual void ClientAdjustStartSoundParams( StartSoundParams_t& params ) override;
 
 private:
 	void ClientAdjustVOPitch( int& pitch );
@@ -1082,7 +1082,7 @@ private:
 	bool IsDecapitation();
 	bool IsHeadSmash();
 
-	virtual int	InternalDrawModel( int flags );
+	virtual int	InternalDrawModel( int flags, const RenderableInstance_t &instance );
 
 private:
 

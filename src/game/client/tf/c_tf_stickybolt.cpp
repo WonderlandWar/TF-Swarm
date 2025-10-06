@@ -226,4 +226,4 @@ void StickyBoltCallbackTF( const CEffectData &data )
 	);
 }
 
-DECLARE_CLIENT_EFFECT( "TFBoltImpact", StickyBoltCallbackTF );
+DECLARE_CLIENT_EFFECT( TFBoltImpact, StickyBoltCallbackTF );

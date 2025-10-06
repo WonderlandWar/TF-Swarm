@@ -251,11 +251,11 @@ void CTFStreakNotice::StreakEnded( CTFPlayerShared::ETFStreak eStreakType, int i
 	wchar_t	wTemp[256];
 	if ( bSelfKill )
 	{
-		g_pVGuiLocalize->ConstructString_safe( wTemp, wzMsg, 2, wszKillerName, wzCount );
+		g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), wzMsg, 2, wszKillerName, wzCount );
 	}
 	else
 	{
-		g_pVGuiLocalize->ConstructString_safe( wTemp, wzMsg, 3, wszKillerName, wszVictimName, wzCount );
+		g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), wzMsg, 3, wszKillerName, wszVictimName, wzCount );
 	}
 	
 	HFont hFont = GetStreakFont();
@@ -498,7 +498,7 @@ void CTFStreakNotice::StreakUpdated( CTFPlayerShared::ETFStreak eStreakType, int
 	g_pVGuiLocalize->ConvertANSIToUnicode( g_PR->GetPlayerName( iKillerID ), wszPlayerName, sizeof(wszPlayerName) );
 
 	wchar_t	wTemp[256];
-	g_pVGuiLocalize->ConstructString_safe( wTemp, wzMsg, 2, wszPlayerName, wzCount );
+	g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), wzMsg, 2, wszPlayerName, wzCount );
 	
 	HFont hFont = GetStreakFont();
 	if ( m_pLabel->GetFont() != hFont )
@@ -1197,7 +1197,7 @@ void CTFHudDeathNotice::OnGameEvent( IGameEvent *event, int iDeathNoticeMsg )
 			// append kill streak count to this notification
 			wchar_t wzCount[10];
 			_snwprintf( wzCount, ARRAYSIZE( wzCount ), L"%d", iKillStreakWep );
-			g_pVGuiLocalize->ConstructString_safe( msg.wzPreKillerText, g_pVGuiLocalize->Find("#Kill_Streak"), 1, wzCount );
+			g_pVGuiLocalize->ConstructString( msg.wzPreKillerText, sizeof( msg.wzPreKillerText ), g_pVGuiLocalize->Find("#Kill_Streak"), 1, wzCount );
 			if ( msg.bLocalPlayerInvolved )
 			{
 				msg.iconPostKillerName = m_iconKillStreakDNeg;
@@ -1212,7 +1212,7 @@ void CTFHudDeathNotice::OnGameEvent( IGameEvent *event, int iDeathNoticeMsg )
 			// Duckstreak icon (always lower priority)
 			wchar_t wzCount[10];
 			_snwprintf( wzCount, ARRAYSIZE( wzCount ), L"%d", iDuckStreakTotal );
-			g_pVGuiLocalize->ConstructString_safe( msg.wzPreKillerText, g_pVGuiLocalize->Find("#Duck_Streak"), 1, wzCount );
+			g_pVGuiLocalize->ConstructString( msg.wzPreKillerText, sizeof( msg.wzPreKillerText ), g_pVGuiLocalize->Find("#Duck_Streak"), 1, wzCount );
 			msg.iconPostKillerName = msg.bLocalPlayerInvolved ? m_iconDuckStreakDNeg : m_iconDuckStreak;
 		}
 
@@ -1293,13 +1293,13 @@ void CTFHudDeathNotice::OnGameEvent( IGameEvent *event, int iDeathNoticeMsg )
 			{
 				wpszFormat = g_pVGuiLocalize->Find( "#Humiliation_Kill_Slap" );
 			}
-			g_pVGuiLocalize->ConstructString_safe( msg.wzInfoText, wpszFormat, 0 );
+			g_pVGuiLocalize->ConstructString( msg.wzInfoText, sizeof( msg.wzInfoText ), wpszFormat, 0 );
 		}
 		else
 		{
 			wchar_t wzCount[10];
 			_snwprintf( wzCount, ARRAYSIZE( wzCount ), L"%d", ++msg.iCount );
-			g_pVGuiLocalize->ConstructString_safe( msg.wzInfoText, g_pVGuiLocalize->Find("#Humiliation_Count"), 1, wzCount );
+			g_pVGuiLocalize->ConstructString( msg.wzInfoText, sizeof( msg.wzInfoText ), g_pVGuiLocalize->Find("#Humiliation_Count"), 1, wzCount );
 		}
 
 		// if there was an assister, put both the killer's and assister's names in the death message
@@ -1323,13 +1323,13 @@ void CTFHudDeathNotice::OnGameEvent( IGameEvent *event, int iDeathNoticeMsg )
 
 	//	if ( ( iCustomDamage == TF_DMG_CUSTOM_THROWABLE_KILL ) || ( deathFlags & TF_DEATH_FEIGN_DEATH ) )
 	//	{
-	//		g_pVGuiLocalize->ConstructString_safe( msg.wzInfoText, g_pVGuiLocalize->Find("#Throwable_Kill"), 0 );
+	//		g_pVGuiLocalize->ConstructString( msg.wzInfoText, sizeof( msg.wzInfoText ), g_pVGuiLocalize->Find("#Throwable_Kill"), 0 );
 	//	}
 	//	else
 	//	{
 	//		wchar_t wzCount[10];
 	//		_snwprintf( wzCount, ARRAYSIZE( wzCount ), L"%d", event->GetInt( "totalhits" ) );
-	//		g_pVGuiLocalize->ConstructString_safe( msg.wzInfoText, g_pVGuiLocalize->Find("#Humiliation_Count"), 1, wzCount );
+	//		g_pVGuiLocalize->ConstructString( msg.wzInfoText, sizeof( msg.wzInfoText ), g_pVGuiLocalize->Find("#Humiliation_Count"), 1, wzCount );
 	//	}
 
 	//	// if there was an assister, put both the killer's and assister's names in the death message
@@ -1420,7 +1420,7 @@ void CTFHudDeathNotice::OnGameEvent( IGameEvent *event, int iDeathNoticeMsg )
 		{
 			wchar_t wzCount[10];
 			_snwprintf( wzCount, ARRAYSIZE( wzCount ), L"%d", ev.numPoints );
-			g_pVGuiLocalize->ConstructString_safe( msg.wzInfoText, g_pVGuiLocalize->Find("#Msg_PasstimeScoreCount"), 1, wzCount );
+			g_pVGuiLocalize->ConstructString( msg.wzInfoText, sizeof( msg.wzInfoText ), g_pVGuiLocalize->Find("#Msg_PasstimeScoreCount"), 1, wzCount );
 		}
 		else
 		{

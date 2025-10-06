@@ -126,8 +126,8 @@ public:
 	MESSAGE_FUNC_PARAMS( OnConfirm, "ConfirmDlgResult", data );
 	MESSAGE_FUNC( OnMainMenuStabilized, "MainMenuStabilized" );
 
-	void		ScheduleTrainingCheck( bool bWasInTraining ) { m_flCheckTrainingAt = (engine->Time() + 1.5); m_bWasInTraining = bWasInTraining; }
-	void		ScheduleItemCheck( void ) { m_flCheckUnclaimedItems = (engine->Time() + 1.5); }
+	void		ScheduleTrainingCheck( bool bWasInTraining ) { m_flCheckTrainingAt = (Plat_FloatTime() + 1.5); m_bWasInTraining = bWasInTraining; }
+	void		ScheduleItemCheck( void ) { m_flCheckUnclaimedItems = (Plat_FloatTime() + 1.5); }
 
 	void		CheckUnclaimedItems();
 

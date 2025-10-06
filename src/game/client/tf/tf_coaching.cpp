@@ -829,7 +829,7 @@ public:
 		wchar_t wszPlayerName[ MAX_PLAYER_NAME_LENGTH ];
 		g_pVGuiLocalize->ConvertANSIToUnicode(pCoachName, wszPlayerName, sizeof( wszPlayerName ) );
 		wchar_t wszText[ 256 ] = L"";
-		g_pVGuiLocalize->ConstructString_safe( wszText, g_pVGuiLocalize->Find( "#TF_Coach_Coach_Prefix" ), 1, wszPlayerName );
+		g_pVGuiLocalize->ConstructString( wszText, sizeof( wszText ), g_pVGuiLocalize->Find( "#TF_Coach_Coach_Prefix" ), 1, wszPlayerName );
 		m_pCoachNameLabel->SetText( wszText );
 
 		if ( m_pAvatar )

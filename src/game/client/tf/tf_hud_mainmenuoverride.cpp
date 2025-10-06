@@ -77,7 +77,7 @@ extern int EconWear_ToIntCategory( float flWear );
 
 void cc_tf_safemode_toggle( IConVar *pConVar, const char *pOldString, float flOldValue )
 {
-	CHudMainMenuOverride *pMMOverride = (CHudMainMenuOverride*)( gViewPortInterface->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
+	CHudMainMenuOverride *pMMOverride = (CHudMainMenuOverride*)( GetViewPortInterface()->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
 	if ( pMMOverride )
 	{
 		pMMOverride->InvalidateLayout();
@@ -86,7 +86,7 @@ void cc_tf_safemode_toggle( IConVar *pConVar, const char *pOldString, float flOl
 
 void cc_tf_mainmenu_match_panel_type( IConVar *pConVar, const char *pOldString, float flOldValue )
 {
-	CHudMainMenuOverride *pMMOverride = (CHudMainMenuOverride*)( gViewPortInterface->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
+	CHudMainMenuOverride *pMMOverride = (CHudMainMenuOverride*)( GetViewPortInterface()->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
 	if ( pMMOverride )
 	{
 		pMMOverride->UpdateRankPanelType();
@@ -110,7 +110,7 @@ ConVar tf_mainmenu_match_panel_type( "tf_mainmenu_match_panel_type", "7", FCVAR_
 
 void cc_promotional_codes_button_changed( IConVar *pConVar, const char *pOldString, float flOldValue )
 {
-	IViewPortPanel *pMMOverride = ( gViewPortInterface->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
+	IViewPortPanel *pMMOverride = ( GetViewPortInterface()->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
 	if ( pMMOverride )
 	{
 		( (CHudMainMenuOverride*)pMMOverride )->UpdatePromotionalCodes();
@@ -1110,13 +1110,13 @@ void CHudMainMenuOverride::OnUpdateMenu( void )
 		ScheduleItemCheck();
 	}
 
-	if ( !bInGame && m_flCheckTrainingAt && m_flCheckTrainingAt < engine->Time() )
+	if ( !bInGame && m_flCheckTrainingAt && m_flCheckTrainingAt < Plat_FloatTime() )
 	{
 		m_flCheckTrainingAt = 0;
 		CheckTrainingStatus();
 	}
 
-	if ( !bInGame && m_flCheckUnclaimedItems && m_flCheckUnclaimedItems < engine->Time() )
+	if ( !bInGame && m_flCheckUnclaimedItems && m_flCheckUnclaimedItems < Plat_FloatTime() )
 	{
 		m_flCheckUnclaimedItems = 0;
 		CheckUnclaimedItems();
@@ -1541,9 +1541,9 @@ void CHudMainMenuOverride::UpdateNotifications()
 	int iNumNotifications = NotificationQueue_GetNumMainMenuNotifications();
 
 	wchar_t wszNumber[16]=L"";
-	V_swprintf_safe( wszNumber, L"%i", iNumNotifications );
+	swprintf( wszNumber, L"%i", iNumNotifications );
 	wchar_t wszText[1024]=L"";
-	g_pVGuiLocalize->ConstructString_safe( wszText, g_pVGuiLocalize->Find( "#MMenu_Notifications_Show" ), 1, wszNumber );
+	g_pVGuiLocalize->ConstructString( wszText, sizeof( wszText ), g_pVGuiLocalize->Find( "#MMenu_Notifications_Show" ), 1, wszNumber );
 
 	m_pNotificationsPanel->SetDialogVariable( "notititle", wszText );
 
@@ -1780,8 +1780,8 @@ void CHudMainMenuOverride::StopUpdateGlow()
 		if ( pUpdateBackground )
 		{
 			GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( pUpdateBackground, "MMenu_UpdateButton_StartGlow" );
-			pUpdateBackground->SetControlVisible( "ViewDetailsGlow", false, true );
-			pUpdateBackground->SetControlVisible( "ViewWarButtonGlow", false, true );
+			pUpdateBackground->SetControlVisible( "ViewDetailsGlow", false );
+			pUpdateBackground->SetControlVisible( "ViewWarButtonGlow", false );
 		}
 	}
 }
@@ -1796,8 +1796,8 @@ void CHudMainMenuOverride::UpdateRankPanelVisibility()
 	m_pRankPanel->SetVisible( bConnectedToGC );
 	m_pRankModelPanel->SetVisible( bConnectedToGC );
 	SetControlVisible( "CycleRankTypeButton", bConnectedToGC );
-	SetControlVisible( "NoGCMessage", !bConnectedToGC, true );
-	SetControlVisible( "NoGCImage", !bConnectedToGC, true );
+	SetControlVisible( "NoGCMessage", !bConnectedToGC );
+	SetControlVisible( "NoGCImage", !bConnectedToGC );
 	UpdateRankPanelType();
 
 	SetControlVisible("NoGCMessage", false);
@@ -2036,7 +2036,7 @@ void CHudMainMenuOverride::OnCommand( const char *command )
 		m_pRankTypeMenu->SetBorder( scheme()->GetIScheme( GetScheme() )->GetBorder( pszContextMenuBorder ) );
 		m_pRankTypeMenu->SetFont( scheme()->GetIScheme( GetScheme() )->GetFont( pszContextMenuFont, IsProportional() ) );
 
-		auto lambdaAddMatchTypeMenuOption = [ &builder ]( ETFMatchGroup eMatchGroup, bool bRequireRatingData = false )
+		auto lambdaAddMatchTypeMenuOption = [ &builder ]( ETFMatchGroup eMatchGroup, bool bRequireRatingData ) // false by default
 		{
 			auto pMatchGroup = GetMatchGroupDescription( eMatchGroup );
 			Assert( pMatchGroup );
@@ -2045,11 +2045,11 @@ void CHudMainMenuOverride::OnCommand( const char *command )
 
 			if ( bRequireRatingData )
 			{
-				if ( !SteamUser() )
+				if ( !steamapicontext->SteamUser() )
 					return;
 
 				EMMRating eRating = pMatchGroup->GetCurrentDisplayRank();
-				CTFRatingData* pRatingData = CTFRatingData::YieldingGetPlayerRatingDataBySteamID( SteamUser()->GetSteamID(), eRating );
+				CTFRatingData* pRatingData = CTFRatingData::YieldingGetPlayerRatingDataBySteamID( steamapicontext->SteamUser()->GetSteamID(), eRating );
 
 				if ( !pRatingData )
 					return;
@@ -2060,8 +2060,8 @@ void CHudMainMenuOverride::OnCommand( const char *command )
 			builder.AddMenuItem( pwszLocName, strCommand.Get(), "type" );
 		};
 	
-		lambdaAddMatchTypeMenuOption( k_eTFMatchGroup_Casual_12v12 );
-		lambdaAddMatchTypeMenuOption( k_eTFMatchGroup_Ladder_6v6 );
+		lambdaAddMatchTypeMenuOption( k_eTFMatchGroup_Casual_12v12, false );
+		lambdaAddMatchTypeMenuOption( k_eTFMatchGroup_Ladder_6v6, false );
 		lambdaAddMatchTypeMenuOption( k_eTFMatchGroup_Event_Placeholder, true );
 
 		// Position to the cursor's position
@@ -2263,7 +2263,7 @@ public:
 			return true;
 
 		// No main menu panel?
-		CHudMainMenuOverride *pMMPanel = (CHudMainMenuOverride*)gViewPortInterface->FindPanelByName( PANEL_MAINMENUOVERRIDE );
+		CHudMainMenuOverride *pMMPanel = (CHudMainMenuOverride*)GetViewPortInterface()->FindPanelByName( PANEL_MAINMENUOVERRIDE );
 		if ( !pMMPanel )
 			return true;
 

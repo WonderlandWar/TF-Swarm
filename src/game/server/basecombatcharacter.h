@@ -392,6 +392,8 @@ public:
 	virtual void		AddClassRelationship( Class_T nClass, Disposition_t nDisposition, int nPriority );
 	virtual void		AddFactionRelationship(int nFaction, Disposition_t nDisposition, int nPriority);
 
+	virtual void		ChangeTeam( int iTeamNum ) OVERRIDE;
+
 	// Factions
 	static int			GetNumFactions( void );
 	static CUtlVector<EHANDLE> *GetEntitiesInFaction( int nFaction );
@@ -445,6 +447,12 @@ public:
 	virtual HalloweenBossType GetBossType() const { return HALLOWEEN_BOSS_INVALID; }
 #endif // TF_DLL
 
+#ifdef GLOWS_ENABLE
+	// Glows
+	void				AddGlowEffect( void );
+	void				RemoveGlowEffect( void );
+	bool				IsGlowEffectActive( void );
+#endif // GLOWS_ENABLE
 
 public:
 	// returns the last body region that took damage
@@ -454,6 +462,11 @@ protected:
 
 public:
 	CNetworkVar( float, m_flNextAttack );			// cannot attack again until this time
+
+#ifdef GLOWS_ENABLE
+protected:
+	CNetworkVar( bool, m_bGlowEnabled );
+#endif // GLOWS_ENABLE
 
 private:
 	Hull_t		m_eHull;

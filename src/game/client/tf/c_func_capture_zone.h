@@ -24,6 +24,8 @@ class C_CaptureZone : public C_BaseEntity, public ICaptureZoneAutoList
 public:
 	DECLARE_CLIENTCLASS();
 
+	virtual CBaseEntity *GetEntity() OVERRIDE { return this; }
+
 	bool IsDisabled( void ){ return m_bDisabled; }
 
 private:

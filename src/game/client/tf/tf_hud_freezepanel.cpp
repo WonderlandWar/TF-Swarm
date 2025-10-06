@@ -722,7 +722,7 @@ CTFFreezePanelCallout *CTFFreezePanel::TestAndAddCallout( Vector &origin, Vector
 					{
 						// Verify that we have LOS to the gib
 						trace_t	tr;
-						UTIL_TraceLine( origin, MainViewOrigin(), MASK_OPAQUE, NULL, COLLISION_GROUP_NONE, &tr );
+						UTIL_TraceLine( origin, MainViewOrigin( GET_ACTIVE_SPLITSCREEN_SLOT() ), MASK_OPAQUE, NULL, COLLISION_GROUP_NONE, &tr );
 						bClear = ( tr.fraction >= 1.0f );
 					}
 
@@ -939,25 +939,13 @@ void CTFFreezePanel::OnThink( void )
 	{
 		if ( ShouldDraw() )
 		{
-			// For now don't do this in Steam Controller mode, because there's no easy way for a SC user to deal with this
-			if ( !::input->IsSteamControllerActive() )
-			{
-				ShowSnapshotPanel( true );
-			}
+			ShowSnapshotPanel( true );
 		}
 		m_flShowSnapshotReminderAt = 0;
 	}
 
 	if ( m_flShowReplayReminderAt && m_flShowReplayReminderAt < gpGlobals->curtime )
 	{
-		if ( ShouldDraw() )
-		{
-			// For now don't do this in Steam Controller mode, because there's no easy way for a SC user to deal with this
-			if ( !::input->IsSteamControllerActive() )
-			{
-				ShowSaveReplayPanel( true );
-			}
-		}
 		m_flShowReplayReminderAt = 0;
 	}
 }
@@ -1010,7 +998,7 @@ void CTFFreezePanel::ShowSnapshotPanel( bool bShow )
 		wchar_t wLabel[256];
 
 		g_pVGuiLocalize->ConvertANSIToUnicode(szKey, wKey, sizeof(wKey));
-		g_pVGuiLocalize->ConstructString_safe( wLabel, g_pVGuiLocalize->Find("#TF_freezecam_snapshot" ), 1, wKey );
+		g_pVGuiLocalize->ConstructString( wLabel, sizeof( wLabel ), g_pVGuiLocalize->Find("#TF_freezecam_snapshot" ), 1, wKey );
 
 		m_pScreenshotPanel->SetDialogVariable( "text", wLabel );
 

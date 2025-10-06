@@ -569,7 +569,7 @@ class CTFWeaponBase : public CBaseCombatWeapon, public IHasOwner, public IHasGen
 
 	virtual void	ProcessMuzzleFlashEvent( void );
 	virtual void	DispatchMuzzleFlash( const char* effectName, C_BaseEntity* pAttachEnt );
-	virtual int		InternalDrawModel( int flags );
+	virtual int		InternalDrawModel( int flags, const RenderableInstance_t &instance );
 	virtual bool	OnInternalDrawModel( ClientModelRenderInfo_t *pInfo ) OVERRIDE;
 
 	virtual bool	ShouldPredict();

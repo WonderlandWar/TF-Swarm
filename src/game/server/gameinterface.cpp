@@ -1081,6 +1081,15 @@ bool CServerGameDLL::SupportsSaveRestore()
 bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame, bool background )
 {
 	VPROF("CServerGameDLL::LevelInit");
+
+#ifdef USES_ECON_ITEMS
+	GameItemSchema_t *pItemSchema = ItemSystem()->GetItemSchema();
+	if ( pItemSchema )
+	{
+		pItemSchema->BInitFromDelayedBuffer();
+	}
+#endif // USES_ECON_ITEMS
+
 	ResetWindspeed();
 	UpdateChapterRestrictions( pMapName );
 

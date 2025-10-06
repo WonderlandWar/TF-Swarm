@@ -81,7 +81,7 @@ public:
 	virtual void OnDataChanged( DataUpdateType_t updateType );
 	virtual const char *GetTrailParticleName( void );
 	virtual int DrawModel( int flags );
-	virtual void	Simulate( void );
+	virtual bool	Simulate( void );
 	virtual void	CreateTrailParticles( void );
 
 	void			SetHighlight( bool bHighlight ) { if ( m_bPulsed ) m_bHighlight = bHighlight; }

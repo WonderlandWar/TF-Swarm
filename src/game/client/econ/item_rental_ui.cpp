@@ -74,7 +74,7 @@ void CConfirmItemPreviewDialog::ApplySchemeSettings( vgui::IScheme *pScheme )
 		if ( pszBaseString )
 		{
 			wchar_t	wTemp[256];
-			g_pVGuiLocalize->ConstructString_safe( wTemp, pszBaseString, 1, m_pToolModelPanel->GetItem()->GetItemName() );
+			g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), pszBaseString, 1, m_pToolModelPanel->GetItem()->GetItemName() );
 			m_pTitleLabel->SetText( wTemp );
 			m_pTitleLabel->GetTextImage()->ClearColorChangeStream();
 		}

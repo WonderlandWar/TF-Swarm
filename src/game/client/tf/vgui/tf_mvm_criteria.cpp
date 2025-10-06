@@ -742,13 +742,13 @@ void CMVMCriteriaPanel::WriteTourList()
 	}
 
 	char archTemp[ 256 ];
-	V_sprintf_safe( archTemp, "%s_LootDescription", pszSelectedTourLocToken );
+	sprintf( archTemp, "%s_LootDescription", pszSelectedTourLocToken );
 	m_pMannUpTourLootDescriptionBox->SetDialogVariable( "tour_loot_detail", g_pVGuiLocalize->Find( archTemp ) );
 
 	m_pMannUpTourLootImage->SetImage( pszLootImage );
 
 	wchar_t wszLocalized[512];
-	g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( pszWarningString ), 0 );
+	g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( pszWarningString ), 0 );
 	m_pTourDifficultyWarning->SetText( wszLocalized );
 	m_pTourDifficultyWarning->SetVisible( bShowDifficultyWarning );
 
@@ -983,7 +983,7 @@ void CMVMCriteriaPanel::WriteChallengeList()
 		}
 
 		//wchar_t wszChallengeName[ 256 ];
-		//g_pVGuiLocalize->ConstructString_safe( wszChallengeName, L"%s1 (%s2)", 2, 
+		//g_pVGuiLocalize->ConstructString( wszChallengeName, sizeof( wszChallengeName ), L"%s1 (%s2)", 2, 
 		//								  g_pVGuiLocalize->Find( mission.m_sDisplayName.Get() ), g_pVGuiLocalize->Find( mission.m_sMode.Get() ) );
 		//kvItem->SetWString( "display_name", wszChallengeName );
 		kvItem->SetString( "display_name", mission.m_sDisplayName.Get() );

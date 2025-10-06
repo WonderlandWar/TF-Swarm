@@ -757,7 +757,7 @@ void CTFStatsSummaryPanel::UpdateLeaderboard()
 		wchar_t wzNumEntriesString[256];
 		_snwprintf( wzNumEntriesString, ARRAYSIZE( wzNumEntriesString ), L"%i", iNumLeaderboardEntries );
 		wchar_t wzTitle[256];
-		g_pVGuiLocalize->ConstructString_safe( wzTitle, g_pVGuiLocalize->Find( "#TF_MapDonators_Title" ), 1, wzNumEntriesString );
+		g_pVGuiLocalize->ConstructString( wzTitle, sizeof( wzTitle ), g_pVGuiLocalize->Find( "#TF_MapDonators_Title" ), 1, wzNumEntriesString );
 		m_pMapInfoPanel->SetDialogVariable( "map_leaderboard_title", wzTitle );
 	}
 	else
@@ -1046,12 +1046,12 @@ void CTFStatsSummaryPanel::UpdateClassDetails( bool bIsMVM )
 		{
 			// if we are doing a cross-class view (no single selected class) and the max value is non-zero, show "# (as <class>)"
 			wchar_t *wzLocalizedClassName = g_pVGuiLocalize->Find( g_aPlayerClassNames[iClass] );
-			g_pVGuiLocalize->ConstructString_safe( wzStatVal, wzWithClassFmt, 2, wzStatNum, wzLocalizedClassName );
+			g_pVGuiLocalize->ConstructString( wzStatVal, sizeof( wzStatVal ), wzWithClassFmt, 2, wzStatNum, wzLocalizedClassName );
 		}
 		else
 		{
 			// just show the value
-			g_pVGuiLocalize->ConstructString_safe( wzStatVal, wzWithoutClassFmt, 1, wzStatNum );
+			g_pVGuiLocalize->ConstructString( wzStatVal, sizeof( wzStatVal ), wzWithoutClassFmt, 1, wzStatNum );
 		}				
 
 		// set the label
@@ -1203,7 +1203,7 @@ void CTFStatsSummaryPanel::SetValueAsClass( const char *pDialogVariable, int iVa
 		wchar_t wzVal[16];
 		wchar_t wzMsg[128];
 		swprintf( wzVal, ARRAYSIZE( wzVal ), L"%d", iValue );
-		g_pVGuiLocalize->ConstructString_safe( wzMsg, wzScoreAsClassFmt, 2, wzVal, wzLocalizedClassName );
+		g_pVGuiLocalize->ConstructString( wzMsg, sizeof( wzMsg ), wzScoreAsClassFmt, 2, wzVal, wzLocalizedClassName );
 		m_pPlayerData->SetDialogVariable( pDialogVariable, wzMsg );
 	}
 	else

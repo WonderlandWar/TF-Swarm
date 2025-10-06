@@ -275,6 +275,22 @@ void CAchievementMgr::Update( float frametime )
 			m_bCheatsEverOn = true;
 		}
 	}
+
+	// Call think functions. Work backwards, because we may remove achievements from the list.
+	int iCount = m_vecThinkListeners.Count();
+	for ( int i = iCount-1; i >= 0; i-- )
+	{
+		if ( m_vecThinkListeners[i].m_flThinkTime < gpGlobals->curtime )
+		{
+			m_vecThinkListeners[i].pAchievement->Think();
+
+			// The think function may have pushed out the think time. If not, remove ourselves from the list.
+			if ( m_vecThinkListeners[i].pAchievement->IsAchieved() || m_vecThinkListeners[i].m_flThinkTime < gpGlobals->curtime )
+			{
+				m_vecThinkListeners.Remove(i);
+			}
+		}
+	}
 #endif
 
 #ifdef _X360
@@ -1726,6 +1742,34 @@ void CAchievementMgr::ResetAchievement_Internal( CBaseAchievement *pAchievement 
 		pAchievement->ListenForEvents();
 	}
 #endif // CLIENT_DLL
+}
+
+void CAchievementMgr::SetAchievementThink( CBaseAchievement *pAchievement, float flThinkTime )
+{
+	// Is the achievement already in the think list?
+	int iCount = m_vecThinkListeners.Count();
+	for ( int i = 0; i < iCount; i++ )
+	{
+		if ( m_vecThinkListeners[i].pAchievement == pAchievement )
+		{
+			if ( flThinkTime == THINK_CLEAR )
+			{
+				m_vecThinkListeners.Remove(i);
+				return;
+			}
+
+			m_vecThinkListeners[i].m_flThinkTime = gpGlobals->curtime + flThinkTime;
+			return;
+		}
+	}
+
+	if ( flThinkTime == THINK_CLEAR )
+		return;
+
+	// Otherwise, add it to the list
+	int iIdx = m_vecThinkListeners.AddToTail();
+	m_vecThinkListeners[iIdx].pAchievement = pAchievement;
+	m_vecThinkListeners[iIdx].m_flThinkTime = gpGlobals->curtime + flThinkTime;
 }
 
 #ifdef CLIENT_DLL

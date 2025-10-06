@@ -106,4 +106,4 @@ void DeathCallingCard( const CEffectData &data )
 	);
 }
 
-DECLARE_CLIENT_EFFECT( "TFDeathCallingCard", DeathCallingCard );
+DECLARE_CLIENT_EFFECT( TFDeathCallingCard, DeathCallingCard );

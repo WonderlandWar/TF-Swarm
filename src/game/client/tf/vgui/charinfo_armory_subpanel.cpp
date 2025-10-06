@@ -197,7 +197,7 @@ void CArmoryPanel::OnShowPanel( void )
 	// If this is the first time we've opened the armory, start the armory explanations
 	if ( !tf_explanations_charinfo_armory_panel.GetBool() && ShouldShowExplanations() )
 	{
-		m_flStartExplanationsAt = engine->Time() + 0.5;
+		m_flStartExplanationsAt = Plat_FloatTime() + 0.5;
 	}
 
 	SetVisible( true );

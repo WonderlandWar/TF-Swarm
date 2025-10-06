@@ -630,7 +630,7 @@ void CQuestItemTracker::FireGameEvent( IGameEvent *event )
 				if ( nType == QUEST_POINTS_NOVICE )
 				{
 					wchar_t wszLocalizedChatMesssage[256];
-					g_pVGuiLocalize->ConstructString_safe( wszLocalizedChatMesssage, g_pVGuiLocalize->Find( "QuestReport_ChatNotification_ObjectiveCompleted_Primary" ), 2, wszPlayerName, g_pVGuiLocalize->Find( pQuestDef->GetLocName() ) );
+					g_pVGuiLocalize->ConstructString( wszLocalizedChatMesssage, sizeof( wszLocalizedChatMesssage ), g_pVGuiLocalize->Find( "QuestReport_ChatNotification_ObjectiveCompleted_Primary" ), 2, wszPlayerName, g_pVGuiLocalize->Find( pQuestDef->GetLocName() ) );
 
 					char szLocalized[256];
 					g_pVGuiLocalize->ConvertUnicodeToANSI( wszLocalizedChatMesssage, szLocalized, sizeof( szLocalized ) );
@@ -641,7 +641,7 @@ void CQuestItemTracker::FireGameEvent( IGameEvent *event )
 				else
 				{
 					wchar_t wszLocalizedChatMesssage[256];
-					g_pVGuiLocalize->ConstructString_safe( wszLocalizedChatMesssage, g_pVGuiLocalize->Find( "QuestReport_ChatNotification_ObjectiveCompleted_Bonus" ), 2, wszPlayerName, g_pVGuiLocalize->Find( pQuestDef->GetLocName() ) );
+					g_pVGuiLocalize->ConstructString( wszLocalizedChatMesssage, sizeof( wszLocalizedChatMesssage ), g_pVGuiLocalize->Find( "QuestReport_ChatNotification_ObjectiveCompleted_Bonus" ), 2, wszPlayerName, g_pVGuiLocalize->Find( pQuestDef->GetLocName() ) );
 
 					char szLocalized[256];
 					g_pVGuiLocalize->ConvertUnicodeToANSI( wszLocalizedChatMesssage, szLocalized, sizeof( szLocalized ) );

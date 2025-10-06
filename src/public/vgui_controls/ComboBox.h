@@ -75,7 +75,10 @@ public:
 	// menu item had been selected by the user
 	MESSAGE_FUNC_INT( ActivateItem, "ActivateItem", itemID );
 	void ActivateItemByRow(int row);
-
+#ifdef CLIENT_DLL
+	void SilentActivateItem(int itemID);	// Sets the menu to the appropriate row without sending a TextChanged message
+	void SilentActivateItemByRow(int row);	// Sets the menu to the appropriate row without sending a TextChanged message
+#endif
 	int GetActiveItem();
 	KeyValues *GetActiveItemUserData();
 	KeyValues *GetItemUserData(int itemID);

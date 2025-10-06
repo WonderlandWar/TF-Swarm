@@ -874,7 +874,7 @@ void CTFStorePreviewItemPanelBase::OnShowClassIconMouseover( KeyValues *data )
 		{
 			wchar_t wzLocalized[256];
 			const char *pszLocString = bIsABundle ? "#Store_ClassImageMouseoverBundle" : "#Store_ClassImageMouseover";
-			g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( pszLocString ), 1, g_pVGuiLocalize->Find( g_aPlayerClassNames[iClass] ) );
+			g_pVGuiLocalize->ConstructString( wzLocalized, sizeof( wzLocalized ), g_pVGuiLocalize->Find( pszLocString ), 1, g_pVGuiLocalize->Find( g_aPlayerClassNames[iClass] ) );
 			m_pClassIconMouseoverLabel->SetText( wzLocalized );
 		}
 		else

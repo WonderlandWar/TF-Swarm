@@ -227,7 +227,7 @@ void CStoreViewCartPanel::UpdateCartItemList( void )
 	wchar_t wszCount[16];
 	_snwprintf( wszCount, ARRAYSIZE( wszCount ), L"%d", pCart->GetTotalItems() );
 	wchar_t wzLocalized[32];
-	g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( "#Store_CartItems" ), 1, wszCount );
+	g_pVGuiLocalize->ConstructString( wzLocalized, sizeof( wzLocalized ), g_pVGuiLocalize->Find( "#Store_CartItems" ), 1, wszCount );
 	m_pClientArea->SetDialogVariable("storecart", wzLocalized );
 
 	// Create / Update all the item entries

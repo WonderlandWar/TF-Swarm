@@ -16,9 +16,9 @@
 #include "tier0/memdbgon.h"
 
 bool BSP_SyncRepack( const char *pszInputMapFile,
-                     const char *pszOutputMapFile,
-                     IBSPPack::eRepackBSPFlags eRepackFlags )
+                     const char *pszOutputMapFile )
 {
+#if 0
 	// load the bsppack dll
 	IBSPPack *libBSPPack = NULL;
 	CSysModule *pModule = g_pFullFileSystem->LoadModule( "bsppack" );
@@ -53,7 +53,7 @@ bool BSP_SyncRepack( const char *pszInputMapFile,
 
 	CUtlBuffer outputBuffer;
 
-	if ( !libBSPPack->RepackBSP( inputBuffer, outputBuffer, eRepackFlags ) )
+	if ( !libBSPPack->RepackBSP( inputBuffer, outputBuffer ) )
 	{
 		Warning( "Internal error compressing BSP\n" );
 		return false;
@@ -65,22 +65,23 @@ bool BSP_SyncRepack( const char *pszInputMapFile,
 	     pszInputMapFile, pszOutputMapFile, inputBuffer.TellPut(), outputBuffer.TellPut() );
 
 	return true;
+#else
+	return false;
+#endif
 }
 
 // Helper to create a thread that calls SyncCompressMap, and clean it up when it exists
 void BSP_BackgroundRepack( const char *pszInputMapFile,
-                           const char *pszOutputMapFile,
-                           IBSPPack::eRepackBSPFlags eRepackFlags )
+                           const char *pszOutputMapFile )
 {
 	// Make this a gamesystem and thread, so it can check for completion each frame and clean itself up. Run() is the
 	// background thread, Update() is the main thread tick.
 	class BackgroundBSPRepackThread : public CThread, public CAutoGameSystemPerFrame
 	{
 	public:
-		BackgroundBSPRepackThread( const char *pszInputFile, const char *pszOutputFile, IBSPPack::eRepackBSPFlags eRepackFlags )
+		BackgroundBSPRepackThread( const char *pszInputFile, const char *pszOutputFile )
 			: m_strInput( pszInputFile )
 			, m_strOutput( pszOutputFile )
-			, m_eRepackFlags( eRepackFlags )
 		{
 			Start();
 		}
@@ -88,7 +89,7 @@ void BSP_BackgroundRepack( const char *pszInputMapFile,
 		// CThread job - returns 0 for success
 		virtual int Run() OVERRIDE
 		{
-			return BSP_SyncRepack( m_strInput.Get(), m_strOutput.Get(), m_eRepackFlags ) ? 0 : 1;
+			return BSP_SyncRepack( m_strInput.Get(), m_strOutput.Get() ) ? 0 : 1;
 		}
 
 		// GameSystem
@@ -118,13 +119,12 @@ void BSP_BackgroundRepack( const char *pszInputMapFile,
 	private:
 		CUtlString                m_strInput;
 		CUtlString                m_strOutput;
-		IBSPPack::eRepackBSPFlags m_eRepackFlags;
 	};
 
 	Msg( "Starting BSP repack job %s -> %s\n", pszInputMapFile, pszOutputMapFile );
 
 	// Deletes itself up when done
-	new BackgroundBSPRepackThread( pszInputMapFile, pszOutputMapFile, eRepackFlags );
+	new BackgroundBSPRepackThread( pszInputMapFile, pszOutputMapFile );
 }
 
 CON_COMMAND( bsp_repack, "Repack and output a (re)compressed version of a bsp file" )
@@ -165,6 +165,6 @@ CON_COMMAND( bsp_repack, "Repack and output a (re)compressed version of a bsp fi
 	else
 	{
 		// No compression
-		BSP_BackgroundRepack( szInFilename, szOutFilename, (IBSPPack::eRepackBSPFlags)0 );
+		BSP_BackgroundRepack( szInFilename, szOutFilename );
 	}
 }

@@ -393,7 +393,10 @@ void CTFAnnotationsPanelCallout::PerformLayout( void )
 			vecTarget.z += m_FollowEntity->CollisionProp()->OBBSize().z;
 		}
 	}
-	Vector vDelta = vecTarget - MainViewOrigin();
+
+	int slot = GET_ACTIVE_SPLITSCREEN_SLOT();
+
+	Vector vDelta = vecTarget - MainViewOrigin( slot );
 	float flDistance = vDelta.Length();
 	VectorNormalize( vDelta );	// Only necessary so we can use it as part of our alpha calculation
 
@@ -402,7 +405,7 @@ void CTFAnnotationsPanelCallout::PerformLayout( void )
 	bool bOnscreen = GetVectorInHudSpace( vecTarget, iX, iY ); // Tested - confirmed NOT GetVectorInScreenSpace
 
 	// Calculate the perp dot product
-	QAngle angPlayerView = MainViewAngles();
+	QAngle angPlayerView = MainViewAngles( slot );
 	Vector vView, vRight, vUp;
 	AngleVectors( angPlayerView, &vView, &vRight, &vUp );
 	const float flPerpDot = vDelta.x * vView.y - vDelta.y * vView.x;
@@ -442,7 +445,7 @@ void CTFAnnotationsPanelCallout::PerformLayout( void )
 		// On screen
 		// If our target isn't visible, we draw transparently
 		trace_t	tr;
-		UTIL_TraceLine( vecTarget, MainViewOrigin(), MASK_OPAQUE, NULL, COLLISION_GROUP_NONE, &tr );
+		UTIL_TraceLine( vecTarget, MainViewOrigin( GET_ACTIVE_SPLITSCREEN_SLOT() ), MASK_OPAQUE, NULL, COLLISION_GROUP_NONE, &tr );
 		
 		if ( tr.fraction < 1.0f )
 		{
@@ -510,11 +513,11 @@ void CTFAnnotationsPanelCallout::PerformLayout( void )
 		wchar_t wzText[256];
 		if ( wzFollowEntityName == NULL )
 		{
-			g_pVGuiLocalize->ConstructString_safe( wzText, g_pVGuiLocalize->Find( "#TR_DistanceTo" ), 1, wzValue );
+			g_pVGuiLocalize->ConstructString( wzText, sizeof( wzText ), g_pVGuiLocalize->Find( "#TR_DistanceTo" ), 1, wzValue );
 		}
 		else
 		{
-			g_pVGuiLocalize->ConstructString_safe( wzText, g_pVGuiLocalize->Find( "#TR_DistanceToObject" ), 2, wzFollowEntityName, wzValue );
+			g_pVGuiLocalize->ConstructString( wzText, sizeof( wzText ), g_pVGuiLocalize->Find( "#TR_DistanceToObject" ), 2, wzFollowEntityName, wzValue );
 		}
 
 		m_pDistanceLabel->SetText( wzText );

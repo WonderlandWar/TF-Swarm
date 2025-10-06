@@ -853,7 +853,7 @@ bool C_ViewmodelAttachmentModel::InitializeAsClientEntity( const char *pszModelN
 	return true;
 }
 
-int C_ViewmodelAttachmentModel::InternalDrawModel( int flags )
+int C_ViewmodelAttachmentModel::InternalDrawModel( int flags, const RenderableInstance_t &instance )
 {
 #ifdef TF_CLIENT_DLL
 	CMatRenderContextPtr pRenderContext( materials );
@@ -862,7 +862,7 @@ int C_ViewmodelAttachmentModel::InternalDrawModel( int flags )
 		pRenderContext->CullMode( MATERIAL_CULLMODE_CW );
 	}
 #endif
-	int r = BaseClass::InternalDrawModel( flags );
+	int r = BaseClass::InternalDrawModel( flags, instance );
 
 #ifdef TF_CLIENT_DLL
 	pRenderContext->CullMode( MATERIAL_CULLMODE_CCW );
@@ -1904,7 +1904,7 @@ bool CEconEntity::IsOverridingViewmodel( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int	CEconEntity::DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags )
+int	CEconEntity::DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags, const RenderableInstance_t &instance )
 {
 	int ret = 0;
 #ifndef DOTA_DLL
@@ -1917,7 +1917,7 @@ int	CEconEntity::DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags
 	// If the attachment is translucent, we need to render the viewmodel first
 	if ( bIsAttachmentTranslucent )
 	{
-		ret = pViewmodel->DrawOverriddenViewmodel( flags );
+		ret = pViewmodel->DrawOverriddenViewmodel( flags, instance );
 	}
 
 	if ( flags & STUDIO_RENDER )
@@ -1953,7 +1953,7 @@ int	CEconEntity::DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags
 
 	if ( !bIsAttachmentTranslucent )
 	{
-		ret = pViewmodel->DrawOverriddenViewmodel( flags );
+		ret = pViewmodel->DrawOverriddenViewmodel( flags, instance );
 	}
 
 	if ( bUseOverride )

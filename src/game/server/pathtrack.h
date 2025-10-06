@@ -22,6 +22,8 @@
 #define SF_PATH_ALTREVERSE		0x00000004
 #define SF_PATH_DISABLE_TRAIN	0x00000008
 #define SF_PATH_TELEPORT		0x00000010
+#define SF_PATH_UPHILL			0x00000020
+#define SF_PATH_DOWNHILL		0x00000040
 #define SF_PATH_ALTERNATE		0x00008000
 
 
@@ -86,12 +88,24 @@ public:
 	void		Visit();
 	bool		HasBeenVisited() const;
 
-private:
-	void		Project( CPathTrack *pstart, CPathTrack *pend, Vector &origin, float dist );
-	void		SetPrevious( CPathTrack *pprevious );
-	void		Link( void );
-	
-	static CPathTrack *Instance( edict_t *pent );
+	bool		IsUpHill(){ return ( FBitSet( m_spawnflags, SF_PATH_UPHILL ) ) ? true : false; }
+	bool		IsDownHill(){ return ( FBitSet( m_spawnflags, SF_PATH_DOWNHILL ) ) ? true : false; }
+	int	GetHillType()
+	{
+		int iRetVal = HILL_TYPE_NONE;
+		if ( IsUpHill() )
+		{
+			iRetVal = HILL_TYPE_UPHILL;
+		}
+		else if ( IsDownHill() )
+		{
+			iRetVal = HILL_TYPE_DOWNHILL;
+		}
+
+		return iRetVal;
+	}
+
+	bool IsDisabled( void ){ return FBitSet( m_spawnflags, SF_PATH_DISABLED ); }
 
 	void InputPass( inputdata_t &inputdata );
 	
@@ -102,6 +116,13 @@ private:
 	void InputTogglePath( inputdata_t &inputdata );
 	void InputEnablePath( inputdata_t &inputdata );
 	void InputDisablePath( inputdata_t &inputdata );
+
+private:
+	void		Project( CPathTrack *pstart, CPathTrack *pend, Vector &origin, float dist );
+	void		SetPrevious( CPathTrack *pprevious );
+	void		Link( void );
+	
+	static CPathTrack *Instance( edict_t *pent );
 
 	DECLARE_DATADESC();
 

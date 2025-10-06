@@ -1229,7 +1229,7 @@ void CTFClassMenu::Go()
 			pSaveReplayKey = "< not bound >";
 		}
 		g_pVGuiLocalize->ConvertANSIToUnicode( pSaveReplayKey, wKeyBind, sizeof( wKeyBind ) );
-		g_pVGuiLocalize->ConstructString_safe( wText, g_pVGuiLocalize->Find( "#Replay_ConnectRecording" ), 1, wKeyBind );
+		g_pVGuiLocalize->ConstructString( wText, sizeof( wText ), g_pVGuiLocalize->Find( "#Replay_ConnectRecording" ), 1, wKeyBind );
 		g_pVGuiLocalize->ConvertUnicodeToANSI( wText, szText, sizeof( szText ) );
 
 		extern ConVar replay_msgduration_connectrecording;
@@ -1449,7 +1449,7 @@ void CTFClassMenu::UpdateNumClassLabels( int iTeam )
 					wchar_t	wTemp[32];
 					wchar_t wzCount[10];
 					_snwprintf( wzCount, ARRAYSIZE( wzCount ), L"%d", classCount );
-					g_pVGuiLocalize->ConstructString_safe( wTemp, g_pVGuiLocalize->Find("TF_ClassLimitHit"), 1, wzCount );
+					g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), g_pVGuiLocalize->Find("TF_ClassLimitHit"), 1, wzCount );
 					SetDialogVariable( g_sDialogVariables[i], wTemp );
 				}
 				else
@@ -1464,7 +1464,7 @@ void CTFClassMenu::UpdateNumClassLabels( int iTeam )
 				_snwprintf( wzCount, ARRAYSIZE( wzCount ), L"%d", classCount );
 				wchar_t wzMax[10];
 				_snwprintf( wzMax, ARRAYSIZE( wzMax ), L"%d", iClassLimit );
-				g_pVGuiLocalize->ConstructString_safe( wTemp, g_pVGuiLocalize->Find("TF_ClassLimitUnder"), 2, wzCount, wzMax );
+				g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), g_pVGuiLocalize->Find("TF_ClassLimitUnder"), 2, wzCount, wzMax );
 				SetDialogVariable( g_sDialogVariables[i], wTemp );
 			}
 		}

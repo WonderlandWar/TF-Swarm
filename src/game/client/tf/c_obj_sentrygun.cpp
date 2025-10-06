@@ -334,7 +334,7 @@ void C_ObjectSentrygun::CreateShield( void )
 	{
 		m_hShieldModel->FollowEntity( this, false );
 		m_hShieldModel->ChangeTeam( GetTeamNumber() );
-		m_hShieldModel->m_nSkin = ( GetTeamNumber() == TF_TEAM_RED ) ? 0 : 1;
+		m_hShieldModel->SetSkin( ( GetTeamNumber() == TF_TEAM_RED ) ? 0 : 1 );
 	}
 
 	m_hShieldEffect = ParticleProp()->Create( "turret_shield", PATTACH_ABSORIGIN_FOLLOW, 0, Vector( 0,0,30) );
@@ -764,7 +764,7 @@ C_SentrygunShield* C_SentrygunShield::Create( const char* pszModelName )
 	if ( !pShield )
 		return NULL;
 
-	if ( !pShield->InitializeAsClientEntity( pszModelName, RENDER_GROUP_TRANSLUCENT_ENTITY ) )
+	if ( !pShield->InitializeAsClientEntity( pszModelName, false ) )
 	{
 		pShield->Release();
 		return NULL;
@@ -786,7 +786,7 @@ void C_SentrygunShield::ClientThink()
 	}
 
 	float flAlpha = RemapVal( gpGlobals->curtime, m_flFadeOutStartTime, m_flFadeOutEndTime, 255.0f, 0.0f );
-	SetRenderColorA( (byte)flAlpha );
+	SetRenderAlpha( (byte)flAlpha );
 	SetNextClientThink( CLIENT_THINK_ALWAYS );
 }
 

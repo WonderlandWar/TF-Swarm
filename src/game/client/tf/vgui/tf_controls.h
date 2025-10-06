@@ -154,7 +154,8 @@ public:
 	}
 	virtual void PerformLayout();
 	virtual void PositionWindow( vgui::Panel *pTipPanel );
-	virtual void ShowTooltip( vgui::Panel* pCurrentPanel ) OVERRIDE;
+	// TF_SWARM: FIXME!
+	//virtual void ShowTooltip( vgui::Panel* pCurrentPanel ) OVERRIDE;
 	virtual void SetText(const char *text)
 	{
 		_isDirty = true;
@@ -395,7 +396,8 @@ public:
 	CDraggableScrollingPanel( Panel *pParent, const char *pszPanelname );
 
 	virtual void ApplySettings( KeyValues *inResourceData ) OVERRIDE;
-	virtual void OnChildRemoved( Panel* pChild ) OVERRIDE;
+	// TF_SWARM: FIXME!
+	//virtual void OnChildRemoved( Panel* pChild ) OVERRIDE;
 	virtual void OnTick() OVERRIDE;
 
 	virtual void OnMousePressed( vgui::MouseCode code ) OVERRIDE;
@@ -414,7 +416,8 @@ public:
 private:
 
 	bool BCheckForPendingChildren();
-	virtual void OnChildSettingsApplied( KeyValues *pInResourceData, Panel *pChild ) OVERRIDE;
+	// TF_SWARM: FIXME!
+	//virtual void OnChildSettingsApplied( KeyValues *pInResourceData, Panel *pChild ) OVERRIDE;
 	void UpdateChildren();
 	void CaptureChildSettings( Panel* pChild );
 

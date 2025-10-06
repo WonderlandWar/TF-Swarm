@@ -254,15 +254,15 @@ char *ConvertScoreboardValueToString( int iValue )
 
 	if ( iValue >= 1000000 )
 	{
-		V_sprintf_safe( szConversion, "%d%s%d%d%d%s%d%d%d", iValue / 1000000, ",", ( iValue % 1000000 ) / 100000, ( iValue % 100000 ) / 10000, ( iValue % 10000 ) / 1000, ",", ( iValue % 1000 ) / 100, ( iValue % 100 ) / 10, iValue % 10 );
+		sprintf( szConversion, "%d%s%d%d%d%s%d%d%d", iValue / 1000000, ",", ( iValue % 1000000 ) / 100000, ( iValue % 100000 ) / 10000, ( iValue % 10000 ) / 1000, ",", ( iValue % 1000 ) / 100, ( iValue % 100 ) / 10, iValue % 10 );
 	}
 	else if ( iValue >= 1000 )
 	{
-		V_sprintf_safe( szConversion, "%d%s%d%d%d", iValue / 1000, ",", ( iValue % 1000 ) / 100, ( iValue % 100 ) / 10, iValue % 10 );
+		sprintf( szConversion, "%d%s%d%d%d", iValue / 1000, ",", ( iValue % 1000 ) / 100, ( iValue % 100 ) / 10, iValue % 10 );
 	}
 	else if ( iValue >= 0 )
 	{
-		V_sprintf_safe( szConversion, "%d", iValue  );
+		sprintf( szConversion, "%d", iValue  );
 	}
 
 	return szConversion;
@@ -511,7 +511,7 @@ void CTFHudMannVsMachineScoreboard::UpdateCreditStats()
 	_snwprintf( wszWaveNumber, ARRAYSIZE( wszWaveNumber ), L"%d", MAX( 1, iWaveNumber + 1 ) );
 
 	wchar_t wszLocalizedWave[512];
-	g_pVGuiLocalize->ConstructString_safe( wszLocalizedWave, g_pVGuiLocalize->Find( "#TF_PVE_WaveCount" ), 1, wszWaveNumber );
+	g_pVGuiLocalize->ConstructString( wszLocalizedWave, sizeof( wszLocalizedWave ), g_pVGuiLocalize->Find( "#TF_PVE_WaveCount" ), 1, wszWaveNumber );
 	m_pPreviousWaveCreditsInfo->SetDialogVariable( "header", wszLocalizedWave );
 	UpdateCreditPanel( m_pPreviousWaveCreditsInfo, nAcquired, nMissed, nBonus );
 
@@ -578,7 +578,7 @@ void CTFHudMannVsMachineScoreboard::UpdateCreditStats()
 			wchar_t wzGoal[32];
 			g_pVGuiLocalize->ConvertANSIToUnicode( CFmtStr( "%d", nCredits ), wzCredits, sizeof( wzCredits ) );
 			g_pVGuiLocalize->ConvertANSIToUnicode( CFmtStr( "%d", nCreditGoal ), wzGoal, sizeof( wzGoal ) );
-			g_pVGuiLocalize->ConstructString_safe( wzRespecProg, g_pVGuiLocalize->Find( "#TF_PVE_RespecsProgress" ), 2, wzCredits, wzGoal );
+			g_pVGuiLocalize->ConstructString( wzRespecProg, sizeof( wzRespecProg ), g_pVGuiLocalize->Find( "#TF_PVE_RespecsProgress" ), 2, wzCredits, wzGoal );
 			m_pRespecStatusLabel->SetText( wzRespecProg );
 		}
 	}
@@ -655,7 +655,7 @@ void CTFHudMannVsMachineScoreboard::UpdatePopFile( void )
 			{
 				const MvMMission_t &mission = GetItemSchema()->GetMvmMissions()[ iChallengeIndex ];
 				wchar_t wszChallengeName[ 256 ];
-				g_pVGuiLocalize->ConstructString_safe( wszChallengeName, L"%s1 (%s2)", 2, 
+				g_pVGuiLocalize->ConstructString( wszChallengeName, sizeof( wszChallengeName ), L"%s1 (%s2)", 2, 
 					g_pVGuiLocalize->Find( mission.m_sDisplayName.Get() ), g_pVGuiLocalize->Find( mission.m_sMode.Get() ) );
 
 				SetDialogVariable( "popfile", wszChallengeName );

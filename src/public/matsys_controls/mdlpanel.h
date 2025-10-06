@@ -111,7 +111,7 @@ private:
 	bool	m_bLookAtCamera : 1;
 
 	float	m_PoseParameters[ MAXSTUDIOPOSEPARAM ];
-
+protected:
 	static const int MAX_SEQUENCE_LAYERS = 8;
 	int					m_nNumSequenceLayers;
 	MDLSquenceLayer_t	m_SequenceLayers[ MAX_SEQUENCE_LAYERS ];

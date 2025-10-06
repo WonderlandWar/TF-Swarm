@@ -35,6 +35,7 @@
 bool NPC_CheckBrushExclude( CBaseEntity *pEntity, CBaseEntity *pBrush );
 #endif
 
+#include "steam/steam_api.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -1359,6 +1360,87 @@ CBasePlayer *UTIL_PlayerBySteamID( const CSteamID &steamID )
 	return NULL;
 }
 
+#ifdef CLIENT_DLL
+char *UTIL_GetFilteredPlayerName( int iPlayerIndex, char *pszName )
+{
+	CSteamID steamIDPlayer;
+	CBasePlayer *pPlayer = UTIL_PlayerByIndex( iPlayerIndex );
+	if ( pPlayer )
+	{
+		pPlayer->GetSteamID( &steamIDPlayer );
+	}
+	return UTIL_GetFilteredPlayerName( steamIDPlayer, pszName );
+}
+
+
+char *UTIL_GetFilteredPlayerName( const CSteamID &steamID, char *pszName )
+{
+	if ( !pszName )
+	{
+		pszName = "";
+	}
+#if 0
+	if ( steamapicontext->SteamUtils() )
+	{
+		steamapicontext->SteamUtils()->FilterText( k_ETextFilteringContextName, steamID, pszName, pszName, MAX_PLAYER_NAME_LENGTH );
+	}
+#endif
+	return pszName;
+}
+
+
+wchar_t *UTIL_GetFilteredPlayerNameAsWChar( int iPlayerIndex, const char *pszName, wchar_t *pwszName )
+{
+	CSteamID steamIDPlayer;
+	CBasePlayer *pPlayer = UTIL_PlayerByIndex( iPlayerIndex );
+	if ( pPlayer )
+	{
+		pPlayer->GetSteamID( &steamIDPlayer );
+	}
+	return UTIL_GetFilteredPlayerNameAsWChar( steamIDPlayer, pszName, pwszName );
+}
+
+
+wchar_t *UTIL_GetFilteredPlayerNameAsWChar( const CSteamID &steamID, const char *pszName, wchar_t *pwszName )
+{
+	if ( !pszName )
+	{
+		pszName = "";
+	}
+#if 0
+	if ( steamapicontext->SteamUtils() )
+	{
+		char szName[ MAX_PLAYER_NAME_LENGTH ];
+		steamapicontext->SteamUtils()->FilterText( k_ETextFilteringContextName, steamID, pszName, szName, sizeof( szName ) );
+		g_pVGuiLocalize->ConvertANSIToUnicode( szName, pwszName, MAX_PLAYER_NAME_LENGTH * sizeof( wchar_t ) );
+	}
+	else
+#endif
+	{
+		g_pVGuiLocalize->ConvertANSIToUnicode( pszName, pwszName, MAX_PLAYER_NAME_LENGTH * sizeof( wchar_t ) );
+	}
+	return pwszName;
+}
+
+
+char *UTIL_GetFilteredChatText( int iPlayerIndex, char *pszText, int nTextBufferSize )
+{
+#if 0
+	if ( steamapicontext->SteamUtils() )
+	{
+		CSteamID steamIDPlayer;
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex( iPlayerIndex );
+		if ( pPlayer )
+		{
+			pPlayer->GetSteamID( &steamIDPlayer );
+		}
+		steamapicontext->SteamUtils()->FilterText( k_ETextFilteringContextChat, steamIDPlayer, pszText, pszText, nTextBufferSize );
+	}
+#endif
+	return pszText;
+}
+#endif // CLIENT_DLL
+
 unsigned short UTIL_GetAchievementEventMask( void )
 {
 	CRC32_t mapCRC;
@@ -2229,7 +2311,8 @@ CSteamID UTIL_SteamIDFromProperString( const char *pszInput, bool bAllowSteam2 /
 	     V_strncmp( szPrefix, pszInput, V_ARRAYSIZE( szPrefix ) - 1 ) == 0 )
 	{
 		CSteamID steamID;
-		bool bMatch = SteamIDFromSteam2String( pszInput, GetUniverse(), &steamID );
+		// TF_SWARM: FIXME! SteamIDFromSteam2String isn't a function!
+		bool bMatch = false; //SteamIDFromSteam2String( pszInput, GetUniverse(), &steamID );
 		if ( bMatch && steamID.IsValid() )
 			{ return steamID; }
 	}
@@ -2253,7 +2336,8 @@ CSteamID UTIL_GuessSteamIDFromFuzzyInput( const char *pszInputRaw, bool bCurrent
 	EUniverse localUniverse = GetUniverse();
 
 	CUtlString strInput( pszInputRaw );
-	strInput.Trim();
+	// TF_SWARM: FIXME! Can't trim in ASW
+	//strInput.Trim();
 
 	// Is this a proper string once trimmed?
 	CSteamID steamID = UTIL_SteamIDFromProperString( strInput, true );

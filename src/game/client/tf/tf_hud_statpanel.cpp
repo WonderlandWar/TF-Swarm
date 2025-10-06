@@ -734,7 +734,7 @@ void CTFStatPanel::ShowStatPanel( int iClass, int iTeam, int iCurStatValue, TFSt
 		g_pVGuiLocalize->ConvertANSIToUnicode( szBest, wzBest, sizeof( wzBest ) );
 		wchar_t *wzFormat = g_pVGuiLocalize->Find( "#StatPanel_Format_Close" );
 		wchar_t wzText[256];
-		g_pVGuiLocalize->ConstructString_safe( wzText, wzFormat, 2, wzCur, wzBest );
+		g_pVGuiLocalize->ConstructString( wzText, sizeof( wzText ), wzFormat, 2, wzCur, wzBest );
 		SetDialogVariable( "stattextsmall", wzText );
 	}
 	else
@@ -762,7 +762,7 @@ void CTFStatPanel::ShowStatPanel( int iClass, int iTeam, int iCurStatValue, TFSt
 		pszPlayerClass = g_pVGuiLocalize->Find( g_aPlayerClassNames[ iClass ] );
 	}
 
-	g_pVGuiLocalize->ConstructString_safe( szSummary, szOriginalSummary, 1, pszPlayerClass );
+	g_pVGuiLocalize->ConstructString( szSummary, sizeof( szSummary ), szOriginalSummary, 1, pszPlayerClass );
 
 	pLabel->SetText( szSummary );
 

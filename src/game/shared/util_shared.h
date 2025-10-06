@@ -484,6 +484,12 @@ void		UTIL_StringToFloatArray( float *pVector, int count, const char *pString );
 
 CBasePlayer *UTIL_PlayerByIndex( int entindex );
 
+// Get the name of a player for display, filtered for profanity and slurs
+char *UTIL_GetFilteredPlayerName( int iPlayerIndex, char *pszName );
+char *UTIL_GetFilteredPlayerName( const CSteamID &steamID, char *pszName );
+wchar_t *UTIL_GetFilteredPlayerNameAsWChar( int iPlayerIndex, const char *pszName, wchar_t *pwszName );
+wchar_t *UTIL_GetFilteredPlayerNameAsWChar( const CSteamID &steamID, const char *pszName, wchar_t *pwszName );
+
 // decodes/encodes a buffer using a 64bit ICE key (inplace)
 void		UTIL_DecodeICE( unsigned char * buffer, int size, const unsigned char *key );
 void		UTIL_EncodeICE( unsigned char * buffer, unsigned int size, const unsigned char *key );
@@ -599,6 +605,37 @@ inline float DistanceToRay( const Vector &pos, const Vector &rayStart, const Vec
 		Remove( this ); \
 	}
 
+//--------------------------------------------------------------------------------------------------------------
+// You can use this if you need an autolist without an extra interface type involved.
+// To use this, just inherit (class Mine : public TAutoList<Mine> {)
+template< class T >
+class TAutoList
+{
+public:
+	typedef CUtlVector< T* > AutoListType;
+
+	static AutoListType &GetAutoList()
+	{
+		return m_autolist;
+	}
+
+protected:
+	TAutoList()
+	{
+		m_autolist.AddToTail( static_cast< T* >( this ) );
+	}
+
+	virtual ~TAutoList()
+	{
+		m_autolist.FindAndFastRemove( static_cast< T* >( this ) );
+	}
+
+private:
+	static AutoListType m_autolist;
+};
+
+template< class T >
+CUtlVector< T* > TAutoList< T >::m_autolist;
 
 //--------------------------------------------------------------------------------------------------------------
 /**

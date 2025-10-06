@@ -167,7 +167,7 @@ void CMvMWaveLossPanel::ShowPanel()
 		_snwprintf( wszWaveNumber, ARRAYSIZE( wszWaveNumber ), L"%d", MAX( 1, iWaveNumber ) );
 
 		wchar_t wszLocalizedWave[512];
-		g_pVGuiLocalize->ConstructString_safe( wszLocalizedWave, g_pVGuiLocalize->Find( "#TF_PVE_WaveCountFail" ), 1, wszWaveNumber );
+		g_pVGuiLocalize->ConstructString( wszLocalizedWave, sizeof( wszLocalizedWave ), g_pVGuiLocalize->Find( "#TF_PVE_WaveCountFail" ), 1, wszWaveNumber );
 		SetDialogVariable( "waveheader", wszLocalizedWave );
 		
 		// Pop file
@@ -179,14 +179,14 @@ void CMvMWaveLossPanel::ShowPanel()
 		if ( GetItemSchema()->GetMvmMissions().IsValidIndex( iChallengeIndex ) )
 		{
 			const MvMMission_t &mission = GetItemSchema()->GetMvmMissions()[ iChallengeIndex ];
-			g_pVGuiLocalize->ConstructString_safe( wszLocalizedSummary, g_pVGuiLocalize->Find( "#TF_PVE_MissionSummaryScheme" ), 2, 
+			g_pVGuiLocalize->ConstructString( wszLocalizedSummary, sizeof( wszLocalizedSummary ), g_pVGuiLocalize->Find( "#TF_PVE_MissionSummaryScheme" ), 2, 
 				g_pVGuiLocalize->Find( mission.m_sDisplayName.Get() ), g_pVGuiLocalize->Find( mission.m_sMode.Get() ) );
 		}
 		else 
 		{
 			wchar_t wszName[256];
 			g_pVGuiLocalize->ConvertANSIToUnicode( GetMapDisplayName( szTempName ), wszName, sizeof(wszName) );
-			g_pVGuiLocalize->ConstructString_safe( wszLocalizedSummary, g_pVGuiLocalize->Find( "#TF_PVE_MissionSummaryDefault" ), 1, 
+			g_pVGuiLocalize->ConstructString( wszLocalizedSummary, sizeof( wszLocalizedSummary ), g_pVGuiLocalize->Find( "#TF_PVE_MissionSummaryDefault" ), 1, 
 				wszName );
 		}	
 

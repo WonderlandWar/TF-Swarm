@@ -99,7 +99,7 @@ void CQuestMapItemAdPanel::OnCommand( const char *command )
 		wchar_t wszCount1[ 16 ];
 		_snwprintf( wszCount1, ARRAYSIZE( wszCount1 ), L"%d", m_pStoreItemDef->GetTypedMsg().price().sint32() );
 		const wchar_t *wpszFormat = g_pVGuiLocalize->Find( "#TF_QuestMap_RewardStore_ConfirmPurchase_Body" );
-		g_pVGuiLocalize->ConstructString_safe( wszOutString, wpszFormat, 2, wszCount1, m_item.GetItemName() );
+		g_pVGuiLocalize->ConstructString( wszOutString, sizeof( wszOutString ), wpszFormat, 2, wszCount1, m_item.GetItemName() );
 
 		CTFGenericConfirmDialog *pDialog = new CTFGenericConfirmDialog( "#TF_QuestMap_RewardStore_ConfirmPurchase_Title", wszOutString, "#TF_Coach_Yes", "#Cancel", &ConfirmPurchaseRewardItem, NULL );
 		if ( pDialog )

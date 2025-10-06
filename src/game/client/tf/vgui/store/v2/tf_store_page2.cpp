@@ -277,7 +277,7 @@ void CTFStorePage2::ApplySchemeSettings( IScheme *pScheme )
 			MakeMoneyString( wszPriceThreshold, ARRAYSIZE( wszPriceThreshold ), iPriceThreshold, EconUI()->GetStorePanel()->GetCurrency() );
 		
 			static wchar_t wszText[512];
-			g_pVGuiLocalize->ConstructString_safe( wszText, pHomePageTitle, 2, pRedText, wszPriceThreshold );
+			g_pVGuiLocalize->ConstructString( wszText, sizeof( wszText ), pHomePageTitle, 2, pRedText, wszPriceThreshold );
 
 			pTitleLabel->SetText( wszText );
 			TextImage *pTextImage = pTitleLabel->GetTextImage();

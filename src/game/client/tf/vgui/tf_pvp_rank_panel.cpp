@@ -511,7 +511,7 @@ void CPvPRankPanel::UpdateRankControls( const LevelInfo_t& levelCurrent )
 			static wchar_t wszOutString[ 256 ];
 			const wchar_t *wpszFormat = g_pVGuiLocalize->Find( nPlacementsToGo == 1 ? "#TF_Competitive_Placements_Singular" 
 																				: "#TF_Competitive_Placements_Multiple" );
-			g_pVGuiLocalize->ConstructString_safe( wszOutString,
+			g_pVGuiLocalize->ConstructString( wszOutString, sizeof( wszOutString ),
 													wpszFormat,
 													1,
 													CStrAutoEncode( CFmtStr( "%d", nPlacementsToGo ) ).ToWString());
@@ -751,7 +751,7 @@ void CPvPRankPanel::BeginRatingLerp()
 				wchar_t wszCount[ 16 ];
 				_snwprintf( wszCount, ARRAYSIZE( wszCount ), L"%d", source.amount() );
 				const wchar_t *wpszFormat = g_pVGuiLocalize->Find( g_XPSourceDefs[ source.type() ].m_pszFormattingLocToken );
-				g_pVGuiLocalize->ConstructString_safe( wszOutString,
+				g_pVGuiLocalize->ConstructString( wszOutString, sizeof( wszOutString ),
 													   wpszFormat,
 													   3,
 													   g_pVGuiLocalize->Find( g_XPSourceDefs[ source.type() ].m_pszTypeLocToken ),

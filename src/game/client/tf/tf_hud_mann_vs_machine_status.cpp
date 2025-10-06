@@ -461,7 +461,7 @@ void CWaveStatusPanel::OnTick( void )
 		wchar_t wszCount[32];
 
 		g_pVGuiLocalize->ConvertANSIToUnicode( szbuf, wszCount, sizeof(wszCount) );
-		g_pVGuiLocalize->ConstructString_safe( wszFinal, g_pVGuiLocalize->Find( "#TF_PVE_WaveCount" ), 1, wszCount );
+		g_pVGuiLocalize->ConstructString( wszFinal, sizeof( wszFinal ), g_pVGuiLocalize->Find( "#TF_PVE_WaveCount" ), 1, wszCount );
 		SetDialogVariable( "wave_count", wszFinal );
 
 		m_bPanelDirty = false;
@@ -1904,11 +1904,11 @@ void CTFHudMannVsMachineStatus::OnTick( void )
 		{
 			if ( seconds > 1 )
 			{
-				g_pVGuiLocalize->ConstructString_safe( wszLocalizedMessage, g_pVGuiLocalize->Find( "#TF_PVE_Server_Message_Reset" ), 1, wszTime );
+				g_pVGuiLocalize->ConstructString( wszLocalizedMessage, sizeof( wszLocalizedMessage ), g_pVGuiLocalize->Find( "#TF_PVE_Server_Message_Reset" ), 1, wszTime );
 			}
 			else
 			{
-				g_pVGuiLocalize->ConstructString_safe( wszLocalizedMessage, g_pVGuiLocalize->Find( "#TF_PVE_Server_Message_ResetNoS" ), 1, wszTime );
+				g_pVGuiLocalize->ConstructString( wszLocalizedMessage, sizeof( wszLocalizedMessage ), g_pVGuiLocalize->Find( "#TF_PVE_Server_Message_ResetNoS" ), 1, wszTime );
 			}
 			m_pServerChangeMessage->SetDialogVariable( "servermessage", wszLocalizedMessage);
 		}
@@ -1916,11 +1916,11 @@ void CTFHudMannVsMachineStatus::OnTick( void )
 		{
 			if ( seconds > 1 )
 			{
-				g_pVGuiLocalize->ConstructString_safe( wszLocalizedMessage, g_pVGuiLocalize->Find( "#TF_PVE_Server_Message_Kick" ), 1, wszTime );
+				g_pVGuiLocalize->ConstructString( wszLocalizedMessage, sizeof( wszLocalizedMessage ), g_pVGuiLocalize->Find( "#TF_PVE_Server_Message_Kick" ), 1, wszTime );
 			}
 			else
 			{
-				g_pVGuiLocalize->ConstructString_safe( wszLocalizedMessage, g_pVGuiLocalize->Find( "#TF_PVE_Server_Message_KickNoS" ), 1, wszTime );
+				g_pVGuiLocalize->ConstructString( wszLocalizedMessage, sizeof( wszLocalizedMessage ), g_pVGuiLocalize->Find( "#TF_PVE_Server_Message_KickNoS" ), 1, wszTime );
 			}
 			m_pServerChangeMessage->SetDialogVariable( "servermessage", wszLocalizedMessage);
 		}

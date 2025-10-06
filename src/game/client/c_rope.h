@@ -126,7 +126,7 @@ public:
 
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 	virtual void	ClientThink();
-	virtual int		DrawModel( int flags );
+	virtual int		DrawModel( int flags, const RenderableInstance_t &instance );
 	virtual bool	ShouldDraw();
 	virtual const Vector& WorldSpaceCenter() const;
 

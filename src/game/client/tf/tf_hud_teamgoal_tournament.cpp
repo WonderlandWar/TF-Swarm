@@ -363,8 +363,8 @@ void CHudTeamGoalTournament::SetupStopWatchLabel( void )
 	wchar_t wszAttackersName[MAX_TEAM_NAME_LENGTH];
 	wchar_t wszDefendersName[MAX_TEAM_NAME_LENGTH];
 
-	V_wcscpy_safe( wszAttackersName, ( pAttacker->GetTeamNumber() == TF_TEAM_BLUE ) ? pBlueTeamName : pRedTeamName ); 
-	V_wcscpy_safe( wszDefendersName, ( pDefender->GetTeamNumber() == TF_TEAM_BLUE ) ? pBlueTeamName : pRedTeamName );
+	wcscpy( wszAttackersName, ( pAttacker->GetTeamNumber() == TF_TEAM_BLUE ) ? pBlueTeamName : pRedTeamName ); 
+	wcscpy( wszDefendersName, ( pDefender->GetTeamNumber() == TF_TEAM_BLUE ) ? pBlueTeamName : pRedTeamName );
 
 #ifdef WIN32
 #define INT_CHAR_FMT L"%d %s"
@@ -411,7 +411,7 @@ void CHudTeamGoalTournament::SetupStopWatchLabel( void )
 
 	if ( pLocalPlayer->GetTeam() == pDefender )
 	{
-		g_pVGuiLocalize->ConstructString_safe( wszLabel, g_pVGuiLocalize->Find( "Tournament_StopWatch_LabelDefender" ), 1, wszAttackersName );
+		g_pVGuiLocalize->ConstructString( wszLabel, sizeof( wszLabel ), g_pVGuiLocalize->Find( "Tournament_StopWatch_LabelDefender" ), 1, wszAttackersName );
 
 		if ( m_pStopWatchGoal )
 		{
@@ -424,7 +424,7 @@ void CHudTeamGoalTournament::SetupStopWatchLabel( void )
 	{
 		bool bCappedAllPoints = ( iPoints == ObjectiveResource()->GetNumControlPoints() );
 
-		g_pVGuiLocalize->ConstructString_safe( wzHelp, g_pVGuiLocalize->Find( bCappedAllPoints ? "Tournament_StopWatch_GoalTextPointsAndTimeAndClose" : "Tournament_StopWatch_GoalTextPointsAndTime" ), 5, wszDefendersName, wszPoints, wszTime, wszAttackersName, wszPoints );
+		g_pVGuiLocalize->ConstructString( wzHelp, sizeof( wzHelp ), g_pVGuiLocalize->Find( bCappedAllPoints ? "Tournament_StopWatch_GoalTextPointsAndTimeAndClose" : "Tournament_StopWatch_GoalTextPointsAndTime" ), 5, wszDefendersName, wszPoints, wszTime, wszAttackersName, wszPoints );
 
 		if ( m_pStopWatchGoalText )
 		{
@@ -477,7 +477,7 @@ void CHudTeamGoalTournament::SetupStopWatchLabel( void )
 
 			iPoints += 1;
 			_snwprintf( wszPoints, ARRAYSIZE( wszPoints ), INT_CHAR_FMT, iPoints, iPoints == 1 ? g_pVGuiLocalize->Find( "Tournament_StopWatch_Point" ) : g_pVGuiLocalize->Find( "Tournament_StopWatch_Points" ) );
-			g_pVGuiLocalize->ConstructString_safe( wzHelp, g_pVGuiLocalize->Find( "Tournament_StopWatch_GoalTextPointsAndTime2" ), 4, wszAttackersName, wszDefendersName, wszAttackersName, wszPoints );
+			g_pVGuiLocalize->ConstructString( wzHelp, sizeof( wzHelp ), g_pVGuiLocalize->Find( "Tournament_StopWatch_GoalTextPointsAndTime2" ), 4, wszAttackersName, wszDefendersName, wszAttackersName, wszPoints );
 
 			if ( m_pStopWatchGoalText2 )
 			{
@@ -487,7 +487,7 @@ void CHudTeamGoalTournament::SetupStopWatchLabel( void )
 
 		if ( pLocalPlayer->GetTeam() == pAttacker )
 		{
-			g_pVGuiLocalize->ConstructString_safe( wszLabel, g_pVGuiLocalize->Find( "Tournament_StopWatch_TimeVictory" ), 1, wszDefendersName );
+			g_pVGuiLocalize->ConstructString( wszLabel, sizeof( wszLabel ), g_pVGuiLocalize->Find( "Tournament_StopWatch_TimeVictory" ), 1, wszDefendersName );
 
 			if ( m_pStopWatchGoal )
 			{
@@ -517,7 +517,7 @@ void CHudTeamGoalTournament::SetupStopWatchLabel( void )
 			m_pStopWatchGoalDivider->SetVisible( false );
 		}
 
-		g_pVGuiLocalize->ConstructString_safe( wzHelp, g_pVGuiLocalize->Find( "Tournament_StopWatch_GoalTextPoints" ), 4, wszDefendersName, wszAttackersName );
+		g_pVGuiLocalize->ConstructString( wzHelp, sizeof( wzHelp ), g_pVGuiLocalize->Find( "Tournament_StopWatch_GoalTextPoints" ), 4, wszDefendersName, wszAttackersName );
 
 
 		if ( m_pStopWatchGoalText )
@@ -527,7 +527,7 @@ void CHudTeamGoalTournament::SetupStopWatchLabel( void )
 
 		if ( pLocalPlayer->GetTeam() == pAttacker )
 		{
-			g_pVGuiLocalize->ConstructString_safe( wszLabel, g_pVGuiLocalize->Find( "Tournament_StopWatch_AttackerScore" ), 1, wszDefendersName );
+			g_pVGuiLocalize->ConstructString( wszLabel, sizeof( wszLabel ), g_pVGuiLocalize->Find( "Tournament_StopWatch_AttackerScore" ), 1, wszDefendersName );
 
 			if ( m_pStopWatchGoal )
 			{

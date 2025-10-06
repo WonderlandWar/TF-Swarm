@@ -76,16 +76,6 @@ C_ObjectDispenser::C_ObjectDispenser()
 C_ObjectDispenser::~C_ObjectDispenser()
 {
 	StopSound( "Building_Dispenser.Heal" );
-	// NVNT see if local player is in the list of targets
-	// temp. fix if dispener is destroyed will stop all healers.
-	if(m_bPlayingSound)
-	{
-		if(tfHaptics.healingDispenserCount>0) {
-			tfHaptics.healingDispenserCount --;
-			if(tfHaptics.healingDispenserCount==0 && !tfHaptics.wasBeingHealedMedic)
-				tfHaptics.isBeingHealed = false;
-		}
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -166,15 +156,6 @@ void C_ObjectDispenser::UpdateEffects( void )
 
 			if ( bHaveEffect )
 				continue;
-			// NVNT if the dispenser has started to heal the local player
-			//   notify the haptics system
-			if(pTarget==C_BasePlayer::GetLocalPlayer())
-			{
-				tfHaptics.healingDispenserCount++;
-				if(!tfHaptics.wasBeingHealedMedic) {
-					tfHaptics.isBeingHealed = true;
-				}
-			}
 
 			const char *pszEffectName;
 			if ( GetTeamNumber() == TF_TEAM_RED )
@@ -262,18 +243,6 @@ void C_ObjectDispenser::StopEffects( bool bRemoveAll /* = false */ )
 	{
 		if ( !bStillHealing[i] )
 		{
-
-			// NVNT if the healing target of this dispenser is the local player.
-			//   inform the haptics system interface we are no longer healing.
-			if(m_hHealingTargetEffects[i].pTarget==C_BasePlayer::GetLocalPlayer())
-			{
-				if(tfHaptics.healingDispenserCount>0) {
-					tfHaptics.healingDispenserCount --;
-					if(tfHaptics.healingDispenserCount==0 && !tfHaptics.wasBeingHealedMedic)
-						tfHaptics.isBeingHealed = false;
-				}
-			}
-
 			ParticleProp()->StopEmission( m_hHealingTargetEffects[i].pEffect );
 			m_hHealingTargetEffects.Remove(i);
 		}

@@ -152,7 +152,7 @@ void CreateHolidayLight( const HolidayLightData_t &holidayLight )
 		pTemp->clientIndex = 0;
 
 		// HACK: Use these ints to ID the light later
-		pTemp->m_nSkin = holidayLight.nID;
+		pTemp->SetSkin( holidayLight.nID );
 		pTemp->hitSound = holidayLight.nSubID;
 
 		// Skybox lights pass in a smaller scale
@@ -164,8 +164,8 @@ void CreateHolidayLight( const HolidayLightData_t &holidayLight )
 		// Set the color
 		pTemp->SetRenderColor( rgbaHolidayLightColors[ g_nHolidayLightColor ]->r(), 
 							   rgbaHolidayLightColors[ g_nHolidayLightColor ]->g(), 
-							   rgbaHolidayLightColors[ g_nHolidayLightColor ]->b(), 
-							   rgbaHolidayLightColors[ g_nHolidayLightColor ]->a() );
+							   rgbaHolidayLightColors[ g_nHolidayLightColor ]->b() );
+		pTemp->SetRenderAlpha( rgbaHolidayLightColors[ g_nHolidayLightColor ]->a() );
 
 		// Next color in the pattern
 		g_nHolidayLightColor = ( g_nHolidayLightColor + 1 ) % ARRAYSIZE( rgbaHolidayLightColors );
@@ -181,12 +181,12 @@ void CreateHolidayLight( const HolidayLightData_t &holidayLight )
 		pTemp->SetAbsOrigin( holidayLight.vOrigin );
 
 		// Every 10 light strands have a blink cycle
-		if ( pTemp->m_nSkin % 5 == 0 )
+		if ( pTemp->GetSkin() % 5 == 0 )
 		{
 			// Magic! Basically this makes the on/off cycle of each color different and offsets it by the segment index.
 			// That way it looks like a timed pattern but is also chaotic.
 			int nCycle = ( pTemp->hitSound + static_cast< int >( gpGlobals->curtime * 2.0f ) ) % ( pTemp->m_nHitboxSet + ARRAYSIZE( rgbaHolidayLightColors ) + 1 );
-			pTemp->SetRenderColorA( nCycle < ARRAYSIZE( rgbaHolidayLightColors ) ? 255 : 64 );
+			pTemp->SetRenderAlpha( nCycle < ARRAYSIZE( rgbaHolidayLightColors ) ? 255 : 64 );
 		}
 
 		// Update the scale
@@ -197,7 +197,7 @@ void CreateHolidayLight( const HolidayLightData_t &holidayLight )
 	}
 }
 
-DECLARE_CLIENT_EFFECT( "TF_HolidayLight", TF_HolidayLightCallback );
+DECLARE_CLIENT_EFFECT( TF_HolidayLight, TF_HolidayLightCallback );
 
 void RopesHolidayLightColor( const CCommand &args )
 {

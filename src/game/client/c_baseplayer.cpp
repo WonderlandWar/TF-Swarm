@@ -32,6 +32,7 @@
 #include "particles_simple.h"
 #include "fx_water.h"
 #include "hltvcamera.h"
+#include "dt_utlvector_recv.h"
 #if defined( REPLAY_ENABLED )
 #include "replaycamera.h"
 #endif
@@ -151,6 +152,7 @@ BEGIN_RECV_TABLE_NOBASE( CPlayerLocalData, DT_Local )
 	RecvPropInt		(RECVINFO(m_bDrawViewmodel)),
 	RecvPropInt		(RECVINFO(m_bWearingSuit)),
 	RecvPropBool	(RECVINFO(m_bPoisoned)),
+	RecvPropBool	(RECVINFO(m_bForceLocalPlayerDraw)),
 	RecvPropFloat	(RECVINFO(m_flStepSize)),
 	RecvPropInt		(RECVINFO(m_bAllowAutoMovement)),
 
@@ -233,10 +235,19 @@ END_RECV_TABLE()
 // -------------------------------------------------------------------------------- //
 // DT_BasePlayer datatable.
 // -------------------------------------------------------------------------------- //
+
+#if defined USES_ECON_ITEMS
+	EXTERN_RECV_TABLE(DT_AttributeList);
+#endif
+
 	IMPLEMENT_CLIENTCLASS_DT(C_BasePlayer, DT_BasePlayer, CBasePlayer)
 		// We have both the local and nonlocal data in here, but the server proxies
 		// only send one.
 		RecvPropDataTable( "localdata", 0, 0, &REFERENCE_RECV_TABLE(DT_LocalPlayerExclusive) ),
+
+#if defined USES_ECON_ITEMS
+		RecvPropDataTable(RECVINFO_DT(m_AttributeList),0, &REFERENCE_RECV_TABLE(DT_AttributeList) ),
+#endif
 
 		RecvPropDataTable(RECVINFO_DT(pl), 0, &REFERENCE_RECV_TABLE(DT_PlayerState), DataTableRecvProxy_StaticDataTable),
 
@@ -268,6 +279,11 @@ END_RECV_TABLE()
 		
 
 		RecvPropString( RECVINFO(m_szLastPlaceName) ),
+
+#if defined USES_ECON_ITEMS
+		RecvPropUtlVector( RECVINFO_UTLVECTOR( m_hMyWearables ), MAX_WEARABLES_SENT_FROM_SERVER,	RecvPropEHandle(NULL, 0, 0) ),
+#endif
+
 		RecvPropVector( RECVINFO(m_vecLadderNormal) ),
 		RecvPropInt		(RECVINFO(m_ladderSurfaceProps) ),
 
@@ -297,6 +313,7 @@ BEGIN_PREDICTION_DATA_NO_BASE( CPlayerLocalData )
 	// DEFINE_PRED_TYPEDESCRIPTION( m_fog, fogparams_t ),
 	// DEFINE_PRED_TYPEDESCRIPTION( m_audio, audioparams_t ),
 	DEFINE_FIELD( m_nStepside, FIELD_INTEGER ),
+	DEFINE_FIELD( m_bPrevForceLocalPlayerDraw, FIELD_BOOLEAN ),
 
 	DEFINE_PRED_FIELD( m_iHideHUD, FIELD_INTEGER, FTYPEDESC_INSENDTABLE ),
 #if PREDICTION_ERROR_CHECK_LEVEL > 1
@@ -309,6 +326,7 @@ BEGIN_PREDICTION_DATA_NO_BASE( CPlayerLocalData )
 	DEFINE_PRED_FIELD( m_bDrawViewmodel, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_bWearingSuit, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_bPoisoned, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
+	DEFINE_PRED_FIELD( m_bForceLocalPlayerDraw, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_bAllowAutoMovement, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
 
 	DEFINE_PRED_FIELD( m_bDucked, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
@@ -424,6 +442,10 @@ C_BasePlayer::C_BasePlayer() : m_iv_vecViewOffset( "C_BasePlayer::m_iv_vecViewOf
 	m_bIsLocalPlayer = false;
 	m_afButtonForced = 0;
 
+	m_bFiredWeapon = false;
+
+	m_nForceVisionFilterFlags = 0;
+	m_nLocalPlayerVisionFlags = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -474,6 +496,8 @@ void C_BasePlayer::Spawn( void )
 	SharedSpawn();
 
 	m_bWasFreezeFraming = false;
+
+	m_bFiredWeapon = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -809,6 +833,18 @@ void C_BasePlayer::PostDataUpdate( DataUpdateType_t updateType )
 			m_flFreezeFrameDistance = RandomFloat( spec_freeze_distance_min.GetFloat(), spec_freeze_distance_max.GetFloat() );
 			m_flFreezeZOffset = RandomFloat( -30, 20 );
 			m_bSentFreezeFrame = false;
+			m_nForceVisionFilterFlags = 0;
+
+			C_BaseEntity *target = GetObserverTarget();
+			if ( target && target->IsPlayer() )
+			{
+				C_BasePlayer *player = ToBasePlayer( target );
+				if ( player )
+				{
+					m_nForceVisionFilterFlags = player->GetVisionFilterFlags();
+					CalculateVisionUsingCurrentFlags();
+				}
+			}
 
 			IGameEvent *pEvent = gameeventmanager->CreateEvent( "show_freezepanel" );
 			if ( pEvent )
@@ -2888,6 +2924,25 @@ bool C_BasePlayer::GetSteamID( CSteamID *pID )
 	}
 	return false;
 }
+
+#if defined USES_ECON_ITEMS
+//-----------------------------------------------------------------------------
+// Purpose: Update the visibility of our worn items.
+//-----------------------------------------------------------------------------
+void C_BasePlayer::UpdateWearables( void )
+{
+	for ( int i=0; i<m_hMyWearables.Count(); ++i )
+	{
+		CEconWearable* pItem = m_hMyWearables[i];
+		if ( pItem )
+		{
+			pItem->ValidateModelIndex();
+			pItem->UpdateVisibility();
+			pItem->CreateShadow();
+		}
+	}
+}
+#endif // USES_ECON_ITEMS
 
 //-----------------------------------------------------------------------------
 //

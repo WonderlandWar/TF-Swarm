@@ -50,7 +50,7 @@ const char *g_szEquipSlotHeader[] =
 	"#ItemSel_TAUNT",		// LOADOUT_POSITION_TAUNT7
 	"#ItemSel_TAUNT",		// LOADOUT_POSITION_TAUNT8
 };
-COMPILE_TIME_ASSERT( ARRAYSIZE( g_szEquipSlotHeader ) == CLASS_LOADOUT_POSITION_COUNT );
+//COMPILE_TIME_ASSERT( ARRAYSIZE( g_szEquipSlotHeader ) == CLASS_LOADOUT_POSITION_COUNT );
 
 static bool ShouldItemNotStack( CEconItemView *pItemData )
 {

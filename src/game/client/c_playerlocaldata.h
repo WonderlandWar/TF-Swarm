@@ -41,6 +41,8 @@ public:
 		m_iv_vecPunchAngle.Setup( &m_vecPunchAngle, LATCH_SIMULATION_VAR );
 		m_iv_vecPunchAngleVel.Setup( &m_vecPunchAngleVel, LATCH_SIMULATION_VAR );
 		m_flFOVRate = 0;
+		m_bForceLocalPlayerDraw = false;
+		m_bPrevForceLocalPlayerDraw = false;
 	}
 
 	unsigned char			m_chAreaBits[MAX_AREA_STATE_BYTES];				// Area visibility flags.
@@ -68,6 +70,8 @@ public:
 	bool					m_bDrawViewmodel;
 	bool					m_bWearingSuit;
 	bool					m_bPoisoned;
+	bool					m_bForceLocalPlayerDraw; // Allows VScripts, etc to force the local player to draw.
+	bool					m_bPrevForceLocalPlayerDraw;
 	bool					m_bAllowAutoMovement;
 // END PREDICTION DATA COMPACTION
 

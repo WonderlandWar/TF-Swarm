@@ -320,7 +320,7 @@ void CTFHudPlayerClass::OnThink()
 					locchar_t wszLocString [128];
 
 					// Construct and set the weapon's name
-					g_pVGuiLocalize->ConstructString_safe( wszLocString, L"%s1", 1, CEconItemLocalizedFullNameGenerator( GLocalizationProvider(), pItem->GetItemDefinition(), pItem->GetItemQuality() ).GetFullName() );
+					g_pVGuiLocalize->ConstructString( wszLocString, sizeof( wszLocString ), L"%s1", 1, CEconItemLocalizedFullNameGenerator( GLocalizationProvider(), pItem->GetItemDefinition(), pItem->GetItemQuality() ).GetFullName() );
 					m_pCarryingWeaponPanel->SetDialogVariable( "carrying", wszLocString );
 
 					// Get and set the rarity color of the weapon
@@ -340,7 +340,7 @@ void CTFHudPlayerClass::OnThink()
 						// Fill out the actual owner's name
 						locchar_t wszStolenString[128];
 						g_pVGuiLocalize->ConvertANSIToUnicode( pOwner->GetPlayerName(), wszPlayerName, sizeof(wszPlayerName) );
-						g_pVGuiLocalize->ConstructString_safe( wszStolenString, g_pVGuiLocalize->Find( "TF_WhoDropped" ), 1, wszPlayerName );
+						g_pVGuiLocalize->ConstructString( wszStolenString, sizeof( wszStolenString ), g_pVGuiLocalize->Find( "TF_WhoDropped" ), 1, wszPlayerName );
 						m_pCarryingOwnerLabel->SetText( wszStolenString );
 						bHasOwner = true;
 					}

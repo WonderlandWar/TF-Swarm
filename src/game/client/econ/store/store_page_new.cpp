@@ -219,7 +219,7 @@ void CStorePricePanel_Popular::SetItem( const econ_store_entry_t *pEntry )
 	wchar_t wszRank[10];
 	_snwprintf( wszRank, ARRAYSIZE( wszRank ), L"%d", m_iPopularityRank );
 	wchar_t wszText[8];
-	g_pVGuiLocalize->ConstructString_safe( wszText, g_pVGuiLocalize->Find( "TF_Popularity_Rank" ), 1, wszRank );
+	g_pVGuiLocalize->ConstructString( wszText, sizeof( wszText ), g_pVGuiLocalize->Find( "TF_Popularity_Rank" ), 1, wszRank );
 	SetDialogVariable( "rank1", wszText );
 	SetDialogVariable( "rank2", wszText );
 

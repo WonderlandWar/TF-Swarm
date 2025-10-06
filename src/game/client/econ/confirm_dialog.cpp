@@ -312,7 +312,7 @@ const wchar_t *CTFGenericConfirmDialog::GetText()
 {
 	if ( m_pTextKey )
 	{
-		g_pVGuiLocalize->ConstructString_safe( m_wszBuffer, m_pTextKey, m_pKeyValues );
+		g_pVGuiLocalize->ConstructString( m_wszBuffer, sizeof( m_wszBuffer ), m_pTextKey, m_pKeyValues );
 		return m_wszBuffer;
 	}
 

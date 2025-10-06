@@ -28,7 +28,7 @@ C_PlayerRelativeModel *C_PlayerRelativeModel::Create( const char *pszModelName, 
 bool C_PlayerRelativeModel::Initialize( const char *pszModelName, C_BaseEntity *pParent, Vector vecOffset, QAngle angleOffset, float flAnimSpeed, float flLifetime, int iFlags )
 {
 	AddEffects( EF_NORECEIVESHADOW | EF_NOSHADOW );
-	if ( InitializeAsClientEntity( pszModelName, RENDER_GROUP_OPAQUE_ENTITY ) == false )
+	if ( InitializeAsClientEntity( pszModelName, false ) == false )
 	{
 		Release();
 		return false;
@@ -132,7 +132,7 @@ bool C_MerasmusBombEffect::Initialize( const char *pszModelName, C_TFPlayer *pPa
 		m_pBombonomiconEffect = NULL;
 	}
 
-	m_pBombonomiconBeam = ParticleProp()->Create( pszEffectName, PATTACH_ABSORIGIN_FOLLOW, INVALID_PARTICLE_ATTACHMENT, Vector(0,0,-10) );
+	m_pBombonomiconBeam = ParticleProp()->Create( pszEffectName, PATTACH_ABSORIGIN_FOLLOW, -1, Vector(0,0,-10) );
 	if ( m_pBombonomiconBeam )
 	{
 		ParticleProp()->AddControlPoint( m_pBombonomiconBeam, 1, pParent, PATTACH_POINT_FOLLOW, "head", Vector(0,0,0) );

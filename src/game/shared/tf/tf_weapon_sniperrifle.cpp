@@ -1584,7 +1584,7 @@ bool CSniperDot::GetRenderingPositions( C_TFPlayer *pPlayer, Vector &vecAttachme
 // Purpose: 
 // TFTODO: Make the sniper dot get brighter the more damage it will do.
 //-----------------------------------------------------------------------------
-int CSniperDot::DrawModel( int flags )
+int CSniperDot::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	// Get the owning player.
 	C_TFPlayer *pPlayer = ToTFPlayer( GetOwnerEntity() );

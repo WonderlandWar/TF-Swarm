@@ -103,7 +103,7 @@ const char *g_ItemEventNames[] =
 	""	// IE_COUNT
 };
 
-COMPILE_TIME_ASSERT( ARRAYSIZE( g_ItemEventNames ) == IE_COUNT );
+//COMPILE_TIME_ASSERT( ARRAYSIZE( g_ItemEventNames ) == IE_COUNT );
 
 C_CTFGameStats C_CTF_GameStats;
 

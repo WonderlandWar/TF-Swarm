@@ -91,7 +91,7 @@ void SetItemPanelToRecipe( CItemModelPanel *pPanel, const CEconCraftingRecipeDef
 		if ( bShowName )
 		{
 			wchar_t *pName_A = g_pVGuiLocalize->Find( pRecipeDef->GetName_A() );
-			g_pVGuiLocalize->ConstructString_safe( wcTmpName, g_pVGuiLocalize->Find( pRecipeDef->GetName() ), 1, pName_A );
+			g_pVGuiLocalize->ConstructString( wcTmpName, sizeof( wcTmpName ), g_pVGuiLocalize->Find( pRecipeDef->GetName() ), 1, pName_A );
 		}
 		else
 		{
@@ -107,14 +107,14 @@ void SetItemPanelToRecipe( CItemModelPanel *pPanel, const CEconCraftingRecipeDef
 		wchar_t *pInp_A = LocalizeRecipeStringPiece( pRecipeDef->GetDescI_A(), wcTmpA, sizeof( wcTmpA ) );
 		wchar_t *pInp_B = LocalizeRecipeStringPiece( pRecipeDef->GetDescI_B(), wcTmpB, sizeof( wcTmpB ) );
 		wchar_t *pInp_C = LocalizeRecipeStringPiece( pRecipeDef->GetDescI_C(), wcTmpC, sizeof( wcTmpC ) );
-		g_pVGuiLocalize->ConstructString_safe( wcTmpDesc, g_pVGuiLocalize->Find( pRecipeDef->GetDescInputs() ), 3, pInp_A, pInp_B, pInp_C );
+		g_pVGuiLocalize->ConstructString( wcTmpDesc, sizeof( wcTmpDesc ), g_pVGuiLocalize->Find( pRecipeDef->GetDescInputs() ), 3, pInp_A, pInp_B, pInp_C );
 		iNegAttribsBegin = Q_wcslen(wcTmpDesc);
 
 		// Build the output string
 		wchar_t *pOut_A = LocalizeRecipeStringPiece( pRecipeDef->GetDescO_A(), wcTmpA, sizeof( wcTmpA ) );
 		wchar_t *pOut_B = LocalizeRecipeStringPiece( pRecipeDef->GetDescO_B(), wcTmpB, sizeof( wcTmpB ) );
 		wchar_t *pOut_C = LocalizeRecipeStringPiece( pRecipeDef->GetDescO_C(), wcTmpC, sizeof( wcTmpC ) );
-		g_pVGuiLocalize->ConstructString_safe( wcTmp, g_pVGuiLocalize->Find( pRecipeDef->GetDescOutputs() ), 3, pOut_A, pOut_B, pOut_C );
+		g_pVGuiLocalize->ConstructString( wcTmp, sizeof( wcTmp ), g_pVGuiLocalize->Find( pRecipeDef->GetDescOutputs() ), 3, pOut_A, pOut_B, pOut_C );
 
 		// Concatenate, and mark the text changes
 		V_wcscat_safe( wcTmpDesc, L"\n" );
@@ -385,7 +385,7 @@ void CCraftingPanel::UpdateRecipeFilter( void )
 
 		wchar_t	wTemp[256];
 		wchar_t *pName_A = g_pVGuiLocalize->Find( pRecipeDef->GetName_A() );
-		g_pVGuiLocalize->ConstructString_safe( wTemp, g_pVGuiLocalize->Find( pRecipeDef->GetName() ), 1, pName_A );
+		g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), g_pVGuiLocalize->Find( pRecipeDef->GetName() ), 1, pName_A );
 		SetButtonToRecipe( iMatchingRecipes, pRecipeDef->GetDefinitionIndex(), wTemp );
 
 		iMatchingRecipes++;
@@ -924,7 +924,7 @@ void CCraftingPanel::UpdateSelectedRecipe( bool bClearInputItems )
 					wchar_t *pInp_A = LocalizeRecipeStringPiece( pRecipeDef->GetDescI_A(), wcTmpA, sizeof( wcTmpA ) );
 					wchar_t *pInp_B = LocalizeRecipeStringPiece( pRecipeDef->GetDescI_B(), wcTmpB, sizeof( wcTmpB ) );
 					wchar_t *pInp_C = LocalizeRecipeStringPiece( pRecipeDef->GetDescI_C(), wcTmpC, sizeof( wcTmpC ) );
-					g_pVGuiLocalize->ConstructString_safe( wcTmpDesc, g_pVGuiLocalize->Find( pRecipeDef->GetDescInputs() ), 3, pInp_A, pInp_B, pInp_C );
+					g_pVGuiLocalize->ConstructString( wcTmpDesc, sizeof( wcTmpDesc ), g_pVGuiLocalize->Find( pRecipeDef->GetDescInputs() ), 3, pInp_A, pInp_B, pInp_C );
 					m_pSelectedRecipeContainer->SetDialogVariable( "recipeinputstring", wcTmpDesc );
 				}
 			}
@@ -1505,7 +1505,7 @@ public:
 			wchar_t szWrenchNumber[16]=L"";
 			_snwprintf( szWrenchNumber, ARRAYSIZE( szWrenchNumber ), L"%i", msg.Body().wrench_number() );
 			wchar_t szNotification[1024]=L"";
-			g_pVGuiLocalize->ConstructString_safe( szNotification, 
+			g_pVGuiLocalize->ConstructString( szNotification, sizeof( szNotification ), 
 											  g_pVGuiLocalize->Find( bDeleted ? "#TF_HUD_Event_GoldenWrench_D": "#TF_HUD_Event_GoldenWrench_C" ), 
 											  2, szPlayerName, szWrenchNumber );
 			pNotifyPanel->SetupNotifyCustom( szNotification, HUD_NOTIFY_GOLDEN_WRENCH, 10.0f );
@@ -1721,7 +1721,7 @@ public:
 
 		// print to chat log
 		wchar_t wszLocalizedString[2048] = L"";
-		g_pVGuiLocalize->ConstructString_safe( wszLocalizedString, "#Notification_System_Message", keyValues );
+		g_pVGuiLocalize->ConstructString( wszLocalizedString, sizeof( wszLocalizedString ), "#Notification_System_Message", keyValues );
 		pHUDChat->SetCustomColor( color );
 		pHUDChat->Printf( CHAT_FILTER_NONE, "%ls", wszLocalizedString );
 

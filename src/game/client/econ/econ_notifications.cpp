@@ -165,7 +165,7 @@ CEconNotification *CEconNotificationQueue::GetNotificationByIndex( int idx )
 
 void CEconNotificationQueue::Update()
 {
-	float flNowTime = engine->Time();
+	float flNowTime = Plat_FloatTime();
 	for ( int i = 0; i < m_vecNotifications.Count(); )
 	{
 		CEconNotification *pNotification = m_vecNotifications[i];
@@ -764,7 +764,7 @@ public:
 
 		const float flMoveTime = cl_notifications_move_time.GetFloat();
 		float lerpPercentage = flMoveTime > 0 ? clamp( ( flMoveTime - m_flInvalidateTime ) / flMoveTime, 0.0f, 1.0f ) : 1.0f;
-		float flCurrTime = engine->Time();
+		float flCurrTime = Plat_FloatTime();
 
 		// move the notifications around
 		const int kMaxVisibleNotifications = cl_notifications_max_num_visible.GetInt();
@@ -855,7 +855,7 @@ public:
 		CUtlVector< CEconNotification *> notifications;
 		GetNotifications( notifications );
 
-		float flCurrTime = engine->Time();
+		float flCurrTime = Plat_FloatTime();
 
 		// check to see if we have a panel for each notification
 		int i = 0;
@@ -953,7 +953,7 @@ DECLARE_HUDELEMENT( CNotificationQueuePanel );
 CEconNotification::CEconNotification()
 	: m_pText("")
 	, m_pSoundFilename( NULL )
-	, m_flExpireTime( engine->Time() + 10.0f )
+	, m_flExpireTime( Plat_FloatTime() + 10.0f )
 	, m_pKeyValues( NULL )
 	, m_bInUse( false )
 	, m_steamID()
@@ -999,7 +999,7 @@ KeyValues *CEconNotification::GetKeyValues() const
 
 const wchar_t *CEconNotification::GetText()
 {
-	g_pVGuiLocalize->ConstructString_safe( m_wszBuffer, m_pText, m_pKeyValues );
+	g_pVGuiLocalize->ConstructString( m_wszBuffer, sizeof( m_wszBuffer ), m_pText, m_pKeyValues );
 	return m_wszBuffer;
 }
 
@@ -1010,7 +1010,7 @@ int CEconNotification::GetID() const
 
 void CEconNotification::SetLifetime( float flSeconds )
 {
-	m_flExpireTime = engine->Time() + flSeconds;
+	m_flExpireTime = Plat_FloatTime() + flSeconds;
 }
 
 float CEconNotification::GetExpireTime() const

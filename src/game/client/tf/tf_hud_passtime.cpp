@@ -716,7 +716,7 @@ void CTFHudPasstimeEventText::ConstructNewString( const char *pLocTag, wchar_t (
 	// FIXME calling find is redundant 
 	if ( pLocTag && pLocTag[0] && g_pVGuiLocalize->Find( pLocTag ) )
 	{
-		g_pVGuiLocalize->ConstructString_safe( out, pLocTag, m_localizeKeys );
+		g_pVGuiLocalize->ConstructString( out, sizeof( out ), pLocTag, m_localizeKeys );
 	}
 	else
 	{
@@ -1582,7 +1582,7 @@ void CTFHudPasstimeBallStatus::OnBallGetOther( int iPlayer )
 		pwszFormatString = L"%s1";
 	}
 	g_pVGuiLocalize->ConvertANSIToUnicode( ( iPlayer > 0 ) ? g_PR->GetPlayerName( iPlayer ) : "", wszPlayerName, sizeof( wszPlayerName ) );
-	g_pVGuiLocalize->ConstructString_safe( wszFinalText, pwszFormatString, 1, wszPlayerName );
+	g_pVGuiLocalize->ConstructString( wszFinalText, sizeof( wszFinalText ), pwszFormatString, 1, wszPlayerName );
 
 	if ( m_pProgressBallCarrierName )
 	{
@@ -1605,7 +1605,7 @@ void CTFHudPasstimeBallStatus::OnBallGetSelf( int iPlayer )
 		pwszFormatString = L"%s1";
 	}
 	g_pVGuiLocalize->ConvertANSIToUnicode( ( iPlayer > 0 ) ? g_PR->GetPlayerName( iPlayer ) : "", wszPlayerName, sizeof( wszPlayerName ) );
-	g_pVGuiLocalize->ConstructString_safe( wszFinalText, pwszFormatString, 1, wszPlayerName );
+	g_pVGuiLocalize->ConstructString( wszFinalText, sizeof( wszFinalText ), pwszFormatString, 1, wszPlayerName );
 
 	if ( m_pProgressBallCarrierName )
 	{

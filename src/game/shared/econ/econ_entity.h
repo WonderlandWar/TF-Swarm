@@ -110,7 +110,7 @@ public:
 	virtual bool			ViewModel_IsTransparent( void );
 	virtual bool			ViewModel_IsUsingFBTexture( void );
 	virtual bool			IsOverridingViewmodel( void );
-	virtual int				DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags );
+	virtual int				DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags, const RenderableInstance_t &instance );
 
 	// Attachments
 	bool					WantsToOverrideViewmodelAttachments( void ) { return (m_hViewmodelAttachment != NULL); }
@@ -234,7 +234,7 @@ public:
 	void SetOuter( CEconEntity *pOuter );
 	CHandle<CEconEntity> GetOuter( void ) { return m_hOuter; }
 	bool InitializeAsClientEntity( const char *pszModelName, RenderGroup_t renderGroup );
-	int  InternalDrawModel( int flags );
+	int  InternalDrawModel( int flags, const RenderableInstance_t &instance );
 	bool OnPostInternalDrawModel( ClientModelRenderInfo_t *pInfo );
 	virtual void StandardBlendingRules( CStudioHdr *hdr, Vector pos[], Quaternion q[], float currentTime, int boneMask );
 	

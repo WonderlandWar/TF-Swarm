@@ -85,7 +85,7 @@ void C_EntityFlyingBird::UpdateFlyDirection( void )
 //-----------------------------------------------------------------------------
 void C_EntityFlyingBird::InitFromServerData( float flyAngle, float flyAngleRate, float flAccelZ, float flSpeed, float flGlideTime )
 {
-	if ( InitializeAsClientEntity( ENTITY_FLYING_BIRD_MODEL, RENDER_GROUP_OPAQUE_ENTITY ) == false )
+	if ( InitializeAsClientEntity( ENTITY_FLYING_BIRD_MODEL, false ) == false )
 	{
 		Release();
 		return;

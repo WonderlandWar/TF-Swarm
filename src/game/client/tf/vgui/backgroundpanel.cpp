@@ -602,14 +602,14 @@ void ResizeWindowControls( EditablePanel *pWindow, int tall, int wide, int offse
 	}
 
 	// and now re-center them.  Woohoo!
-	for ( int i = 0; i < panelList->Size(); ++i )
+	for ( int i = 0; i < panelList->Count(); ++i )
 	{
 		PHandle handle = (*panelList)[i];
 
 		Panel *panel = handle.Get();
 
 		bool found = false;
-		for ( int j = 0; j < movedPanels.Size(); ++j )
+		for ( int j = 0; j < movedPanels.Count(); ++j )
 		{
 			if (panel == movedPanels[j])
 				found = true;

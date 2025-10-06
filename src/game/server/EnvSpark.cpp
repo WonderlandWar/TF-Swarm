@@ -8,6 +8,7 @@
 #include "cbase.h"
 #include "IEffects.h"
 #include "engine/IEngineSound.h"
+#include "envspark.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -32,35 +33,6 @@ const int SF_SPARK_START_ON			= 64;
 const int SF_SPARK_GLOW				= 128;
 const int SF_SPARK_SILENT			= 256;
 const int SF_SPARK_DIRECTIONAL		= 512;
-
-
-class CEnvSpark : public CPointEntity
-{
-	DECLARE_CLASS( CEnvSpark, CPointEntity );
-
-public:
-	CEnvSpark( void );
-
-	void	Spawn(void);
-	void	Precache(void);
-	void	SparkThink(void);
-
-	// Input handlers
-	void InputStartSpark( inputdata_t &inputdata );
-	void InputStopSpark( inputdata_t &inputdata );
-	void InputToggleSpark( inputdata_t &inputdata );
-	void InputSparkOnce( inputdata_t &inputdata );
-	
-	DECLARE_DATADESC();
-
-	float			m_flDelay;
-	int				m_nGlowSpriteIndex;
-	int				m_nMagnitude;
-	int				m_nTrailLength;
-
-	COutputEvent	m_OnSpark;
-};
-
 
 BEGIN_DATADESC( CEnvSpark )
 

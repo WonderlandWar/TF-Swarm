@@ -1200,7 +1200,7 @@ class CAchievementTFMedic_HealLarge : public CBaseTFAchievement
 
 		if ( m_iCount != iOldCount )
 		{
-			m_pAchievementMgr->SetDirty( true );
+			m_pAchievementMgr->SetDirty( true, GET_ACTIVE_SPLITSCREEN_SLOT() );
 		}
 
 		if ( IsLocalTFPlayerClass( TF_CLASS_MEDIC ) )
@@ -1232,7 +1232,7 @@ class CAchievementTFMedic_HealHuge : public CBaseTFAchievement
 
 		if ( m_iCount != iOldCount )
 		{
-			m_pAchievementMgr->SetDirty( true );
+			m_pAchievementMgr->SetDirty( true, GET_ACTIVE_SPLITSCREEN_SLOT() );
 		}
 
 		if ( IsLocalTFPlayerClass( TF_CLASS_MEDIC ) )
@@ -1262,7 +1262,7 @@ class CAchievementTFMedic_HealGrind : public CBaseTFAchievement
 		m_iCount = classStats.accumulated.m_iStat[TFSTAT_HEALING];
 		if ( m_iCount != iOldCount )
 		{
-			m_pAchievementMgr->SetDirty( true );
+			m_pAchievementMgr->SetDirty( true, GET_ACTIVE_SPLITSCREEN_SLOT() );
 		}
 
 		if ( IsLocalTFPlayerClass( TF_CLASS_MEDIC ) )

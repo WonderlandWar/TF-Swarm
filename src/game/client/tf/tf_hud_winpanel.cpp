@@ -229,7 +229,7 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 			pBGPanel->SetBorder( pScheme->GetBorder( bUseMoreOpaqueBorder ? "TFFatLineBorderBlueBGMoreOpaque" : "TFFatLineBorderBlueBG" ) );
 			pTopPlayersLabel = g_pVGuiLocalize->Find( "#Winpanel_BlueMVPs" );
 			pLocalizedTeamName = pBlueTeamName;
-			g_pVGuiLocalize->ConstructString_safe( wzTeamWin, g_pVGuiLocalize->Find( pWinTeamLabel ), 2, pLocalizedTeamName, g_pVGuiLocalize->Find( "#Winpanel_Team1" ) );
+			g_pVGuiLocalize->ConstructString( wzTeamWin, sizeof( wzTeamWin ), g_pVGuiLocalize->Find( pWinTeamLabel ), 2, pLocalizedTeamName, g_pVGuiLocalize->Find( "#Winpanel_Team1" ) );
 			pTeamLabel = wzTeamWin;
 			break;
 		case TF_TEAM_RED:
@@ -255,7 +255,7 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 				else
 				{
 					bool bBlueAttackers = ( pBlueTeam->GetRole() == TEAM_ROLE_ATTACKERS );
-					g_pVGuiLocalize->ConstructString_safe( wzTeamWin,
+					g_pVGuiLocalize->ConstructString( wzTeamWin, sizeof( wzTeamWin ),
 						g_pVGuiLocalize->Find( "#WinPanel_StopWatch_Round_Complete" ),
 						1,
 						bBlueAttackers ? pBlueTeamName : pRedTeamName );
@@ -273,10 +273,10 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 
 		if ( TFGameRules() && TFGameRules()->IsInTournamentMode() && !TFGameRules()->IsInStopWatch() )
 		{
-			g_pVGuiLocalize->ConstructString_safe( wzTeamWin, g_pVGuiLocalize->Find( pWinTeamLabel ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzTeamWin, sizeof( wzTeamWin ), g_pVGuiLocalize->Find( pWinTeamLabel ), 1, pLocalizedTeamName );
 
 			wchar_t wzTeamMPVs[256];
-			g_pVGuiLocalize->ConstructString_safe( wzTeamMPVs, g_pVGuiLocalize->Find( "#Winpanel_TournamentMVPs" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzTeamMPVs, sizeof( wzTeamMPVs ), g_pVGuiLocalize->Find( "#Winpanel_TournamentMVPs" ), 1, pLocalizedTeamName );
 
 			if ( iWinningTeam != TEAM_UNASSIGNED )
 			{
@@ -285,7 +285,7 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 		}
 		else if ( ( iWinningTeam != TEAM_UNASSIGNED ) && ( iWinningTeam != TEAM_INVALID ) )
 		{
-			g_pVGuiLocalize->ConstructString_safe( wzTeamWin, g_pVGuiLocalize->Find( pWinTeamLabel ), 2, pLocalizedTeamName, g_pVGuiLocalize->Find( "#Winpanel_Team1" ) );
+			g_pVGuiLocalize->ConstructString( wzTeamWin, sizeof( wzTeamWin ), g_pVGuiLocalize->Find( pWinTeamLabel ), 2, pLocalizedTeamName, g_pVGuiLocalize->Find( "#Winpanel_Team1" ) );
 		}
 
 		if ( ( iWinningTeam != TEAM_UNASSIGNED ) && ( iWinningTeam != TEAM_INVALID ) )
@@ -302,11 +302,11 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 			{
 				if ( TFGameRules() && ( TFGameRules()->GetGameType() == TF_GAMETYPE_ESCORT ) && ( TFGameRules()->HasMultipleTrains() == true ) && ( iRoundsRemaining == 0 ) )
 				{
-					g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_PayloadRace" ), 1, pLocalizedTeamName );
+					g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_PayloadRace" ), 1, pLocalizedTeamName );
 				}
 				else
 				{
-					g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_AllPointsCaptured" ), 1, pLocalizedTeamName );
+					g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_AllPointsCaptured" ), 1, pLocalizedTeamName );
 				}
 			}
 			break;
@@ -325,42 +325,42 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 					wpszFormatString = g_pVGuiLocalize->Find( "#Winreason_FlagCaptureLimit" );
 				}
 
-				g_pVGuiLocalize->ConstructString_safe( wzWinReason, wpszFormatString, 2,
+				g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), wpszFormatString, 2,
 					pLocalizedTeamName, wzFlagCaptureLimit );
 			}			
 			break;
 		case WINREASON_OPPONENTS_DEAD:
-			g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_OpponentsDead" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_OpponentsDead" ), 1, pLocalizedTeamName );
 			break;
 		case WINREASON_DEFEND_UNTIL_TIME_LIMIT:
-			g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_DefendedUntilTimeLimit" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_DefendedUntilTimeLimit" ), 1, pLocalizedTeamName );
 			break;
 		case WINREASON_STALEMATE:
 			if ( !TFGameRules() || !TFGameRules()->IsCompetitiveMode() )
 			{
-				g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_Stalemate" ), 0 );
+				g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_Stalemate" ), 0 );
 			}
 			break;	
 		case WINREASON_TIMELIMIT:
-			g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_TimeLimit" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_TimeLimit" ), 1, pLocalizedTeamName );
 			break;
 		case WINREASON_WINLIMIT:
-			g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_WinLimit" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_WinLimit" ), 1, pLocalizedTeamName );
 			break;
 		case WINREASON_WINDIFFLIMIT:
-			g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_WinDiffLimit" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_WinDiffLimit" ), 1, pLocalizedTeamName );
 			break;
 		case WINREASON_RD_REACTOR_CAPTURED:
-			g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_ReactorCaptured" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_ReactorCaptured" ), 1, pLocalizedTeamName );
 			break;
 		case WINREASON_RD_CORES_COLLECTED:
-			g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_CoresCollected" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_CoresCollected" ), 1, pLocalizedTeamName );
 			break;
 		case WINREASON_RD_REACTOR_RETURNED:
-			g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_ReactorReturned" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_ReactorReturned" ), 1, pLocalizedTeamName );
 			break;
 		case WINREASON_PD_POINTS:
-			g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_PlayerDestructionPoints" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_PlayerDestructionPoints" ), 1, pLocalizedTeamName );
 			break;
 		case WINREASON_SCORED:
 			{
@@ -377,7 +377,7 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 					wpszFormatString = g_pVGuiLocalize->Find( "#Winreason_ScoreLimit" );
 				}
 
-				g_pVGuiLocalize->ConstructString_safe( wzWinReason, wpszFormatString, 2,
+				g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), wpszFormatString, 2,
 					pLocalizedTeamName, wzScoreLimit );
 			}			
 			break;
@@ -385,7 +385,7 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 			if ( pBlueTeam && pBlueTeamName && pRedTeamName )
 			{
 				bool bBlueAttackers = ( pBlueTeam->GetRole() == TEAM_ROLE_ATTACKERS );
-				g_pVGuiLocalize->ConstructString_safe( wzWinReason,
+				g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ),
 					g_pVGuiLocalize->Find( "#Winreason_Stopwatch_Watching_Rounds" ),
 					2,
 					bBlueAttackers ? pBlueTeamName : pRedTeamName,
@@ -396,7 +396,7 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 			if ( pBlueTeam && pBlueTeamName && pRedTeamName )
 			{
 				bool bBlueAttackers = ( pBlueTeam->GetRole() == TEAM_ROLE_ATTACKERS );
-				g_pVGuiLocalize->ConstructString_safe( wzWinReason,
+				g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ),
 					g_pVGuiLocalize->Find( "#Winreason_Stopwatch_SwitchSides" ),
 					2,
 					bBlueAttackers ? pRedTeamName : pBlueTeamName,
@@ -407,7 +407,7 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 			if ( pBlueTeam && pBlueTeamName && pRedTeamName )
 			{
 				bool bBlueAttackers = ( pBlueTeam->GetRole() == TEAM_ROLE_ATTACKERS );
-				g_pVGuiLocalize->ConstructString_safe( wzWinReason,
+				g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ),
 					g_pVGuiLocalize->Find( "#Winreason_Stopwatch_Playing_Rounds" ),
 					2,
 					bBlueAttackers ? pBlueTeamName : pRedTeamName,
@@ -427,7 +427,7 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 			wchar_t wzNumCapturesRemaining[16];
 			wchar_t wzCapturesRemainingMsg[256]=L"";
 			_snwprintf( wzNumCapturesRemaining, ARRAYSIZE( wzNumCapturesRemaining ), L"%i", iRoundsRemaining );
-			g_pVGuiLocalize->ConstructString_safe( wzCapturesRemainingMsg,  
+			g_pVGuiLocalize->ConstructString( wzCapturesRemainingMsg, sizeof( wzCapturesRemainingMsg ),  
 				g_pVGuiLocalize->Find( 1 == iRoundsRemaining ? "#Winpanel_CapturePointRemaining" : "Winpanel_CapturePointsRemaining" ),
 				1, wzNumCapturesRemaining );
 			SetDialogVariable( "DetailsLabel", wzCapturesRemainingMsg );
@@ -451,7 +451,7 @@ void CTFWinPanel::FireGameEvent( IGameEvent * event )
 					}
 				}
 				g_pVGuiLocalize->ConvertANSIToUnicode( szPlayerNames, wzPlayerNames, sizeof( wzPlayerNames ) );
-				g_pVGuiLocalize->ConstructString_safe( wzCapMsg, g_pVGuiLocalize->Find( "#Winpanel_WinningCapture" ), 1, wzPlayerNames );
+				g_pVGuiLocalize->ConstructString( wzCapMsg, sizeof( wzCapMsg ), g_pVGuiLocalize->Find( "#Winpanel_WinningCapture" ), 1, wzPlayerNames );
 				SetDialogVariable( "DetailsLabel", wzCapMsg );
 			}
 		}

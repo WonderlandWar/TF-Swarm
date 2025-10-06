@@ -686,7 +686,6 @@ bool	CBaseLoadoutPanel::HandleItemSelectionKeyPressed( vgui::KeyCode code )
 	else if ( nButtonCode == KEY_XBUTTON_DOWN || 
 			  nButtonCode == KEY_XSTICK1_DOWN ||
 			  nButtonCode == KEY_XSTICK2_DOWN ||
-			  nButtonCode == STEAMCONTROLLER_DPAD_DOWN ||
 			  nButtonCode == KEY_DOWN )
 	{
 		SelectAdjacentItem( 0, 1 );
@@ -695,7 +694,6 @@ bool	CBaseLoadoutPanel::HandleItemSelectionKeyPressed( vgui::KeyCode code )
 	else if ( nButtonCode == KEY_XBUTTON_RIGHT || 
 			  nButtonCode == KEY_XSTICK1_RIGHT ||
 			  nButtonCode == KEY_XSTICK2_RIGHT || 
-			  nButtonCode == STEAMCONTROLLER_DPAD_RIGHT ||
 			  nButtonCode == KEY_RIGHT )
 	{
 		SelectAdjacentItem( 1, 0 );
@@ -704,7 +702,6 @@ bool	CBaseLoadoutPanel::HandleItemSelectionKeyPressed( vgui::KeyCode code )
 	else if ( nButtonCode == KEY_XBUTTON_LEFT || 
 			  nButtonCode == KEY_XSTICK1_LEFT ||
 			  nButtonCode == KEY_XSTICK2_LEFT || 
-			  nButtonCode == STEAMCONTROLLER_DPAD_LEFT ||
 			  nButtonCode == KEY_LEFT )
 	{
 		SelectAdjacentItem( -1, 0 );

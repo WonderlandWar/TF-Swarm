@@ -1877,6 +1877,14 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 
 	IGameSystem::LevelInitPreEntityAllSystems(pMapName);
 
+#ifdef USES_ECON_ITEMS
+	GameItemSchema_t *pItemSchema = ItemSystem()->GetItemSchema();
+	if ( pItemSchema )
+	{
+		pItemSchema->BInitFromDelayedBuffer();
+	}
+#endif // USES_ECON_ITEMS
+
 	ResetWindspeed();
 
 #if !defined( NO_ENTITY_PREDICTION )
@@ -2441,6 +2449,7 @@ void OnRenderStart()
 	C_BaseEntity::SetAbsQueriesValid( false );
 
 	Rope_ResetCounters();
+	UpdateLocalPlayerVisionFlags();
 
 	// Interpolate server entities and move aiments.
 	{

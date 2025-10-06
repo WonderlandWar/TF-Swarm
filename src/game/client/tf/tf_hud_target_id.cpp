@@ -845,7 +845,7 @@ void CTargetID::UpdateID( void )
 				{
 					pszPrepend = L"";
 				}
-				g_pVGuiLocalize->ConstructString_safe( sIDString, g_pVGuiLocalize->Find(printFormatString), 2, pszPrepend, wszPlayerName );
+				g_pVGuiLocalize->ConstructString( sIDString, sizeof( sIDString ), g_pVGuiLocalize->Find(printFormatString), 2, pszPrepend, wszPlayerName );
 			}
 
 			// Show target's clip state to attached medics
@@ -950,11 +950,11 @@ void CTargetID::UpdateID( void )
 							_snwprintf( wszChargeLevel, ARRAYSIZE( wszChargeLevel ) - 1, L"%.0f", pDroppedWeapon->GetChargeLevel() * 100 );
 							wszChargeLevel[ARRAYSIZE( wszChargeLevel ) - 1] = '\0';
 
-							g_pVGuiLocalize->ConstructString_safe( sIDString, L"%s1 (%s2%)", 2, CEconItemLocalizedFullNameGenerator( GLocalizationProvider(), pDroppedEconItem->GetItemDefinition(), pDroppedEconItem->GetItemQuality() ).GetFullName(), wszChargeLevel );
+							g_pVGuiLocalize->ConstructString( sIDString, sizeof( sIDString ), L"%s1 (%s2%)", 2, CEconItemLocalizedFullNameGenerator( GLocalizationProvider(), pDroppedEconItem->GetItemDefinition(), pDroppedEconItem->GetItemQuality() ).GetFullName(), wszChargeLevel );
 						}
 						else
 						{
-							g_pVGuiLocalize->ConstructString_safe( sIDString, L"%s1", 1, CEconItemLocalizedFullNameGenerator( GLocalizationProvider(), pDroppedEconItem->GetItemDefinition(), pDroppedEconItem->GetItemQuality() ).GetFullName() );
+							g_pVGuiLocalize->ConstructString( sIDString, sizeof( sIDString ), L"%s1", 1, CEconItemLocalizedFullNameGenerator( GLocalizationProvider(), pDroppedEconItem->GetItemDefinition(), pDroppedEconItem->GetItemQuality() ).GetFullName() );
 						}
 
 						locchar_t wszPlayerName [128];
@@ -963,7 +963,7 @@ void CTargetID::UpdateID( void )
 						if ( pOwner )
 						{
 							g_pVGuiLocalize->ConvertANSIToUnicode( pOwner->GetPlayerName(), wszPlayerName, sizeof(wszPlayerName) );
-							g_pVGuiLocalize->ConstructString_safe( sDataString, g_pVGuiLocalize->Find( "#TF_WhoDropped" ), 1, wszPlayerName );
+							g_pVGuiLocalize->ConstructString( sDataString, sizeof( sDataString ), g_pVGuiLocalize->Find( "#TF_WhoDropped" ), 1, wszPlayerName );
 
 							// Get the rarity color
 							vgui::IScheme *pScheme = vgui::scheme()->GetIScheme( GetScheme() );
@@ -1170,7 +1170,7 @@ int CSecondaryTargetID::CalculateTargetIndex( C_TFPlayer *pLocalTFPlayer )
 	{
 		if ( pHealTarget->entindex() != m_iTargetEntIndex )
 		{
-			g_pVGuiLocalize->ConstructString_safe( m_wszPrepend, g_pVGuiLocalize->Find("#TF_playerid_healtarget" ), 0 );
+			g_pVGuiLocalize->ConstructString( m_wszPrepend, sizeof( m_wszPrepend ), g_pVGuiLocalize->Find("#TF_playerid_healtarget" ), 0 );
 		}
 		return pHealTarget->entindex();
 	}
@@ -1183,7 +1183,7 @@ int CSecondaryTargetID::CalculateTargetIndex( C_TFPlayer *pLocalTFPlayer )
 	{
 		if ( pHealer->entindex() != m_iTargetEntIndex )
 		{
-			g_pVGuiLocalize->ConstructString_safe( m_wszPrepend, g_pVGuiLocalize->Find("#TF_playerid_healer" ), 0 );
+			g_pVGuiLocalize->ConstructString( m_wszPrepend, sizeof( m_wszPrepend ), g_pVGuiLocalize->Find("#TF_playerid_healer" ), 0 );
 		}
 		return pHealer->entindex();
 	}

@@ -326,7 +326,7 @@ void CTFSpectatorGUI::Update()
 		wchar_t wzValue[32];
 		_snwprintf( wzValue, ARRAYSIZE( wzValue ), L"%u", distance );
 		wchar_t wzText[256];
-		g_pVGuiLocalize->ConstructString_safe( wzText, g_pVGuiLocalize->Find( "#TR_DistanceToStudent" ), 1, wzValue );
+		g_pVGuiLocalize->ConstructString( wzText, sizeof( wzText ), g_pVGuiLocalize->Find( "#TR_DistanceToStudent" ), 1, wzValue );
 		SetDialogVariable( "student_distance", wzText );
 	}
 
@@ -364,17 +364,17 @@ void CTFSpectatorGUI::UpdateReinforcements( void )
 	{
 		if ( TFGameRules()->IsInArenaMode() == true )
 		{
-			g_pVGuiLocalize->ConstructString_safe( wLabel, g_pVGuiLocalize->Find( "#TF_Arena_NoRespawning" ), 0 );
+			g_pVGuiLocalize->ConstructString( wLabel, sizeof( wLabel ), g_pVGuiLocalize->Find( "#TF_Arena_NoRespawning" ), 0 );
 		}
 		else
 		{
-			g_pVGuiLocalize->ConstructString_safe( wLabel, g_pVGuiLocalize->Find( "#game_respawntime_stalemate" ), 0 );
+			g_pVGuiLocalize->ConstructString( wLabel, sizeof( wLabel ), g_pVGuiLocalize->Find( "#game_respawntime_stalemate" ), 0 );
 		}
 	}
 	else if ( TFGameRules()->State_Get() == GR_STATE_TEAM_WIN )
 	{
 		// a team has won the round
-		g_pVGuiLocalize->ConstructString_safe( wLabel, g_pVGuiLocalize->Find( "#game_respawntime_next_round" ), 0 );
+		g_pVGuiLocalize->ConstructString( wLabel, sizeof( wLabel ), g_pVGuiLocalize->Find( "#game_respawntime_next_round" ), 0 );
 	}
 	else
 	{
@@ -400,11 +400,11 @@ void CTFSpectatorGUI::UpdateReinforcements( void )
 		int iRespawnWait = (flNextRespawn - gpGlobals->curtime);
 		if ( iRespawnWait <= 0 )
 		{
-			g_pVGuiLocalize->ConstructString_safe( wLabel, g_pVGuiLocalize->Find("#game_respawntime_now" ), 0 );
+			g_pVGuiLocalize->ConstructString( wLabel, sizeof( wLabel ), g_pVGuiLocalize->Find("#game_respawntime_now" ), 0 );
 		}
 		else if ( iRespawnWait <= 1.0 )
 		{
-			g_pVGuiLocalize->ConstructString_safe( wLabel, g_pVGuiLocalize->Find("#game_respawntime_in_sec" ), 0 );
+			g_pVGuiLocalize->ConstructString( wLabel, sizeof( wLabel ), g_pVGuiLocalize->Find("#game_respawntime_in_sec" ), 0 );
 		}
 		else
 		{
@@ -425,7 +425,7 @@ void CTFSpectatorGUI::UpdateReinforcements( void )
 
 					Q_snprintf( szSecs, sizeof( szSecs ), "%d", nCost );
 					g_pVGuiLocalize->ConvertANSIToUnicode( szSecs, wSecs, sizeof( wSecs ) );
-					g_pVGuiLocalize->ConstructString_safe( wLabel, g_pVGuiLocalize->Find( pszString ), 1, wSecs );
+					g_pVGuiLocalize->ConstructString( wLabel, sizeof( wLabel ), g_pVGuiLocalize->Find( pszString ), 1, wSecs );
 
 					wchar_t wBuyBack[256];
 					UTIL_ReplaceKeyBindings( wLabel, 0, wBuyBack, sizeof( wBuyBack ), GAME_ACTION_SET_SPECTATOR );
@@ -437,7 +437,7 @@ void CTFSpectatorGUI::UpdateReinforcements( void )
 			Q_snprintf( szSecs, sizeof(szSecs), "%d", iRespawnWait );
 
 			g_pVGuiLocalize->ConvertANSIToUnicode(szSecs, wSecs, sizeof(wSecs));
-			g_pVGuiLocalize->ConstructString_safe( wLabel, g_pVGuiLocalize->Find("#game_respawntime_in_secs" ), 1, wSecs );
+			g_pVGuiLocalize->ConstructString( wLabel, sizeof( wLabel ), g_pVGuiLocalize->Find("#game_respawntime_in_secs" ), 1, wSecs );
 		}
 	}
 
@@ -483,7 +483,7 @@ void CTFSpectatorGUI::UpdateKeyLabels( void )
 				wchar_t wzTipLabel[512]=L"";
 				const wchar_t *wzTip = g_TFTips.GetNextClassTip( iClass );
 				Assert( wzTip && wzTip[0] );
-				g_pVGuiLocalize->ConstructString_safe( wzTipLabel, g_pVGuiLocalize->Find( "#Tip_Fmt" ), 1, wzTip );
+				g_pVGuiLocalize->ConstructString( wzTipLabel, sizeof( wzTipLabel ), g_pVGuiLocalize->Find( "#Tip_Fmt" ), 1, wzTip );
 				SetDialogVariable( "tip", wzTipLabel );
 			}
 			
@@ -704,7 +704,7 @@ void CTFSpectatorGUI::UpdateKeyLabels( void )
 				Q_strncpy( szMapName, GetMapDisplayName( tempname ), sizeof( szMapName ) );
 
 				g_pVGuiLocalize->ConvertANSIToUnicode( szMapName, wMapName, sizeof(wMapName));
-				g_pVGuiLocalize->ConstructString_safe( wLabel, g_pVGuiLocalize->Find( "#Spec_Map" ), 1, wMapName );
+				g_pVGuiLocalize->ConstructString( wLabel, sizeof( wLabel ), g_pVGuiLocalize->Find( "#Spec_Map" ), 1, wMapName );
 
 				m_pMapLabel->SetText( wLabel ); 
 			}
@@ -725,7 +725,7 @@ void CTFSpectatorGUI::UpdateKeyLabels( void )
 			const char* pStudentName = g_TF_PR->GetPlayerName( pStudent->entindex() );
 
 			g_pVGuiLocalize->ConvertANSIToUnicode( pStudentName, wPlayerName, sizeof(wPlayerName));
-			g_pVGuiLocalize->ConstructString_safe( wLabel, g_pVGuiLocalize->Find( "#TF_Coach_Student_Prefix" ), 1, wPlayerName );
+			g_pVGuiLocalize->ConstructString( wLabel, sizeof( wLabel ), g_pVGuiLocalize->Find( "#TF_Coach_Student_Prefix" ), 1, wPlayerName );
 			
 			SetDialogVariable( "student_name", wLabel ); 
 		}
@@ -852,7 +852,7 @@ void CTFSpectatorGUI::ShowPanel(bool bShow)
 					pSaveReplayKey = "< not bound >";
 				}
 				g_pVGuiLocalize->ConvertANSIToUnicode( pSaveReplayKey, wKeyBind, sizeof( wKeyBind ) );
-				g_pVGuiLocalize->ConstructString_safe( wText, g_pVGuiLocalize->Find( "#Replay_SaveThisLifeMsg" ), 1, wKeyBind );
+				g_pVGuiLocalize->ConstructString( wText, sizeof( wText ), g_pVGuiLocalize->Find( "#Replay_SaveThisLifeMsg" ), 1, wKeyBind );
 				g_pVGuiLocalize->ConvertUnicodeToANSI( wText, szText, sizeof( szText ) );
 
 				GetClientMode()->DisplayReplayMessage( szText, -1.0f, false, NULL, false );

@@ -407,7 +407,7 @@ void CCharInfoLoadoutSubPanel::OnPageShow( void )
 	// If this is the first time we've opened the loadout, start the loadout explanations
 	if ( !tf_explanations_charinfopanel.GetBool() && ShouldShowExplanations() )
 	{
-		m_flStartExplanationsAt = engine->Time() + 0.5;
+		m_flStartExplanationsAt = Plat_FloatTime() + 0.5;
 	}
 
 }
@@ -589,7 +589,7 @@ void CCharInfoLoadoutSubPanel::OnCommand( const char *command )
 	{
 		if ( !m_flStartExplanationsAt )
 		{
-			m_flStartExplanationsAt = engine->Time();
+			m_flStartExplanationsAt = Plat_FloatTime();
 		}
 		RequestFocus();
 	}
@@ -920,7 +920,7 @@ void CCharInfoLoadoutSubPanel::UpdateLabelFromClass( int nClass )
 		wchar_t wzCount[10];
 		_snwprintf( wzCount, ARRAYSIZE( wzCount ), L"%d", iNumItems );
 		wchar_t	wTemp[32];
-		g_pVGuiLocalize->ConstructString_safe( wTemp, g_pVGuiLocalize->Find("ItemsFoundShort"), 1, wzCount );
+		g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), g_pVGuiLocalize->Find("ItemsFoundShort"), 1, wzCount );
 		m_pItemsLabel->SetText( wTemp );
 		m_pItemsLabel->SetColorStr( m_ItemColor );
 	}
@@ -972,7 +972,7 @@ void CCharInfoLoadoutSubPanel::UpdateLabelFromSubButton( int nButton )
 				wchar_t wzCount[10];
 				_snwprintf( wzCount, ARRAYSIZE( wzCount ), L"%d", iNumItems );
 				wchar_t	wTemp[32];
-				g_pVGuiLocalize->ConstructString_safe( wTemp, g_pVGuiLocalize->Find("Loadout_OpenBackpackDesc"), 1, wzCount );
+				g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), g_pVGuiLocalize->Find("Loadout_OpenBackpackDesc"), 1, wzCount );
 				m_pItemsLabel->SetText( wTemp );
 			}
 		}
@@ -1042,7 +1042,7 @@ void CCharInfoLoadoutSubPanel::OnTick( void )
 	if ( !TFInventoryManager()->GetLocalTFInventory()->RetrievedInventoryFromSteam() )
 		return;
 
-	if ( m_flStartExplanationsAt && m_flStartExplanationsAt < engine->Time() )
+	if ( m_flStartExplanationsAt && m_flStartExplanationsAt < Plat_FloatTime() )
 	{
 		m_flStartExplanationsAt = 0;
 

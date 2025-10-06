@@ -640,7 +640,7 @@ public:
 						pNewAccount->m_nSourceID = pVictim->entindex();
 						pNewAccount->m_flBatchWindow = hud_combattext_batching.GetBool() ? hud_combattext_batching_window.GetFloat() : 0.f;
 						pNewAccount->m_bLargeFont = bIsCrit;
-						//	V_swprintf_safe( pNewAccount->m_wzText, L" (%d)", m_nQueuedDamageEvents );
+						//	swprintf( pNewAccount->m_wzText, L" (%d)", m_nQueuedDamageEvents );
 					}
 				}
 			}
@@ -963,7 +963,7 @@ void CDamageAccountPanel::Paint( void )
 		vgui::surface()->DrawSetTextPos( nX, nY );
 
 		wchar_t wDPSBuf[20];
-		V_swprintf_safe( wDPSBuf, L"%d DPS", (int)m_flDamagePerSecond );
+		swprintf( wDPSBuf, L"%d DPS", (int)m_flDamagePerSecond );
 		vgui::surface()->DrawPrintText( wDPSBuf, wcslen( wDPSBuf ), FONT_DRAW_NONADDITIVE );
 	}
 }
@@ -1138,18 +1138,18 @@ void CAccountPanel::Paint( void )
 
 			if ( m_AccountDeltaItems[i].m_iAmount > 0 )
 			{
-				V_swprintf_safe( wBuf, L"+%d", m_AccountDeltaItems[i].m_iAmount );
+				swprintf( wBuf, L"+%d", m_AccountDeltaItems[i].m_iAmount );
 			}
 			else
 			{
-				V_swprintf_safe( wBuf, L"%d", m_AccountDeltaItems[i].m_iAmount );
+				swprintf( wBuf, L"%d", m_AccountDeltaItems[i].m_iAmount );
 			}
 
 			// Append?
 			if ( m_AccountDeltaItems[i].m_wzText[0] )
 			{
 				wchar_t wAppend[8] = { 0 };
-				V_swprintf_safe( wAppend, L"%ls", m_AccountDeltaItems[i].m_wzText );
+				swprintf( wAppend, L"%ls", m_AccountDeltaItems[i].m_wzText );
 				V_wcscat_safe( wBuf, wAppend );
 			}
 

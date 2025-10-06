@@ -8,7 +8,7 @@
 
 // for full cloak effect
 extern ConVar tf_teammate_max_invis;
-
+#if 0
 C_TFHaptics::C_TFHaptics()
 {
 	memset(this, 0, sizeof(C_TFHaptics));
@@ -183,3 +183,4 @@ public:
 static C_TFHapticsInternal tfInternalHaptics;
 
 C_TFHaptics &tfHaptics = *((C_TFHaptics*)&tfInternalHaptics);
+#endif

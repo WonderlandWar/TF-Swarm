@@ -49,6 +49,20 @@ public:
 	void			ToSockadr(struct sockaddr *s) const;
 	unsigned int	GetIP() const;
 
+	// Returns 0xAABBCCDD for AA.BB.CC.DD on all platforms, which is the same format used by SetIP().
+	// (So why isn't it just named GetIP()?  Because previously there was a fucntion named GetIP(), and
+	// it did NOT return back what you put into SetIP().  So we nuked that guy.)
+	unsigned int GetIPHostByteOrder() const
+	{
+		return BigDWord( GetIPNetworkByteOrder() );
+	}
+
+	// Returns a number that depends on the platform.  In most cases, this probably should not be used.
+	unsigned int GetIPNetworkByteOrder() const
+	{
+		return *(unsigned int *)&ip;
+	}
+
 	bool	IsLocalhost() const; // true, if this is the localhost IP 
 	bool	IsLoopback() const;	// true if engine loopback buffers are used
 	bool	IsReservedAdr() const; // true, if this is a private LAN IP

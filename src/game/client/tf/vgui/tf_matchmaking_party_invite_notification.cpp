@@ -75,7 +75,7 @@ CInviteNotification::CInviteNotification( CSteamID steamID, CTFParty::EPendingTy
 	}
 
 	KeyValues* pKV = new KeyValues( (const char*)NULL, "other", CStrAutoEncode( strName ).ToWString() );
-	g_pVGuiLocalize->ConstructString_safe( wszBuf, pszRequestString, pKV );
+	g_pVGuiLocalize->ConstructString( wszBuf, sizeof( wszBuf ), pszRequestString, pKV );
 	pKV->deleteThis();
 	SetDialogVariable( "invite", wszBuf );
 	SetControlVisible( "AcceptButton", bIncoming );

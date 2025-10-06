@@ -980,7 +980,7 @@ void CTFStorePreviewItemPanel2::PreviewItem( int iClass, CEconItemView *pItem, c
 						MakeMoneyString( wzRentalLocalizedPrice, ARRAYSIZE( wzRentalLocalizedPrice ), flRentalPriceScale * iTotalPrice, eCurrency )
 
 						wchar_t wzLocalizedPriceString[96];
-						::ILocalize::ConstructString_safe( wzLocalizedPriceString, pwsRentalPriceFormat, 2, wzLocalizedPrice, wzRentalLocalizedPrice );
+						::ILocalize::ConstructString( wzLocalizedPriceString, sizeof( wzLocalizedPriceString ), pwsRentalPriceFormat, 2, wzLocalizedPrice, wzRentalLocalizedPrice );
 						m_pDetailsViewChild->SetDialogVariable( "price", wzLocalizedPriceString );
 					}
 					else
@@ -991,8 +991,8 @@ void CTFStorePreviewItemPanel2::PreviewItem( int iClass, CEconItemView *pItem, c
 							if ( iTotalPrice != 0 )
 							{
 								wchar_t wzMarketString[96];
-								g_pVGuiLocalize->ConstructString_safe(
-									wzMarketString,
+								g_pVGuiLocalize->ConstructString(
+									wzMarketString, sizeof( wzMarketString ),
 									LOCCHAR( "%s1 %s2" ),
 									2,
 									g_pVGuiLocalize->Find( "#Store_StartingAt" ),

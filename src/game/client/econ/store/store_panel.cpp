@@ -899,13 +899,13 @@ void CStorePanel::UpsellStamps( void )
 	wchar_t *pwchMapName = g_pVGuiLocalize->Find( pUpsellMap->pszMapNameLocKey );
 
 	char szMapHours[ 8 ];
-	V_sprintf_safe( szMapHours, "%i", nUpsellNumHours );
+	sprintf( szMapHours, "%i", nUpsellNumHours );
 
 	wchar_t wszMapHours[ 8 ];
 	g_pVGuiLocalize->ConvertANSIToUnicode( szMapHours, wszMapHours, sizeof( wszMapHours ) );
 
 	wchar_t wchDonationDescription[ 512 ];
-	g_pVGuiLocalize->ConstructString_safe( wchDonationDescription, g_pVGuiLocalize->Find( "#Store_ConfirmStampDonationAddText" ), 2, pwchMapName, wszMapHours );
+	g_pVGuiLocalize->ConstructString( wchDonationDescription, sizeof( wchDonationDescription ), g_pVGuiLocalize->Find( "#Store_ConfirmStampDonationAddText" ), 2, pwchMapName, wszMapHours );
 	
 	CStampUpsellDialog *pDialog = vgui::SETUP_PANEL( new CStampUpsellDialog( "#Store_ConfirmStampDonationAddTitle", 
 		wchDonationDescription, g_pVGuiLocalize->Find( "#Store_ConfirmStampDonationAddText2" ), 

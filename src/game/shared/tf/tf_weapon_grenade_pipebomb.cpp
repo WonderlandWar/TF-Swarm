@@ -342,12 +342,12 @@ void CTFGrenadePipebombProjectile::CreateTrailParticles( void )
 
 extern ConVar tf_grenadelauncher_livetime;
 
-void CTFGrenadePipebombProjectile::Simulate( void )
+bool CTFGrenadePipebombProjectile::Simulate( void )
 {
 	BaseClass::Simulate();
 
 	if ( !HasStickyEffects() )
-		return;
+		return true;
 
 	if ( m_bPulsed == false )
 	{
@@ -370,18 +370,20 @@ void CTFGrenadePipebombProjectile::Simulate( void )
 			}
 		}
 	}
+
+	return true;
 }
 
 //------------------------------------------------------------------------------
 // Purpose: Don't draw if we haven't yet gone past our original spawn point
 // Input  : flags - 
 //-----------------------------------------------------------------------------
-int CTFGrenadePipebombProjectile::DrawModel( int flags )
+int CTFGrenadePipebombProjectile::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	if ( gpGlobals->curtime < ( m_flCreationTime + 0.1 ) )
 		return 0;
 
-	return BaseClass::DrawModel( flags );
+	return BaseClass::DrawModel( flags, instance );
 }
 
 #else

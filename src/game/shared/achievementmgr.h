@@ -14,7 +14,11 @@
 #include "GameEventListener.h"
 #include "iachievementmgr.h"
 #include "utlmap.h"
+#ifndef NO_STEAM
 #include "steam/steam_api.h"
+#endif
+
+#define THINK_CLEAR		-1
 
 typedef void* AsyncHandle_t;
 
@@ -83,6 +87,9 @@ public:
 	STEAM_CALLBACK( CAchievementMgr, Steam_OnUserStatsReceived, UserStatsReceived_t, m_CallbackUserStatsReceived );
 	STEAM_CALLBACK( CAchievementMgr, Steam_OnUserStatsStored, UserStatsStored_t, m_CallbackUserStatsStored );
 #endif
+
+	void SetAchievementThink( CBaseAchievement *pAchievement, float flThinkTime );
+
 	const CUtlVector<int>& GetAchievedDuringCurrentGame( int nPlayerSlot );
 	void ResetAchievedDuringCurrentGame( int nPlayerSlot );
 	virtual void FireGameEvent( IGameEvent *event );
@@ -97,6 +104,13 @@ private:
 	CUtlVector<CBaseAchievement *> m_vecMapEventListeners[MAX_SPLITSCREEN_PLAYERS];		// vector of achievements that are listening for map events
 	CUtlVector<CBaseAchievement *> m_vecComponentListeners[MAX_SPLITSCREEN_PLAYERS];	// vector of achievements that are listening for components that make up an achievement
 	CUtlVector<CBaseAchievement *>	 m_vecAchievementInOrder[MAX_SPLITSCREEN_PLAYERS];	// vector of all achievements for accessing by display order
+
+	struct achievementthink_t
+	{
+		float			 m_flThinkTime;
+		CBaseAchievement *pAchievement;
+	};
+	CUtlVector<achievementthink_t> m_vecThinkListeners;					// vector of achievements that are actively thinking
 
 	float m_flLevelInitTime[MAX_SPLITSCREEN_PLAYERS];
 	float m_flLastClassChangeTime[MAX_SPLITSCREEN_PLAYERS];		// Time when player last changed class

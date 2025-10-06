@@ -159,15 +159,15 @@ void CTFTrainingComplete::SetUpResults( IGameEvent *event )
 		wchar_t wsText_LastMap[MAX_TRAINING_MSG_LENGTH];
 		wchar_t wsText_NextMap[MAX_TRAINING_MSG_LENGTH];
 #ifdef WIN32
-		V_swprintf_safe( wsText_LastMap, L"%S", GetMapDisplayName( map ) );
-		V_swprintf_safe( wsText_NextMap, L"%S", GetMapDisplayName( nextMap ) );
+		swprintf( wsText_LastMap, L"%S", GetMapDisplayName( map ) );
+		swprintf( wsText_NextMap, L"%S", GetMapDisplayName( nextMap ) );
 #else
 		// GetMapDisplayName returns char * which is %s, NOT %S, on Posix
-		V_swprintf_safe( wsText_LastMap, L"%s", GetMapDisplayName( map ) );
-		V_swprintf_safe( wsText_NextMap, L"%s", GetMapDisplayName( nextMap ) );		
+		swprintf( wsText_LastMap, L"%s", GetMapDisplayName( map ) );
+		swprintf( wsText_NextMap, L"%s", GetMapDisplayName( nextMap ) );		
 #endif
 		wchar_t wsResult[MAX_TRAINING_MSG_LENGTH];
-		g_pVGuiLocalize->ConstructString_safe( wsResult, g_pVGuiLocalize->Find( endText ), 2, wsText_LastMap, wsText_NextMap );
+		g_pVGuiLocalize->ConstructString( wsResult, sizeof( wsResult ), g_pVGuiLocalize->Find( endText ), 2, wsText_LastMap, wsText_NextMap );
 		pRichText->SetText( wsResult );
 
 		bHasNextMap = Q_stricmp( nextMap, "" ) != 0;
@@ -177,7 +177,7 @@ void CTFTrainingComplete::SetUpResults( IGameEvent *event )
 
 	extern int Training_GetProgressCount();
 	TFGameRules()->SetAllowTrainingAchievements( true );
-	g_AchievementMgrTF.UpdateAchievement( ACHIEVEMENT_TF_COMPLETE_TRAINING, Training_GetProgressCount() );
+	g_AchievementMgrTF.UpdateAchievement( ACHIEVEMENT_TF_COMPLETE_TRAINING, Training_GetProgressCount(), GET_ACTIVE_SPLITSCREEN_SLOT() );
 }
 
 //-----------------------------------------------------------------------------

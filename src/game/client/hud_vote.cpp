@@ -1555,18 +1555,18 @@ void CHudVote::MsgFunc_VoteStart( bf_read &msg )
 	{
 		// YES / NO UI
 		wchar_t wzFinal[k_MAX_VOTE_NAME_LENGTH] = L"";
-		wchar_t *pszText = g_pVGuiLocalize->Find( ::input->IsSteamControllerActive() ? "#GameUI_vote_yes_sc_instruction" : "#GameUI_vote_yes_pc_instruction" );
+		wchar_t *pszText = g_pVGuiLocalize->Find( "#GameUI_vote_yes_pc_instruction" );
 		if ( pszText )
 		{
-			UTIL_ReplaceKeyBindings( pszText, 0, wzFinal, sizeof( wzFinal ), ::input->IsSteamControllerActive() ? GAME_ACTION_SET_FPSCONTROLS : GAME_ACTION_SET_NONE );
+			UTIL_ReplaceKeyBindings( pszText, 0, wzFinal, sizeof( wzFinal ), GAME_ACTION_SET_NONE );
 			if ( pVotePanel->m_pVoteActive )
 				pVotePanel->m_pVoteActive->SetControlString( "LabelOption1", wzFinal );
 		}
 
-		pszText = g_pVGuiLocalize->Find( ::input->IsSteamControllerActive() ? "#GameUI_vote_no_sc_instruction" : "#GameUI_vote_no_pc_instruction" );
+		pszText = g_pVGuiLocalize->Find( "#GameUI_vote_no_pc_instruction" );
 		if ( pszText )
 		{
-			UTIL_ReplaceKeyBindings( pszText, 0, wzFinal, sizeof( wzFinal ), ::input->IsSteamControllerActive() ? GAME_ACTION_SET_FPSCONTROLS : GAME_ACTION_SET_NONE );
+			UTIL_ReplaceKeyBindings( pszText, 0, wzFinal, sizeof( wzFinal ), GAME_ACTION_SET_NONE );
 			if ( pVotePanel->m_pVoteActive )
 				pVotePanel->m_pVoteActive->SetControlString( "LabelOption2", wzFinal );
 		}

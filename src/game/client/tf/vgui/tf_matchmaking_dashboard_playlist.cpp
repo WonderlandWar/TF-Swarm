@@ -167,22 +167,22 @@ void CPlayListEntry::UpdateBannedState()
 					// Less than an hour ban
 					if ( nDurationHours < 1 )
 					{
-						g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#TF_Matchmaking_Ban_Duration_Remaining_Short" ), 2, wszDurationMinutes, wszMinutesRemaining );
+						g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#TF_Matchmaking_Ban_Duration_Remaining_Short" ), 2, wszDurationMinutes, wszMinutesRemaining );
 					}
 					else
 					{
-						g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#TF_Matchmaking_Ban_Duration_Remaining" ), 4, wszDurationHours, wszDurationMinutes, wszHoursRemaining, wszMinutesRemaining );
+						g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#TF_Matchmaking_Ban_Duration_Remaining" ), 4, wszDurationHours, wszDurationMinutes, wszHoursRemaining, wszMinutesRemaining );
 					}
 				}
 				// Long ban (at least "nDaysForLongBan" days) but less than that remaining
 				else if ( nDaysRemaining < nDaysForLongBan )
 				{
-					g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#TF_Matchmaking_Ban_Duration_Remaining_Long_Penalty_Short_Duration" ), 4, wszDurationDays, wszDurationHours, wszHoursRemaining, wszMinutesRemaining );
+					g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#TF_Matchmaking_Ban_Duration_Remaining_Long_Penalty_Short_Duration" ), 4, wszDurationDays, wszDurationHours, wszHoursRemaining, wszMinutesRemaining );
 				}
 				// Long ban and at least that long remaining)
 				else
 				{
-					g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "TF_Matchmaking_Ban_Duration_Remaining_Long_Penalty" ), 4, wszDurationDays, wszDurationHours, wszDaysRemaining, wszHoursRemaining );
+					g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "TF_Matchmaking_Ban_Duration_Remaining_Long_Penalty" ), 4, wszDurationDays, wszDurationHours, wszDaysRemaining, wszHoursRemaining );
 				}
 				pBanLabel->SetText( wszLocalized );
 			}

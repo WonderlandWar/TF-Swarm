@@ -1033,11 +1033,11 @@ void CEconItemDetailsRichText::AddDataText( const char *pszText, bool bAddPostLi
 	{
 		if ( wpszArg2 )
 		{
-			g_pVGuiLocalize->ConstructString_safe( wszConstructedString, pLocText, 2, wpszArg, wpszArg2 );
+			g_pVGuiLocalize->ConstructString( wszConstructedString, sizeof( wszConstructedString ), pLocText, 2, wpszArg, wpszArg2 );
 		}
 		else
 		{
-			g_pVGuiLocalize->ConstructString_safe( wszConstructedString, pLocText, 1, wpszArg );
+			g_pVGuiLocalize->ConstructString( wszConstructedString, sizeof( wszConstructedString ), pLocText, 1, wpszArg );
 		}
 		pLocText = wszConstructedString;
 	}

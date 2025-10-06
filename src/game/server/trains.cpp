@@ -1404,10 +1404,18 @@ void CFuncTrackTrain::InputSetSpeedDir( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CFuncTrackTrain::InputSetSpeedDirAccel( inputdata_t &inputdata )
 {
-	float newSpeed = inputdata.value.Float();
+	SetSpeedDirAccel( inputdata.value.Float() );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CFuncTrackTrain::SetSpeedDirAccel( float flNewSpeed )
+{
+	float newSpeed = flNewSpeed;
 	SetDirForward( newSpeed >= 0 );
-	newSpeed = fabs(newSpeed);
-	float flScale = clamp( newSpeed, 0, 1 );
+	newSpeed = fabs( newSpeed );
+	float flScale = clamp( newSpeed, 0.f, 1.f );
 	SetSpeed( m_maxSpeed * flScale, true );
 }
 

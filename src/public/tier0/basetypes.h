@@ -47,6 +47,7 @@
 #define NULL 0
 #endif
 
+#include <stdint.h>
 
 #ifdef POSIX
 template<class T>

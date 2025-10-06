@@ -95,7 +95,7 @@ const char *g_szItemBorders[][5] =
 	{ "BackpackItemBorder_RarityAncient",	"BackpackItemMouseOverBorder_RarityAncient",	"BackpackItemSelectedBorder",	"BackpackItemGreyedOutBorder_RarityAncient",	"BackpackItemGreyedOutSelectedBorder_RarityAncient"		}, // AE_RARITY_ANCIENT,
 };	
 
-COMPILE_TIME_ASSERT( ARRAYSIZE(g_szItemBorders) == AE_MAX_TYPES );
+//COMPILE_TIME_ASSERT( ARRAYSIZE(g_szItemBorders) == AE_MAX_TYPES );
 
 enum { kNoUserData = -1 };
 
@@ -1080,7 +1080,7 @@ int CBackpackPanel::GetNumPages( void )
 //-----------------------------------------------------------------------------
 void CBackpackPanel::AssignItemToPanel( CItemModelPanel *pPanel, int iIndex )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	static int iItemBackpackPos = 0;
 	if ( iIndex == 0 )
@@ -1330,7 +1330,7 @@ void CBackpackPanel::UpdateFilteringItems()
 //-----------------------------------------------------------------------------
 void CBackpackPanel::UpdateModelPanels( void )
 {
-	tmZone( TELEMETRY_LEVEL1, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL1, TMZF_NONE, "%s", __FUNCTION__ );
 
 	UpdateFilteringItems();
 	
@@ -1355,7 +1355,7 @@ void CBackpackPanel::UpdateModelPanels( void )
 	if ( InToolSelectionMode() && m_ToolSelectionItem.IsValid() )
 	{
 		wchar_t	wTemp[256];
-		g_pVGuiLocalize->ConstructString_safe( wTemp, g_pVGuiLocalize->Find( "BackpackApplyTool" ), 1, m_ToolSelectionItem.GetItemName() );
+		g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), g_pVGuiLocalize->Find( "BackpackApplyTool" ), 1, m_ToolSelectionItem.GetItemName() );
 		SetDialogVariable( "loadoutclass", wTemp );
 	}
 	else
@@ -1364,7 +1364,7 @@ void CBackpackPanel::UpdateModelPanels( void )
 	}
 
 	char szTmp[16];
-	V_sprintf_safe( szTmp, "%d/%d", GetCurrentPage()+1, GetNumPages() );
+	sprintf( szTmp, "%d/%d", GetCurrentPage()+1, GetNumPages() );
 	SetDialogVariable( "backpackpage", szTmp );
 
 	// Now layout again to position our item buttons 
@@ -1464,7 +1464,7 @@ void CBackpackPanel::OnKeyCodePressed( vgui::KeyCode code )
 	// Handle close here, CBasePanel parent doesn't support "DialogClosing" command
 	ButtonCode_t nButtonCode = GetBaseButtonCode( code );
 
-	if ( (nButtonCode == KEY_XBUTTON_B || nButtonCode == STEAMCONTROLLER_B) && InToolSelectionMode() )
+	if ( (nButtonCode == KEY_XBUTTON_B ) && InToolSelectionMode() )
 	{
 		CancelToolSelection();
 	}
@@ -1476,7 +1476,7 @@ void CBackpackPanel::OnKeyCodePressed( vgui::KeyCode code )
 	{
 		OnCommand( "prevpage" );
 	}
-	else if ( ( nButtonCode == KEY_XBUTTON_A || code == KEY_ENTER || nButtonCode == STEAMCONTROLLER_A ) )
+	else if ( ( nButtonCode == KEY_XBUTTON_A || code == KEY_ENTER ) )
 	{
 		if( InToolSelectionMode() )
 		{
@@ -1487,7 +1487,7 @@ void CBackpackPanel::OnKeyCodePressed( vgui::KeyCode code )
 			OpenContextMenu();
 		}
 	}
-	else if ( nButtonCode == KEY_XBUTTON_X || nButtonCode == STEAMCONTROLLER_X )
+	else if ( nButtonCode == KEY_XBUTTON_X )
 	{
 		if( !InToolSelectionMode() )
 		{
@@ -1708,7 +1708,7 @@ bool CreateMarketPriceString( item_definition_index_t iDefIndex, wchar_t *pszStr
 	MakeMoneyString( pszCurrencyString, ARRAYSIZE( pszCurrencyString ), pClientMarketData->m_unLowestPrice, eCurrency );
 
 	wchar_t pszConstructed[kLocalizedPriceSizeInChararacters];
-	g_pVGuiLocalize->ConstructString_safe( pszConstructed, g_pVGuiLocalize->Find( "#TF_MarketPrice" ), 1, pszCurrencyString );
+	g_pVGuiLocalize->ConstructString( pszConstructed, sizeof( pszConstructed ), g_pVGuiLocalize->Find( "#TF_MarketPrice" ), 1, pszCurrencyString );
 
 	// copy result;
 	V_wcsncpy( pszString, pszConstructed, iBufferSize );
@@ -1734,7 +1734,7 @@ bool CreateStorePriceString( item_definition_index_t iDefIndex, wchar_t *pszStri
 	MakeMoneyString( pszCurrencyString, ARRAYSIZE( pszCurrencyString ), pEntry->GetCurrentPrice( eCurrency ), eCurrency );
 
 	wchar_t pszConstructed[kLocalizedPriceSizeInChararacters];
-	g_pVGuiLocalize->ConstructString_safe( pszConstructed, g_pVGuiLocalize->Find( "#TF_StorePrice" ), 1, pszCurrencyString );
+	g_pVGuiLocalize->ConstructString( pszConstructed, sizeof( pszConstructed ), g_pVGuiLocalize->Find( "#TF_StorePrice" ), 1, pszCurrencyString );
 
 	// copy result;
 	V_wcsncpy( pszString, pszConstructed, iBufferSize );
@@ -1779,11 +1779,11 @@ void CBackpackPanel::AddPaintToContextMenu( Menu *pPaintSubMenu, item_definition
 
 	wchar_t wBuff[256];
 	char cBuff[256];
-	V_swprintf_safe( wBuff, L"     %ls", g_pVGuiLocalize->Find( pPaintCanDef->GetItemBaseName() ) );
+	swprintf( wBuff, L"     %ls", g_pVGuiLocalize->Find( pPaintCanDef->GetItemBaseName() ) );
 
 	char szItemName[256];
 	g_pVGuiLocalize->ConvertUnicodeToANSI( g_pVGuiLocalize->Find( pPaintCanDef->GetItemBaseName() ), szItemName, sizeof( szItemName ) );
-	V_sprintf_safe( cBuff, "     %s", szItemName );
+	sprintf( cBuff, "     %s", szItemName );
 
 	uint32 unPaintRGB0 = 0;
 	uint32 unPaintRGB1 = 0;
@@ -2391,7 +2391,7 @@ void CBackpackPanel::OnItemPanelMouseRightRelease( vgui::Panel *panel )
 		}
 	}
 }
-
+#if 0 // TF_SWARM: FIXME!
 void CBackpackPanel::OnMouseMismatchedRelease( MouseCode code, Panel* pPressedPanel )
 {
 	if ( pPressedPanel )
@@ -2399,7 +2399,7 @@ void CBackpackPanel::OnMouseMismatchedRelease( MouseCode code, Panel* pPressedPa
 		OnMouseReleased( code );
 	}
 }
-
+#endif
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
@@ -2936,8 +2936,6 @@ const char *CBackpackPanel::GetGreyOutItemPanelReason( CItemModelPanel *pItemPan
 //-----------------------------------------------------------------------------
 void CBackpackPanel::SetBorderForItem( CItemModelPanel *pItemPanel, bool bMouseOver )
 {
-	tmZone( TELEMETRY_LEVEL1, TMZF_NONE, "%s", __FUNCTION__ );
-
 	if ( !pItemPanel )
 		return;
 

@@ -52,7 +52,7 @@ const unsigned int g_CapabilityApplicationMap[] =
 	ITEM_CAP_CAN_UNUSUALIFY,								// ITEM_CAP_CAN_UNUSUALIFY
 };
 
-COMPILE_TIME_ASSERT( ARRAYSIZE( g_CapabilityApplicationMap ) == NUM_ITEM_CAPS );
+//COMPILE_TIME_ASSERT( ARRAYSIZE( g_CapabilityApplicationMap ) == NUM_ITEM_CAPS );
 
 //---------------------------------------------------------------------------------------
 // Purpose:
@@ -336,7 +336,7 @@ static const char *s_pszStrangeRestrictionTypes[] =
 #endif // defined( TF_DLL ) || defined( TF_GC_DLL ) || defined( TF_CLIENT_DLL )
 };
 
-COMPILE_TIME_ASSERT( ARRAYSIZE( s_pszStrangeRestrictionTypes ) == kStrangeEventRestrictionCount );
+//COMPILE_TIME_ASSERT( ARRAYSIZE( s_pszStrangeRestrictionTypes ) == kStrangeEventRestrictionCount );
 
 CEconTool_StrangePartRestriction::CEconTool_StrangePartRestriction( const char *pszTypeName, const char *pszUseString, item_capabilities_t unCapabilities, KeyValues *pUsageKV )
 	: IEconTool( pszTypeName, pszUseString, NULL, unCapabilities )

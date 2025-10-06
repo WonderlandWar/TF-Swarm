@@ -36,7 +36,7 @@ C_TFAmmoPack::~C_TFAmmoPack( void )
 // Input  : flags - 
 // Output : int
 //-----------------------------------------------------------------------------
-int C_TFAmmoPack::DrawModel( int flags )
+int C_TFAmmoPack::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 #ifdef _DEBUG
 	// Debug!
@@ -50,7 +50,7 @@ int C_TFAmmoPack::DrawModel( int flags )
 	}
 #endif // _DEBUG
 
-	return BaseClass::DrawModel( flags );
+	return BaseClass::DrawModel( flags, instance );
 }
 
 //-----------------------------------------------------------------------------

@@ -131,7 +131,7 @@ void CHudArenaNotification::FireGameEvent( IGameEvent * event )
 		_snwprintf( wStreak, ARRAYSIZE( wStreak ), L"%i", iStreak );
 
 		wchar_t wszLocalized[100];
-		g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#TF_Arena_MaxStreak" ), 2, pTeam->Get_Localized_Name(), wStreak );
+		g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#TF_Arena_MaxStreak" ), 2, pTeam->Get_Localized_Name(), wStreak );
 		
 
 		char szLocalized[100];

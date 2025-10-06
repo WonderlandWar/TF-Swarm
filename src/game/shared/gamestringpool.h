@@ -20,6 +20,7 @@ class IGameSystem;
 // String allocation
 //-----------------------------------------------------------------------------
 string_t AllocPooledString( const char *pszValue );
+string_t AllocPooledString_StaticConstantStringPointer( const char *pszGlobalConstValue );
 string_t FindPooledString( const char *pszValue );
 void PurgeDeferredPooledStrings();
 

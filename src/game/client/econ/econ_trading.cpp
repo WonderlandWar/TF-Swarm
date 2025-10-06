@@ -526,7 +526,7 @@ void Trading_RequestTrade( const CSteamID &steamID )
 			CTradingWaitDialog *pDialog = new CTradingWaitDialog( "#TF_Trading_TimeoutPartyB_Named", wszPlayerName );
 			ShowWaitingDialog( pDialog, "#TF_Trading_WaitingForPartyB", true, true, 30.0f );
 			wchar_t wszConstructedString[1024];
-			g_pVGuiLocalize->ConstructString_safe( wszConstructedString, g_pVGuiLocalize->Find( "#TF_Trading_WaitingForPartyB_Named" ), 1, wszPlayerName );
+			g_pVGuiLocalize->ConstructString( wszConstructedString, sizeof( wszConstructedString ), g_pVGuiLocalize->Find( "#TF_Trading_WaitingForPartyB_Named" ), 1, wszPlayerName );
 			pDialog->SetDialogVariable( "updatetext", wszConstructedString );
 		}
 		else

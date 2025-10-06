@@ -774,7 +774,7 @@ void CTFHudTimeStatus::OnThink()
 
 					if ( !nServerTimeLimit )
 					{
-						g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#TF_HUD_ServerNoTimeLimit" ), 0);
+						g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#TF_HUD_ServerNoTimeLimit" ), 0);
 						SetDialogVariable( "servertimeleft", wzServerTimeLeft );
 						return;
 					}
@@ -783,7 +783,7 @@ void CTFHudTimeStatus::OnThink()
 
 					if ( iTimeLeft == 0 )
 					{
-						g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#TF_HUD_ServerChangeOnRoundEnd" ), 0);
+						g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#TF_HUD_ServerChangeOnRoundEnd" ), 0);
 						SetDialogVariable( "servertimeleft", wzServerTimeLeft );
 						return;
 					}
@@ -798,12 +798,12 @@ void CTFHudTimeStatus::OnThink()
 
 					if (iHours == 0)
 					{
-						g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#TF_HUD_ServerTimeLeftNoHours" ), 2, wzServerTimeMinLeft, wzServerTimeSecLeft);
+						g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#TF_HUD_ServerTimeLeftNoHours" ), 2, wzServerTimeMinLeft, wzServerTimeSecLeft);
 						SetDialogVariable( "servertimeleft", wzServerTimeLeft );
 						return;
 					}
 
-					g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#TF_HUD_ServerTimeLeft" ), 3, wzServerTimeHrsLeft, wzServerTimeMinLeft, wzServerTimeSecLeft);
+					g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#TF_HUD_ServerTimeLeft" ), 3, wzServerTimeHrsLeft, wzServerTimeMinLeft, wzServerTimeSecLeft);
 					SetDialogVariable( "servertimeleft", wzServerTimeLeft );
 				}
 			}
@@ -873,11 +873,11 @@ void CTFHudTimeStatus::Paint( void )
 
 			if ( m_TimerDeltaItems[i].m_nAmount > 0 )
 			{
-				V_swprintf_safe( wBuf, L"+%d:%02d", nMinutes, nSeconds );
+				swprintf( wBuf, L"+%d:%02d", nMinutes, nSeconds );
 			}
 			else
 			{
-				V_swprintf_safe( wBuf, L"-%d:%02d", nMinutes, nSeconds );
+				swprintf( wBuf, L"-%d:%02d", nMinutes, nSeconds );
 			}
 
 			surface()->DrawPrintText( wBuf, wcslen(wBuf), FONT_DRAW_NONADDITIVE );
@@ -1009,8 +1009,8 @@ void CTFHudKothTimeStatus::UpdateActiveTeam( void )
 {
 	if ( ShouldUseMatchHUD() )
 	{
-		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pRedPanel, m_nActiveTeam == TF_TEAM_RED ? "ActiveTimerHighlight" : "ActiveTimerDim", false );
-		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pBluePanel, m_nActiveTeam == TF_TEAM_BLUE ? "ActiveTimerHighlight" : "ActiveTimerDim", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pRedPanel, m_nActiveTeam == TF_TEAM_RED ? "ActiveTimerHighlight" : "ActiveTimerDim" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( m_pBluePanel, m_nActiveTeam == TF_TEAM_BLUE ? "ActiveTimerHighlight" : "ActiveTimerDim" );
 	}
 	else if ( m_pActiveTimerBG )
 	{

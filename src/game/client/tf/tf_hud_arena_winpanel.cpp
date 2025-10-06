@@ -145,7 +145,7 @@ void CTFArenaWinPanel::FireGameEvent( IGameEvent * event )
 			wchar_t wzStreakString[256]=L"";
 			_snwprintf( wzStreaNum, ARRAYSIZE( wzStreaNum ), L"%i", tf_arena_max_streak.GetInt() );
 
-			g_pVGuiLocalize->ConstructString_safe( wzStreakString, g_pVGuiLocalize->Find( "#TF_Arena_PlayingTo" ), 1, wzStreaNum );
+			g_pVGuiLocalize->ConstructString( wzStreakString, sizeof( wzStreakString ), g_pVGuiLocalize->Find( "#TF_Arena_PlayingTo" ), 1, wzStreaNum );
 
 			m_pTeamScorePanel->SetDialogVariable( "arenastreaktext", wzStreakString );
 		}
@@ -209,11 +209,11 @@ void CTFArenaWinPanel::FireGameEvent( IGameEvent * event )
 		wchar_t wzTeamWin[256] = L"";
 		if ( TFGameRules() && TFGameRules()->IsInTournamentMode() )
 		{
-			g_pVGuiLocalize->ConstructString_safe( wzTeamWin, g_pVGuiLocalize->Find( "#Winpanel_TournamentTeamWins" ), 1, pLocalizedTeamName );
-			g_pVGuiLocalize->ConstructString_safe( m_wzTeamLose, g_pVGuiLocalize->Find( "#Winpanel_TournamentTeamLost" ), 2, pLocalizedLoserTeamName );
+			g_pVGuiLocalize->ConstructString( wzTeamWin, sizeof( wzTeamWin ), g_pVGuiLocalize->Find( "#Winpanel_TournamentTeamWins" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( m_wzTeamLose, sizeof( m_wzTeamLose ), g_pVGuiLocalize->Find( "#Winpanel_TournamentTeamLost" ), 2, pLocalizedLoserTeamName );
 
 			wchar_t wzTeamMPVs[256];
-			g_pVGuiLocalize->ConstructString_safe( wzTeamMPVs, g_pVGuiLocalize->Find( "#Winpanel_TournamentMVPs" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzTeamMPVs, sizeof( wzTeamMPVs ), g_pVGuiLocalize->Find( "#Winpanel_TournamentMVPs" ), 1, pLocalizedTeamName );
 
 			if ( m_iWinningPlayerTeam != TEAM_UNASSIGNED )
 			{
@@ -222,8 +222,8 @@ void CTFArenaWinPanel::FireGameEvent( IGameEvent * event )
 		}
 		else if ( m_iWinningPlayerTeam != TEAM_UNASSIGNED )
 		{
-			g_pVGuiLocalize->ConstructString_safe( wzTeamWin, g_pVGuiLocalize->Find( "#Winpanel_TeamWins" ), 2, pLocalizedTeamName, g_pVGuiLocalize->Find( "#Winpanel_Team1" ) );
-			g_pVGuiLocalize->ConstructString_safe( m_wzTeamLose, g_pVGuiLocalize->Find( "#Winpanel_TeamLost" ), 2, pLocalizedLoserTeamName, g_pVGuiLocalize->Find( "#Winpanel_Team1" ) );
+			g_pVGuiLocalize->ConstructString( wzTeamWin, sizeof( wzTeamWin ), g_pVGuiLocalize->Find( "#Winpanel_TeamWins" ), 2, pLocalizedTeamName, g_pVGuiLocalize->Find( "#Winpanel_Team1" ) );
+			g_pVGuiLocalize->ConstructString( m_wzTeamLose, sizeof( m_wzTeamLose ), g_pVGuiLocalize->Find( "#Winpanel_TeamLost" ), 2, pLocalizedLoserTeamName, g_pVGuiLocalize->Find( "#Winpanel_Team1" ) );
 		}
 
 		if ( m_iWinningPlayerTeam != TEAM_UNASSIGNED )
@@ -238,24 +238,24 @@ void CTFArenaWinPanel::FireGameEvent( IGameEvent * event )
 		switch ( iWinReason )
 		{
 		case WINREASON_ALL_POINTS_CAPTURED:
-			g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_AllPointsCaptured" ), 1, pLocalizedTeamName );
+			g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_AllPointsCaptured" ), 1, pLocalizedTeamName );
 			break;
 		case WINREASON_OPPONENTS_DEAD:
 
 			if ( TFGameRules() && TFGameRules()->IsInArenaMode() == true )
 			{
-				g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_Arena" ), 1, pLocalizedTeamName );
+				g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_Arena" ), 1, pLocalizedTeamName );
 			}
 			else
 			{
-				g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_OpponentsDead" ), 1, pLocalizedTeamName );
+				g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_OpponentsDead" ), 1, pLocalizedTeamName );
 			}
 			break;
 
 		case WINREASON_STALEMATE:
 			if ( !TFGameRules() || !TFGameRules()->IsCompetitiveMode() )
 			{
-				g_pVGuiLocalize->ConstructString_safe( wzWinReason, g_pVGuiLocalize->Find( "#Winreason_Stalemate" ), 0 );
+				g_pVGuiLocalize->ConstructString( wzWinReason, sizeof( wzWinReason ), g_pVGuiLocalize->Find( "#Winreason_Stalemate" ), 0 );
 			}
 			break;	
 
@@ -286,7 +286,7 @@ void CTFArenaWinPanel::FireGameEvent( IGameEvent * event )
 					}
 				}
 				g_pVGuiLocalize->ConvertANSIToUnicode( szPlayerNames, wzPlayerNames, sizeof( wzPlayerNames ) );
-				g_pVGuiLocalize->ConstructString_safe( wzCapMsg, g_pVGuiLocalize->Find( "#Winpanel_WinningCapture" ), 1, wzPlayerNames );
+				g_pVGuiLocalize->ConstructString( wzCapMsg, sizeof( wzCapMsg ), g_pVGuiLocalize->Find( "#Winpanel_WinningCapture" ), 1, wzPlayerNames );
 				SetDialogVariable( "DetailsLabel", wzCapMsg );
 			}
 		}
@@ -635,7 +635,7 @@ void CTFArenaWinPanel::OnTick()
 
 	if ( m_bShouldBeVisible == true )
 	{
-		IViewPortPanel *scoreboard = gViewPortInterface->FindPanelByName( PANEL_SCOREBOARD );
+		IViewPortPanel *scoreboard = GetViewPortInterface()->FindPanelByName( PANEL_SCOREBOARD );
 		if ( ( scoreboard && scoreboard->IsVisible() ) || IsInFreezeCam() )
 		{
 			SetVisible( false );

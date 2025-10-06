@@ -3,9 +3,13 @@
 #include "vgui_bitmapimage.h"
 #include "bitmap/bitmap.h"
 #include "vgui/isurface.h"
+#include "vgui_controls/menu.h"
+#include "vgui_controls/ComboBox.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+
+using namespace vgui;
 
 void BitmapImage::DestroyTexture()
 {
@@ -52,4 +56,80 @@ void CBitmapPanel::SetBitmap( const Bitmap_t &bitmap )
 
 	// Set the bitmap
 	m_pImage->SetBitmap( bitmap );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Activate the item in the menu list, as if that menu item had been selected by the user
+// Input  : itemID - itemID from AddItem in list of dropdown items
+//-----------------------------------------------------------------------------
+void ComboBox::ActivateItemByRow(int row)
+{
+	m_pDropDown->ActivateItemByRow(row);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Activate the item in the menu list, without sending a TextChanged message
+// Input  : row - row to activate
+//-----------------------------------------------------------------------------
+void ComboBox::SilentActivateItemByRow(int row)
+{
+	int itemID = GetItemIDFromRow( row );
+	if ( itemID >= 0 )
+	{
+		SilentActivateItem( itemID );
+	}
+}
+
+MenuBuilder::MenuBuilder( Menu *pMenu, Panel *pActionTarget )
+	: m_pMenu( pMenu )
+	, m_pActionTarget( pActionTarget )
+	, m_pszLastCategory( NULL )
+{}
+
+MenuItem* MenuBuilder::AddMenuItem( const char *pszButtonText, const char *pszCommand, const char *pszCategoryName )
+{
+	AddSepratorIfNeeded( pszCategoryName );
+	return m_pMenu->GetMenuItem( m_pMenu->AddMenuItem( pszButtonText, pszCommand, m_pActionTarget ) );
+}
+
+MenuItem* MenuBuilder::AddMenuItem( const char *pszButtonText, KeyValues *kvUserData, const char *pszCategoryName )
+{
+	AddSepratorIfNeeded( pszCategoryName );
+	return m_pMenu->GetMenuItem( m_pMenu->AddMenuItem( pszButtonText, kvUserData, m_pActionTarget ) );
+}
+
+MenuItem* MenuBuilder::AddMenuItem( const wchar_t *pwszButtonText, const char *pszCommand, const char *pszCategoryName )
+{
+	AddSepratorIfNeeded( pszCategoryName );
+	return m_pMenu->GetMenuItem( m_pMenu->AddMenuItem( CStrAutoEncode( pwszButtonText ).ToString(), pwszButtonText, pszCommand, m_pActionTarget ) );
+}
+
+MenuItem* MenuBuilder::AddMenuItem( const wchar_t *pwszButtonText, KeyValues *kvUserData, const char *pszCategoryName )
+{
+	AddSepratorIfNeeded( pszCategoryName );
+	return m_pMenu->GetMenuItem( m_pMenu->AddMenuItem( CStrAutoEncode( pwszButtonText ).ToString(), pwszButtonText, kvUserData, m_pActionTarget ) );
+}
+
+MenuItem* MenuBuilder::AddCascadingMenuItem( const char *pszButtonText, Menu *pSubMenu, const char *pszCategoryName )
+{
+	AddSepratorIfNeeded( pszCategoryName );
+	return m_pMenu->GetMenuItem( m_pMenu->AddCascadingMenuItem( pszButtonText, m_pActionTarget, pSubMenu ) );
+}
+
+MenuItem* MenuBuilder::AddCascadingMenuItem( const wchar_t *pwszButtonText, Menu *pSubMenu, const char *pszCategoryName )
+{
+	AddSepratorIfNeeded( pszCategoryName );
+	return m_pMenu->GetMenuItem( m_pMenu->AddCascadingMenuItem( CStrAutoEncode( pwszButtonText ).ToString(), pwszButtonText, (KeyValues*)NULL, m_pActionTarget, pSubMenu ) );
+}
+
+
+void MenuBuilder::AddSepratorIfNeeded( const char *pszCategoryName )
+{
+	// Add a separator if the categories are different
+	if ( m_pszLastCategory && V_stricmp( pszCategoryName, m_pszLastCategory ) != 0 )
+	{
+		m_pMenu->AddSeparator();
+	}
+
+	m_pszLastCategory = pszCategoryName;
 }

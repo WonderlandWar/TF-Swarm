@@ -1013,11 +1013,11 @@ void CTFClientScoreBoardDialog::UpdateTeamInfo()
 			_snwprintf( wNumPlayers, ARRAYSIZE( wNumPlayers ), L"%i", team->Get_Number_Players() );
 			if ( team->Get_Number_Players() == 1 )
 			{
-				g_pVGuiLocalize->ConstructString_safe( string1, g_pVGuiLocalize->Find( "#TF_ScoreBoard_Player" ), 1, wNumPlayers );
+				g_pVGuiLocalize->ConstructString( string1, sizeof( string1 ), g_pVGuiLocalize->Find( "#TF_ScoreBoard_Player" ), 1, wNumPlayers );
 			}
 			else
 			{
-				g_pVGuiLocalize->ConstructString_safe( string1, g_pVGuiLocalize->Find( "#TF_ScoreBoard_Players" ), 1, wNumPlayers );
+				g_pVGuiLocalize->ConstructString( string1, sizeof( string1 ), g_pVGuiLocalize->Find( "#TF_ScoreBoard_Players" ), 1, wNumPlayers );
 			}
 
 			// set # of players for team in dialog
@@ -1319,7 +1319,7 @@ void CTFClientScoreBoardDialog::UpdatePlayerList()
 				// HOLY CHEESEBALL BUSY INDICATOR
 				const wchar_t *pwszEllipses = &L"....."[4 - ( (unsigned)Plat_FloatTime() % 5U )];
 				wchar_t wszLocalized[512];
-				g_pVGuiLocalize->ConstructString_safe( wszLocalized, pwszFormat, 1, pwszEllipses );
+				g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), pwszFormat, 1, pwszEllipses );
 				pKV->SetWString( "name", wszLocalized );
 
 				int itemID = pPlayerList->AddItem( 0, pKV );
@@ -1605,7 +1605,7 @@ void CTFClientScoreBoardDialog::UpdatePlayerList()
 						// HOLY CHEESEBALL BUSY INDICATOR
 						const wchar_t *pwszEllipses = &L"....."[4 - ( (unsigned)Plat_FloatTime() % 5U )];
 						wchar_t wszLocalized[512];
-						g_pVGuiLocalize->ConstructString_safe( wszLocalized, pwszFormat, 1, pwszEllipses );
+						g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), pwszFormat, 1, pwszEllipses );
 						pKV->SetWString( "name", wszLocalized );
 
 						int itemID = pPlayerList->AddItem( 0, pKV );
@@ -1686,7 +1686,7 @@ void CTFClientScoreBoardDialog::UpdateSpectatorList()
 		wchar_t wzList[1024];
 		_snwprintf( wzCount, ARRAYSIZE( wzCount ), L"%i", nCoaches );
 		g_pVGuiLocalize->ConvertANSIToUnicode( szCoachList, wzList, sizeof( wzList ) );
-		g_pVGuiLocalize->ConstructString_safe( wzText, g_pVGuiLocalize->Find( pchFormat), 2, wzCount, wzList );
+		g_pVGuiLocalize->ConstructString( wzText, sizeof( wzText ), g_pVGuiLocalize->Find( pchFormat), 2, wzCount, wzList );
 	}
 	if ( nSpectators > 0 )
 	{
@@ -1697,7 +1697,7 @@ void CTFClientScoreBoardDialog::UpdateSpectatorList()
 		wchar_t wzSpectatorList[1024];
 		_snwprintf( wzSpectatorCount, ARRAYSIZE( wzSpectatorCount ), L"%i", nSpectators );
 		g_pVGuiLocalize->ConvertANSIToUnicode( szSpectatorList, wzSpectatorList, sizeof( wzSpectatorList ) );
-		g_pVGuiLocalize->ConstructString_safe( wzSpectatorText, g_pVGuiLocalize->Find( pchFormat), 2, wzSpectatorCount, wzSpectatorList );
+		g_pVGuiLocalize->ConstructString( wzSpectatorText, sizeof( wzSpectatorText ), g_pVGuiLocalize->Find( pchFormat), 2, wzSpectatorCount, wzSpectatorList );
 		if ( nCoaches > 0 )
 		{
 			V_wcscat_safe( wzText, L". " );
@@ -1767,7 +1767,7 @@ void CTFClientScoreBoardDialog::UpdateArenaWaitingToPlayList()
 			wchar_t wzSpectatorList[1024];
 			_snwprintf( wzSpectatorCount, ARRAYSIZE( wzSpectatorCount ), L"%i", nSpectators );
 			g_pVGuiLocalize->ConvertANSIToUnicode( szSpectatorList, wzSpectatorList, sizeof( wzSpectatorList ) );
-			g_pVGuiLocalize->ConstructString_safe( wzSpectators, g_pVGuiLocalize->Find( pchFormat), 2, wzSpectatorCount, wzSpectatorList );
+			g_pVGuiLocalize->ConstructString( wzSpectators, sizeof( wzSpectatorCount ), g_pVGuiLocalize->Find( pchFormat), 2, wzSpectatorCount, wzSpectatorList );
 		}
 	}
 
@@ -2043,10 +2043,10 @@ void CTFClientScoreBoardDialog::UpdateServerTimeLeft()
 
 	if ( iServerTimeLimit == 0 )
 	{ 
-		g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#Scoreboard_NoTimeLimit" ), 0 );
+		g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#Scoreboard_NoTimeLimit" ), 0 );
 		SetDialogVariable( "servertimeleft", wzServerTimeLeft );
 
-		g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#Scoreboard_NoTimeLimitNew" ), 0 );
+		g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#Scoreboard_NoTimeLimitNew" ), 0 );
 		SetDialogVariable( "servertime", wzServerTimeLeft );
 
 		if ( m_pServerTimeLeftValue && m_pServerTimeLeftValue->IsVisible() &&  ( m_pFontTimeLeftString != vgui::INVALID_FONT ) )
@@ -2066,10 +2066,10 @@ void CTFClientScoreBoardDialog::UpdateServerTimeLeft()
 	}
 	if ( iTimeLeft == 0 )
 	{
-		g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#Scoreboard_ChangeOnRoundEnd" ), 0 );
+		g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#Scoreboard_ChangeOnRoundEnd" ), 0 );
 		SetDialogVariable( "servertimeleft", wzServerTimeLeft );
 
-		g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#Scoreboard_ChangeOnRoundEndNew" ), 0 );
+		g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#Scoreboard_ChangeOnRoundEndNew" ), 0 );
 		SetDialogVariable( "servertime", wzServerTimeLeft );
 
 		if ( m_pServerTimeLeftValue && m_pServerTimeLeftValue->IsVisible() && ( m_pFontTimeLeftString != vgui::INVALID_FONT ) )
@@ -2097,19 +2097,19 @@ void CTFClientScoreBoardDialog::UpdateServerTimeLeft()
 
 	if ( iHours == 0 )
 	{
-		g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#Scoreboard_TimeLeftNoHours" ), 2, wzServerTimeMinLeft, wzServerTimeSecLeft );
+		g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#Scoreboard_TimeLeftNoHours" ), 2, wzServerTimeMinLeft, wzServerTimeSecLeft );
 		SetDialogVariable( "servertimeleft", wzServerTimeLeft );
 
-		g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#Scoreboard_TimeLeftNoHoursNew" ), 2, wzServerTimeMinLeft, wzServerTimeSecLeft );
+		g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#Scoreboard_TimeLeftNoHoursNew" ), 2, wzServerTimeMinLeft, wzServerTimeSecLeft );
 		SetDialogVariable( "servertime", wzServerTimeLeft );
 
 		return;
 	}
 	
-	g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#Scoreboard_TimeLeft" ), 3, wzServerTimeHrsLeft, wzServerTimeMinLeft, wzServerTimeSecLeft );
+	g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#Scoreboard_TimeLeft" ), 3, wzServerTimeHrsLeft, wzServerTimeMinLeft, wzServerTimeSecLeft );
 	SetDialogVariable( "servertimeleft", wzServerTimeLeft );
 
-	g_pVGuiLocalize->ConstructString_safe( wzServerTimeLeft, g_pVGuiLocalize->Find( "#Scoreboard_TimeLeftNew" ), 3, wzServerTimeHrsLeft, wzServerTimeMinLeft, wzServerTimeSecLeft );
+	g_pVGuiLocalize->ConstructString( wzServerTimeLeft, sizeof( wzServerTimeLeft ), g_pVGuiLocalize->Find( "#Scoreboard_TimeLeftNew" ), 3, wzServerTimeHrsLeft, wzServerTimeMinLeft, wzServerTimeSecLeft );
 	SetDialogVariable( "servertime", wzServerTimeLeft );
 }
 
@@ -2219,11 +2219,11 @@ const wchar_t *GetPointsString( int iPoints )
 	_snwprintf( wzScoreVal, ARRAYSIZE( wzScoreVal ), L"%i", iPoints );
 	if ( 1 == iPoints ) 
 	{
-		g_pVGuiLocalize->ConstructString_safe( wzScore, g_pVGuiLocalize->Find( "#TF_ScoreBoard_Point" ), 1, wzScoreVal );
+		g_pVGuiLocalize->ConstructString( wzScore, sizeof( wzScore ), g_pVGuiLocalize->Find( "#TF_ScoreBoard_Point" ), 1, wzScoreVal );
 	}
 	else
 	{
-		g_pVGuiLocalize->ConstructString_safe( wzScore, g_pVGuiLocalize->Find( "#TF_ScoreBoard_Points" ), 1, wzScoreVal );
+		g_pVGuiLocalize->ConstructString( wzScore, sizeof( wzScore ), g_pVGuiLocalize->Find( "#TF_ScoreBoard_Points" ), 1, wzScoreVal );
 	}
 	return wzScore;
 }
@@ -2278,7 +2278,7 @@ void CTFClientScoreBoardDialog::FireGameEvent( IGameEvent *event )
 		wchar_t wzHostName[256];
 		wchar_t wzServerLabel[256];
 		g_pVGuiLocalize->ConvertANSIToUnicode( hostname, wzHostName, sizeof( wzHostName ) );
-		g_pVGuiLocalize->ConstructString_safe( wzServerLabel, g_pVGuiLocalize->Find( "#Scoreboard_Server" ), 1, wzHostName );
+		g_pVGuiLocalize->ConstructString( wzServerLabel, sizeof( wzServerLabel ), g_pVGuiLocalize->Find( "#Scoreboard_Server" ), 1, wzHostName );
 		SetDialogVariable( "server", wzServerLabel );
 		const char *pMapName = event->GetString( "mapname" );
 		SetDialogVariable( "mapname", GetMapDisplayName( pMapName ) );

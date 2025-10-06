@@ -8364,7 +8364,7 @@ void CTFGameRules::Think()
 	}
 
 	// ...
-	if ( tf_item_based_forced_holiday.GetInt() == kHoliday_Halloween && engine->Time() >= g_fEternaweenAutodisableTime )
+	if ( tf_item_based_forced_holiday.GetInt() == kHoliday_Halloween && Plat_FloatTime() >= g_fEternaweenAutodisableTime )
 	{
 		if ( GCClientSystem() )
 		{
@@ -8529,10 +8529,10 @@ void CTFGameRules::Think()
 #endif // TF_RAID_MODE
 
 	// Batched strange event message processing?
-	if ( engine->Time() > m_flNextStrangeEventProcessTime )
+	if ( Plat_FloatTime() > m_flNextStrangeEventProcessTime )
 	{
 		KillEaterEvents_FlushBatches();
-		m_flNextStrangeEventProcessTime = engine->Time() + g_flStrangeEventBatchProcessInterval;
+		m_flNextStrangeEventProcessTime = Plat_FloatTime() + g_flStrangeEventBatchProcessInterval;
 	}
 
 	ManageCompetitiveMode();
@@ -20366,7 +20366,7 @@ public:
 		{
 		case kGameServerModificationItem_Halloween:
 			tf_item_based_forced_holiday.SetValue( msg.Body().active() ? kHoliday_Halloween : kHoliday_None );
-			g_fEternaweenAutodisableTime = engine->Time() + (SERVER_MODIFICATION_ITEM_DURATION_IN_MINUTES * 60.0f);
+			g_fEternaweenAutodisableTime = Plat_FloatTime() + (SERVER_MODIFICATION_ITEM_DURATION_IN_MINUTES * 60.0f);
 			if ( TFGameRules() )
 			{
 				TFGameRules()->FlushAllAttributeCaches();

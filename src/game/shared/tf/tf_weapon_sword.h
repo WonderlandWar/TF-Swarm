@@ -58,7 +58,7 @@ public:
 
 #ifdef CLIENT_DLL
 	virtual void		UpdateAttachmentModels( void );
-	virtual int			DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags );
+	virtual int			DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags, const RenderableInstance_t &instance );
 #endif // CLIENT_DLL
 
 protected:

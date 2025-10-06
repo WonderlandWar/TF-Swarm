@@ -230,7 +230,7 @@ QAngle const &C_EyeballBoss::GetRenderAngles( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int	C_EyeballBoss::InternalDrawModel( int flags )
+int	C_EyeballBoss::InternalDrawModel( int flags, const RenderableInstance_t &instance )
 {
 	bool bUseInvulnMaterial = ( GetTeamNumber() == TF_TEAM_RED ) || ( GetTeamNumber() == TF_TEAM_BLUE );
 
@@ -239,7 +239,7 @@ int	C_EyeballBoss::InternalDrawModel( int flags )
 		modelrender->ForcedMaterialOverride( m_InvulnerableMaterial );
 	}
 
-	int ret = BaseClass::InternalDrawModel( flags );
+	int ret = BaseClass::InternalDrawModel( flags, instance );
 
 	if ( bUseInvulnMaterial )
 	{

@@ -35,7 +35,7 @@ public:
 
 	static CLaserDot *Create( const Vector &origin, CBaseEntity *pOwner = NULL, bool bVisibleDot = true );
 #ifdef CLIENT_DLL
-	virtual int DrawModel( int flags );
+	virtual int DrawModel( int flags, const RenderableInstance_t &instance );
 	virtual bool ShouldDraw( void ) { return false; }
 #endif
 };

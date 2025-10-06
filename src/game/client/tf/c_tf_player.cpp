@@ -1274,7 +1274,7 @@ void C_TFRagdoll::OnDataChanged( DataUpdateType_t type )
 //-----------------------------------------------------------------------------
 // 
 //-----------------------------------------------------------------------------
-int C_TFRagdoll::InternalDrawModel( int flags )
+int C_TFRagdoll::InternalDrawModel( int flags, const RenderableInstance_t &instance )
 {
 	if ( m_MaterialOverride.IsValid() )
 	{
@@ -1515,7 +1515,7 @@ void C_TFRagdoll::ClientThink( void )
 		iAlpha = MAX( iAlpha - ( iFadeSpeed * gpGlobals->frametime ), 0 );
 
 		SetRenderMode( kRenderTransAlpha );
-		SetRenderColorA( iAlpha );
+		SetRenderAlpha( iAlpha );
 
 		if ( iAlpha == 0 )
 		{
@@ -1591,7 +1591,8 @@ void C_TFRagdoll::DissolveEntity( CBaseEntity* pEnt )
 	{
 		pDissolve->SetRenderMode( kRenderTransColor );
 		pDissolve->m_nRenderFX = kRenderFxNone;
-		pDissolve->SetRenderColor( 255, 255, 255, 255 );
+		pDissolve->SetRenderColor( 255, 255, 255 );
+		pDissolve->SetRenderAlpha( 255 );
 
 		Vector vColor;
 		if ( m_iTeam == TF_TEAM_BLUE )
@@ -8323,7 +8324,7 @@ void C_TFPlayer::OverrideView( CViewSetup *pSetup )
 //-----------------------------------------------------------------------------
 // Purpose: Draw my viewmodel in some special way
 //-----------------------------------------------------------------------------
-int	C_TFPlayer::DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags )
+int	C_TFPlayer::DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags, const RenderableInstance_t &instance )
 {
 	int ret = 0;
 
@@ -8348,11 +8349,11 @@ int	C_TFPlayer::DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags 
 		C_BaseCombatWeapon *pWeapon = pViewmodel->GetOwningWeapon();
 		if ( pWeapon && pWeapon->IsOverridingViewmodel() )
 		{
-			ret = pWeapon->DrawOverriddenViewmodel( pViewmodel, flags );
+			ret = pWeapon->DrawOverriddenViewmodel( pViewmodel, flags, instance );
 		}
 		else
 		{
-			ret = pViewmodel->DrawOverriddenViewmodel( flags );
+			ret = pViewmodel->DrawOverriddenViewmodel( flags, instance );
 		}
 
 		if ( flags & STUDIO_RENDER )
@@ -11086,7 +11087,7 @@ void C_TFPlayer::FireGameEvent( IGameEvent *event )
 							g_pVGuiLocalize->ConvertANSIToUnicode( g_PR->GetPlayerName( pEventPlayer->entindex() ), wszPlayerName, sizeof( wszPlayerName ) );
 
 							wchar_t wszLocalized[100];
-							g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#TF_Class_Change" ), 2, wszPlayerName, g_pVGuiLocalize->Find( g_aPlayerClassNames[nClassID] ) );
+							g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#TF_Class_Change" ), 2, wszPlayerName, g_pVGuiLocalize->Find( g_aPlayerClassNames[nClassID] ) );
 
 							char szLocalized[100];
 							g_pVGuiLocalize->ConvertUnicodeToANSI( wszLocalized, szLocalized, sizeof( szLocalized ) );
@@ -11104,7 +11105,7 @@ void C_TFPlayer::FireGameEvent( IGameEvent *event )
 		{
 			wchar_t wzNotification[1024] = L"";
 			const wchar_t *pwzTitle = g_pVGuiLocalize->Find( "#TF_Competitive_Abandoned" );
-			g_pVGuiLocalize->ConstructString_safe( wzNotification, pwzTitle, 0 );
+			g_pVGuiLocalize->ConstructString( wzNotification, sizeof( wzNotification ), pwzTitle, 0 );
 			
 			if ( event->GetBool( "game_over" ) )
 			{
@@ -11450,7 +11451,7 @@ void C_TFPlayer::HandleInspectHint()
 			}
 
 			g_pVGuiLocalize->ConvertANSIToUnicode( key, wKeyBind, sizeof( wKeyBind ) );
-			g_pVGuiLocalize->ConstructString_safe( szNotification, wpszFormat, 1, wKeyBind );
+			g_pVGuiLocalize->ConstructString( szNotification, sizeof( szNotification ), wpszFormat, 1, wKeyBind );
 			pNotifyPanel->SetupNotifyCustom( szNotification, "", GetTeamNumber() );
 
 			tf_inspect_hint_count.SetValue( nNotifyCount + 1 );

@@ -36,7 +36,7 @@ int C_FuncForceField::DrawModel( int flags, const RenderableInstance_t &instance
 	if ( TFGameRules()->State_Get() == GR_STATE_TEAM_WIN )
 		return 1;
 
-	return BaseClass::DrawModel( flags );
+	return BaseClass::DrawModel( flags, instance );
 }
 
 //-----------------------------------------------------------------------------

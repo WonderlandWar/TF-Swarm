@@ -191,7 +191,7 @@ void CTFItemPickupPanel::UpdateModelPanels( void )
 				if ( iClass != TF_CLASS_UNDEFINED )
 				{
 					wchar_t wzLocalized[128];
-					g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( "#OpenSpecificLoadout" ), 1, g_pVGuiLocalize->Find( g_aPlayerClassNames[iClass] ) );
+					g_pVGuiLocalize->ConstructString( wzLocalized, sizeof( wzLocalized ), g_pVGuiLocalize->Find( "#OpenSpecificLoadout" ), 1, g_pVGuiLocalize->Find( g_aPlayerClassNames[iClass] ) );
 					SetDialogVariable("loadouttext", wzLocalized );
 				}
 				else
@@ -290,7 +290,7 @@ void CTFItemDiscardPanel::ShowPanel(bool bShow)
 	{
 		if ( !tf_explanations_discardpanel.GetBool() )
 		{
-			m_flStartExplanationsAt = engine->Time() + 0.5;
+			m_flStartExplanationsAt = Plat_FloatTime() + 0.5;
 			vgui::ivgui()->AddTickSignal( GetVPanel() );
 		}
 	}
@@ -303,7 +303,7 @@ void CTFItemDiscardPanel::OnTick( void )
 {
 	BaseClass::OnTick();
 
-	if ( m_flStartExplanationsAt && m_flStartExplanationsAt < engine->Time() && TFModalStack()->IsEmpty() )
+	if ( m_flStartExplanationsAt && m_flStartExplanationsAt < Plat_FloatTime() && TFModalStack()->IsEmpty() )
 	{
 		m_flStartExplanationsAt = 0;
 
@@ -331,7 +331,7 @@ void CTFItemDiscardPanel::OnCommand( const char *command )
 	{
 		if ( !m_flStartExplanationsAt )
 		{
-			m_flStartExplanationsAt = engine->Time();
+			m_flStartExplanationsAt = Plat_FloatTime();
 			vgui::ivgui()->AddTickSignal( GetVPanel() );
 		}
 		RequestFocus();

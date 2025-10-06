@@ -156,7 +156,7 @@ void CWarStandingPanel::PerformLayout()
 		}
 
 		// Set the "(Your side)" labels
-		SetControlVisible( CFmtStr( "Team%dYourSide", i ), i == nAffiliation, true );
+		SetControlVisible( CFmtStr( "Team%dYourSide", i ), i == nAffiliation );
 	}
 }
 
@@ -356,7 +356,7 @@ void CWarLandingPanel::SetVisible( bool bVisible )
 	EditablePanel* pSceneContainer = FindControl< EditablePanel >( "SceneContainer", true );
 	if ( pSceneContainer )
 	{
-		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pSceneContainer, m_strSceneAnimName, false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pSceneContainer, m_strSceneAnimName );
 	}
 }
 
@@ -377,9 +377,9 @@ void CWarLandingPanel::UpdateUIState()
 		pMainContainer->SetControlVisible( "UnaffiliatedContainer", bWarActive && bNeedsToJoin && m_eJoiningState == NO_ACTION );
 
 		bool bHasGCConnection = GCClientSystem()->BConnectedtoGC();
-		pMainContainer->SetControlVisible( "JoinPyroButton", bHasGCConnection, true );
-		pMainContainer->SetControlVisible( "JoinHeavyButton", bHasGCConnection, true );
-		pMainContainer->SetControlVisible( "NoGContainer", !bHasGCConnection, true );
+		pMainContainer->SetControlVisible( "JoinPyroButton", bHasGCConnection );
+		pMainContainer->SetControlVisible( "JoinHeavyButton", bHasGCConnection );
+		pMainContainer->SetControlVisible( "NoGContainer", !bHasGCConnection );
 	}
 
 	static wchar_t wszEndDateOutString[ 128 ];
@@ -392,7 +392,7 @@ void CWarLandingPanel::UpdateUIState()
 
 	const wchar_t *wpszEndDateFormat = g_pVGuiLocalize->Find( IsWarActive( PYRO_VS_HEAVY_WAR_DEF_INDEX ) ? "#TF_War_EndFutureDate" : "#TF_War_EndPastDate" );
 
-	g_pVGuiLocalize->ConstructString_safe( wszEndDateOutString, wpszEndDateFormat, 1, wszTemp );
+	g_pVGuiLocalize->ConstructString( wszEndDateOutString, sizeof( wszEndDateOutString ), wpszEndDateFormat, 1, wszTemp );
 	CExLabel* pSceneContainer = FindControl< CExLabel >( "EndDateLabel", true );
 	if ( pSceneContainer )
 	{
@@ -418,7 +418,7 @@ void CWarLandingPanel::UpdateUIState()
 
 		static wchar_t wszOutString[ 128 ];
 		const wchar_t *wpszFormat = g_pVGuiLocalize->Find( "#TF_War_ConfirmSideSelection" );
-		g_pVGuiLocalize->ConstructString_safe( wszOutString, wpszFormat, 1, g_pVGuiLocalize->Find( pChosenSide->m_pszLocalizedName ) );
+		g_pVGuiLocalize->ConstructString( wszOutString, sizeof( wszOutString ), wpszFormat, 1, g_pVGuiLocalize->Find( pChosenSide->m_pszLocalizedName ) );
 		
 		EditablePanel* pJoining = FindControl< EditablePanel >( "ConfirmSelectionContainer", true );
 		if ( pJoining )
@@ -437,7 +437,7 @@ void CWarLandingPanel::UpdateUIState()
 
 		static wchar_t wszOutString[ 128 ];
 		const wchar_t *wpszFormat = g_pVGuiLocalize->Find( "#TF_War_JoiningTeam" );
-		g_pVGuiLocalize->ConstructString_safe( wszOutString, wpszFormat, 1, g_pVGuiLocalize->Find( pChosenSide->m_pszLocalizedName ) );
+		g_pVGuiLocalize->ConstructString( wszOutString, sizeof( wszOutString ), wpszFormat, 1, g_pVGuiLocalize->Find( pChosenSide->m_pszLocalizedName ) );
 		
 		EditablePanel* pJoining = FindControl< EditablePanel >( "JoiningContainer", true );
 		if ( pJoining )
@@ -457,7 +457,7 @@ void CWarLandingPanel::UpdateUIState()
 
 		static wchar_t wszOutString[ 128 ];
 		const wchar_t *wpszFormat = g_pVGuiLocalize->Find( "#TF_War_JoinedTeam" );
-		g_pVGuiLocalize->ConstructString_safe( wszOutString, wpszFormat, 1, g_pVGuiLocalize->Find( pChosenSide->m_pszLocalizedName ) );
+		g_pVGuiLocalize->ConstructString( wszOutString, sizeof( wszOutString ), wpszFormat, 1, g_pVGuiLocalize->Find( pChosenSide->m_pszLocalizedName ) );
 		EditablePanel* pJoined = FindControl< EditablePanel >( "TeamJoinedContainer", true );
 		if ( pJoined )
 		{
@@ -477,9 +477,9 @@ void CWarLandingPanel::UpdateUIState()
 
 	pJoiningPopup->SetVisible( m_eJoiningState != NO_ACTION );
 
-	pJoiningPopup->SetControlVisible( "ConfirmSelectionContainer", m_eJoiningState == CONFIRM_SIDE_SELECTION, true );
-	pJoiningPopup->SetControlVisible( "JoiningContainer", m_eJoiningState == ATTEMPTING_TO_JOIN_AND_WAITING_FOR_RESPONSE, true );
-	pJoiningPopup->SetControlVisible( "TeamJoinedContainer", m_eJoiningState == SUCCESS_RESPONSE_RECIEVED_WAITING_FOR_USER_CONFIRMATION, true );
-	pJoiningPopup->SetControlVisible( "FailedToJoinContainer", m_eJoiningState == FAILED_RESPONSE_RECIEVED_WAITING_FOR_USER_CONFIRMATION, true );
+	pJoiningPopup->SetControlVisible( "ConfirmSelectionContainer", m_eJoiningState == CONFIRM_SIDE_SELECTION );
+	pJoiningPopup->SetControlVisible( "JoiningContainer", m_eJoiningState == ATTEMPTING_TO_JOIN_AND_WAITING_FOR_RESPONSE );
+	pJoiningPopup->SetControlVisible( "TeamJoinedContainer", m_eJoiningState == SUCCESS_RESPONSE_RECIEVED_WAITING_FOR_USER_CONFIRMATION );
+	pJoiningPopup->SetControlVisible( "FailedToJoinContainer", m_eJoiningState == FAILED_RESPONSE_RECIEVED_WAITING_FOR_USER_CONFIRMATION );
 }
 

@@ -1443,7 +1443,7 @@ void C_RopeKeyframe::ClientThink()
 }
 
 
-int C_RopeKeyframe::DrawModel( int flags )
+int C_RopeKeyframe::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	VPROF_BUDGET( "C_RopeKeyframe::DrawModel", VPROF_BUDGETGROUP_ROPES );
 	if( !InitRopePhysics() )

@@ -86,12 +86,14 @@ protected:
 	void SetInflictorEntityNameFilter( const char *pEntityName );
 	void SetMapNameFilter( const char *pMapName );
 	void SetComponentPrefix( const char *pPrefix );
-	void IncrementCount();
+	void IncrementCount( int iOptIncrement = 0 );
 	void EvaluateNewAchievement();
 	void AwardAchievement();
 	void ShowProgressNotification();
 	void HandleProgressUpdate();
 	virtual void CalcProgressMsgIncrement();
+	void SetNextThink( float flThinkTime );
+	void ClearThink( void );
 
 	const char *m_pszName;								// name of this achievement
 	int m_iAchievementID;								// ID of this achievement
@@ -216,7 +218,7 @@ static CBaseAchievement *Create_##className( void )					\
 static CBaseAchievementHelper g_##className##_Helper( Create_##className );
 
 #define DECLARE_ACHIEVEMENT( className, achievementID, achievementName, iPointValue ) \
-	DECLARE_ACHIEVEMENT_( className, achievementID, achievementName, NULL, iPointValue, false )
+	DECLARE_ACHIEVEMENT_( className, achievementID, achievementName, NULL, iPointValue, false, 0 )
 
 #define DECLARE_ACHIEVEMENT_ORDER( className, achievementID, achievementName, iPointValue, iDisplayOrder ) \
 	DECLARE_ACHIEVEMENT_( className, achievementID, achievementName, NULL, iPointValue, false, iDisplayOrder )

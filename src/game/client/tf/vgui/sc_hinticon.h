@@ -39,11 +39,7 @@ public:
 private:
 	CUtlString m_strActionName;
 	CUtlString m_strActionSet;
-	ControllerActionSetHandle_t m_actionSetHandle;
 	int m_nGlyphTexture;
-
-	static int GetVGUITextureIDForActionOrigin( EControllerActionOrigin eOrigin );
-	static int s_nVGUITextureForOrigin[k_EControllerActionOrigin_Count];
 };
 
 #endif  // SC_HINTICON_H

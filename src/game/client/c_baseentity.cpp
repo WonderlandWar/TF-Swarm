@@ -1672,8 +1672,8 @@ void C_BaseEntity::UpdateVisibility()
 				}
 
 				SetRenderMode( kRenderTransColor );
-				SetRenderColor( 255, 0, 0, 200 );
-
+				SetRenderColor( 255, 0, 0 );
+				SetRenderAlpha( 200 );
 			}
 			else
 			{
@@ -1687,7 +1687,8 @@ void C_BaseEntity::UpdateVisibility()
 			{
 				// We need to fix up the rendering.
 				SetRenderMode( m_PreviousRenderMode );
-				SetRenderColor( m_PreviousRenderColor.r, m_PreviousRenderColor.g, m_PreviousRenderColor.b, m_PreviousRenderColor.a );
+				SetRenderColor( m_PreviousRenderColor.r, m_PreviousRenderColor.g, m_PreviousRenderColor.b );
+				SetRenderAlpha( m_PreviousRenderColor.a );
 			}
 
 			m_bWasDeemedInvalid = false;

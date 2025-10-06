@@ -237,7 +237,7 @@ void CTFParticlePanel::OnTick()
 {
 	BaseClass::OnTick();
 	
-	float flTime = engine->Time();
+	float flTime = Plat_FloatTime();
 
 	bool bAnyActive = false;
 	// Update all particles

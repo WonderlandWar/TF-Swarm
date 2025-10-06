@@ -136,7 +136,8 @@ bool Impact( Vector &vecOrigin, Vector &vecStart, int iMaterial, int iDamageType
 
 	if ( (nFlags & IMPACT_NODECAL) == 0 )
 	{
-		int decalNumber = decalsystem->GetDecalIndexForName( GetImpactDecal( pEntity, iMaterial, iDamageType ) );
+		const char *pchDecalName = GetImpactDecal( pEntity, iMaterial, iDamageType );
+		int decalNumber = decalsystem->GetDecalIndexForName( pchDecalName );
 		if ( decalNumber == -1 )
 			return false;
 

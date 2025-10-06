@@ -275,7 +275,7 @@ USER_MESSAGE( BreakModel_Pumpkin )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int	CTFWearable::InternalDrawModel( int flags )
+int	CTFWearable::InternalDrawModel( int flags, const RenderableInstance_t &instance )
 {
 	C_TFPlayer *pOwner = ToTFPlayer( GetOwnerEntity() );
 
@@ -302,7 +302,7 @@ int	CTFWearable::InternalDrawModel( int flags )
 		modelrender->ForcedMaterialOverride( *pOwner->GetInvulnMaterialRef() );
 	}
 
-	int ret = BaseClass::InternalDrawModel( flags );
+	int ret = BaseClass::InternalDrawModel( flags, instance );
 
 	if ( bUseInvulnMaterial && (flags & STUDIO_RENDER) )
 	{

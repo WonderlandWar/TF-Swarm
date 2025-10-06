@@ -3262,7 +3262,7 @@ void CTFWeaponBase::UpdateVisibility( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int	CTFWeaponBase::InternalDrawModel( int flags )
+int	CTFWeaponBase::InternalDrawModel( int flags, const RenderableInstance_t &instance )
 {
 	C_TFPlayer *pOwner = ToTFPlayer( GetOwnerEntity() );
 	bool bNotViewModel = ( pOwner->ShouldDrawThisPlayer() );
@@ -3274,7 +3274,7 @@ int	CTFWeaponBase::InternalDrawModel( int flags )
 		modelrender->ForcedMaterialOverride( *pOwner->GetInvulnMaterialRef() );
 	}
 
-	int ret = BaseClass::InternalDrawModel( flags );
+	int ret = BaseClass::InternalDrawModel( flags, instance );
 
 	if ( bUseInvulnMaterial )
 	{
@@ -6208,7 +6208,7 @@ public:
 		if ( pHUDChat )
 		{
 			wchar_t wszNotification[1024]=L"";
-			g_pVGuiLocalize->ConstructString_safe( wszNotification, 
+			g_pVGuiLocalize->ConstructString( wszNotification, sizeof( wszNotification ), 
 				g_pVGuiLocalize->Find( "#TF_HUD_Event_KillEater_Leveled_Chat" ), 
 				3, wszPlayerName, wszWeaponName, wszLevelName );
 

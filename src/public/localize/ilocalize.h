@@ -215,11 +215,11 @@ private:
 	typedef wchar_t locchar_t;
 
 	#define loc_snprintf	V_snwprintf
-	#define loc_sprintf_safe V_swprintf_safe
+	#define loc_sprintf_safe swprintf
 	#define loc_sncat		V_wcsncat
 	#define loc_scat_safe	V_wcscat_safe
 	#define loc_sncpy		Q_wcsncpy
-	#define loc_scpy_safe	V_wcscpy_safe
+	#define loc_scpy_safe	wcscpy
 	#define loc_strlen		Q_wcslen
 	#define LOCCHAR(x)		L ## x
 	#define LOCCHAR_FMT_LOCPRINTF L"%ls"

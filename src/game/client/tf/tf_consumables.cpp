@@ -473,7 +473,7 @@ void CEconTool_ClaimCode::OnClientUseConsumable( CEconItemView *pItem, vgui::Pan
 	{
 		wchar_t wszClaimType[128];
 		KeyValuesAD pkvDummy( "dummy" );
-		g_pVGuiLocalize->ConstructString_safe( wszClaimType, pszClaimValue, pkvDummy );
+		g_pVGuiLocalize->ConstructString( wszClaimType, sizeof( wszClaimType ), pszClaimValue, pkvDummy );
 		pDialog->AddStringToken( "claim_type", wszClaimType );
 	}
 	pDialog->SetContext( new CUseItemConfirmContext( pItem, kServerPlayers_DontSend ) );
@@ -1310,7 +1310,7 @@ public:
 				g_pVGuiLocalize->ConvertANSIToUnicode( szRecipientName, wszRecipientName, sizeof( wszRecipientName ) );
 
 				wchar_t wszNotification[1024]=L"";
-				g_pVGuiLocalize->ConstructString_safe( wszNotification, 
+				g_pVGuiLocalize->ConstructString( wszNotification, sizeof( wszNotification ), 
 												  pFormat,
 												  2, m_wszPlayerName, wszRecipientName );
 
@@ -2327,7 +2327,7 @@ void CSelectPlayerForDuelDialog::OnShowClassIconMouseover( KeyValues *data )
 		{
 			wchar_t wzLocalized[256];
 			const char *pszLocString = "#TF_SelectPlayer_Duel_PlayerClass";
-			g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( pszLocString ), 1, g_pVGuiLocalize->Find( g_aPlayerClassNames[iClass] ) );
+			g_pVGuiLocalize->ConstructString( wzLocalized, sizeof( wzLocalized ), g_pVGuiLocalize->Find( pszLocString ), 1, g_pVGuiLocalize->Find( g_aPlayerClassNames[iClass] ) );
 			m_pClassIconMouseoverLabel->SetText( wzLocalized );
 		}
 		else
@@ -2360,7 +2360,7 @@ void CSelectPlayerForDuelDialog::SetSelectedClass( int iClass )
 	}
 
 	wchar_t wszText[1024]=L"";
-	g_pVGuiLocalize->ConstructString_safe( wszText, 
+	g_pVGuiLocalize->ConstructString( wszText, sizeof( wszText ), 
 									  g_pVGuiLocalize->Find( "#TF_SelectPlayer_DuelClass" ),
 									  1, 
 									  g_pVGuiLocalize->Find( pClassName ) );
@@ -2441,7 +2441,7 @@ public:
 			}
 	
 			wchar_t wszLocalizedString[256];
-			g_pVGuiLocalize->ConstructString_safe( wszLocalizedString, wszItemRenamed, 3, wszPlayerName, CEconItemLocalizedFullNameGenerator( GLocalizationProvider(), pItemDefinition, iItemQuality ).GetFullName(), wszCustomName );
+			g_pVGuiLocalize->ConstructString( wszLocalizedString, sizeof( wszLocalizedString ), wszItemRenamed, 3, wszPlayerName, CEconItemLocalizedFullNameGenerator( GLocalizationProvider(), pItemDefinition, iItemQuality ).GetFullName(), wszCustomName );
 
 			char szLocalized[256];
 			g_pVGuiLocalize->ConvertUnicodeToANSI( wszLocalizedString, szLocalized, sizeof( szLocalized ) );

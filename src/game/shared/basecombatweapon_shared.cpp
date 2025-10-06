@@ -130,7 +130,7 @@ void CBaseCombatWeapon::GiveDefaultAmmo( void )
 	// If I use clips, set my clips to the default
 	if ( UsesClipsForAmmo1() )
 	{
-		m_iClip1 = GetDefaultClip1();
+		m_iClip1 = AutoFiresFullClip() ? 0 : GetDefaultClip1();
 	}
 	else
 	{
@@ -1149,7 +1149,7 @@ void CBaseCombatWeapon::SetViewModel()
 //-----------------------------------------------------------------------------
 bool CBaseCombatWeapon::SendWeaponAnim( int iActivity )
 {
-#ifdef USES_PERSISTENT_ITEMS
+#ifdef USES_ECON_ITEMS
 	iActivity = TranslateViewmodelHandActivity( (Activity)iActivity );
 #endif
 
@@ -1328,7 +1328,7 @@ bool CBaseCombatWeapon::ReloadOrSwitchWeapons( void )
 	else
 	{
 		// Weapon is useable. Reload if empty and weapon has waited as long as it has to after firing
-		if ( UsesClipsForAmmo1() && 
+		if ( UsesClipsForAmmo1() && !AutoFiresFullClip() && 
 			 (m_iClip1 == 0) && 
 			 (GetWeaponFlags() & ITEM_FLAG_NOAUTORELOAD) == false && 
 			 m_flNextPrimaryAttack < gpGlobals->curtime && 
@@ -1422,7 +1422,8 @@ bool CBaseCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 	MDLCACHE_CRITICAL_SECTION();
 
 	// cancel any reload in progress.
-	m_bInReload = false; 
+	m_bInReload = false;
+	m_bFiringWholeClip = false;
 
 	// kill any think functions
 	SetThink(NULL);
@@ -1506,6 +1507,16 @@ void CBaseCombatWeapon::HideThink( void )
 	{
 		SetWeaponVisible( false );
 	}
+}
+
+bool CBaseCombatWeapon::CanReload( void )
+{
+	if ( AutoFiresFullClip() && m_bFiringWholeClip )
+	{
+		return false;
+	}
+
+	return true;
 }
 
 #if defined ( TF_CLIENT_DLL ) || defined ( TF_DLL )
@@ -1609,6 +1620,8 @@ void CBaseCombatWeapon::ItemPostFrame( void )
 	if (!pOwner)
 		return;
 
+	UpdateAutoFire();
+
 	//Track the duration of the fire
 	//FIXME: Check for IN_ATTACK2 as well?
 	//FIXME: What if we're calling ItemBusyFrame?
@@ -1697,6 +1710,15 @@ void CBaseCombatWeapon::ItemPostFrame( void )
 			}
 
 			PrimaryAttack();
+			
+			if ( AutoFiresFullClip() )
+			{
+				m_bFiringWholeClip = true;
+			}
+
+#ifdef CLIENT_DLL
+			pOwner->SetFiredWeapon( true );
+#endif
 		}
 	}
 
@@ -1713,7 +1735,7 @@ void CBaseCombatWeapon::ItemPostFrame( void )
 	// -----------------------
 	//  No buttons down
 	// -----------------------
-	if (!((pOwner->m_nButtons & IN_ATTACK) || (pOwner->m_nButtons & IN_ATTACK2) || (pOwner->m_nButtons & IN_RELOAD)))
+	if (!((pOwner->m_nButtons & IN_ATTACK) || (pOwner->m_nButtons & IN_ATTACK2) || (CanReload() && pOwner->m_nButtons & IN_RELOAD)))
 	{
 		// no fire buttons down or reloading
 		if ( ( m_bInReload == false ) && !ReloadOrSwitchWeapons() )
@@ -1747,6 +1769,7 @@ void CBaseCombatWeapon::HandleFireOnEmpty()
 //-----------------------------------------------------------------------------
 void CBaseCombatWeapon::ItemBusyFrame( void )
 {
+	UpdateAutoFire();
 }
 
 //-----------------------------------------------------------------------------
@@ -2129,6 +2152,54 @@ void CBaseCombatWeapon::AbortReload( void )
 	StopWeaponSound( RELOAD ); 
 #endif
 	m_bInReload = false;
+}
+
+void CBaseCombatWeapon::UpdateAutoFire( void )
+{
+	if ( !AutoFiresFullClip() )
+		return;
+
+	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
+	if ( !pOwner )
+		return;
+
+	if ( m_iClip1 == 0 )
+	{
+		// Ready to reload again
+		m_bFiringWholeClip = false;
+	}
+
+	if ( m_bFiringWholeClip )
+	{
+		// If it's firing the clip don't let them repress attack to reload
+		pOwner->m_nButtons &= ~IN_ATTACK;
+	}
+
+	// Don't use the regular reload key
+	if ( pOwner->m_nButtons & IN_RELOAD )
+	{
+		pOwner->m_nButtons &= ~IN_RELOAD;
+	}
+
+	// Try to fire if there's ammo in the clip and we're not holding the button
+	bool bReleaseClip = m_iClip1 > 0 && !( pOwner->m_nButtons & IN_ATTACK );
+
+	if ( !bReleaseClip )
+	{
+		if ( CanReload() && ( pOwner->m_nButtons & IN_ATTACK ) )
+		{
+			// Convert the attack key into the reload key
+			pOwner->m_nButtons |= IN_RELOAD;
+		}
+
+		// Don't allow attack button if we're not attacking
+		pOwner->m_nButtons &= ~IN_ATTACK;
+	}
+	else
+	{
+		// Fake the attack key
+		pOwner->m_nButtons |= IN_ATTACK;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -2588,6 +2659,7 @@ BEGIN_PREDICTION_DATA( CBaseCombatWeapon )
 
 	DEFINE_FIELD( m_bInReload, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_bFireOnEmpty, FIELD_BOOLEAN ),
+	DEFINE_FIELD( m_bFiringWholeClip, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_flNextEmptySoundTime, FIELD_FLOAT ),
 	DEFINE_FIELD( m_Activity, FIELD_INTEGER ),
 	DEFINE_FIELD( m_fFireDuration, FIELD_FLOAT ),

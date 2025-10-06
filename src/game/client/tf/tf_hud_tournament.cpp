@@ -332,7 +332,7 @@ void CHudTournament::PreparePanel( void )
 
 			if ( pFormatString )
 			{
-				g_pVGuiLocalize->ConstructString_safe( szCountdown, pFormatString, 1, wzVal );
+				g_pVGuiLocalize->ConstructString( szCountdown, sizeof( szCountDown ), pFormatString, 1, wzVal );
 				SetDialogVariable( "tournamentstatelabel", szCountdown );
 			}
 
@@ -519,11 +519,11 @@ void CHudTournament::FireGameEvent( IGameEvent * event )
 			wchar_t wszTeam[16];
 			g_pVGuiLocalize->ConvertANSIToUnicode( event->GetString( "newname" ), wszTeam, sizeof(wszTeam) );
 		
-			g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#Tournament_TeamName_Change" ), 2, wszPlayerName, wszTeam );
+			g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#Tournament_TeamName_Change" ), 2, wszPlayerName, wszTeam );
 		}
 		else
 		{
-			g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#Tournament_ReadyState_Change" ), 2, wszPlayerName, iTeamState == 1 ? g_pVGuiLocalize->Find( "#Tournament_TeamReady" ) : g_pVGuiLocalize->Find( "#Tournament_TeamNotReady" ) );
+			g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#Tournament_ReadyState_Change" ), 2, wszPlayerName, iTeamState == 1 ? g_pVGuiLocalize->Find( "#Tournament_TeamReady" ) : g_pVGuiLocalize->Find( "#Tournament_TeamNotReady" ) );
 		}
 
 		char szLocalized[100];
@@ -549,14 +549,14 @@ void CHudTournament::FireGameEvent( IGameEvent * event )
 		{
 			if ( event->GetInt( "time" ) == 10 )
 			{
-				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudTournament_MoveTimerDown", false );
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudTournament_MoveTimerDown" );
 				//GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "HudTournament_MoveChatWindow", false );
 			}
 		}
 	}
 	else if ( FStrEq( "competitive_victory", pEventName ) )
 	{
-		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudTournament_DoorsCloseEndRound", false );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "HudTournament_DoorsCloseEndRound" );
 	}
 }
 
@@ -646,9 +646,9 @@ void CHudTournament::OnTick( void )
 				}
 			}
 
-			if ( !m_pScoreboard.Get() && gViewPortInterface )
+			if ( !m_pScoreboard.Get() && GetViewPortInterface() )
 			{
-				m_pScoreboard = (CTFClientScoreBoardDialog *)( gViewPortInterface->FindPanelByName( PANEL_SCOREBOARD ) );
+				m_pScoreboard = (CTFClientScoreBoardDialog *)( GetViewPortInterface()->FindPanelByName( PANEL_SCOREBOARD ) );
 			}
 
 			if ( m_pScoreboard.Get() && m_pScoreboard->IsVisible() )
@@ -1509,11 +1509,11 @@ void CHudStopWatch::OnTick( void )
 
 			if ( pPlayer->GetTeam() == pAttacker )
 			{
-				g_pVGuiLocalize->ConstructString_safe( wzHelp, g_pVGuiLocalize->Find( "Tournament_StopWatch_TimeVictory" ), 1, pDefender->Get_Localized_Name() );
+				g_pVGuiLocalize->ConstructString( wzHelp, sizeof( wzHelp ), g_pVGuiLocalize->Find( "Tournament_StopWatch_TimeVictory" ), 1, pDefender->Get_Localized_Name() );
 			}
 			else
 			{
-				g_pVGuiLocalize->ConstructString_safe( wzHelp, g_pVGuiLocalize->Find( "Tournament_StopWatch_TimeVictoryDefender" ), 1, pDefender->Get_Localized_Name() );
+				g_pVGuiLocalize->ConstructString( wzHelp, sizeof( wzHelp ), g_pVGuiLocalize->Find( "Tournament_StopWatch_TimeVictoryDefender" ), 1, pDefender->Get_Localized_Name() );
 			}
 
 			SetDialogVariable( "descriptionlabel", wzHelp );
@@ -1552,15 +1552,15 @@ void CHudStopWatch::OnTick( void )
 			
 			if ( pPlayer->GetTeam() == pAttacker )
 			{
-				g_pVGuiLocalize->ConstructString_safe( wzScoreVal, g_pVGuiLocalize->Find( "Tournament_StopWatchPointCaptureAttacker" ), 2, wzVal, iPoints == 1 ? g_pVGuiLocalize->Find( "#Tournament_StopWatch_Point" ) : g_pVGuiLocalize->Find( "#Tournament_StopWatch_Points" )  );
+				g_pVGuiLocalize->ConstructString( wzScoreVal, sizeof( wzScoreVal ), g_pVGuiLocalize->Find( "Tournament_StopWatchPointCaptureAttacker" ), 2, wzVal, iPoints == 1 ? g_pVGuiLocalize->Find( "#Tournament_StopWatch_Point" ) : g_pVGuiLocalize->Find( "#Tournament_StopWatch_Points" )  );
 			}
 			else if ( pPlayer->GetTeam() == pDefender )
 			{
-				g_pVGuiLocalize->ConstructString_safe( wzScoreVal, g_pVGuiLocalize->Find( "Tournament_StopWatchPointCaptureDefender" ), 2, wzVal, iPoints == 1 ? g_pVGuiLocalize->Find( "#Tournament_StopWatch_Point" ) : g_pVGuiLocalize->Find( "#Tournament_StopWatch_Points" )  );
+				g_pVGuiLocalize->ConstructString( wzScoreVal, sizeof( wzScoreVal ), g_pVGuiLocalize->Find( "Tournament_StopWatchPointCaptureDefender" ), 2, wzVal, iPoints == 1 ? g_pVGuiLocalize->Find( "#Tournament_StopWatch_Point" ) : g_pVGuiLocalize->Find( "#Tournament_StopWatch_Points" )  );
 			}
 			else
 			{
-				g_pVGuiLocalize->ConstructString_safe( wzScoreVal, g_pVGuiLocalize->Find( "Tournament_StopWatchPointCaptureSpectator" ), 2, wzVal, iPoints == 1 ? g_pVGuiLocalize->Find( "#Tournament_StopWatch_Point" ) : g_pVGuiLocalize->Find( "#Tournament_StopWatch_Points" )  );
+				g_pVGuiLocalize->ConstructString( wzScoreVal, sizeof( wzScoreVal ), g_pVGuiLocalize->Find( "Tournament_StopWatchPointCaptureSpectator" ), 2, wzVal, iPoints == 1 ? g_pVGuiLocalize->Find( "#Tournament_StopWatch_Point" ) : g_pVGuiLocalize->Find( "#Tournament_StopWatch_Points" )  );
 			}
 
 			SetDialogVariable( "stopwatchlabel", wzScoreVal );	

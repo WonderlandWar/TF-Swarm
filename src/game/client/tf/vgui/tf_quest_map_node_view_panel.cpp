@@ -612,7 +612,7 @@ void CQuestNodeViewPanel::PerformLayout()
 			char szTimeBuffer[ k_RTimeRenderBufferSize ];
 			CRTime::RTime32ToString( timeExpire.GetRTime32(), szTimeBuffer );
 			wchar_t wszExpire[ 256 ];
-			g_pVGuiLocalize->ConstructString_safe( wszExpire, g_pVGuiLocalize->Find( "#TF_QuestExpirationWarning" ), 1, CStrAutoEncode( szTimeBuffer ).ToWString() );
+			g_pVGuiLocalize->ConstructString( wszExpire, sizeof( wszExpire ), g_pVGuiLocalize->Find( "#TF_QuestExpirationWarning" ), 1, CStrAutoEncode( szTimeBuffer ).ToWString() );
 			SetDialogVariable( "expire_time", wszExpire );
 		}
 	}

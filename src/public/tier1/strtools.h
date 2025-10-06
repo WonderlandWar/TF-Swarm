@@ -66,6 +66,7 @@ char*	_V_strstr	( const char *s1, const char *search );
 char*	_V_strupr	( char *start );
 char*	_V_strlower	( char *start );
 int		_V_wcslen	( const wchar_t *pwch );
+inline wchar_t*	_V_wcslower (wchar_t *start)				{ return _wcslwr( start ); }
 
 #ifdef POSIX
 inline char *strupr( char *start )
@@ -109,6 +110,7 @@ inline char *strlwr( char *start )
 #define V_strupr(start)					_V_strupr	((start))				
 #define V_strlower(start)				_V_strlower ((start))		
 #define V_wcslen(pwch)					_V_wcslen	((pwch))		
+#define V_wcslower(pwch)				_V_wcslower	((pwch))		
 
 #else
 
@@ -124,6 +126,7 @@ inline int		V_strcmp (const char *s1, const char *s2)			{ return strcmp( s1, s2 
 inline int		V_wcscmp (const wchar_t *s1, const wchar_t *s2)		{ return wcscmp( s1, s2 ); }
 inline int		V_stricmp( const char *s1, const char *s2 )			{ return stricmp( s1, s2 ); }
 inline char*	V_strstr( const char *s1, const char *search )		{ return (char*)strstr( s1, search ); }
+inline wchar_t*	V_wcslower (wchar_t *start)							{ return _wcslwr( start ); }
 inline char*	V_strupr (char *start)								{ return strupr( start ); }
 inline char*	V_strlower (char *start)							{ return strlwr( start ); }
 
@@ -153,6 +156,13 @@ inline bool	StringHasPrefixCaseSensitive( const char *str, const char *prefix ) 
 // Normalizes a float string in place.  
 // (removes leading zeros, trailing zeros after the decimal point, and the decimal point itself where possible)
 void			V_normalizeFloatString( char* pFloat );
+
+// this is locale-unaware and therefore faster version of standard isdigit()
+// It also avoids sign-extension errors.
+inline bool V_isdigit( char c )
+{
+	return c >= '0' && c <= '9';
+}
 
 inline bool V_isspace(int c)
 {
@@ -215,9 +225,9 @@ template <size_t cchDest> char *V_strcat_safe( INOUT_Z_ARRAY char (&pDest)[cchDe
 static wchar_t *V_wcsncat( INOUT_Z_CAP(cchDest) wchar_t *pDest, const wchar_t *pSrc, size_t cchDest, int max_chars_to_copy )
 {
 	size_t charstocopy = (size_t)0;
-
+#ifdef Assert
 	Assert( (ptrdiff_t)cchDest >= 0 );
-	
+#endif
 	size_t len = wcslen(pDest);
 	size_t srclen = wcslen( pSrc );
 	if ( max_chars_to_copy <= COPY_ALL_CHARACTERS )

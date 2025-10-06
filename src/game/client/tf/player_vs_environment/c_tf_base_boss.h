@@ -13,6 +13,8 @@ public:
 
 	virtual ~C_TFBaseBoss() {}
 
+	virtual CBaseEntity *GetEntity() OVERRIDE { return this; }
+
 	ShadowType_t ShadowCastType( void );
 
 	// ITFMvMBossProgressUser

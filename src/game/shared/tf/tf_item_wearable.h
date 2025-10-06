@@ -56,7 +56,7 @@ public:
 #endif
 
 #if defined( CLIENT_DLL )
-	virtual int			InternalDrawModel( int flags );
+	virtual int			InternalDrawModel( int flags, const RenderableInstance_t &instance );
 	virtual bool		ShouldDraw();
 	virtual bool		ShouldDrawWhenPlayerIsDead() { return ( GetWeaponAssociatedWith() == NULL ); }
 	virtual bool		ShouldDrawParticleSystems( void );		// can't be const because it potentially mutates m_eParticleSystemVisibility state

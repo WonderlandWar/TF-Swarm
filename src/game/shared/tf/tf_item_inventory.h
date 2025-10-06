@@ -259,7 +259,7 @@ public:
 
 	virtual void SetLifetime( float flSeconds )
 	{
-		m_flExpireTime = engine->Time() + flSeconds;
+		m_flExpireTime = Plat_FloatTime() + flSeconds;
 	}
 
 	virtual float GetExpireTime() const

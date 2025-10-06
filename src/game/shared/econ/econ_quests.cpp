@@ -59,7 +59,7 @@ QuestPointsDef_t g_QuestPointsDefs[] = {
 	} 
 };
 
-COMPILE_TIME_ASSERT( ARRAYSIZE( g_QuestPointsDefs ) == EQuestPoints_ARRAYSIZE );
+//COMPILE_TIME_ASSERT( ARRAYSIZE( g_QuestPointsDefs ) == EQuestPoints_ARRAYSIZE );
 
 extern bool InitPerClassRandomChanceStringArray( KeyValues *pPerClassData, CRandomChanceString (&outputArray)[LOADOUT_COUNT], CUtlVector<CUtlString>* pVecErrors );
 

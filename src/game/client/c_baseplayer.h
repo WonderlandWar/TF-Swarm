@@ -35,6 +35,7 @@
 class C_BaseCombatWeapon;
 class C_BaseViewModel;
 class C_FuncLadder;
+class C_EconWearable;
 
 extern int g_nKillCamMode;
 extern int g_nKillCamTarget1;
@@ -258,6 +259,9 @@ public:
 
 	int							GetUserID( void ) const;
 	virtual bool				CanSetSoundMixer( void );
+	virtual int					GetVisionFilterFlags( bool bWeaponsCheck = false ) { return 0x00; }
+	bool						HasVisionFilterFlags( int nFlags, bool bWeaponsCheck = false ) { return ( GetVisionFilterFlags( bWeaponsCheck ) & nFlags ) == nFlags; }
+	virtual void				CalculateVisionUsingCurrentFlags( void ) {}
 
 	// return the entity used for soundscape radius checks
 	virtual C_BaseEntity		*GetSoundscapeListener();
@@ -429,6 +433,17 @@ public:
 
 	virtual void			OnAchievementAchieved( int iAchievement ) {}
 
+#if defined USES_ECON_ITEMS
+	// Wearables
+	virtual void			UpdateWearables();
+	const C_EconWearable	*GetWearable( int i ) const { return m_hMyWearables[i]; }
+	C_EconWearable			*GetWearable( int i ) { return m_hMyWearables[i]; }
+	int						GetNumWearables( void ) const { return m_hMyWearables.Count(); }
+#endif
+
+	bool					HasFiredWeapon( void ) { return m_bFiredWeapon; }
+	void					SetFiredWeapon( bool bFlag ) { m_bFiredWeapon = bFlag; }
+
 protected:
 	fogparams_t				m_CurrentFog;
 	EHANDLE					m_hOldFogController;
@@ -456,6 +471,10 @@ public:
 	
 	// Data for only the local player
 	CNetworkVarEmbedded( CPlayerLocalData, m_Local );
+
+#if defined USES_ECON_ITEMS
+	CNetworkVarEmbedded( CAttributeList, m_AttributeList );
+#endif
 
 	EHANDLE					m_hTonemapController;
 
@@ -601,6 +620,8 @@ private:
 
 	EHANDLE			m_pCurrentVguiScreen;
 
+	bool			m_bFiredWeapon;
+
 
 	// Player flashlight dynamic light pointers
 	bool			m_bFlashlightEnabled[ MAX_SPLITSCREEN_PLAYERS ];
@@ -679,6 +700,14 @@ protected:
 	float			m_flFreezeZOffset;
 	byte			m_ubEFNoInterpParity;
 	byte			m_ubOldEFNoInterpParity;
+
+	int				m_nForceVisionFilterFlags; // Force our vision filter to a specific setting
+	int				m_nLocalPlayerVisionFlags;
+
+#if defined USES_ECON_ITEMS
+	// Wearables
+	CUtlVector<CHandle<C_EconWearable > >	m_hMyWearables;
+#endif
 
 	// If we have any attached split users, this is the list of them
 	CUtlVector< CHandle< CBasePlayer > > m_hSplitScreenPlayers;

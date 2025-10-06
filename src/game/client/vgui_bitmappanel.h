@@ -50,7 +50,7 @@ public:
 	virtual void SetImage( BitmapImage *pImage );
 #ifdef CLIENT_DLL
 	/// Set bitmap data directly
-	virtual void SetBitmap( const Bitmap_t &bitmap );
+	virtual void SetBitmap( const struct Bitmap_t &bitmap );
 #endif
 	const char *GetMouseOverText( void );
 

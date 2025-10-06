@@ -26,6 +26,13 @@ C_BaseCombatCharacter::C_BaseCombatCharacter()
 {
 	for ( int i=0; i < m_iAmmo.Count(); i++ )
 		m_iAmmo.Set( i, 0 );
+
+#ifdef GLOWS_ENABLE
+	m_pGlowEffect = NULL;
+	m_bGlowEnabled = false;
+	m_bOldGlowEnabled = false;
+	m_bClientSideGlowEnabled = false;
+#endif // GLOWS_ENABLE
 }
 
 //-----------------------------------------------------------------------------
@@ -33,6 +40,9 @@ C_BaseCombatCharacter::C_BaseCombatCharacter()
 //-----------------------------------------------------------------------------
 C_BaseCombatCharacter::~C_BaseCombatCharacter()
 {
+#ifdef GLOWS_ENABLE
+	DestroyGlowEffect();
+#endif // GLOWS_ENABLE
 }
 
 /*
@@ -44,6 +54,33 @@ int	C_BaseCombatCharacter::GetAmmoCount( char *szName ) const
 	return GetAmmoCount( g_pGameRules->GetAmmoDef()->Index(szName) );
 }
 */
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void C_BaseCombatCharacter::OnPreDataChanged( DataUpdateType_t updateType )
+{
+	BaseClass::OnPreDataChanged( updateType );
+
+#ifdef GLOWS_ENABLE
+	m_bOldGlowEnabled = m_bGlowEnabled;
+#endif // GLOWS_ENABLE
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void C_BaseCombatCharacter::OnDataChanged( DataUpdateType_t updateType )
+{
+	BaseClass::OnDataChanged( updateType );
+
+#ifdef GLOWS_ENABLE
+	if ( m_bOldGlowEnabled != m_bGlowEnabled )
+	{
+		UpdateGlowEffect();
+	}
+#endif // GLOWS_ENABLE
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: Overload our muzzle flash and send it to any actively held weapon
@@ -62,6 +99,68 @@ void C_BaseCombatCharacter::DoMuzzleFlash()
 		BaseClass::DoMuzzleFlash();
 	}
 }
+
+#ifdef GLOWS_ENABLE
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void C_BaseCombatCharacter::GetGlowEffectColor( float *r, float *g, float *b )
+{
+	*r = 0.76f;
+	*g = 0.76f;
+	*b = 0.76f;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+/*
+void C_BaseCombatCharacter::EnableGlowEffect( float r, float g, float b )
+{
+	// destroy the existing effect
+	if ( m_pGlowEffect )
+	{
+		DestroyGlowEffect();
+	}
+
+	m_pGlowEffect = new CGlowObject( this, Vector( r, g, b ), 1.0, true );
+}
+*/
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void C_BaseCombatCharacter::UpdateGlowEffect( void )
+{
+	// destroy the existing effect
+	if ( m_pGlowEffect )
+	{
+		DestroyGlowEffect();
+	}
+
+	// create a new effect
+	if ( m_bGlowEnabled || m_bClientSideGlowEnabled )
+	{
+		float r, g, b;
+		GetGlowEffectColor( &r, &g, &b );
+
+		m_pGlowEffect = new CGlowObject( this, Vector( r, g, b ), 1.0, true );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void C_BaseCombatCharacter::DestroyGlowEffect( void )
+{
+	if ( m_pGlowEffect )
+	{
+		delete m_pGlowEffect;
+		m_pGlowEffect = NULL;
+	}
+}
+#endif // GLOWS_ENABLE
+
 IMPLEMENT_CLIENTCLASS(C_BaseCombatCharacter, DT_BaseCombatCharacter, CBaseCombatCharacter);
 
 // Only send active weapon index to local player
@@ -70,6 +169,9 @@ BEGIN_RECV_TABLE_NOBASE( C_BaseCombatCharacter, DT_BCCLocalPlayerExclusive )
 
 
 	RecvPropArray3( RECVINFO_ARRAY(m_hMyWeapons), RecvPropEHandle( RECVINFO( m_hMyWeapons[0] ) ) ),
+#ifdef GLOWS_ENABLE
+	RecvPropBool( RECVINFO( m_bGlowEnabled ) ),
+#endif // GLOWS_ENABLE
 
 
 END_RECV_TABLE();

@@ -988,7 +988,7 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 				pKeyValues->SetInt( "level", iLevel );
 
 				wchar_t	wTemp[256];
-				g_pVGuiLocalize->ConstructString_safe( wTemp, pszBaseString, pKeyValues );
+				g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), pszBaseString, pKeyValues );
 
 				static char szAnsi[1024];
 				g_pVGuiLocalize->ConvertUnicodeToANSI( wTemp, szAnsi, sizeof(szAnsi) );
@@ -1055,7 +1055,7 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 				pKeyValues->SetInt( "level", iLevel );
 
 				wchar_t	wTemp[256];
-				g_pVGuiLocalize->ConstructString_safe( wTemp, pszBaseString, pKeyValues );
+				g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), pszBaseString, pKeyValues );
 
 				static char szAnsi[1024];
 				g_pVGuiLocalize->ConvertUnicodeToANSI( wTemp, szAnsi, sizeof(szAnsi) );
@@ -1161,7 +1161,7 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 				pKeyValues->SetInt( "level", iLevel );
 
 				wchar_t	wTemp[256];
-				g_pVGuiLocalize->ConstructString_safe( wTemp, pszBaseString, pKeyValues );
+				g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), pszBaseString, pKeyValues );
 
 				static char szAnsi[1024];
 				g_pVGuiLocalize->ConvertUnicodeToANSI( wTemp, szAnsi, sizeof(szAnsi) );
@@ -1203,7 +1203,7 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 				pKeyValues->SetInt( "level", iLevel );
 
 				wchar_t	wTemp[256];
-				g_pVGuiLocalize->ConstructString_safe( wTemp, pszBaseString, pKeyValues );
+				g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), pszBaseString, pKeyValues );
 
 				static char szAnsi[1024];
 				g_pVGuiLocalize->ConvertUnicodeToANSI( wTemp, szAnsi, sizeof(szAnsi) );
@@ -1239,7 +1239,7 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 				pKeyValues->SetInt( "level", iLevel );
 
 				wchar_t	wTemp[256];
-				g_pVGuiLocalize->ConstructString_safe( wTemp, pszBaseString, pKeyValues );
+				g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), pszBaseString, pKeyValues );
 
 				static char szAnsi[1024];
 				g_pVGuiLocalize->ConvertUnicodeToANSI( wTemp, szAnsi, sizeof(szAnsi) );
@@ -1318,7 +1318,7 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 				pKeyValues->SetInt( "level", iLevel );
 
 				wchar_t	wTemp[256];
-				g_pVGuiLocalize->ConstructString_safe( wTemp, pszBaseString, pKeyValues );
+				g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), pszBaseString, pKeyValues );
 
 				static char szAnsi[1024];
 				g_pVGuiLocalize->ConvertUnicodeToANSI( wTemp, szAnsi, sizeof(szAnsi) );
@@ -2268,7 +2268,7 @@ void ClientModeTFNormal::PrintTextToChat( const char *pText, KeyValues *pKeyValu
 	if ( pHUDChat )
 	{
 		wchar_t wszText[1024]=L"";
-		g_pVGuiLocalize->ConstructString_safe( wszText, pText, pKeyValues );
+		g_pVGuiLocalize->ConstructString( wszText, sizeof( wszText ), pText, pKeyValues );
 		char szAnsi[1024];
 		g_pVGuiLocalize->ConvertUnicodeToANSI( wszText, szAnsi, sizeof(szAnsi) );
 		pHUDChat->Printf( CHAT_FILTER_NONE, "%s", szAnsi );
@@ -2281,7 +2281,7 @@ void ClientModeTFNormal::PrintTextToChatPlayer( int iPlayerIndex, const char *pT
 	if ( pHUDChat )
 	{
 		wchar_t wszText[1024]=L"";
-		g_pVGuiLocalize->ConstructString_safe( wszText, pText, pKeyValues );
+		g_pVGuiLocalize->ConstructString( wszText, sizeof( wszText ), pText, pKeyValues );
 		char szAnsi[1024];
 		g_pVGuiLocalize->ConvertUnicodeToANSI( wszText, szAnsi, sizeof(szAnsi) );
 		pHUDChat->ChatPrintf( iPlayerIndex, CHAT_FILTER_NONE, "%s", szAnsi );

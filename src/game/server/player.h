@@ -20,6 +20,11 @@
 #include "simtimer.h"
 #include "vprof.h"
 
+#if defined USES_ECON_ITEMS
+#include "game_item_schema.h"
+#include "econ_item_view.h"
+#endif
+
 class CLogicPlayerProxy;
 
 // For queuing and processing usercmds
@@ -87,6 +92,10 @@ class CHintSystem;
 class CAI_Expresser;
 class CAI_Node;
 class CAI_Link;
+
+#if defined USES_ECON_ITEMS
+class CEconWearable;
+#endif // USES_ECON_ITEMS
 
 class CTonemapTrigger;
 
@@ -402,6 +411,15 @@ public:
 	void					ShowViewModel( bool bShow );
 	void					ShowCrosshair( bool bShow );
 
+	void					SetForceLocalDraw( bool bForceLocalDraw )
+	{
+		m_Local.m_bForceLocalPlayerDraw = bForceLocalDraw;
+	}
+	bool					GetForceLocalDraw( void )
+	{
+		return m_Local.m_bForceLocalPlayerDraw;
+	}
+
 	bool					ScriptIsPlayerNoclipping( void );
 	virtual void			NoClipStateChanged( void ) { };
 
@@ -647,6 +665,12 @@ public:
 
 	virtual bool			ShouldAnnounceAchievement( void ){ return true; }
 
+#if defined USES_ECON_ITEMS
+	// Wearables
+	virtual void			EquipWearable( CEconWearable *pItem );
+	virtual void			RemoveWearable( CEconWearable *pItem );
+	void					PlayWearableAnimsForPlaybackEvent( wearableanimplayback_t iPlayback );
+#endif
 
 	bool					IsSplitScreenPartner( CBasePlayer *pPlayer );
 	void					SetSplitScreenPlayer( bool bSplitScreenPlayer, CBasePlayer *pOwner );
@@ -851,6 +875,10 @@ public:
 	//  the player and not to other players.
 	CNetworkVarEmbedded( CPlayerLocalData, m_Local );
 
+#if defined USES_ECON_ITEMS
+	CNetworkVarEmbedded( CAttributeList,	m_AttributeList );
+#endif
+
 	CNetworkVarEmbedded( fogplayerparams_t, m_PlayerFog );
 	void InitFogController( void );
 	void InputSetFogController( inputdata_t &inputdata );
@@ -914,6 +942,12 @@ public:
 	float		GetFOVTime( void ){ return m_flFOVTime; }
 
 	void		AdjustDrownDmg( int nAmount );
+
+#if defined USES_ECON_ITEMS
+	CEconWearable			*GetWearable( int i ) { return m_hMyWearables[i]; }
+	const CEconWearable		*GetWearable( int i ) const { return m_hMyWearables[i]; }
+	int						GetNumWearables( void ) const { return m_hMyWearables.Count(); }
+#endif
 
 private:
 
@@ -1085,6 +1119,11 @@ protected:
 	float					m_flStepSoundTime;	// time to check for next footstep sound
 
 	bool					m_bAllowInstantSpawn;
+
+#if defined USES_ECON_ITEMS
+	// Wearables
+	CUtlVector<CHandle<CEconWearable > >	m_hMyWearables;
+#endif
 
 private:
 

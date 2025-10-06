@@ -61,7 +61,7 @@ void CTFStorePageBase::OnPageShow( void )
 	// If this is the first time we've opened the store, start the armory explanations
 	if ( !tf_explanations_store.GetBool() && m_pPageData )
 	{
-		m_flStartExplanationsAt = engine->Time() + 0.5;
+		m_flStartExplanationsAt = Plat_FloatTime() + 0.5;
 		vgui::ivgui()->AddTickSignal( GetVPanel() );
 	}
 }
@@ -75,7 +75,7 @@ void CTFStorePageBase::OnCommand( const char *command )
 	{
 		if ( !m_flStartExplanationsAt )
 		{
-			m_flStartExplanationsAt = engine->Time();
+			m_flStartExplanationsAt = Plat_FloatTime();
 			vgui::ivgui()->AddTickSignal( GetVPanel() );
 		}
 		RequestFocus();
@@ -183,7 +183,7 @@ void CTFStorePageBase::UpdateFilterComboBox( void )
 		pKeyValues->SetInt( "filter", FILTER_ALLCLASS_ITEMS );
 
 		_snwprintf( wszCount, ARRAYSIZE( wszCount ), L"%d", nCount );
-		g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( "#Store_ClassFilter_AllClasses" ), 1, wszCount );
+		g_pVGuiLocalize->ConstructString( wzLocalized, sizeof( wzLocalized ), g_pVGuiLocalize->Find( "#Store_ClassFilter_AllClasses" ), 1, wszCount );
 		m_pFilterComboBox->AddItem( wzLocalized, pKeyValues );
 	}
 
@@ -197,7 +197,7 @@ void CTFStorePageBase::UpdateFilterComboBox( void )
 		pKeyValues->SetInt( "filter", iClass );
 
 		_snwprintf( wszCount, ARRAYSIZE( wszCount ), L"%d", nCount );
-		g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( g_szClassFilterStrings[iClass] ), 1, wszCount );
+		g_pVGuiLocalize->ConstructString( wzLocalized, sizeof( wzLocalized ), g_pVGuiLocalize->Find( g_szClassFilterStrings[iClass] ), 1, wszCount );
 		m_pFilterComboBox->AddItem( wzLocalized, pKeyValues );
 	}
 
@@ -208,7 +208,7 @@ void CTFStorePageBase::UpdateFilterComboBox( void )
 		pKeyValues->SetInt( "filter", FILTER_UNOWNED_ITEMS );
 
 		_snwprintf( wszCount, ARRAYSIZE( wszCount ), L"%d", nCount );
-		g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( "#Store_Items_Unowned" ), 1, wszCount );
+		g_pVGuiLocalize->ConstructString( wzLocalized, sizeof( wzLocalized ), g_pVGuiLocalize->Find( "#Store_Items_Unowned" ), 1, wszCount );
 		m_pFilterComboBox->AddItem( wzLocalized, pKeyValues );
 	}
 
@@ -219,7 +219,7 @@ void CTFStorePageBase::UpdateFilterComboBox( void )
 		pKeyValues->SetInt( "filter", FILTER_ALLCLASS_ITEMS );
 
 		_snwprintf( wszCount, ARRAYSIZE( wszCount ), L"%d", m_vecFilterCounts[FILTER_ALLCLASS_ITEMS] );
-		g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( "#Store_ClassFilter_AllClasses" ), 1, wszCount );
+		g_pVGuiLocalize->ConstructString( wzLocalized, sizeof( wzLocalized ), g_pVGuiLocalize->Find( "#Store_ClassFilter_AllClasses" ), 1, wszCount );
 		m_pFilterComboBox->AddItem( wzLocalized, pKeyValues );
 	}
 
@@ -232,7 +232,7 @@ void CTFStorePageBase::UpdateFilterComboBox( void )
 		pKeyValues->SetInt( "filter", iClass );
 
 		_snwprintf( wszCount, ARRAYSIZE( wszCount ), L"%d", m_vecFilterCounts[iClass] );
-		g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( g_szClassFilterStrings[iClass] ), 1, wszCount );
+		g_pVGuiLocalize->ConstructString( wzLocalized, sizeof( wzLocalized ), g_pVGuiLocalize->Find( g_szClassFilterStrings[iClass] ), 1, wszCount );
 		m_pFilterComboBox->AddItem( wzLocalized, pKeyValues );
 	}
 
@@ -242,7 +242,7 @@ void CTFStorePageBase::UpdateFilterComboBox( void )
 		pKeyValues->SetInt( "filter", FILTER_UNOWNED_ITEMS );
 
 		_snwprintf( wszCount, ARRAYSIZE( wszCount ), L"%d", m_vecFilterCounts[FILTER_UNOWNED_ITEMS] );
-		g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( "#Store_Items_Unowned" ), 1, wszCount );
+		g_pVGuiLocalize->ConstructString( wzLocalized, sizeof( wzLocalized ), g_pVGuiLocalize->Find( "#Store_Items_Unowned" ), 1, wszCount );
 		m_pFilterComboBox->AddItem( wzLocalized, pKeyValues );
 	}
 #endif
@@ -257,7 +257,7 @@ void CTFStorePageBase::OnTick( void )
 {
 	BaseClass::OnTick();
 
-	if ( m_flStartExplanationsAt && m_flStartExplanationsAt < engine->Time() )
+	if ( m_flStartExplanationsAt && m_flStartExplanationsAt < Plat_FloatTime() )
 	{
 		m_flStartExplanationsAt = 0;
 

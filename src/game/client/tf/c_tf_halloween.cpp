@@ -126,7 +126,7 @@ public:
 		else
 		{
 			float alpha = 0.75f * ( ( HALLOWEEN_ITEM_TIME_TO_READY - flTimeDelta ) / HALLOWEEN_ITEM_TIME_TO_READY );
-			SetRenderColorA( alpha * 256 );
+			SetRenderAlpha( alpha * 256 );
 		}		
 	}
 
@@ -260,7 +260,7 @@ CON_COMMAND( cl_halloween_test_spawn_pickup, "Test spawning the pickup item" )
 	else
 	{
 		if ( gHalloweenPickup.Get() )
-			gHalloweenPickup->Release();
+			UTIL_Remove( gHalloweenPickup );
 		gHalloweenPickup = pEntity;
 	}
 }

@@ -403,7 +403,7 @@ bool CLadderLobbyLeaderboard::UpdateLeaderboards()
 			wchar_t wszCount[ 16 ];
 			_snwprintf( wszCount, ARRAYSIZE( wszCount ), L"%d", levelInfo.m_nLevelNum );
 			const wchar_t *wpszFormat = g_pVGuiLocalize->Find( pMatchDesc->m_pProgressionDesc->m_pszLevelToken );
-			g_pVGuiLocalize->ConstructString_safe( wszOutString, wpszFormat, 2, wszCount, g_pVGuiLocalize->Find( levelInfo.m_pszLevelTitle ) );
+			g_pVGuiLocalize->ConstructString( wszOutString, sizeof( wszOutString ), wpszFormat, 2, wszCount, g_pVGuiLocalize->Find( levelInfo.m_pszLevelTitle ) );
 			g_pVGuiLocalize->ConvertUnicodeToANSI( wszOutString, szLocalized, sizeof( szLocalized ) );
 
 			pRankImage->SetMouseInputEnabled( true );

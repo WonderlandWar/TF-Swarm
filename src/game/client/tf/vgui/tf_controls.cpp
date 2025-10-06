@@ -39,7 +39,7 @@ wchar_t* LocalizeNumberWithToken( const char* pszLocToken, int nValue )
 	wchar_t wszCount[ 16 ];
 	_snwprintf( wszCount, ARRAYSIZE( wszCount ), L"%d", nValue );
 	const wchar_t *wpszFormat = g_pVGuiLocalize->Find( pszLocToken );
-	g_pVGuiLocalize->ConstructString_safe( wszOutString, wpszFormat, 1, wszCount );
+	g_pVGuiLocalize->ConstructString( wszOutString, sizeof( wszOutString ), wpszFormat, 1, wszCount );
 	
 	return wszOutString;
 }
@@ -52,7 +52,7 @@ wchar_t* LocalizeNumberWithToken( const char* pszLocToken, int nValue1, int nVal
 	_snwprintf( wszCount1, ARRAYSIZE( wszCount1 ), L"%d", nValue1 );
 	_snwprintf( wszCount2, ARRAYSIZE( wszCount2 ), L"%d", nValue2 );
 	const wchar_t *wpszFormat = g_pVGuiLocalize->Find( pszLocToken );
-	g_pVGuiLocalize->ConstructString_safe( wszOutString, wpszFormat, 2, wszCount1, wszCount2 );
+	g_pVGuiLocalize->ConstructString( wszOutString, sizeof( wszOutString ), wpszFormat, 2, wszCount1, wszCount2 );
 
 	return wszOutString;
 }
@@ -239,8 +239,11 @@ int AttemptPositionTooltip( const tooltippos_t eTooltipPosition,
 							 int &iXPos, 
 							 int &iYPos )
 {
-	int iPanelX = pMouseOverPanel->GetXPos();
-	int iPanelY = pMouseOverPanel->GetYPos();
+	int iPanelXAbsolute;
+	int iPanelYAbsolute;
+	pMouseOverPanel->GetPos( iPanelXAbsolute, iPanelYAbsolute );
+	int iPanelX = iPanelXAbsolute;
+	int iPanelY = iPanelYAbsolute;
 	pMouseOverPanel->ParentLocalToScreen( iPanelX, iPanelY );
 
 	switch ( eTooltipPosition )
@@ -279,13 +282,13 @@ int AttemptPositionTooltip( const tooltippos_t eTooltipPosition,
 	iYPos = clamp( iYPos, 0, iScreenY - pToolTipPanel->GetTall() );
 
 	// Detect how much overlap we have in X
-	int nXMin = Max( iXPos, pMouseOverPanel->GetXPos() );
-	int nXMax = Min( iXPos + pToolTipPanel->GetWide(), pMouseOverPanel->GetXPos() + pMouseOverPanel->GetWide() );
+	int nXMin = Max( iXPos, iPanelXAbsolute );
+	int nXMax = Min( iXPos + pToolTipPanel->GetWide(), iPanelXAbsolute + pMouseOverPanel->GetWide() );
 	int nXScore = Max( 0, nXMax - nXMin );
 
 	// Detect overlap in Y
-	int nYMin = Max( iYPos, pMouseOverPanel->GetYPos() );
-	int nYMax = Min( iYPos + pToolTipPanel->GetTall(), pMouseOverPanel->GetYPos() + pMouseOverPanel->GetTall() );
+	int nYMin = Max( iYPos, iPanelYAbsolute );
+	int nYMax = Min( iYPos + pToolTipPanel->GetTall(), iPanelYAbsolute + pMouseOverPanel->GetTall() );
 	int nYScore = Max( 0, nYMax - nYMin );
 
 	return nXScore + nYScore;
@@ -778,7 +781,7 @@ void CTFAdvancedOptionsDialog::OnKeyCodeTyped(KeyCode code)
 void CTFAdvancedOptionsDialog::OnKeyCodePressed(KeyCode code)
 {
 	// force ourselves to be closed if the escape key it pressed
-	if ( GetBaseButtonCode( code ) == KEY_XBUTTON_B || GetBaseButtonCode( code ) == STEAMCONTROLLER_B || GetBaseButtonCode( code ) == STEAMCONTROLLER_START )
+	if ( GetBaseButtonCode( code ) == KEY_XBUTTON_B )
 	{
 		OnClose();
 	}
@@ -965,6 +968,7 @@ void CTFAdvancedOptionsDialog::CreateControls()
 			pBox->SetDefaultColor( tanDark, pBox->GetBgColor() );
 			pBox->SetArmedColor( tanDark, pBox->GetBgColor() );
 			pBox->SetDepressedColor( tanDark, pBox->GetBgColor() );
+			// TF_SWARM: FIXME!
 			pBox->SetSelectedColor( tanDark, pBox->GetBgColor() );
 			pBox->SetHighlightColor( tanDark );
 			pBox->GetCheckImage()->SetColor( tanDark );
@@ -1065,12 +1069,14 @@ void CTFAdvancedOptionsDialog::CreateControls()
 		{
 			if ( pCtrl->pPrompt )
 			{
-				pCtrl->pPrompt->SetTooltip( m_pToolTip, pObj->tooltip );
+				// TF_SWARM: FIXME!
+				//pCtrl->pPrompt->SetTooltip( m_pToolTip, pObj->tooltip );
 			}
 			else
 			{
-				pCtrl->SetTooltip( m_pToolTip, pObj->tooltip );
-				pCtrl->pControl->SetTooltip( m_pToolTip, pObj->tooltip );
+				// TF_SWARM: FIXME!
+				//pCtrl->SetTooltip( m_pToolTip, pObj->tooltip );
+				//pCtrl->pControl->SetTooltip( m_pToolTip, pObj->tooltip );
 			}
 		}
 
@@ -1283,7 +1289,8 @@ void CTFTextToolTip::PositionWindow( Panel *pTipPanel )
 		}
 	}	
 }
-
+// TF_SWARM: FIXME!
+#if 0
 void CTFTextToolTip::ShowTooltip( Panel *pCurrentPanel )
 {
 	EditablePanel* pEditableCurrentPanel = dynamic_cast< EditablePanel* >( pCurrentPanel );
@@ -1299,7 +1306,7 @@ void CTFTextToolTip::ShowTooltip( Panel *pCurrentPanel )
 
 	BaseClass::ShowTooltip( pCurrentPanel );
 }
-
+#endif
 static vgui::DHANDLE<CTFAdvancedOptionsDialog> g_pTFAdvancedOptionsDialog;
 
 //-----------------------------------------------------------------------------
@@ -1518,7 +1525,10 @@ void CScrollableList::PerformLayout()
 		LayoutInfo_t layout = m_vecAutoLayoutPanels[ i ];
 		nYpos += layout.m_nGap;
 
-		layout.m_pPanel->SetPos( layout.m_pPanel->GetXPos(), nYpos );
+		int layoutPanelXPOS;
+		int layoutPanelYPOS;
+		layout.m_pPanel->GetPos( layoutPanelXPOS, layoutPanelYPOS );
+		layout.m_pPanel->SetPos( layoutPanelXPOS, nYpos );
 
 		nYpos += layout.m_pPanel->GetTall();
 	}
@@ -1781,7 +1791,8 @@ void CDraggableScrollingPanel::ApplySettings( KeyValues *inResourceData )
 		}
 	}
 }
-
+// TF_SWARM: FIXME!
+#if 0
 //-----------------------------------------------------------------------------
 // Purpose: When a child is removed, remove the original data for that child
 //-----------------------------------------------------------------------------
@@ -1796,7 +1807,7 @@ void CDraggableScrollingPanel::OnChildRemoved( Panel* pChild )
 
 	m_vecChildOriginalData.Remove( idx );
 }
-
+#endif
 //-----------------------------------------------------------------------------
 // Purpose: Check if our pending children are loaded yer
 //-----------------------------------------------------------------------------
@@ -2010,7 +2021,8 @@ void CDraggableScrollingPanel::AddOrUpdateChild( Panel* pChild, bool bScaleWithZ
 		UpdateChildren();
 	}
 }
-
+// TF_SWARM: FIXME!
+#if 0 
 //-----------------------------------------------------------------------------
 // Purpose: See if we were waiting for a child to get their settings applied
 //			before we added them as a managed child
@@ -2028,7 +2040,7 @@ void CDraggableScrollingPanel::OnChildSettingsApplied( KeyValues *pInResourceDat
 		}
 	}
 }
-
+#endif
 void CDraggableScrollingPanel::CaptureChildSettings( Panel* pChild )
 {
 	float flStartWide = GetWide() / m_flZoom;
@@ -2038,41 +2050,44 @@ void CDraggableScrollingPanel::CaptureChildSettings( Panel* pChild )
 	{
 		if ( m_vecChildOriginalData[ i ].m_pChild == pChild )
 		{
+			int xpos;
+			int ypos;
+			pChild->GetPos( xpos, ypos );
 			ChildPositionInfo_t& info = m_vecChildOriginalData[ i ];
 			switch ( info.m_ePinPosition )
 			{
 				case PIN_CENTER:
 				{
-					info.m_flX = ( pChild->GetXPos() + ( pChild->GetWide() / 2.f ) ) / flStartWide;
-					info.m_flY = ( pChild->GetYPos() + ( pChild->GetTall() / 2.f ) ) / flStartTall;
+					info.m_flX = ( xpos + ( pChild->GetWide() / 2.f ) ) / flStartWide;
+					info.m_flY = ( ypos + ( pChild->GetTall() / 2.f ) ) / flStartTall;
 				}
 				break;
 
 				case PIN_TOP_LEFT:
 				{
-					info.m_flX = pChild->GetXPos() / flStartWide;
-					info.m_flY = pChild->GetYPos() / flStartTall;
+					info.m_flX = xpos / flStartWide;
+					info.m_flY = ypos / flStartTall;
 				}
 				break;
 
 				case PIN_TOP_RIGHT:
 				{
-					info.m_flX = ( pChild->GetXPos() + pChild->GetWide() ) / flStartWide;
-					info.m_flY =   pChild->GetYPos() / flStartTall;
+					info.m_flX = ( xpos + pChild->GetWide() ) / flStartWide;
+					info.m_flY =   ypos / flStartTall;
 				}
 				break;
 
 				case PIN_BOTTOM_LEFT:
 				{
-					info.m_flX =   pChild->GetXPos() / flStartWide;
-					info.m_flY = ( pChild->GetYPos() + pChild->GetTall() ) / flStartTall;
+					info.m_flX =   xpos / flStartWide;
+					info.m_flY = ( ypos + pChild->GetTall() ) / flStartTall;
 				}
 				break;
 
 				case PIN_BOTTOM_RIGHT:
 				{
-					info.m_flX = ( pChild->GetXPos() + pChild->GetWide() ) / flStartWide;
-					info.m_flY = ( pChild->GetYPos() + pChild->GetTall() ) / flStartTall;
+					info.m_flX = ( xpos + pChild->GetWide() ) / flStartWide;
+					info.m_flY = ( ypos + pChild->GetTall() ) / flStartTall;
 				}
 				break;
 			}
@@ -2282,11 +2297,13 @@ public:
 		SetVisible( true );
 
 		// Do starting stuff
-		if ( g_pClientMode && GetClientMode()->GetViewport() && GetClientMode()->GetViewportAnimationController() )
+		if ( GetClientMode() && GetClientMode()->GetViewport() && GetClientMode()->GetViewportAnimationController() )
 		{
-			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, m_bPositive ? "XPSourceShow_Positive" : "XPSourceShow_Negative", false );
-			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "xpos", GetXPos() + m_nXTravel, 0.f, 3.f, AnimationController::INTERPOLATOR_DEACCEL, 0, true, false );
-			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "ypos", GetYPos() + m_nYTravel, 0.f, 3.f, AnimationController::INTERPOLATOR_DEACCEL, 0, true, false );
+			int x, y;
+			GetPos( x, y );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, m_bPositive ? "XPSourceShow_Positive" : "XPSourceShow_Negative" );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "xpos", x + m_nXTravel, 0.f, 3.f, AnimationController::INTERPOLATOR_DEACCEL, 0 );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "ypos", y + m_nYTravel, 0.f, 3.f, AnimationController::INTERPOLATOR_DEACCEL, 0 );
 		}
 
 		if ( !m_strSound.IsEmpty() )

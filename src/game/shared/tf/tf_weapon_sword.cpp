@@ -237,15 +237,15 @@ void CTFDecapitationMeleeWeaponBase::UpdateAttachmentModels( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int	CTFDecapitationMeleeWeaponBase::DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags )
+int	CTFDecapitationMeleeWeaponBase::DrawOverriddenViewmodel( C_BaseViewModel *pViewmodel, int flags, const RenderableInstance_t &instance )
 {
-	int iRes = BaseClass::DrawOverriddenViewmodel( pViewmodel, flags );
+	int iRes = BaseClass::DrawOverriddenViewmodel( pViewmodel, flags, instance );
 
 	CTFWearableDemoShield* pMyShield = dynamic_cast<CTFWearableDemoShield*>( m_hShield.Get() );
 
 	if ( pMyShield )
 	{
-		pMyShield->DrawOverriddenViewmodel( pViewmodel, flags );
+		pMyShield->DrawOverriddenViewmodel( pViewmodel, flags, instance );
 	}
 
 	return iRes;

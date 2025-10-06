@@ -346,6 +346,33 @@ private:
 	double			m_fLastTypeAheadTime;
 };
 
+#ifdef CLIENT_DLL
+//-----------------------------------------------------------------------------
+// Helper class to create menu
+//-----------------------------------------------------------------------------
+class MenuBuilder
+{
+public:
+
+	MenuBuilder( Menu *pMenu, Panel *pActionTarget );
+
+	MenuItem* AddMenuItem( const char *pszButtonText, const char *pszCommand, const char *pszCategoryName );
+	MenuItem* AddMenuItem( const char *pszButtonText, KeyValues *kvUserData, const char *pszCategoryName );
+	MenuItem* AddMenuItem( const wchar_t *pwszButtonText, const char *pszCommand, const char *pszCategoryName );
+	MenuItem* AddMenuItem( const wchar_t *pwszButtonText, KeyValues *kvUserData, const char *pszCategoryName );
+
+	MenuItem* AddCascadingMenuItem( const char *pszButtonText, Menu *pSubMenu, const char *pszCategoryName );
+	MenuItem* AddCascadingMenuItem( const wchar_t *pwszButtonText, Menu *pSubMenu, const char *pszCategoryName );
+
+private:
+
+	void AddSepratorIfNeeded( const char *pszCategoryName );
+
+	Menu *m_pMenu;
+	Panel *m_pActionTarget;
+	const char *m_pszLastCategory;
+};
+#endif
 } // namespace vgui
 
 #endif // MENU_H

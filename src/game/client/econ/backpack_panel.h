@@ -115,7 +115,8 @@ public:
 	virtual void OnKeyCodeTyped(vgui::KeyCode code) OVERRIDE;
 
 	virtual void OnMouseReleased(vgui::MouseCode code) OVERRIDE;
-	virtual void OnMouseMismatchedRelease( vgui::MouseCode code, Panel* pPressedPanel ) OVERRIDE;
+	// TF_SWARM: FIXME!
+	//virtual void OnMouseMismatchedRelease( vgui::MouseCode code, Panel* pPressedPanel ) OVERRIDE;
 	virtual void OnMouseCaptureLost() OVERRIDE;
 
 	void OnItemContentsChanged( CEconItemView *pEconItemView );

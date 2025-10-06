@@ -75,7 +75,9 @@
 #include "logic_playerproxy.h"
 #include "fogvolume.h"
 
-
+#if defined USES_ECON_ITEMS
+#include "econ_wearable.h"
+#endif
 
 #ifdef HL2_DLL
 #include "combine_mine.h"
@@ -238,6 +240,9 @@ END_DATADESC()
 BEGIN_DATADESC( CBasePlayer )
 
 	DEFINE_EMBEDDED( m_Local ),
+#if defined USES_ECON_ITEMS
+	DEFINE_EMBEDDED( m_AttributeList ),
+#endif
 	DEFINE_UTLVECTOR( m_hTriggerSoundscapeList, FIELD_EHANDLE ),
 	DEFINE_EMBEDDED( pl ),
 
@@ -7451,7 +7456,83 @@ CBaseEntity *CBasePlayer::HasNamedPlayerItem( const char *pszItemName )
 	return NULL;
 }
 
+#if defined USES_ECON_ITEMS
+//-----------------------------------------------------------------------------
+// Purpose: Add this wearable to the players' equipment list.
+//-----------------------------------------------------------------------------
+void CBasePlayer::EquipWearable( CEconWearable *pItem )
+{
+	Assert( pItem );
 
+	if ( pItem )
+	{
+		m_hMyWearables.AddToHead( pItem );
+		pItem->Equip( this );
+	}
+
+#ifdef DBGFLAG_ASSERT
+	// Double check list integrity.
+	for ( int i = m_hMyWearables.Count()-1; i >= 0; --i )
+	{
+		Assert( m_hMyWearables[i] != NULL );
+	}
+	// Networked Vector has a max size of MAX_WEARABLES_SENT_FROM_SERVER, should never have more then 7 wearables
+	// in public
+	// Search for : RecvPropUtlVector( RECVINFO_UTLVECTOR( m_hMyWearables ), MAX_WEARABLES_SENT_FROM_SERVER,	RecvPropEHandle(NULL, 0, 0) ),
+	Assert( m_hMyWearables.Count() <= MAX_WEARABLES_SENT_FROM_SERVER );
+#endif
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Remove this wearable from the player's equipment list.
+//-----------------------------------------------------------------------------
+void CBasePlayer::RemoveWearable( CEconWearable *pItem )
+{
+	Assert( pItem );
+
+	for ( int i = m_hMyWearables.Count()-1; i >= 0; --i )
+	{
+		CEconWearable *pWearable = m_hMyWearables[i];
+		if ( pWearable == pItem )
+		{
+			pItem->UnEquip( this );
+			UTIL_Remove( pWearable );
+			m_hMyWearables.Remove( i );
+			break;
+		}
+
+		// Integrety is failing, remove NULLs
+		if ( !pWearable )
+		{
+			m_hMyWearables.Remove( i );
+			break;
+		}
+	}
+
+#ifdef DBGFLAG_ASSERT
+	// Double check list integrity.
+	for ( int i = m_hMyWearables.Count()-1; i >= 0; --i )
+	{
+		Assert( m_hMyWearables[i] != NULL );
+	}
+#endif
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBasePlayer::PlayWearableAnimsForPlaybackEvent( wearableanimplayback_t iPlayback )
+{
+	// Tell all our wearables to play their animations
+	FOR_EACH_VEC( m_hMyWearables, i )
+	{
+		if ( m_hMyWearables[i] )
+		{
+			m_hMyWearables[i]->PlayAnimForPlaybackEvent( iPlayback );
+		}
+	}
+}
+#endif // USES_ECON_ITEMS
 
 //================================================================================
 // TEAM HANDLING
@@ -7970,7 +8051,15 @@ REGISTER_SEND_PROXY_NON_MODIFIED_POINTER( SendProxy_SendNonLocalDataTable );
 // DT_BasePlayer sendtable.
 // -------------------------------------------------------------------------------- //
 
+#if defined USES_ECON_ITEMS
+	EXTERN_SEND_TABLE(DT_AttributeList);
+#endif
+
 	IMPLEMENT_SERVERCLASS_ST( CBasePlayer, DT_BasePlayer )
+
+#if defined USES_ECON_ITEMS
+		SendPropDataTable(SENDINFO_DT(m_AttributeList), &REFERENCE_SEND_TABLE(DT_AttributeList)),
+#endif
 
 		SendPropDataTable(SENDINFO_DT(pl), &REFERENCE_SEND_TABLE(DT_PlayerState), SendProxy_DataTableToDataTable),
 
@@ -7993,6 +8082,11 @@ REGISTER_SEND_PROXY_NON_MODIFIED_POINTER( SendProxy_SendNonLocalDataTable );
 		SendPropEHandle	(SENDINFO(m_hZoomOwner) ),
 		SendPropArray	(SendPropEHandle( SENDINFO_ARRAY( m_hViewModel ) ), m_hViewModel ),
 		SendPropString	(SENDINFO(m_szLastPlaceName) ),
+
+#if defined USES_ECON_ITEMS
+		SendPropUtlVector( SENDINFO_UTLVECTOR( m_hMyWearables ), MAX_WEARABLES_SENT_FROM_SERVER, SendPropEHandle( NULL, 0 ) ),
+#endif // USES_ECON_ITEMS
+
 		SendPropVector	(SENDINFO(m_vecLadderNormal), 0, SPROP_NORMAL ),
 		SendPropInt		(SENDINFO(m_ladderSurfaceProps), 0, SPROP_UNSIGNED ),
 		SendPropInt		(SENDINFO( m_ubEFNoInterpParity ), NOINTERP_PARITY_MAX_BITS, SPROP_UNSIGNED ),

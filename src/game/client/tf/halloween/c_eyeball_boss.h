@@ -31,7 +31,7 @@ public:
 	virtual void SetDormant( bool bDormant );
 
 	virtual QAngle const &GetRenderAngles( void );
-	virtual int	InternalDrawModel( int flags );
+	virtual int	InternalDrawModel( int flags, const RenderableInstance_t &instance );
 
 private:
 	C_EyeballBoss( const C_EyeballBoss & );				// not defined, not accessible

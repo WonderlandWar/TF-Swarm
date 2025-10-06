@@ -814,6 +814,8 @@ public:
 	virtual void					SetHealth(int iHealth) {}
 	virtual int						GetHealth() const { return 0; }
 	virtual int						GetMaxHealth() const { return 1; }
+	virtual bool					IsVisibleToTargetID( void ) const { return false; }
+	virtual bool					IsHealthBarVisible( void ) const { return false; }
 
 	// Returns the health fraction
 	float							HealthFraction() const;
@@ -1248,6 +1250,9 @@ public:
 	void	SetCreateTime( float flCreateTime )					{ m_flCreateTime = flCreateTime; }
 
 	int		GetCreationTick() const;
+
+	virtual void ClientAdjustStartSoundParams( EmitSound_t &params ) {}
+	//virtual void ClientAdjustStartSoundParams( StartSoundParams_t& params ) {}
 
 #ifdef _DEBUG
 	void FunctionCheck( void *pFunction, const char *name );
@@ -1860,7 +1865,7 @@ protected:
 	bool m_bDeemedInvalid;
 	bool m_bWasDeemedInvalid;
 	RenderMode_t m_PreviousRenderMode;
-	color32 m_PreviousRenderColor;
+	color24 m_PreviousRenderColor;
 #endif
 
 private:

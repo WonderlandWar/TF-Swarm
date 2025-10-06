@@ -194,7 +194,7 @@ void CBaseAchievement::Event_EntityKilled( CBaseEntity *pVictim, CBaseEntity *pA
 //-----------------------------------------------------------------------------
 // Purpose: called when an event that counts toward an achievement occurs
 //-----------------------------------------------------------------------------
-void CBaseAchievement::IncrementCount()
+void CBaseAchievement::IncrementCount( int iOptIncrement )
 {
 #ifdef INFESTED_DLL
 #ifndef _DEBUG
@@ -224,7 +224,20 @@ void CBaseAchievement::IncrementCount()
 		}
 
 		// on client, where the count is kept, increment count
-		m_iCount++;
+		if ( iOptIncrement > 0 )
+		{
+			// user specified that we want to increase by more than one.
+			m_iCount += iOptIncrement;
+			if ( m_iCount > m_iGoal )
+			{
+				m_iCount = m_iGoal;
+			}
+		}
+		else
+		{
+			m_iCount++;
+		}
+
 		// if this achievement gets saved w/global state, flag our global state as dirty
 		if ( GetFlags() & ACH_SAVE_GLOBAL )
 		{
@@ -340,6 +353,22 @@ void CBaseAchievement::CalcProgressMsgIncrement()
 	{
 		m_iProgressMsgIncrement = 0;
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBaseAchievement::SetNextThink( float flThinkTime ) 
+{ 
+	m_pAchievementMgr->SetAchievementThink( this, flThinkTime ); 
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBaseAchievement::ClearThink( void ) 
+{ 
+	m_pAchievementMgr->SetAchievementThink( this, THINK_CLEAR ); 
 }
 
 //-----------------------------------------------------------------------------

@@ -65,6 +65,10 @@
 #include "viewpostprocess.h"
 #include "viewdebug.h"
 
+#if defined USES_ECON_ITEMS
+#include "econ_wearable.h"
+#endif
+
 #ifdef USE_MONITORS
 #include "c_point_camera.h"
 #endif // USE_MONITORS
@@ -209,6 +213,8 @@ static ConVar pyro_dof( "pyro_dof", "1", FCVAR_ARCHIVE );
 #endif
 
 extern ConVar cl_leveloverview;
+
+extern ConVar localplayer_visionflags;
 
 ConVar r_fastzreject( "r_fastzreject", "0", 0, "Activate/deactivates a fast z-setting algorithm to take advantage of hardware with fast z reject. Use -1 to default to hardware settings" );
 
@@ -505,6 +511,8 @@ protected:
 	virtual void	PushView( float waterHeight );
 	virtual void	PopView();
 
+	void			SSAO_DepthPass();
+	void			DrawDepthOfField();
 };
 
 
@@ -777,6 +785,14 @@ static inline unsigned long BuildEngineDrawWorldListFlags( unsigned nDrawFlags )
 	if( nDrawFlags & DF_RENDER_REFLECTION )
 	{
 		nEngineFlags |= DRAWWORLDLISTS_DRAW_REFLECTION;
+	}
+
+	if( nDrawFlags & DF_SSAO_DEPTH_PASS )
+	{
+		// TF_SWARM: The closest thing to DRAWWORLDLISTS_DRAW_SSAO is DRAWWORLDLISTS_DRAW_SHADOWDEPTH, DRAWWORLDLISTS_DRAW_SSAO isn't a thing in Swarm
+		const int DRAWWORLDLISTS_DRAW_SSAO = DRAWWORLDLISTS_DRAW_SHADOWDEPTH;
+		nEngineFlags |= DRAWWORLDLISTS_DRAW_SSAO | DRAWWORLDLISTS_DRAW_STRICTLYUNDERWATER | DRAWWORLDLISTS_DRAW_INTERSECTSWATER | DRAWWORLDLISTS_DRAW_STRICTLYABOVEWATER ;
+		nEngineFlags &= ~( DRAWWORLDLISTS_DRAW_WATERSURFACE | DRAWWORLDLISTS_DRAW_REFRACTION | DRAWWORLDLISTS_DRAW_REFLECTION );
 	}
 
 	return nEngineFlags;
@@ -4454,8 +4470,8 @@ void CRendering3dView::DrawTranslucentRenderablesNoWorld( bool bInSkybox )
 
 	// Draw the particle singletons.
 	DrawParticleSingletons( bInSkybox );
-
-	bool bShadowDepth = (m_DrawFlags & DF_SHADOW_DEPTH_MAP ) != 0;
+	
+	bool bShadowDepth = (m_DrawFlags & ( DF_SHADOW_DEPTH_MAP | DF_SSAO_DEPTH_PASS ) ) != 0;
 
 	CClientRenderablesList::CEntry *pEntities = m_pRenderablesList->m_RenderGroups[RENDER_GROUP_TRANSLUCENT];
 	int iCurTranslucentEntity = m_pRenderablesList->m_RenderGroupCounts[RENDER_GROUP_TRANSLUCENT] - 1;
@@ -4494,8 +4510,8 @@ void CRendering3dView::DrawNoZBufferTranslucentRenderables( void )
 
 	if ( !m_pMainView->ShouldDrawEntities() || !r_drawtranslucentrenderables.GetBool() )
 		return;
-
-	bool bShadowDepth = (m_DrawFlags & DF_SHADOW_DEPTH_MAP ) != 0;
+	
+	bool bShadowDepth = (m_DrawFlags & ( DF_SHADOW_DEPTH_MAP | DF_SSAO_DEPTH_PASS ) ) != 0;
 
 	// FIXME: This ignores Z. We don't need to sort it at all? Not sure about refraction here...
 	// Could use fast path
@@ -5504,10 +5520,43 @@ void CBaseWorldView::DrawSetup( float waterHeight, int nSetupFlags, float waterZ
 }
 
 
+void MaybeInvalidateLocalPlayerAnimation()
+{
+	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+	if ( ( pPlayer != NULL ) && pPlayer->InFirstPersonView() )
+	{
+		// We sometimes need different animation for the main view versus the shadow rendering,
+		// so we need to reset the cache to ensure this actually happens.
+		pPlayer->InvalidateBoneCache();
+
+		C_BaseCombatWeapon *pWeapon = pPlayer->GetActiveWeapon();
+		if ( pWeapon != NULL )
+		{
+			pWeapon->InvalidateBoneCache();
+		}
+
+#if defined USES_ECON_ITEMS
+		// ...and all the things you're wearing/holding/etc
+		int NumWearables = pPlayer->GetNumWearables();
+		for ( int i = 0; i < NumWearables; ++i )
+		{
+			CEconWearable* pItem = pPlayer->GetWearable ( i );
+			if ( pItem != NULL )
+			{
+				pItem->InvalidateBoneCache();
+			}
+		}
+#endif // USES_ECON_ITEMS
+
+	}
+}
+
 void CBaseWorldView::DrawExecute( float waterHeight, view_id_t viewID, float waterZAdjust )
 {
 	// @MULTICORE (toml 8/16/2006): rethink how, where, and when this is done...
+	MaybeInvalidateLocalPlayerAnimation();
 	g_pClientShadowMgr->ComputeShadowTextures( *this, m_pWorldListInfo->m_LeafCount, m_pWorldListInfo->m_pLeafDataList );
+	MaybeInvalidateLocalPlayerAnimation();
 
 	// Make sure sound doesn't stutter
 	engine->Sound_ExtraUpdate();
@@ -5595,6 +5644,124 @@ void CBaseWorldView::DrawExecute( float waterHeight, view_id_t viewID, float wat
 #if defined( _X360 )
 	pRenderContext->PopVertexShaderGPRAllocation();
 #endif
+}
+
+
+void CBaseWorldView::SSAO_DepthPass()
+{
+#if 1
+	VPROF_BUDGET( "CSimpleWorldView::SSAO_DepthPass", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
+
+	int savedViewID = g_CurrentViewID;
+	g_CurrentViewID = VIEW_SSAO;
+
+	ITexture *pSSAO = materials->FindTexture( "_rt_ResolvedFullFrameDepth", TEXTURE_GROUP_RENDER_TARGET );
+
+	CMatRenderContextPtr pRenderContext( materials );
+
+	pRenderContext->ClearColor4ub( 255, 255, 255, 255 );
+
+#if defined( _X360 )
+	Assert(0); // rebalance this if we ever use this on 360
+	pRenderContext->PushVertexShaderGPRAllocation( 112 ); //almost all work is done in vertex shaders for depth rendering, max out their threads
+#endif
+
+	pRenderContext.SafeRelease();
+
+	if( IsPC() )
+	{
+		render->Push3DView( (*this), VIEW_CLEAR_DEPTH | VIEW_CLEAR_COLOR, pSSAO, GetFrustum() );
+	}
+	else if( IsX360() )
+	{
+		render->Push3DView( (*this), VIEW_CLEAR_DEPTH | VIEW_CLEAR_COLOR, pSSAO, GetFrustum() );
+	}
+
+	MDLCACHE_CRITICAL_SECTION();
+
+	engine->Sound_ExtraUpdate();	// Make sure sound doesn't stutter
+
+	m_DrawFlags |= DF_SSAO_DEPTH_PASS;
+
+	{
+		VPROF_BUDGET( "DrawWorld", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
+		DrawWorld( 0.0f );
+	}
+
+	// Draw opaque and translucent renderables with appropriate override materials
+	// OVERRIDE_SSAO_DEPTH_WRITE is OK with a NULL material pointer
+	modelrender->ForcedMaterialOverride( NULL );	// OVERRIDE_SSAO_DEPTH_WRITE isn't in TF_SWARM
+
+	{
+		// TF_SWARM: This doesn't seem like a good idea
+		VPROF_BUDGET( "DrawOpaqueRenderables", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
+		DrawOpaqueRenderables( true ); // DEPTH_MODE_SSA0 doesn't exist, and setting this to true won't give proper results either
+	}
+
+#if 0
+	if ( m_bRenderFlashlightDepthTranslucents || r_flashlightdepth_drawtranslucents.GetBool() )
+	{
+		VPROF_BUDGET( "DrawTranslucentRenderables", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
+		DrawTranslucentRenderables( false, true );
+	}
+#endif
+
+	modelrender->ForcedMaterialOverride( 0 );
+
+	m_DrawFlags &= ~DF_SSAO_DEPTH_PASS;
+
+	pRenderContext.GetFrom( materials );
+
+	if( IsX360() )
+	{
+		//Resolve() the depth texture here. Before the pop so the copy will recognize that the resolutions are the same
+		pRenderContext->CopyRenderTargetToTextureEx( NULL, -1, NULL, NULL );
+	}
+
+	render->PopView( GetFrustum() );
+
+#if defined( _X360 )
+	pRenderContext->PopVertexShaderGPRAllocation();
+#endif
+
+	pRenderContext.SafeRelease();
+
+	g_CurrentViewID = savedViewID;
+#endif
+}
+
+
+void CBaseWorldView::DrawDepthOfField( )
+{
+	CMatRenderContextPtr pRenderContext( materials );
+
+	ITexture *pSmallFB0 = materials->FindTexture( "_rt_smallfb0", TEXTURE_GROUP_RENDER_TARGET );
+	ITexture *pSmallFB1 = materials->FindTexture( "_rt_smallfb1", TEXTURE_GROUP_RENDER_TARGET );
+
+	Rect_t	DestRect;
+	int w = pSmallFB0->GetActualWidth();
+	int h = pSmallFB0->GetActualHeight();
+	DestRect.x = 0;
+	DestRect.y = 0;
+	DestRect.width = w;
+	DestRect.height = h;
+
+	pRenderContext->CopyRenderTargetToTextureEx( pSmallFB0, 0, NULL, &DestRect );
+
+	IMaterial *pPyroBlurXMaterial = materials->FindMaterial( "dev/pyro_blur_filter_x", TEXTURE_GROUP_OTHER );
+	IMaterial *pPyroBlurYMaterial = materials->FindMaterial( "dev/pyro_blur_filter_y", TEXTURE_GROUP_OTHER );
+
+	pRenderContext->PushRenderTargetAndViewport( pSmallFB1, 0, 0, w, h );
+	pRenderContext->DrawScreenSpaceRectangle( pPyroBlurYMaterial, 0, 0, w, h, 0, 0, w - 1, h - 1, w, h );
+	pRenderContext->PopRenderTargetAndViewport();
+
+	pRenderContext->PushRenderTargetAndViewport( pSmallFB0, 0, 0, w, h );
+	pRenderContext->DrawScreenSpaceRectangle( pPyroBlurXMaterial, 0, 0, w, h, 0, 0, w - 1, h - 1, w, h );
+	pRenderContext->PopRenderTargetAndViewport();
+
+	IMaterial *pPyroDepthOfFieldMaterial = materials->FindMaterial( "dev/pyro_dof",  TEXTURE_GROUP_OTHER );
+
+	pRenderContext->DrawScreenSpaceRectangle( pPyroDepthOfFieldMaterial, x, y, width, height, 0, 0, width-1, height-1, width, height );
 }
 
 //-----------------------------------------------------------------------------

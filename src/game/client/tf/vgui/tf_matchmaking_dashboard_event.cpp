@@ -147,7 +147,7 @@ private:
 					V_wcscat_safe( wszMaps, g_pVGuiLocalize->Find( pMap->pszMapNameLocKey ) );
 				}
 
-				g_pVGuiLocalize->ConstructString_safe( wszLocString, g_pVGuiLocalize->Find( pUIData->m_pszSidePanelDesc ), 1, wszMaps );
+				g_pVGuiLocalize->ConstructString( wszLocString, sizeof( wszLocString ), g_pVGuiLocalize->Find( pUIData->m_pszSidePanelDesc ), 1, wszMaps );
 				pDescLabel->SetText( wszLocString );
 			}
 			else

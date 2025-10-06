@@ -249,7 +249,7 @@ void CVictoryPanel::SetMapAndPopFile ( )
 	if ( GetItemSchema()->GetMvmMissions().IsValidIndex( iMissionIndex ) )
 	{
 		const MvMMission_t &mission = GetItemSchema()->GetMvmMissions()[ iMissionIndex ];	
-		g_pVGuiLocalize->ConstructString_safe( wszLocalizedSummary, L"%s1 : %s2", 2, 
+		g_pVGuiLocalize->ConstructString( wszLocalizedSummary, sizeof( wszLocalizedSummary ), L"%s1 : %s2", 2, 
 			wszMapName, g_pVGuiLocalize->Find( mission.m_sDisplayName.Get() ) );
 	}
 	else 
@@ -258,7 +258,7 @@ void CVictoryPanel::SetMapAndPopFile ( )
 		wchar_t wszPopFileName[MAX_PATH];
 		g_pVGuiLocalize->ConvertANSIToUnicode( GetMapDisplayName(szTempName), wszPopFileName, sizeof(wszPopFileName) );
 
-		g_pVGuiLocalize->ConstructString_safe( wszLocalizedSummary, L"%s1 : %s2", 2, 
+		g_pVGuiLocalize->ConstructString( wszLocalizedSummary, sizeof( wszLocalizedSummary ), L"%s1 : %s2", 2, 
 			wszMapName, wszPopFileName );
 	}
 
@@ -822,7 +822,7 @@ bool CMvMVictoryMannUpEntry::AnimateProgressBar( void )
 			_snwprintf( wszTourLevel, ARRAYSIZE(wszTourLevel) - 1, L"%d", m_nBadgeLevel );
 
 			wszTourLevel[ ARRAYSIZE(wszTourLevel)-1 ] = '\0';
-			g_pVGuiLocalize->ConstructString_safe( wszTourUp, g_pVGuiLocalize->Find( "#TF_MvM_TourCount" ), 1, wszTourLevel );
+			g_pVGuiLocalize->ConstructString( wszTourUp, sizeof( wszTourUp ), g_pVGuiLocalize->Find( "#TF_MvM_TourCount" ), 1, wszTourLevel );
 			m_pTourProgress->SetDialogVariable( "level", wszTourUp);
 		}
 
@@ -1269,7 +1269,7 @@ void CMvMVictoryMannUpEntry::CheckBadgeLevel( const CMsgMvMVictoryInfo_Player& p
 #endif // USE_MVM_TOUR
 
 	wszTourLevel[ ARRAYSIZE(wszTourLevel)-1 ] = '\0';
-	g_pVGuiLocalize->ConstructString_safe( wszTourUp, g_pVGuiLocalize->Find( "#TF_MvM_TourCount" ), 1, wszTourLevel );
+	g_pVGuiLocalize->ConstructString( wszTourUp, sizeof( wszTourUp ), g_pVGuiLocalize->Find( "#TF_MvM_TourCount" ), 1, wszTourLevel );
 	m_pTourProgress->SetDialogVariable( "level", wszTourUp );
 }
 
@@ -1877,10 +1877,7 @@ void CMvMVictoryPanelContainer::OnCommand( const char *command )
 
 void CMvMVictoryPanelContainer::OnKeyCodePressed( vgui::KeyCode code )
 {
-	if ( code == STEAMCONTROLLER_A || code == STEAMCONTROLLER_B )
-	{
-		OnCommand( "done" );
-	}
+
 }
 
 

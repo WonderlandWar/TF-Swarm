@@ -1364,7 +1364,7 @@ void ClientModeShared::FireGameEvent( IGameEvent *event )
 				);
 
 				/*g_pVGuiLocalize->ConstructString_safe( 
-					szItemname, 
+					szItemname, sizeof( szItemname ), 
 					LOCCHAR( "%s1 " ),
 					1, 
 					CEconItemLocalizedFullNameGenerator( GLocalizationProvider(), pItemDefinition, iItemQuality ).GetFullName()

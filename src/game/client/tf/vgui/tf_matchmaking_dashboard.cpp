@@ -470,7 +470,7 @@ void CTFMatchmakingDashboard::OnCommand( const char *command )
 			if ( GTFPartyClient()->BInQueueForMatchGroup( eMatchGroup ) )
 			{
 				wchar_t wszBuff[ 512 ];
-				g_pVGuiLocalize->ConstructString_safe( wszBuff, g_pVGuiLocalize->Find( "#TF_MM_QueueState_LeaveQueue" ), 1, g_pVGuiLocalize->Find( pMatchGroup->GetNameLocToken() ) );
+				g_pVGuiLocalize->ConstructString( wszBuff, sizeof( wszBuff ), g_pVGuiLocalize->Find( "#TF_MM_QueueState_LeaveQueue" ), 1, g_pVGuiLocalize->Find( pMatchGroup->GetNameLocToken() ) );
 				contextMenuBuilder.AddMenuItem( wszBuff, new KeyValues( "Command", "command", CFmtStr( "leavematchgroup%d", i ) ), "leave" );
 			}
 		}

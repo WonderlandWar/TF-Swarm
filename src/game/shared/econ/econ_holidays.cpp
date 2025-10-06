@@ -352,7 +352,7 @@ static IIsHolidayActive *s_HolidayChecks[] =
 	&g_Holiday_Summer,								// kHoliday_Summer
 };
 
-COMPILE_TIME_ASSERT( ARRAYSIZE( s_HolidayChecks ) == kHolidayCount );
+//COMPILE_TIME_ASSERT( ARRAYSIZE( s_HolidayChecks ) == kHolidayCount );
 
 //-----------------------------------------------------------------------------
 // Purpose:

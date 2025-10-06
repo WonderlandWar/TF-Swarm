@@ -77,7 +77,7 @@ void CBaseToolUsageDialog::ApplySchemeSettings( vgui::IScheme *pScheme )
 		if ( pszBaseString )
 		{
 			wchar_t	wTemp[256];
-			g_pVGuiLocalize->ConstructString_safe( wTemp, pszBaseString, 2, m_pToolModelPanel->GetItem()->GetItemName(), m_pSubjectModelPanel->GetItem()->GetItemName() );
+			g_pVGuiLocalize->ConstructString( wTemp, sizeof( wTemp ), pszBaseString, 2, m_pToolModelPanel->GetItem()->GetItemName(), m_pSubjectModelPanel->GetItem()->GetItemName() );
 			m_pTitleLabel->SetText( wTemp );
 
 			// Now go through the string and find the escape characters telling us where the color changes are
@@ -657,7 +657,7 @@ public:
 
 				// Stick the names of the items into the string
 				wchar_t	wTempUntradable[1024] = { 0 };
-				g_pVGuiLocalize->ConstructString_safe( wTempUntradable, pszUntradableString, 2, m_pToolModelPanel->GetItem()->GetItemName(), m_pSubjectModelPanel->GetItem()->GetItemName() );
+				g_pVGuiLocalize->ConstructString( wTempUntradable, sizeof( wTempUntradable ), pszUntradableString, 2, m_pToolModelPanel->GetItem()->GetItemName(), m_pSubjectModelPanel->GetItem()->GetItemName() );
 
 				// Concat onto the the original string
 				V_wcscat_safe( wTempFinalString, wTempUntradable, sizeof( wTempUntradable ) );

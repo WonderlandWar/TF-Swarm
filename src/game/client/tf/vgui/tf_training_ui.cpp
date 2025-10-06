@@ -444,7 +444,7 @@ public:
 				if ( pTitleFormatData )
 				{
 					wchar_t wszTitle[ 1024 ];
-					g_pVGuiLocalize->ConstructString_safe( wszTitle, m_strTitleToken.Get(), pTitleFormatData );
+					g_pVGuiLocalize->ConstructString( wszTitle, sizeof( wszTitle ), m_strTitleToken.Get(), pTitleFormatData );
 					pTitleFormatData->deleteThis();
 
 					pTrainingDialog->SetDialogVariable( "title", wszTitle );
@@ -876,7 +876,7 @@ public:
 				{
 					wchar_t wszNum[16] = L"";
 					V_snwprintf( wszNum, ARRAYSIZE( wszNum ), L"%i", nPercent );
-					g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#TR_Progress" ), 1, wszNum );
+					g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#TR_Progress" ), 1, wszNum );
 				}
 				else
 				{
@@ -1385,7 +1385,7 @@ public:
 			wchar_t wszNum2[16]=L"";
 			V_snwprintf( wszNum1, ARRAYSIZE( wszNum1 ), L"%i", pCurMapInfo->m_aPlayerRange[0] );
 			V_snwprintf( wszNum2, ARRAYSIZE( wszNum2 ), L"%i", pCurMapInfo->m_aPlayerRange[1] );
-			g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#TF_OfflinePractice_NumPlayers" ), 2, wszNum1, wszNum2 );
+			g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#TF_OfflinePractice_NumPlayers" ), 2, wszNum1, wszNum2 );
 			pSuggestedPlayerCountLabel->SetText( wszLocalized );
 		}
 

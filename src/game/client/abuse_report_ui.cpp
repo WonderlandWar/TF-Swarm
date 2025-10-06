@@ -651,7 +651,7 @@ void  CAbuseReportDlg::UpdateAvatarImage()
 		if ( pAccused->m_iSteamAvatarIndex > 0 )
 		{
 			m_pAvatarImage->SetShouldDrawFriendIcon( false );
-			m_pAvatarImage->SetPlayer( pAccused->m_steamID, k_EAvatarSize184x184 );
+			m_pAvatarImage->SetPlayer( pAccused->m_steamID, k_EAvatarSize64x64 ); //k_EAvatarSize184x184
 
 			m_pAvatarImage->SetVisible( true );
 			m_pNoAvatarLabel->SetVisible( false );

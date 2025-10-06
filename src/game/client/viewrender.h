@@ -75,6 +75,7 @@ enum view_id_t
 	VIEW_INTRO_PLAYER = 5,
 	VIEW_INTRO_CAMERA = 6,
 	VIEW_SHADOW_DEPTH_TEXTURE = 7,
+	VIEW_SSAO = 8,
 	VIEW_ID_COUNT
 };
 view_id_t CurrentViewID();

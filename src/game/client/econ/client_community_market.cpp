@@ -29,7 +29,7 @@ static void ClientMarketData_Refresh()
 	msg.Body().set_user_currency( EconUI()->GetStorePanel()->GetCurrency() );
 	GCClientSystem()->BSendMessage( msg );
 
-	g_fClientMarketDataLastUpdateTime = engine->Time();
+	g_fClientMarketDataLastUpdateTime = Plat_FloatTime();
 }
 
 //-----------------------------------------------------------------------------
@@ -41,7 +41,7 @@ const client_market_data_t *GetClientMarketData( const steam_market_gc_identifie
 	// numbers but we don't want to fall too far behind. THe GC itself doesn't update in realtime
 	// so constantly querying for updates isn't really useful. We'll still use whatever data if any
 	// we have for this call.
-	if ( (engine->Time() - g_fClientMarketDataLastUpdateTime) >= s_fUpdateTimeInSeconds )
+	if ( (Plat_FloatTime() - g_fClientMarketDataLastUpdateTime) >= s_fUpdateTimeInSeconds )
 	{
 		ClientMarketData_Refresh();
 	}

@@ -28,7 +28,7 @@ int CTFWeaponBaseMerasmusGrenade::GetCustomParticleIndex()
 
 #ifdef CLIENT_DLL
 
-int CTFWeaponBaseMerasmusGrenade::DrawModel( int flags )
+int CTFWeaponBaseMerasmusGrenade::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	float flAliveTime = gpGlobals->curtime - m_flSpawnTime;
 
@@ -47,7 +47,7 @@ int CTFWeaponBaseMerasmusGrenade::DrawModel( int flags )
 		SetModelScale( flSize );
 	}
 	
-	return BaseClass::DrawModel( flags );
+	return BaseClass::DrawModel( flags, instance );
 }
 
 #endif

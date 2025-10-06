@@ -344,8 +344,9 @@ void CStorePricePanel::SetPriceText( int iPrice, const char *pVariable, const ec
 	if ( pEntry->m_bIsMarketItem )
 	{	
 		wchar_t wzMarketString[96];
-		g_pVGuiLocalize->ConstructString_safe(
+		g_pVGuiLocalize->ConstructString(
 			wzMarketString,
+			sizeof( wzMarketString ),
 			LOCCHAR( "%s1 %s2" ),
 			2,
 			g_pVGuiLocalize->Find( "#Store_Market" ),
@@ -1007,7 +1008,7 @@ void CStorePage::PerformLayout( void )
 		const char *pszLocString = bIsFreeTrial ? "#Store_FreeTrial_BonusText" : "#Store_Promotion_SpendForGift";
 		const char *pszElementName = bIsFreeTrial ? "BonusTextLabel" : "PromotionLabel_BonusItem";
 				
-		g_pVGuiLocalize->ConstructString_safe( wszText, g_pVGuiLocalize->Find( pszLocString ), 1, wszPriceThreshold );
+		g_pVGuiLocalize->ConstructString( wszText, sizeof( wszText ), g_pVGuiLocalize->Find( pszLocString ), 1, wszPriceThreshold );
 		CExLabel *pPromotionText = dynamic_cast< CExLabel* >( FindChildByName( pszElementName, true ) );
 		if ( pPromotionText )
 		{
@@ -2098,7 +2099,7 @@ void CStorePage::UpdateCart( void )
 	wchar_t wszCount[16];
 	wchar_t wzLocalized[512];
 	_snwprintf( wszCount, ARRAYSIZE( wszCount ), L"%d", pCart->GetTotalItems() );
-	g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( "#Store_Cart" ), 1, wszCount );
+	g_pVGuiLocalize->ConstructString( wzLocalized, sizeof( wzLocalized ), g_pVGuiLocalize->Find( "#Store_Cart" ), 1, wszCount );
 	SetDialogVariable("storecart", wzLocalized );
 }
 
@@ -2127,7 +2128,7 @@ void CStorePage::UpdateBackpackLabel( void )
 
 	if ( iItemsInCart == 0 || econ_never_show_items_in_cart_count.GetBool() )
 	{
-		g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#Store_FreeBackpackSpace" ), 1, wszBackpackSlotCount );
+		g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#Store_FreeBackpackSpace" ), 1, wszBackpackSlotCount );
 	}
 	else
 	{
@@ -2143,14 +2144,14 @@ void CStorePage::UpdateBackpackLabel( void )
 			// We're a free trial account so we show the number of backpack slots we really have,
 			// the number of slots we get as a bonus when purchasing, and then the number of items
 			// in our cart.
-			g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#Store_FreeBackpackSpace_WithCartItems_WithUpgrade" ), 3, wszBackpackSlotCount, wszCartCount, wszUpgradeSlotCount );
+			g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#Store_FreeBackpackSpace_WithCartItems_WithUpgrade" ), 3, wszBackpackSlotCount, wszCartCount, wszUpgradeSlotCount );
 		}
 		else
 #endif // defined( TF_CLIENT_DLL )
 		{
 			// We aren't a free trial account, so there is no account upgrade included in
 			// this purchase, so fall back to showing the number of items in our cart.
-			g_pVGuiLocalize->ConstructString_safe( wszLocalized, g_pVGuiLocalize->Find( "#Store_FreeBackpackSpace_WithCartItems" ), 2, wszBackpackSlotCount, wszCartCount );
+			g_pVGuiLocalize->ConstructString( wszLocalized, sizeof( wszLocalized ), g_pVGuiLocalize->Find( "#Store_FreeBackpackSpace_WithCartItems" ), 2, wszBackpackSlotCount, wszCartCount );
 		}
 	}
 	

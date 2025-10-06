@@ -386,7 +386,7 @@ CLaserDot* CLaserDot::Create( const Vector &origin, CBaseEntity *pOwner, bool bV
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int CLaserDot::DrawModel( int flags )
+int CLaserDot::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	// Get the owning player.
 	C_TFPlayer *pPlayer = ToTFPlayer( GetOwnerEntity() );
@@ -410,12 +410,6 @@ int CLaserDot::DrawModel( int flags )
 			// Take our view position and orientation
 			vecAttachment = CurrentViewOrigin();
 			vecDir = CurrentViewForward();
-
-			if ( UseVR() )
-			{
-				// It will basically be a copy of CSniperDot::GetRenderingPositions in tf_weapon_sniperrife.cpp
-				Assert ( !"Ask Joe Ludwig to fix CLaserDot::DrawModel() for VR." );
-			}
 
 			// Clamp the forward distance for the sniper's firstperson
 			flDist = 384;
