@@ -163,7 +163,8 @@ void CTFHudPasstimeOffscreenArrow::PaintBackground()
 	//
 	float flArrowAngle;
 	{
-		const Vector vecHudDir = Vector( -vecLocalTarget.y / engine->GetScreenAspectRatio(), -vecLocalTarget.z, 0 ).Normalized();
+		// TF_SWARM: Should we be using ScreenWidth() and ScreenHeight()?
+		const Vector vecHudDir = Vector( -vecLocalTarget.y / engine->GetScreenAspectRatio( ScreenWidth(), ScreenHeight() ), -vecLocalTarget.z, 0 ).Normalized();
 		flArrowAngle = atan2( vecHudDir.y, vecHudDir.x );
 		// put it in the range 0 to 2PI
 		if ( flArrowAngle > (M_PI_F * 2.0f) )

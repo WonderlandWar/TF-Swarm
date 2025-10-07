@@ -101,7 +101,7 @@
 #if defined( TF_CLIENT_DLL )
 #include "rtime.h"
 #include "tf_hud_disconnect_prompt.h"
-#include "../engine/audio/public/sound.h"
+//#include "../engine/audio/public/sound.h"
 #include "tf_shared_content_manager.h"
 #include "tf_gamerules.h"
 #endif
@@ -1819,6 +1819,8 @@ void ConfigureCurrentSystemLevel()
 	char szModName[32] = "ep2";
 #elif defined ( SDK_CLIENT_DLL )
 	char szModName[32] = "sdk";
+#elif defined ( TF_CLIENT_DLL )
+	char szModName[32] = "tf";
 #endif
 
 	UpdateSystemLevel( nCPULevel, nGPULevel, nMemLevel, nGPUMemLevel, VGui_IsSplitScreen(), szModName );
@@ -2803,6 +2805,10 @@ bool CHLClient::CanRecordDemo( char *errorMsg, int length ) const
 
 void CHLClient::OnDemoRecordStart( char const* pDemoBaseName )
 {
+	if ( GetClientModeNormal() )
+	{
+		return GetClientModeNormal()->OnDemoRecordStart( pDemoBaseName );
+	}
 #ifdef DEMOPOLISH_ENABLED
 	if ( IsDemoPolishEnabled() )
 	{
@@ -2816,6 +2822,10 @@ void CHLClient::OnDemoRecordStart( char const* pDemoBaseName )
 
 void CHLClient::OnDemoRecordStop()
 {
+	if ( GetClientModeNormal() )
+	{
+		return GetClientModeNormal()->OnDemoRecordStop();
+	}
 #ifdef DEMOPOLISH_ENABLED
 	if ( DemoPolish_GetRecorder().m_bInit )
 	{

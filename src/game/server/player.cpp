@@ -69,7 +69,8 @@
 #include "env_debughistory.h"
 #include "fogcontroller.h"
 #include "gameinterface.h"
-//#include "hl2orange.spa.h"
+#include "hl2orange.spa.h"
+#include "dt_utlvector_send.h"
 #include "toolframework/itoolframework.h"
 #include "sendprop_priorities.h"
 #include "logic_playerproxy.h"
@@ -173,6 +174,8 @@ ConVar	sk_player_chest( "sk_player_chest","1" );
 ConVar	sk_player_stomach( "sk_player_stomach","1" );
 ConVar	sk_player_arm( "sk_player_arm","1" );
 ConVar	sk_player_leg( "sk_player_leg","1" );
+
+ConVar	sv_player_usercommand_timeout( "sv_player_usercommand_timeout", "3", FCVAR_CHEAT, "After this many seconds without a usercommand from a player, the server will RunNullCommand as if client sends an empty command." );
 
 ConVar  player_debug_print_damage( "player_debug_print_damage", "0", FCVAR_CHEAT, "When true, print amount and type of all damage received by player to console." );
 
@@ -625,6 +628,8 @@ CBasePlayer::CBasePlayer( )
 	m_nBodyPitchPoseParam = -1;
 	m_flForwardMove = 0;
 	m_flSideMove = 0;
+
+	m_flLastUserCommandTime = 0.f;
 
 	m_bSplitScreenPlayer = false;
 	m_hSplitOwner = NULL;
@@ -3372,6 +3377,7 @@ void CBasePlayer::PhysicsSimulate( void )
 		for ( int i = 0; i < commandsToRun; ++i )
 		{
 			PlayerRunCommand( &vecAvailCommands[ i ], MoveHelperServer() );
+			m_flLastUserCommandTime = savetime;
 
 			// Update our vphysics object.
 			if ( m_pPhysicsController )
@@ -3398,6 +3404,12 @@ void CBasePlayer::PhysicsSimulate( void )
 			pi->m_flGameSimulationTime = gpGlobals->curtime;
 			pi->m_nNumCmds = commandsToRun;
 		}
+	}
+	else if ( GetTimeSinceLastUserCommand() > sv_player_usercommand_timeout.GetFloat() )
+	{
+		// no usercommand from player after some threshold
+		// server should start RunNullCommand as if client sends an empty command so that Think and gamestate related things run properly
+		RunNullCommand();
 	}
 
 	// Restore the true server clock
@@ -7942,7 +7954,7 @@ void CMovementSpeedMod::InputSpeedMod(inputdata_t &data)
 			// Bring the weapon back
 			if  ( HasSpawnFlags( SF_SPEED_MOD_SUPPRESS_WEAPONS ) && pPlayer->GetActiveWeapon() == NULL )
 			{
-				pPlayer->SetActiveWeapon( pPlayer->Weapon_GetLast() );
+				pPlayer->SetActiveWeapon( pPlayer->GetLastWeapon() );
 				if ( pPlayer->GetActiveWeapon() )
 				{
 					pPlayer->GetActiveWeapon()->Deploy();

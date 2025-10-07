@@ -15632,7 +15632,7 @@ void CTFPlayer::CreateRagdollEntity( bool bGib, bool bBurning, bool bElectrocute
 	// Add additional gib setup.
 	if ( bGib )
 	{
-		m_nRenderFX = kRenderFxRagdoll;
+		m_bClientSideRagdoll = true;
 	}
 
 	// Save ragdoll handle.

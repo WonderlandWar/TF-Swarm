@@ -182,7 +182,7 @@ void CBaseMultiplayerPlayer::Spawn( void )
 	BaseClass::Spawn();
 }
 
-void CBaseMultiplayerPlayer::AwardAchievement( int iAchievement )
+void CBaseMultiplayerPlayer::AwardAchievement( int iAchievement, int iCount )
 {
 	Assert( iAchievement >= 0 && iAchievement < 0xFFFF );		// must fit in short
 
@@ -190,6 +190,7 @@ void CBaseMultiplayerPlayer::AwardAchievement( int iAchievement )
 
 	UserMessageBegin( filter, "AchievementEvent" );
 		WRITE_SHORT( iAchievement );
+		WRITE_SHORT( iCount );
 	MessageEnd();
 }
 

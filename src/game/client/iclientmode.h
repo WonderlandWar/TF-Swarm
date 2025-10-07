@@ -28,6 +28,7 @@ enum
 	MM_NONE = 0,
 	MM_SAY,
 	MM_SAY_TEAM,
+	MM_SAY_PARTY,
 };
 
 abstract_class IClientMode
@@ -121,13 +122,23 @@ public:
 
 	virtual int		HudElementKeyInput( int down, ButtonCode_t keynum, const char *pszCurrentBinding ) = 0;
 
-	virtual void	DoPostScreenSpaceEffects( const CViewSetup *pSetup ) = 0;
+	virtual bool	DoPostScreenSpaceEffects( const CViewSetup *pSetup ) = 0;
 
 // Updates.
 public:
 
 	// Called every frame.
 	virtual void	Update()=0;	
+
+	// Returns true if VR mode should black out everything around the UI
+	virtual bool	ShouldBlackoutAroundHUD() = 0;
+	
+	virtual bool	IsInfoPanelAllowed() = 0;
+	virtual void	InfoPanelDisplayed() = 0;
+	virtual bool	IsHTMLInfoPanelAllowed() = 0;
+
+	virtual void	OnDemoRecordStart( char const* pDemoBaseName ) = 0;
+	virtual void	OnDemoRecordStop() = 0;
 
 	virtual void	SetBlurFade( float scale ) = 0;
 	virtual float	GetBlurFade( void ) = 0;

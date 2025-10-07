@@ -67,7 +67,7 @@ public:
 	float GetTeamplayStartTime( int nUserSlot ) { return m_flTeamplayStartTime[nUserSlot]; }
 	int	  GetMiniroundsCompleted( int nUserSlot ) { return m_iMiniroundsCompleted[nUserSlot]; }
 	const char *GetMapName() { return m_szMap; }
-	void OnAchievementEvent( int iAchievementID, int nUserSlot );
+	void OnAchievementEvent( int iAchievementID, int nUserSlot, int iCount = 1 );
 	void SetDirty( bool bDirty, int nUserSlot ) { m_bDirty[nUserSlot] = bDirty; }
 	bool CheckAchievementsEnabled();
 

@@ -237,7 +237,7 @@ public:
 
 		if ( m_nPartySlot == 0 )
 		{
-			steamIDMember = SteamUser()->GetSteamID();
+			steamIDMember = steamapicontext->SteamUser()->GetSteamID();
 			bHasTicket = GTFGCClientSystem()->BLocalPlayerInventoryHasMvmTicket();
 			bUsingSquadSurplus = GTFPartyClient()->GetLocalPlayerCriteria().GetSquadSurplus();
 		}
@@ -595,7 +595,7 @@ void CMVMCriteriaPanel::WriteControls()
 	}
 	else if ( !GTFGCClientSystem()->GetLocalPlayerInventoryMvmTicketCount() )
 	{
-		vecPlayersWithoutTickets.AddToTail( SteamUser()->GetSteamID() );
+		vecPlayersWithoutTickets.AddToTail( steamapicontext->SteamUser()->GetSteamID() );
 	}
 
 	m_MvMEconItemsGroupBox->SetControlVisible( "MissingTicketsLabel", vecPlayersWithoutTickets.Count() );
@@ -668,11 +668,11 @@ void CMVMCriteriaPanel::WriteTourList()
 		}
 
 		char cchTemp[256];
-		V_sprintf_safe( cchTemp, "%d / %d", nCompletedChallengeCount, tour.m_vecMissions.Count() );
+		sprintf( cchTemp, "%d / %d", nCompletedChallengeCount, tour.m_vecMissions.Count() );
 		kvItem->SetString( "progress", cchTemp );
 
 		uint32 iTourNumber = Max( 1U, unBadgeLevel );
-		V_sprintf_safe( cchTemp, "%d", iTourNumber );
+		sprintf( cchTemp, "%d", iTourNumber );
 		kvItem->SetString( "badge_level", cchTemp );
 
 		if ( tour.m_bIsNew )

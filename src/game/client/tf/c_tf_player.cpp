@@ -42,7 +42,7 @@
 #include "materialsystem/imaterialvar.h"
 #include "soundenvelope.h"
 #include "voice_status.h"
-#include "clienteffectprecachesystem.h"
+#include "precache_register.h"
 #include "functionproxy.h"
 #include "toolframework_client.h"
 #include "choreoevent.h"
@@ -60,7 +60,7 @@
 #include "tf_proxyentity.h"
 #include "materialsystem/imaterial.h"
 #include "materialsystem/imaterialvar.h"
-#include "materialsystem/itexturecompositor.h"
+//#include "materialsystem/itexturecompositor.h"
 #include "c_tf_team.h"
 #include "tf_item_inventory.h"
 #include "model_types.h"
@@ -71,7 +71,7 @@
 #include "econ_entity.h"
 #include "ihasowner.h"
 #include "tf_hud_itemeffectmeter.h"
-#include "replay/vgui/replayinputpanel.h"
+//#include "replay/vgui/replayinputpanel.h"
 #include "tf_replay.h"
 #include "netadr.h"
 #include "input.h"
@@ -80,12 +80,12 @@
 #include "econ_gcmessages.h"
 #include "rtime.h"
 #include "networkstringtable_clientdll.h"
-#include "replay/ireplaymanager.h"
+//#include "replay/ireplaymanager.h"
 #include "gc_clientsystem.h"
 #include "c_entitydissolve.h"
 #include "tf_viewmodel.h"
 #include "player_vs_environment/c_tf_upgrades.h"
-#include "sourcevr/isourcevirtualreality.h"
+//#include "sourcevr/isourcevirtualreality.h"
 #include "tempent.h"
 #include "confirm_dialog.h"
 #include "c_tf_weapon_builder.h"
@@ -112,7 +112,7 @@
 #include <vgui_controls/AnimationController.h>
 #include "tf_weapon_rocketpack.h"
 #include "econ_paintkit.h"
-#include "soundstartparams.h"
+//#include "soundstartparams.h"
 #include "SoundEmitterSystem/isoundemittersystembase.h"
 
 
@@ -284,10 +284,10 @@ extern SkyBoxMaterials_t s_PyroSkyboxMaterials;
 #define TF_PLAYER_HEAD_LABEL_RED 0
 #define TF_PLAYER_HEAD_LABEL_BLUE 1
 
-CLIENTEFFECT_REGISTER_BEGIN( PrecacheInvuln )
-CLIENTEFFECT_MATERIAL( "models/effects/invulnfx_blue.vmt" )
-CLIENTEFFECT_MATERIAL( "models/effects/invulnfx_red.vmt" )
-CLIENTEFFECT_REGISTER_END()
+PRECACHE_REGISTER_BEGIN( GLOBAL, PrecacheInvuln )
+PRECACHE( MATERIAL, "models/effects/invulnfx_blue.vmt" )
+PRECACHE( MATERIAL, "models/effects/invulnfx_red.vmt" )
+PRECACHE_REGISTER_END()
 
 // *********************************************************************************************************
 // KillStreak Effect Data
@@ -756,7 +756,7 @@ void C_TFRagdoll::CreateTFRagdoll()
 			Interp_Copy( pPlayer );
 
 			SetAbsAngles( pPlayer->GetRenderAngles() );
-			GetRotationInterpolator().Reset();
+			GetRotationInterpolator().Reset( gpGlobals->curtime );
 
 			m_flAnimTime = pPlayer->m_flAnimTime;
 			SetSequence( pPlayer->GetSequence() );
@@ -879,7 +879,7 @@ void C_TFRagdoll::CreateTFRagdoll()
 	if ( cl_ragdoll_physics_enable.GetBool() && !m_bDeathAnim )
 	{
 		// Make us a ragdoll..
-		m_nRenderFX = kRenderFxRagdoll;
+		m_bClientSideRagdoll = true;
 
 		matrix3x4_t boneDelta0[MAXSTUDIOBONES];
 		matrix3x4_t boneDelta1[MAXSTUDIOBONES];
@@ -1008,11 +1008,11 @@ float C_TFRagdoll::FrameAdvance( float flInterval )
 			// holding frozen time is up - turn to a stiff ragdoll and fall over
 			m_frozenTimer.Invalidate();
 
-			m_nRenderFX = kRenderFxRagdoll;
+			m_bClientSideRagdoll = true;
 
-			matrix3x4_t boneDelta0[MAXSTUDIOBONES];
-			matrix3x4_t boneDelta1[MAXSTUDIOBONES];
-			matrix3x4_t currentBones[MAXSTUDIOBONES];
+			matrix3x4a_t boneDelta0[MAXSTUDIOBONES];
+			matrix3x4a_t boneDelta1[MAXSTUDIOBONES];
+			matrix3x4a_t currentBones[MAXSTUDIOBONES];
 			const float boneDt = 0.1f;
 			GetRagdollInitBoneArrays( boneDelta0, boneDelta1, currentBones, boneDt );
 			InitAsClientRagdoll( boneDelta0, boneDelta1, currentBones, boneDt, true );
@@ -1031,7 +1031,7 @@ float C_TFRagdoll::FrameAdvance( float flInterval )
 
 	if ( !m_bRagdollOn && IsSequenceFinished() && m_bDeathAnim )
 	{
-		m_nRenderFX = kRenderFxRagdoll;
+		m_bClientSideRagdoll = true;
 
 		matrix3x4_t boneDelta0[MAXSTUDIOBONES];
 		matrix3x4_t boneDelta1[MAXSTUDIOBONES];
@@ -6836,7 +6836,7 @@ void C_TFPlayer::RecalcBodygroupsIfDirty( void )
 int C_TFPlayer::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	// If we're a dead player with a fresh ragdoll, don't draw
-	if ( GetRenderFX() == kRenderFxRagdoll )
+	if ( m_bClientSideRagdoll )
 		return 0;
 
 	RecalcBodygroupsIfDirty();
@@ -9160,7 +9160,7 @@ ShadowType_t C_TFPlayer::ShadowCastType( void )
 		return SHADOWS_NONE;
 
 	// If in ragdoll mode.
-	if ( m_nRenderFX == kRenderFxRagdoll )
+	if ( m_bClientSideRagdoll )
 		return SHADOWS_NONE;
 
 	if ( !ShouldDrawThisPlayer() )

@@ -326,24 +326,30 @@ inline bool CMsgQuestObjectiveDef_ETF2Team_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<CMsgQuestObjectiveDef_ETF2Team>(
     CMsgQuestObjectiveDef_ETF2Team_descriptor(), name, value);
 }
-enum LogicalOperation {
+#if 0
+enum int {
   AND = 0,
   OR = 1,
   NOT = 2
 };
+#else
+#define AND 0
+#define OR 1
+#define NOT 2
+#endif
 bool LogicalOperation_IsValid(int value);
-const LogicalOperation LogicalOperation_MIN = AND;
-const LogicalOperation LogicalOperation_MAX = NOT;
+const int LogicalOperation_MIN = AND;
+const int LogicalOperation_MAX = NOT;
 const int LogicalOperation_ARRAYSIZE = LogicalOperation_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* LogicalOperation_descriptor();
-inline const ::std::string& LogicalOperation_Name(LogicalOperation value) {
+inline const ::std::string& LogicalOperation_Name(int value) {
   return ::google::protobuf::internal::NameOfEnum(
     LogicalOperation_descriptor(), value);
 }
 inline bool LogicalOperation_Parse(
-    const ::std::string& name, LogicalOperation* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<LogicalOperation>(
+    const ::std::string& name, int* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<int>(
     LogicalOperation_descriptor(), name, value);
 }
 enum EValueDefinitionSource {
@@ -1673,12 +1679,12 @@ class CMsgQuestObjectiveDef : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedField<int>& conditions() const;
   inline ::google::protobuf::RepeatedField<int>* mutable_conditions();
 
-  // optional .LogicalOperation condition_logic = 14;
+  // optional .int condition_logic = 14;
   inline bool has_condition_logic() const;
   inline void clear_condition_logic();
   static const int kConditionLogicFieldNumber = 14;
-  inline ::LogicalOperation condition_logic() const;
-  inline void set_condition_logic(::LogicalOperation value);
+  inline int condition_logic() const;
+  inline void set_condition_logic(int value);
 
   // repeated string item_name = 15;
   inline int item_name_size() const;
@@ -1696,12 +1702,12 @@ class CMsgQuestObjectiveDef : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& item_name() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_item_name();
 
-  // optional .LogicalOperation item_logic = 16;
+  // optional .int item_logic = 16;
   inline bool has_item_logic() const;
   inline void clear_item_logic();
   static const int kItemLogicFieldNumber = 16;
-  inline ::LogicalOperation item_logic() const;
-  inline void set_item_logic(::LogicalOperation value);
+  inline int item_logic() const;
+  inline void set_item_logic(int value);
 
   // optional uint32 jump_state = 17;
   inline bool has_jump_state() const;
@@ -5962,12 +5968,12 @@ class CMsgQuestMapNodeCondition_Logic : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required .LogicalOperation operation = 1;
+  // required .int operation = 1;
   inline bool has_operation() const;
   inline void clear_operation();
   static const int kOperationFieldNumber = 1;
-  inline ::LogicalOperation operation() const;
-  inline void set_operation(::LogicalOperation value);
+  inline int operation() const;
+  inline void set_operation(int value);
 
   // repeated .CMsgQuestMapNodeCondition sub_conditions = 2;
   inline int sub_conditions_size() const;
@@ -7772,7 +7778,7 @@ CMsgQuestObjectiveDef::mutable_conditions() {
   return &conditions_;
 }
 
-// optional .LogicalOperation condition_logic = 14;
+// optional .int condition_logic = 14;
 inline bool CMsgQuestObjectiveDef::has_condition_logic() const {
   return (_has_bits_[0] & 0x00000400u) != 0;
 }
@@ -7786,11 +7792,11 @@ inline void CMsgQuestObjectiveDef::clear_condition_logic() {
   condition_logic_ = 0;
   clear_has_condition_logic();
 }
-inline ::LogicalOperation CMsgQuestObjectiveDef::condition_logic() const {
+inline int CMsgQuestObjectiveDef::condition_logic() const {
   // @@protoc_insertion_point(field_get:CMsgQuestObjectiveDef.condition_logic)
-  return static_cast< ::LogicalOperation >(condition_logic_);
+  return static_cast< int >(condition_logic_);
 }
-inline void CMsgQuestObjectiveDef::set_condition_logic(::LogicalOperation value) {
+inline void CMsgQuestObjectiveDef::set_condition_logic(int value) {
   assert(::LogicalOperation_IsValid(value));
   set_has_condition_logic();
   condition_logic_ = value;
@@ -7851,7 +7857,7 @@ CMsgQuestObjectiveDef::mutable_item_name() {
   return &item_name_;
 }
 
-// optional .LogicalOperation item_logic = 16;
+// optional .int item_logic = 16;
 inline bool CMsgQuestObjectiveDef::has_item_logic() const {
   return (_has_bits_[0] & 0x00001000u) != 0;
 }
@@ -7865,11 +7871,11 @@ inline void CMsgQuestObjectiveDef::clear_item_logic() {
   item_logic_ = 0;
   clear_has_item_logic();
 }
-inline ::LogicalOperation CMsgQuestObjectiveDef::item_logic() const {
+inline int CMsgQuestObjectiveDef::item_logic() const {
   // @@protoc_insertion_point(field_get:CMsgQuestObjectiveDef.item_logic)
-  return static_cast< ::LogicalOperation >(item_logic_);
+  return static_cast< int >(item_logic_);
 }
-inline void CMsgQuestObjectiveDef::set_item_logic(::LogicalOperation value) {
+inline void CMsgQuestObjectiveDef::set_item_logic(int value) {
   assert(::LogicalOperation_IsValid(value));
   set_has_item_logic();
   item_logic_ = value;
@@ -15870,7 +15876,7 @@ inline void CMsgQuestMapNodeCondition_NodeState::set_allocated_target_node_defid
 
 // CMsgQuestMapNodeCondition_Logic
 
-// required .LogicalOperation operation = 1;
+// required .int operation = 1;
 inline bool CMsgQuestMapNodeCondition_Logic::has_operation() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -15884,11 +15890,11 @@ inline void CMsgQuestMapNodeCondition_Logic::clear_operation() {
   operation_ = 0;
   clear_has_operation();
 }
-inline ::LogicalOperation CMsgQuestMapNodeCondition_Logic::operation() const {
+inline int CMsgQuestMapNodeCondition_Logic::operation() const {
   // @@protoc_insertion_point(field_get:CMsgQuestMapNodeCondition_Logic.operation)
-  return static_cast< ::LogicalOperation >(operation_);
+  return static_cast< int >(operation_);
 }
-inline void CMsgQuestMapNodeCondition_Logic::set_operation(::LogicalOperation value) {
+inline void CMsgQuestMapNodeCondition_Logic::set_operation(int value) {
   assert(::LogicalOperation_IsValid(value));
   set_has_operation();
   operation_ = value;
@@ -16091,9 +16097,9 @@ template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::CMsgQuestObjectiveDef_ETF2Team>() {
   return ::CMsgQuestObjectiveDef_ETF2Team_descriptor();
 }
-template <> struct is_proto_enum< ::LogicalOperation> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< int > : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::LogicalOperation>() {
+inline const EnumDescriptor* GetEnumDescriptor< int >() {
   return ::LogicalOperation_descriptor();
 }
 template <> struct is_proto_enum< ::EValueDefinitionSource> : ::google::protobuf::internal::true_type {};

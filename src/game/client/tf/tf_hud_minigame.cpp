@@ -84,7 +84,7 @@ void CHudMiniGame::OnTick()
 		{
 			if ( !FStrEq( pszResFilename, m_szResFilename + sizeof( "resource/UI/" ) - 1 ) )
 			{
-				V_sprintf_safe( m_szResFilename, "resource/UI/%s", pszResFilename );
+				sprintf( m_szResFilename, "resource/UI/%s", pszResFilename );
 				InvalidateLayout( false, true );
 			}
 		}

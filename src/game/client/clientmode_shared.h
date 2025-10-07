@@ -65,6 +65,7 @@ public:
 	virtual bool	ShouldDrawViewModel();
 	virtual bool	ShouldDrawParticles( );
 	virtual bool	ShouldDrawCrosshair( void );
+	virtual bool	ShouldBlackoutAroundHUD() OVERRIDE;
 	virtual void	AdjustEngineViewport( int& x, int& y, int& width, int& height );
 	virtual void	PreRender(CViewSetup *pSetup);
 	virtual void	PostRender();
@@ -103,6 +104,15 @@ public:
 	virtual bool CanRecordDemo( char *errorMsg, int length ) const { return true; }
 
 	virtual int HandleSpectatorKeyInput( int down, ButtonCode_t keynum, const char *pszCurrentBinding );
+	
+	virtual bool	DoPostScreenSpaceEffects( const CViewSetup *pSetup );
+	
+	virtual bool	IsInfoPanelAllowed() OVERRIDE { return true; }
+	virtual void	InfoPanelDisplayed() OVERRIDE { }
+	virtual bool	IsHTMLInfoPanelAllowed() OVERRIDE { return true; }
+
+	virtual void			OnDemoRecordStart( char const* pDemoBaseName ) OVERRIDE {}
+	virtual void			OnDemoRecordStop() OVERRIDE {}
 
 	virtual void InitChatHudElement( void );
 	virtual void InitWeaponSelectionHudElement( void );
@@ -111,6 +121,9 @@ protected:
 	CBaseViewport			*m_pViewport;
 
 	int			GetSplitScreenPlayerSlot() const;
+
+private:
+	virtual bool	BCanSendPartyChatMessages() const { return false; }
 
 	// Message mode handling
 	// All modes share a common chat interface

@@ -309,7 +309,7 @@ void C_TFProjectile_GrapplingHook::RemoveRope()
 {
 	if ( m_hRope )
 	{
-		m_hRope->Release();
+		UTIL_Remove( m_hRope );
 		m_hRope = NULL;
 	}
 }

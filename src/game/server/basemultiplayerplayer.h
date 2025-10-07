@@ -78,8 +78,8 @@ public:
 	int GetTeamBalanceScore( void ) { return m_iBalanceScore; }
 
 	virtual int	CalculateTeamBalanceScore( void );
-
-	void AwardAchievement( int iAchievement );
+	
+	void AwardAchievement( int iAchievement, int iCount = 1 );
 	int	GetPerLifeCounterKV( const char *name );
 	void SetPerLifeCounterKV( const char *name, int value );
 	void ResetPerLifeCounters( void );

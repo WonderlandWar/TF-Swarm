@@ -61,9 +61,7 @@ void CTFDashboardNotification::SetToExpire( float flDelay )
 								flDelay - flAlphaTime,
 								flAlphaTime,
 								AnimationController::INTERPOLATOR_LINEAR,
-								0,
-								true,
-								false );
+								0 );
 
 	PostMessage( this, new KeyValues( "Expire" ), flDelay );
 }

@@ -59,12 +59,6 @@ class CHudChat;
 
 DECLARE_HUDELEMENT( CHudTournament );
 
-static const wchar_t* GetSCGlyph( const char* action )
-{
-	auto origin = g_pInputSystem->GetSteamControllerActionOrigin( action, GAME_ACTION_SET_FPSCONTROLS );
-	return g_pInputSystem->GetSteamControllerFontCharacterForActionOrigin( origin );
-}
-
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -264,7 +258,6 @@ void CHudTournament::PreparePanel( void )
 	if ( !TFGameRules() )
 		return;
 
-	bool bSteamController = ::input->IsSteamControllerActive();
 	bool bShowReadyHintIcon = false;
 
 	if ( TFGameRules()->IsInPreMatch() )
@@ -284,15 +277,7 @@ void CHudTournament::PreparePanel( void )
 				const char *pszLabelText;
 				if ( TFGameRules() && TFGameRules()->PlayerReadyStatus_HaveMinPlayersToEnable() )
 				{
-					if ( bSteamController )
-					{
-						pszLabelText = "Tournament_Instructions_Ready_NoKeyHintText";
-						bShowReadyHintIcon = true;
-					}
-					else
-					{
-						pszLabelText = "Tournament_Instructions_Ready";
-					}
+					pszLabelText = "Tournament_Instructions_Ready";
 				}
 				else
 				{
@@ -350,15 +335,7 @@ void CHudTournament::PreparePanel( void )
 			{
 				if ( m_bReadyStatusMode )
 				{
-					if ( bSteamController )
-					{
-						SetDialogVariable( "readylabel", g_pVGuiLocalize->Find( "Tournament_Instructions_Ready_NoKeyHintText" ) );
-						bShowReadyHintIcon = true;
-					}
-					else
-					{
-						SetDialogVariable( "readylabel", g_pVGuiLocalize->Find( "Tournament_Instructions_Ready" ) );
-					}
+					SetDialogVariable( "readylabel", g_pVGuiLocalize->Find( "Tournament_Instructions_Ready" ) );
 				}
 				else
 				{
@@ -378,7 +355,9 @@ void CHudTournament::PreparePanel( void )
 		{
 			if ( bShowReadyHintIcon && !bAutoReady )
 			{
-				pReadyHintIcon->SetText( GetSCGlyph( "toggleready" ) );
+				// TF_SWARM: Not sure what to do here, it expects a steam controller
+				pReadyHintIcon->SetText( "toggleready" );
+				//pReadyHintIcon->SetText( GetSCGlyph( "toggleready" ) );
 				pReadyHintIcon->SetVisible( true );
 				pReadyHintIcon->SetEnabled( true );
 			}
@@ -395,11 +374,11 @@ void CHudTournament::PreparePanel( void )
 
 			if ( m_bCountDownVisible )
 			{
-				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence(this, m_bCompetitiveMode ? "HudTournament_ShowTimerCompetitive" : "HudTournament_ShowTimerDefault", false);
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence(this, m_bCompetitiveMode ? "HudTournament_ShowTimerCompetitive" : "HudTournament_ShowTimerDefault");
 			}
 			else
 			{
-				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence(this, "HudTournament_HideTimer", false);
+				GetClientMode()->GetViewportAnimationController()->StartAnimationSequence(this, "HudTournament_HideTimer");
 			}
 		}	
 	}
@@ -442,7 +421,7 @@ void CHudTournament::PreparePanel( void )
 		if ( mp_timelimit.GetInt() > 0 )
 		{
 			wchar_t szWindConditionsTmp[1024];
-			V_wcscpy_safe( szWindConditionsTmp, szWindConditions );
+			wcscpy( szWindConditionsTmp, szWindConditions );
 
 			_snwprintf( szWindConditions, ARRAYSIZE( szWindConditions ), STRING_FMT L"%d " STRING_FMT, szWindConditionsTmp, mp_timelimit.GetInt(), mp_timelimit.GetInt() == 1 ? g_pVGuiLocalize->Find( "Tournament_WinConditionsMinute" ) : g_pVGuiLocalize->Find( "Tournament_WinConditionsMinutes" ) );
 			bPrev = true;
@@ -453,12 +432,12 @@ void CHudTournament::PreparePanel( void )
 			if ( bPrev )
 			{
 				wchar_t szWindConditionsTmp[1024];
-				V_wcscpy_safe( szWindConditionsTmp, szWindConditions );
+				wcscpy( szWindConditionsTmp, szWindConditions );
 				_snwprintf( szWindConditions, ARRAYSIZE( szWindConditions ), STRING_FMT L", ", szWindConditionsTmp );
 			}
 
 			wchar_t szWindConditionsTmp2[1024];
-			V_wcscpy_safe( szWindConditionsTmp2, szWindConditions );
+			wcscpy( szWindConditionsTmp2, szWindConditions );
 			_snwprintf( szWindConditions, ARRAYSIZE( szWindConditions ), STRING_FMT L"%d " STRING_FMT, szWindConditionsTmp2, mp_winlimit.GetInt(), mp_winlimit.GetInt() == 1 ? g_pVGuiLocalize->Find( "Tournament_WinConditionsWin" ) : g_pVGuiLocalize->Find( "Tournament_WinConditionsWins" ) );
 			bPrev = true;
 		}
@@ -468,19 +447,19 @@ void CHudTournament::PreparePanel( void )
 			if ( bPrev )
 			{
 				wchar_t szWindConditionsTmp[1024];
-				V_wcscpy_safe( szWindConditionsTmp, szWindConditions );
+				wcscpy( szWindConditionsTmp, szWindConditions );
 				_snwprintf( szWindConditions, ARRAYSIZE( szWindConditions ), STRING_FMT L", ", szWindConditionsTmp );
 			}
 
 			wchar_t szWindConditionsTmp2[1024];
-			V_wcscpy_safe( szWindConditionsTmp2, szWindConditions );
+			wcscpy( szWindConditionsTmp2, szWindConditions );
 			_snwprintf( szWindConditions, ARRAYSIZE( szWindConditions ), STRING_FMT L"%d " STRING_FMT, szWindConditionsTmp2, mp_maxrounds.GetInt(), mp_maxrounds.GetInt() == 1 ? g_pVGuiLocalize->Find( "Tournament_WinConditionsRound" ) : g_pVGuiLocalize->Find( "Tournament_WinConditionsRounds" ) );
 		}
 	}
 	else
 	{
 		wchar_t szWindConditionsTmp[1024];
-		V_wcscpy_safe( szWindConditionsTmp, szWindConditions );
+		wcscpy( szWindConditionsTmp, szWindConditions );
 		_snwprintf( szWindConditions, ARRAYSIZE( szWindConditions ), STRING_FMT STRING_FMT, szWindConditionsTmp, g_pVGuiLocalize->Find( "Tournament_WinConditionsNone" ) );
 	}
 
@@ -1101,7 +1080,7 @@ bool CHudTournamentSetup::ToggleState( ButtonCode_t code )
 	if ( !g_TF_PR )
 		return false;
 
-	if ( code == KEY_F4 || code == STEAMCONTROLLER_F4 )
+	if ( code == KEY_F4 )
 	{
 		if ( TFGameRules() && TFGameRules()->UsePlayerReadyStatusMode() )
 		{

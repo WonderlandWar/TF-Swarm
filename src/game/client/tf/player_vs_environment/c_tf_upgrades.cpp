@@ -1204,9 +1204,9 @@ void CHudUpgradePanel::UpdateJoystickControls( void )
 	bool bRight = ::input->Joystick_GetSide() > 0.0f || ::input->Joystick_GetYaw() > 0.0f || vgui::input()->IsKeyDown( KEY_XBUTTON_RIGHT ) || vgui::input()->IsKeyDown( KEY_RIGHT );
 	bool bNavLeftRightPressed = bLeft || bRight;
 
-	bool bAccept = vgui::input()->IsKeyDown( KEY_XBUTTON_A ) || vgui::input()->IsKeyDown( KEY_ENTER ) || vgui::input()->IsKeyDown( STEAMCONTROLLER_A );
-	bool bBack = vgui::input()->IsKeyDown( KEY_XBUTTON_X ) || vgui::input()->IsKeyDown( KEY_BACKSPACE ) || vgui::input()->IsKeyDown( STEAMCONTROLLER_X );
-	bool bDone = vgui::input()->IsKeyDown( KEY_XBUTTON_B ) || vgui::input()->IsKeyDown( KEY_ESCAPE ) || vgui::input()->IsKeyDown( STEAMCONTROLLER_B );
+	bool bAccept = vgui::input()->IsKeyDown( KEY_XBUTTON_A ) || vgui::input()->IsKeyDown( KEY_ENTER );
+	bool bBack = vgui::input()->IsKeyDown( KEY_XBUTTON_X ) || vgui::input()->IsKeyDown( KEY_BACKSPACE );
+	bool bDone = vgui::input()->IsKeyDown( KEY_XBUTTON_B ) || vgui::input()->IsKeyDown( KEY_ESCAPE );
 	bool bNext = vgui::input()->IsKeyDown( KEY_XBUTTON_RIGHT_SHOULDER ) || vgui::input()->IsKeyDown( KEY_PAGEDOWN );
 	bool bPrev = vgui::input()->IsKeyDown( KEY_XBUTTON_LEFT_SHOULDER ) || vgui::input()->IsKeyDown( KEY_PAGEUP );
 	bool bNavButtonPressed = bAccept || bBack || bDone || bNext || bPrev;
@@ -1980,11 +1980,11 @@ void CHudUpgradePanel::OnCommand( const char *command )
 		// See if we need to award achievements
 		if ( m_bAwardMaxSlotAchievement )
 		{
-			g_AchievementMgrTF.AwardAchievement( ACHIEVEMENT_TF_MVM_MAX_PRIMARY_UPGRADES );
+			g_AchievementMgrTF.AwardAchievement( ACHIEVEMENT_TF_MVM_MAX_PRIMARY_UPGRADES, GET_ACTIVE_SPLITSCREEN_SLOT() );
 		}
 		if ( m_bAwardMaxResistAchievement )
 		{
-			g_AchievementMgrTF.AwardAchievement( ACHIEVEMENT_TF_MVM_MAX_PLAYER_RESISTANCES );
+			g_AchievementMgrTF.AwardAchievement( ACHIEVEMENT_TF_MVM_MAX_PLAYER_RESISTANCES, GET_ACTIVE_SPLITSCREEN_SLOT() );
 		}
 
 		return;

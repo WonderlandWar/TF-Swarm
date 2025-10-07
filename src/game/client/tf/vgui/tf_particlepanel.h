@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "tier2/camerautils.h"
+//#include "tier2/camerautils.h"
 
 class CTFParticlePanel : public vgui::EditablePanel
 {

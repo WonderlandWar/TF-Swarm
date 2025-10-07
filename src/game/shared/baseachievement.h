@@ -11,10 +11,11 @@
 #endif
 
 #include "GameEventListener.h"
-//#include "hl2orange.spa.h"
+#include "hl2orange.spa.h"
 #include "iachievementmgr.h"
 
 class CAchievementMgr;
+class IPlayerLocal;
 
 //
 // Base class for achievements
@@ -33,6 +34,7 @@ public:
 	void SetAchievementID( int iAchievementID ) { m_iAchievementID = iAchievementID; }
 	void SetName( const char *pszName ) { m_pszName = pszName; }
 	const char *GetName() { return m_pszName; }
+	const char *GetStat() { return m_pszStat?m_pszStat:GetName(); }
 	void SetFlags( int iFlags );
 	int GetFlags() { return m_iFlags; }
 	void SetGoal( int iGoal ) { m_iGoal = iGoal; }
@@ -58,6 +60,7 @@ public:
 	int GetProgressShown() { return m_iProgressShown; }
 	virtual bool IsAchieved() { return m_bAchieved; }
 	virtual bool IsActive();
+	virtual bool LocalPlayerCanEarn( void ) { return true; }
 	void SetAchieved( bool bAchieved ) { m_bAchieved = bAchieved; }
 	uint64 GetComponentBits() { return m_iComponentBits; }
 	void SetComponentBits( uint64 iComponentBits );
@@ -94,8 +97,10 @@ protected:
 	virtual void CalcProgressMsgIncrement();
 	void SetNextThink( float flThinkTime );
 	void ClearThink( void );
+	void SetStat( const char* pStatName ) { m_pszStat = pStatName; }
 
 	const char *m_pszName;								// name of this achievement
+	const char *m_pszStat;								// stat this achievement uses
 	int m_iAchievementID;								// ID of this achievement
 	int	m_iFlags;										// ACH_* flags for this achievement
 	int	m_iGoal;										// goal # of steps to award this achievement

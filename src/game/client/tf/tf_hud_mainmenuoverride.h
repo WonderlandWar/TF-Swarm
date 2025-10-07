@@ -133,7 +133,7 @@ public:
 
 	void		OnTick();
 
-	virtual GameActionSet_t GetPreferredActionSet() { return GAME_ACTION_SET_NONE; } // Seems like this should be GAME_ACTION_SET_MENU, but it's not because it's apparently visible *all* *the* *time*
+	//	virtual GameActionSet_t GetPreferredActionSet() { return GAME_ACTION_SET_NONE; } // Seems like this should be GAME_ACTION_SET_MENU, but it's not because it's apparently visible *all* *the* *time*
 
 #ifdef _DEBUG
 	void		Refresh();

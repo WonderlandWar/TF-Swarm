@@ -1242,7 +1242,6 @@ void CCharInfoLoadoutSubPanel::OnKeyCodePressed(vgui::KeyCode code)
 	if ( nButtonCode == KEY_XBUTTON_LEFT || 
 		 nButtonCode == KEY_XSTICK1_LEFT ||
 		 nButtonCode == KEY_XSTICK2_LEFT ||
-		 nButtonCode == STEAMCONTROLLER_DPAD_LEFT ||
 		 code == KEY_LEFT )
 	{
 		if ( m_iLabelSetToClass != -1 )
@@ -1258,7 +1257,6 @@ void CCharInfoLoadoutSubPanel::OnKeyCodePressed(vgui::KeyCode code)
 	else if ( nButtonCode == KEY_XBUTTON_RIGHT || 
 			  nButtonCode == KEY_XSTICK1_RIGHT ||
 			  nButtonCode == KEY_XSTICK2_RIGHT ||
-			  nButtonCode == STEAMCONTROLLER_DPAD_RIGHT ||
 			  code == KEY_RIGHT )
 	{
 		if ( m_iLabelSetToClass != -1 )
@@ -1274,7 +1272,6 @@ void CCharInfoLoadoutSubPanel::OnKeyCodePressed(vgui::KeyCode code)
 	else if ( nButtonCode == KEY_XBUTTON_UP || 
 			  nButtonCode == KEY_XSTICK1_UP ||
 			  nButtonCode == KEY_XSTICK2_UP ||
-			  nButtonCode == STEAMCONTROLLER_DPAD_UP ||
 			  code == KEY_UP )
 	{
 		if ( m_iLabelSetToClass == -1 )
@@ -1294,7 +1291,6 @@ void CCharInfoLoadoutSubPanel::OnKeyCodePressed(vgui::KeyCode code)
 	else if ( nButtonCode == KEY_XBUTTON_DOWN || 
 			  nButtonCode == KEY_XSTICK1_DOWN ||
 			  nButtonCode == KEY_XSTICK2_DOWN ||
-			  nButtonCode == STEAMCONTROLLER_DPAD_DOWN ||
 			  code == KEY_DOWN )
 	{
 		if ( m_iLabelSetToClass != -1 )

@@ -54,8 +54,7 @@ class CUserCmd;
 // Put this in your derived class definition to declare it's activity table
 // UNDONE: Cascade these?
 #define DECLARE_ACTTABLE()		static acttable_t m_acttable[];\
-	acttable_t *ActivityList( void );\
-	int ActivityListCount( void );
+	virtual acttable_t *ActivityList( int &iActivityCount ) OVERRIDE;
 
 // You also need to include the activity table itself in your class' implementation:
 // e.g.
@@ -72,8 +71,7 @@ class CUserCmd;
 // activity table.
 // UNDONE: Cascade these?
 #define IMPLEMENT_ACTTABLE(className) \
-	acttable_t *className::ActivityList( void ) { return m_acttable; } \
-	int className::ActivityListCount( void ) { return ARRAYSIZE(m_acttable); } \
+	acttable_t *className::ActivityList( int &iActivityCount ) { iActivityCount = ARRAYSIZE(m_acttable); return m_acttable; }
 
 typedef struct
 {
@@ -250,6 +248,8 @@ public:
 	virtual void			HandleFireOnEmpty();					// Called when they have the attack button down
 																	// but they are out of ammo. The default implementation
 																	// either reloads, switches weapons, or plays an empty sound.
+	virtual bool			CanPerformSecondaryAttack() const;
+
 #ifdef CLIENT_DLL
 	virtual void			CreateMove( float flInputSampleTime, CUserCmd *pCmd, const QAngle &vecOldViewAngles ) {}
 #endif
@@ -331,6 +331,8 @@ public:
 	//All weapons can be picked up by NPCs by default
 	virtual bool			CanBePickedUpByNPCs( void ) { return true;	}
 
+	virtual int				GetSkinOverride() const { return -1; }
+
 public:
 
 	// Weapon info accessors for data in the weapon's data file
@@ -345,6 +347,7 @@ public:
 	virtual int				GetWeight( void ) const;
 	virtual bool			AllowsAutoSwitchTo( void ) const;
 	virtual bool			AllowsAutoSwitchFrom( void ) const;
+	virtual bool			ForceWeaponSwitch( void ) const { return false; }
 	virtual int				GetWeaponFlags( void ) const;
 	virtual int				GetSlot( void ) const;
 	virtual int				GetPosition( void ) const;
@@ -385,8 +388,7 @@ public:
 	virtual CHudTexture const	*GetSpriteZoomedAutoaim( void ) const;
 
 	virtual Activity		ActivityOverride( Activity baseAct, bool *pRequired );
-	virtual	acttable_t*		ActivityList( void ) { return NULL; }
-	virtual	int				ActivityListCount( void ) { return 0; }
+	virtual	acttable_t*		ActivityList( int &iActivityCount ) { return NULL; }
 
 	virtual void			Activate( void );
 
@@ -525,6 +527,8 @@ public:
 	virtual void			HideThink( void );
 	virtual bool			CanReload( void );
 
+	virtual float			GetNextSecondaryAttackDelay( void ) { return 0.5f; } // This is for setting the next attack timer from inside SecondaryAttack()
+
 // FTYPEDESC_INSENDTABLE STUFF
 private:
 	typedef CHandle< CBaseCombatCharacter > CBaseCombatCharacterHandle;
@@ -600,6 +604,12 @@ public:
 
 	bool					SetIdealActivity( Activity ideal );
 	void					MaintainIdealActivity( void );
+
+#ifdef CLIENT_DLL
+	virtual const Vector&	GetViewmodelOffset() { return vec3_origin; }
+#endif // CLIENT_DLL
+
+	virtual bool			UsesCenterFireProjectile( void ) const { return false; }
 
 private:
 	int						m_nIdealSequence;

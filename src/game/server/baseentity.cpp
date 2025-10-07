@@ -761,7 +761,7 @@ CBaseEntity::CBaseEntity( bool bServerOnly )
 
 	m_pEvent = NULL;
 
-
+	m_bTruceValidForEnt = false;
 }
 
 //-----------------------------------------------------------------------------

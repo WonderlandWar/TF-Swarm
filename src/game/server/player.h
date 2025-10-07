@@ -456,7 +456,7 @@ public:
 	virtual bool			Weapon_ShouldSetLast( CBaseCombatWeapon *pOldWeapon, CBaseCombatWeapon *pNewWeapon ) { return true; }
 	virtual bool			Weapon_ShouldSelectItem( CBaseCombatWeapon *pWeapon );
 	void					Weapon_DropSlot( int weaponSlot );
-	CBaseCombatWeapon		*Weapon_GetLast( void ) { return m_hLastWeapon.Get(); }
+	CBaseCombatWeapon		*GetLastWeapon( void ) { return m_hLastWeapon.Get(); }
 
 	virtual bool			HasUnlockableWeapons( int iUnlockedableIndex ) { return false; }
 	bool					HasUnlockedWpn( int iIndex ) { return false; }
@@ -630,6 +630,8 @@ public:
 	// the player is in one.
 	virtual void			PlayerRunCommand(CUserCmd *ucmd, IMoveHelper *moveHelper);
 	void					RunNullCommand();
+	CUserCmd *				GetCurrentCommand( void )	{ return m_pCurrentCommand; }
+	float					GetTimeSinceLastUserCommand( void ) { return ( !IsConnected() || IsFakeClient() || IsBot() ) ? 0.f : gpGlobals->curtime - m_flLastUserCommandTime; }
 
 	// Team Handling
 	virtual void			ChangeTeam( int iTeamNum ) { ChangeTeam(iTeamNum,false, false); }
@@ -796,7 +798,10 @@ public:
 	float	GetTimeBase() const;
 	void	SetLastUserCommand( const CUserCmd &cmd );
 	const CUserCmd *GetLastUserCommand( void );
-	virtual bool IsBot() const;
+	
+	virtual bool IsBot() const;		// IMPORTANT: This returns true for ANY type of bot. If your game uses different, incompatible types of bots check your specific bot type before casting
+	virtual bool IsBotOfType( int botType ) const;	// return true if this player is a bot of the specific type (zero is invalid)
+	virtual int GetBotType( void ) const;			// return a unique int representing the type of bot instance this is
 
 	bool	IsPredictingWeapons( void ) const; 
 	int		CurrentCommandNumber() const;
@@ -1290,6 +1295,9 @@ private:
 	CUtlLinkedList< CPlayerSimInfo >  m_vecPlayerSimInfo;
 	CUtlLinkedList< CPlayerCmdInfo >  m_vecPlayerCmdInfo;
 
+	// Store the last time we successfully processed a usercommand
+	float			m_flLastUserCommandTime;
+
 	friend class CGameMovement;
 	friend class CMoveHelperServer;
 	Vector m_movementCollisionNormal;
@@ -1327,6 +1335,20 @@ inline const Vector &CBasePlayer::GetMovementCollisionNormal( void ) const
 inline const Vector &CBasePlayer::GetGroundNormal( void ) const
 {
 	return m_groundNormal;
+}
+
+//-----------------------------------------------------------------------------
+// Inline methods
+//-----------------------------------------------------------------------------
+inline bool CBasePlayer::IsBotOfType( int botType ) const
+{
+	// bot type of zero is invalid
+	return ( GetBotType() != 0 ) && ( GetBotType() == botType );
+}
+
+inline int CBasePlayer::GetBotType( void ) const
+{
+	return 0;
 }
 
 inline bool CBasePlayer::IsAutoKickDisabled( void ) const

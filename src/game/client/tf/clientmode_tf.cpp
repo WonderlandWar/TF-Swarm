@@ -629,34 +629,6 @@ bool ClientModeTFNormal::ShouldBlackoutAroundHUD()
 	return ClientModeShared::ShouldBlackoutAroundHUD();
 }
 
-	
-//-----------------------------------------------------------------------------
-// Purpose: Allows the client mode to override mouse control stuff in sourcevr
-//-----------------------------------------------------------------------------
-HeadtrackMovementMode_t ClientModeTFNormal::ShouldOverrideHeadtrackControl() 
-{
-	C_TFPlayer *pPlayer = C_TFPlayer::GetLocalTFPlayer();
-	if ( !pPlayer )
-		return HMM_NOOVERRIDE;
-
-	// TODO: check if these actually all work right.
-	switch ( pPlayer->GetObserverMode() )
-	{
-		case OBS_MODE_DEATHCAM	:		// Turned into OBS_MODE_CHASE in VR
-		case OBS_MODE_ROAMING	:
-		case OBS_MODE_FIXED		:		// Checked - works.
-		case OBS_MODE_CHASE		:		// Checked - works.
-		case OBS_MODE_POI		:		// PASSTIME NOT CHECKED
-		case OBS_MODE_FREEZECAM	:		// Turned into OBS_MODE_CHASE in VR
-			return HMM_SHOOTMOVEMOUSE_LOOKFACE;
-		case OBS_MODE_IN_EYE	:		// Checked - works.
-			return HMM_NOOVERRIDE;
-	}
-
-	return ClientModeShared::ShouldOverrideHeadtrackControl();
-}
-
-
 int ClientModeTFNormal::GetDeathMessageStartHeight( void )
 {
 	return m_pViewport->GetDeathMessageStartHeight();
@@ -1631,13 +1603,13 @@ bool ClientModeTFNormal::DoPostScreenSpaceEffects( const CViewSetup *pSetup )
 }
 
 #if !defined(NO_STEAM)
-void ClientModeTFNormal::OnScreenshotRequested( ScreenshotRequested_t *pParam )
-{
+//void ClientModeTFNormal::OnScreenshotRequested( ScreenshotRequested_t *pParam )
+//{
 	// Steam has requested a screenshot, act as if the key currently bound to screenshots
 	// has been pressed (we want tagging and the killcam screenshot behavior if applicable)
-	HudElementKeyInput( 0, BUTTON_CODE_INVALID, "screenshot" );
-	engine->ClientCmd( "screenshot" );
-}
+//	HudElementKeyInput( 0, BUTTON_CODE_INVALID, "screenshot" );
+//	engine->ClientCmd( "screenshot" );
+//}
 #endif
 
 
@@ -1844,117 +1816,7 @@ void ClientModeTFNormal::Update()
 	// CHudVote *pHudVote = GET_HUDELEMENT( CHudVote );
 	// CTFHudMannVsMachineStatus *pMannVsMachineStatus = GET_HUDELEMENT( CTFHudMannVsMachineStatus );
 	C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
-
-	// Update steam controller stuff if one is active
-	if ( ::input->IsSteamControllerActive() )
-	{
-		// Walk through all the panels and HUD elements, see what kind of action set each one requests.
-		bool bNeedMenu = false;
-		bool bNeedHUD = false;
-		bool bNeedSpectator = false;
-		m_pViewport->ForEachPanel( [&] (IViewPortPanel* pPanel) {
-			if ( pPanel && pPanel->IsVisible() )
-			{
-				auto actionset = pPanel->GetPreferredActionSet();
-				if ( actionset == GAME_ACTION_SET_MENUCONTROLS )
-				{
-					bNeedMenu = true;
-				}
-				else if ( actionset == GAME_ACTION_SET_IN_GAME_HUD )
-				{
-					bNeedHUD = true;
-				}
-				else if ( actionset == GAME_ACTION_SET_SPECTATOR )
-				{
-					bNeedSpectator = true;
-				}
-			}
-		} );
-
-		GetHud().ForEachHudElement( [&]( CHudElement* pElement ) {
-			if ( pElement )
-			{
-				auto actionset = pElement->GetPreferredActionSet();
-				if ( actionset == GAME_ACTION_SET_MENUCONTROLS )
-				{
-					bNeedMenu = true;
-				}
-				else if ( actionset == GAME_ACTION_SET_IN_GAME_HUD )
-				{
-					bNeedHUD = true;
-				}
-				else if ( actionset == GAME_ACTION_SET_SPECTATOR )
-				{
-					bNeedSpectator = true;
-				}
-			}
-		} );
-
-		// See if there's a modal dialog which wants to change the action set
-		if ( !TFModalStack()->IsEmpty() )
-		{
-			vgui::VPANEL panelTop = TFModalStack()->Top().Get();
-			vgui::Panel* pPanel =  vgui::ipanel()->GetPanel( panelTop, "ClientDLL" );
-			if ( pPanel )
-			{
-				CConfirmDialog* pDialog = dynamic_cast<CConfirmDialog*>( pPanel );
-				if ( pDialog )
-				{
-					GameActionSet_t actionset = pDialog->GetPreferredActionSet();
-					if ( actionset == GAME_ACTION_SET_MENUCONTROLS )
-					{
-						bNeedMenu = true;
-					}
-					else if ( actionset == GAME_ACTION_SET_IN_GAME_HUD )
-					{
-						bNeedMenu = true;
-					}
-					else if ( actionset == GAME_ACTION_SET_SPECTATOR )
-					{
-						bNeedSpectator = true;
-					}
-				}
-			}
-		}
-		
-		// Set the preferred action set. Requesting menu trumps hud, which trumps spectator, which trumps fps.
-		if ( !engine->IsInGame() || !engine->IsConnected() || enginevgui->IsGameUIVisible() || bNeedMenu )
-		{
-			::input->SetPreferredGameActionSet( GAME_ACTION_SET_MENUCONTROLS );
-		}
-		else if ( bNeedHUD )
-		{
-			::input->SetPreferredGameActionSet( GAME_ACTION_SET_IN_GAME_HUD );
-		}
-		else if ( bNeedSpectator || (pLocalPlayer && pLocalPlayer->GetTeamNumber() == TEAM_SPECTATOR) )
-		{
-			::input->SetPreferredGameActionSet( GAME_ACTION_SET_SPECTATOR );
-		}
-		else
-		{
-			::input->SetPreferredGameActionSet( GAME_ACTION_SET_FPSCONTROLS );
-		}
-
-		// Adjust look sensitivity down if the player is current using a zoomed-in weapon (typically sniper rifle).
-		float look_sensitivity = 0.125f;
-		if ( pLocalPlayer && pLocalPlayer->m_Shared.InCond( TF_COND_ZOOMED ) )
-		{
-			look_sensitivity = 0.035f;
-		}
-
-		// Set the flag for special action handling if we're taunting
-		if ( pLocalPlayer && pLocalPlayer->m_Shared.InCond( TF_COND_TAUNTING ) )
-		{
-			::input->SetGameActionSetFlags( GAME_ACTION_SET_FLAGS_TAUNTING );
-		}
-		else
-		{
-			::input->SetGameActionSetFlags( GAME_ACTION_SET_FLAGS_NONE );
-		}
-
-		sc_look_sensitivity_scale.SetValue( look_sensitivity );
-	}
-
+	
 	if ( !engine->IsInGame() )
 	{
 		// @note Tom Bui: we want this thing to always run, so we get animations at the main menu
@@ -1982,13 +1844,6 @@ void ClientModeTFNormal::Update()
 	{
 		m_wasConnectedLastUpdate = true;
 	}
-}
-
-
-//----------------------------------------------------------------------------
-void	ClientModeTFNormal::ComputeVguiResConditions( KeyValues *pkvConditions ) 
-{
-	BaseClass::ComputeVguiResConditions( pkvConditions );
 }
 
 

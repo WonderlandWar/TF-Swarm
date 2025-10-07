@@ -35,7 +35,7 @@ public:
 	virtual int		GetRenderGroupPriority() OVERRIDE { return 51; }
 	void			WantsToTeleport( void );
 
-	virtual GameActionSet_t GetPreferredActionSet() { return IsActive() ? GAME_ACTION_SET_IN_GAME_HUD : GAME_ACTION_SET_NONE; }
+	//	virtual GameActionSet_t GetPreferredActionSet() { return IsActive() ? GAME_ACTION_SET_IN_GAME_HUD : GAME_ACTION_SET_NONE; }
 
 private:
 	void SetSelectedItem( eEurekaTeleportTargets eSelectedTeleportTarget );

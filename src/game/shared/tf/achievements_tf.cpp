@@ -21,7 +21,7 @@
 #include "usermessages.h"
 
 // NVNT include for tf2 damage
-#include "haptics/haptic_utils.h"
+//#include "haptics/haptic_utils.h"
 
 CAchievementMgr g_AchievementMgrTF;	// global achievement mgr for TF
 
@@ -135,7 +135,7 @@ void CTFAchievementFullRound::FireGameEvent_Internal( IGameEvent *event )
 //-----------------------------------------------------------------------------
 bool CTFAchievementFullRound::PlayerWasInEntireRound( float flRoundTime )
 {
-	float flTeamplayStartTime = m_pAchievementMgr->GetTeamplayStartTime();
+	float flTeamplayStartTime = m_pAchievementMgr->GetTeamplayStartTime( GET_ACTIVE_SPLITSCREEN_SLOT() );
 	if ( flTeamplayStartTime > 0 ) 
 	{	
 		// has the player been present and on a game team since the start of this round (minus a grace period)?
@@ -160,7 +160,7 @@ class CAchievementTFPlayGameEveryClass : public CTFAchievementFullRound
 
 	virtual void Event_OnRoundComplete( float flRoundTime, IGameEvent *event )
 	{
-		float flLastClassChangeTime = m_pAchievementMgr->GetLastClassChangeTime();
+		float flLastClassChangeTime = m_pAchievementMgr->GetLastClassChangeTime( GET_ACTIVE_SPLITSCREEN_SLOT() );
 		if ( flLastClassChangeTime > 0 ) 
 		{					
 			// has the player been present and not changed class since the start of this round (minus a grace period)?
@@ -206,7 +206,7 @@ class CAchievementTFPlayGameEveryMap : public CTFAchievementFullRound
 
 	virtual void Event_OnRoundComplete( float flRoundTime, IGameEvent *event )
 	{
-		float flTeamplayStartTime = m_pAchievementMgr->GetTeamplayStartTime();
+		float flTeamplayStartTime = m_pAchievementMgr->GetTeamplayStartTime( GET_ACTIVE_SPLITSCREEN_SLOT() );
 		if ( flTeamplayStartTime > 0 ) 
 		{	
 			// has the player been present and on a game team since the start of this round (minus a grace period)?
@@ -235,7 +235,7 @@ class CAchievementTFGetHealPoints : public CBaseTFAchievementSimple
 		m_iCount = classStats.accumulated.m_iStat[TFSTAT_HEALING];
 		if ( m_iCount != iOldCount )
 		{
-			m_pAchievementMgr->SetDirty( true );
+			m_pAchievementMgr->SetDirty( true, GET_ACTIVE_SPLITSCREEN_SLOT() );
 		}
 
 		if ( IsLocalTFPlayerClass( TF_CLASS_MEDIC ) )
@@ -295,7 +295,7 @@ class CAchievementTFGetHeadshots: public CBaseTFAchievementSimple
 		m_iCount = classStats.accumulated.m_iStat[TFSTAT_HEADSHOTS];
 		if ( m_iCount != iOldCount )
 		{
-			m_pAchievementMgr->SetDirty( true );
+			m_pAchievementMgr->SetDirty( true, GET_ACTIVE_SPLITSCREEN_SLOT() );
 		}
 
 		if ( IsLocalTFPlayerClass( TF_CLASS_SNIPER ) )
@@ -457,7 +457,7 @@ class CAchievementTFGetMultipleKills : public CBaseTFAchievementSimple
 		m_iCount = iKills;
 		if ( m_iCount != iOldCount )
 		{
-			m_pAchievementMgr->SetDirty( true );
+			m_pAchievementMgr->SetDirty( true, GET_ACTIVE_SPLITSCREEN_SLOT() );
 		}
 
 		EvaluateNewAchievement();
@@ -549,7 +549,7 @@ class CAchievementTFWinHydroNoEnemyCaps : public CBaseTFAchievementSimple
 	{
 		// winning hydro with no enemy caps means there were 2 previous minirounds completed (3 total for a shutout)
 		// and local player's team won the final round
-		if ( ( 2 == m_pAchievementMgr->GetMiniroundsCompleted() ) && ( CheckWinNoEnemyCaps( event, TEAM_ROLE_NONE ) ) )
+		if ( ( 2 == m_pAchievementMgr->GetMiniroundsCompleted( GET_ACTIVE_SPLITSCREEN_SLOT() ) ) && ( CheckWinNoEnemyCaps( event, TEAM_ROLE_NONE ) ) )
 		{
 			IncrementCount();
 		}
@@ -575,7 +575,7 @@ class CAchievementTFWinDustbowlNoEnemyCaps : public CBaseTFAchievementSimple
 	{
 		// defending dustbowl with no enemy caps means there were no previous minirounds completed (that would be an attacker capture),
 		// the player was on the defending team and they won with no enemy caps
-		if ( ( 0 == m_pAchievementMgr->GetMiniroundsCompleted() ) && CheckWinNoEnemyCaps( event, TEAM_ROLE_DEFENDERS ) )
+		if ( ( 0 == m_pAchievementMgr->GetMiniroundsCompleted( GET_ACTIVE_SPLITSCREEN_SLOT() ) ) && CheckWinNoEnemyCaps( event, TEAM_ROLE_DEFENDERS ) )
 		{
 			IncrementCount();
 		}
@@ -735,15 +735,6 @@ USER_MESSAGE( Damage )
 	Vector attackDirectionLocal(vec3_origin);
 	// rotate the direction to the local players view
 	pLocal->WorldToEntitySpace(attackerPosition, &attackDirectionLocal);
-	
-	if ( haptics )
-	{
-		Vector hapticSpace( attackDirectionLocal.y, -attackDirectionLocal.z, attackDirectionLocal.x );
-
-		hapticSpace.NormalizeInPlace();
-
-		haptics->ApplyDamageEffect((float)iDamage, iDmgBits, hapticSpace);
-	}
 	// NVNT END
 }
 
@@ -753,7 +744,7 @@ USER_MESSAGE( UpdateAchievement )
 	int iIndex = (int) msg.ReadShort();
 	int nData = (int) msg.ReadShort();
 
-	g_AchievementMgrTF.UpdateAchievement( iIndex, nData );
+	g_AchievementMgrTF.UpdateAchievement( iIndex, nData, GET_ACTIVE_SPLITSCREEN_SLOT() );
 }
 
 // Receive the PlayerJarated user message and send out a clientside event for achievements to hook.

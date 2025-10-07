@@ -18,7 +18,7 @@
 #include "tf_hud_mainmenuoverride.h"
 #include "tf_matchmaking_dashboard_parent_manager.h"
 #include "vgui_int.h"
-#include "../../vgui2/src/VPanel.h"
+//#include "../../vgui2/src/VPanel.h"
 
 //-----------------------------------------------------------------------------
 // Purpose: Panel that lives on the viewport that is a popup that we parent
@@ -103,7 +103,7 @@ void CMMDashboardParentManager::UpdateParenting()
 //-----------------------------------------------------------------------------
 void CMMDashboardParentManager::AttachToGameUI()
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	if ( !m_pHUDPopup )
 	{
@@ -132,7 +132,7 @@ void CMMDashboardParentManager::AttachToGameUI()
 
 void CMMDashboardParentManager::AttachToTopMostPopup()
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	// Not being used.  Hide it.
 	if ( m_pHUDPopup )
@@ -144,7 +144,7 @@ void CMMDashboardParentManager::AttachToTopMostPopup()
 
 	if ( vgui::surface()->GetPopupCount() > 0 )
 	{
-		tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s - Popup traverse", __FUNCTION__ );
+		//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s - Popup traverse", __FUNCTION__ );
 		int nSurfaceWide, nSurfaceTall;
 		vgui::surface()->GetScreenSize( nSurfaceWide, nSurfaceTall );
 
@@ -181,14 +181,14 @@ void CMMDashboardParentManager::AttachToTopMostPopup()
 
 	Panel *pPopup = ipanel()->GetPanel( (VPANEL)top, GetControlsModuleName());
 
-	if ( !pPopup && gViewPortInterface )
+	if ( !pPopup && GetViewPortInterface() )
 	{
-		pPopup = (CHudMainMenuOverride*)( gViewPortInterface->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
+		pPopup = (CHudMainMenuOverride*)( GetViewPortInterface()->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
 	}
 
 	if ( pPopup )
 	{
-		tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s - Popup reparent", __FUNCTION__ );
+		//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s - Popup reparent", __FUNCTION__ );
 
 		FOR_EACH_VEC( m_vecPanels, i )
 		{	

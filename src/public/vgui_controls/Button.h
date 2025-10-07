@@ -185,7 +185,7 @@ protected:
 	KeyValues *GetActionMessage();
 	void PlayButtonReleasedSound();
 
-private:
+protected:
 	enum ButtonFlags_t
 	{
 		ARMED					= 0x0001,

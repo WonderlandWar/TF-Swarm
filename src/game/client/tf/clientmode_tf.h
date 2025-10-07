@@ -53,7 +53,7 @@ public:
 	virtual bool	ShouldDrawViewModel();
 	virtual bool	ShouldDrawCrosshair( void );
 	virtual bool	ShouldBlackoutAroundHUD() OVERRIDE;
-	virtual HeadtrackMovementMode_t ShouldOverrideHeadtrackControl() OVERRIDE;
+	//virtual HeadtrackMovementMode_t ShouldOverrideHeadtrackControl() OVERRIDE;
 
 	int				GetDeathMessageStartHeight( void );
 
@@ -67,7 +67,6 @@ public:
 
 	virtual bool	DoPostScreenSpaceEffects( const CViewSetup *pSetup );
 	virtual void	Update();
-	virtual void	ComputeVguiResConditions( KeyValues *pkvConditions ) OVERRIDE;
 
 	virtual bool	IsInfoPanelAllowed() OVERRIDE;
 	virtual void	InfoPanelDisplayed() OVERRIDE;
@@ -83,7 +82,7 @@ public:
 	void			PrintTextToChatPlayer( int iPlayerIndex, const char *pText, KeyValues *pKeyValues = NULL );
 
 #if !defined(NO_STEAM)
-	STEAM_CALLBACK_MANUAL( ClientModeTFNormal, OnScreenshotRequested, ScreenshotRequested_t, m_CallbackScreenshotRequested );
+	//STEAM_CALLBACK_MANUAL( ClientModeTFNormal, OnScreenshotRequested, ScreenshotRequested_t, m_CallbackScreenshotRequested );
 #endif
 
 	bool IsEngyBuildVisible() const;

@@ -6708,7 +6708,7 @@ void CTFWeaponBase::UpdateAllViewmodelAddons( void )
 }
 
 // StatTrak Module Testing
-void CTFWeaponBase::AddStatTrakModel( CEconItemView *pItem, int nStatTrakType, AccountID_t holderAcctId )
+void CTFWeaponBase::AddStatTrakModel( CEconItemView *pItem, int nStatTrakType, uint32 holderAcctId )
 {
 	// Already has module, just early out
 	if ( m_viewmodelStatTrakAddon && m_viewmodelStatTrakAddon.Get() && m_viewmodelStatTrakAddon->GetMoveParent() )
@@ -6768,10 +6768,10 @@ void CTFWeaponBase::AddStatTrakModel( CEconItemView *pItem, int nStatTrakType, A
 			CTFWeaponAttachmentModel *pStatTrakEnt = new class CTFWeaponAttachmentModel;
 			if ( pStatTrakEnt )
 			{
-				pStatTrakEnt->InitializeAsClientEntity( attrModule.value().c_str(), RENDER_GROUP_VIEW_MODEL_OPAQUE );
+				pStatTrakEnt->InitializeAsClientEntity( attrModule.value().c_str(), false );
 				
 				pStatTrakEnt->Init( GetViewmodelAttachment(), this, true );
-				pStatTrakEnt->m_nSkin = nSkin;
+				pStatTrakEnt->SetSkin( nSkin );
 				m_viewmodelStatTrakAddon = pStatTrakEnt;
 				
 				if ( cl_flipviewmodels.GetBool() )
@@ -6794,10 +6794,10 @@ void CTFWeaponBase::AddStatTrakModel( CEconItemView *pItem, int nStatTrakType, A
 		CTFWeaponAttachmentModel *pStatTrakEnt = new class CTFWeaponAttachmentModel;
 		if ( pStatTrakEnt )
 		{
-			pStatTrakEnt->InitializeAsClientEntity( attrModule.value().c_str(), RENDER_GROUP_OPAQUE_ENTITY );
+			pStatTrakEnt->InitializeAsClientEntity( attrModule.value().c_str(), false );
 			pStatTrakEnt->SetModelScale( flScale );
 			pStatTrakEnt->Init( this, this, false );
-			pStatTrakEnt->m_nSkin = nSkin;
+			pStatTrakEnt->SetSkin( nSkin );
 			m_worldmodelStatTrakAddon = pStatTrakEnt;
 			
 			

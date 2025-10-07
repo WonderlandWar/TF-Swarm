@@ -66,6 +66,7 @@ CBaseAchievement::CBaseAchievement()
 	m_bAchieved = false;
 	m_pAchievementMgr = NULL;
 	m_nUserSlot = 0;
+	m_pszStat = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -209,8 +210,8 @@ void CBaseAchievement::IncrementCount( int iOptIncrement )
 	}
 #endif
 #endif
-
-	if ( !IsAchieved() )
+	
+	if ( !IsAchieved() && LocalPlayerCanEarn() )
 	{
 		if ( !m_pAchievementMgr->CheckAchievementsEnabled() )
 		{

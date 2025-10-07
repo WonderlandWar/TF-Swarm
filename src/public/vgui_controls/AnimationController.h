@@ -68,6 +68,11 @@ public:
 		INTERPOLATOR_PULSE,
 		INTERPOLATOR_FLICKER,
 		INTERPOLATOR_SIMPLESPLINE, // ease in / out
+
+		// TF_SWARM: replacements for things that don't exist in swarm
+		INTERPOLATOR_BOUNCE = INTERPOLATOR_LINEAR,	   // gravitational bounce
+		INTERPOLATOR_BIAS = INTERPOLATOR_LINEAR,
+		INTERPOLATOR_GAIN = INTERPOLATOR_LINEAR,
 	};
 
 	// runs the specific animation command (doesn't use script file at all)

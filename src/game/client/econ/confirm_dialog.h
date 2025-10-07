@@ -37,7 +37,7 @@ public:
 	void Show( bool bMakePopup = true );
 	void SetIconImage( const char *pszIcon );
 
-	virtual GameActionSet_t GetPreferredActionSet() const { return GAME_ACTION_SET_MENUCONTROLS; }
+	//virtual GameActionSet_t GetPreferredActionSet() const { return GAME_ACTION_SET_MENUCONTROLS; }
 
 protected:
 	virtual void		OnSizeChanged(int nNewWide, int nNewTall );
@@ -183,7 +183,7 @@ public:
 	virtual const char *GetResFile() OVERRIDE { return "Resource/UI/ReviveDialog.res"; }
 	void SetOwner( CBaseEntity *pEntity );
 
-	virtual GameActionSet_t GetPreferredActionSet() const OVERRIDE { return GAME_ACTION_SET_IN_GAME_HUD; }
+	//virtual GameActionSet_t GetPreferredActionSet() const OVERRIDE { return GAME_ACTION_SET_IN_GAME_HUD; }
 
 	CTFSpectatorGUIHealth *m_pTargetHealth;
 	CHandle< C_BaseEntity >	m_hEntity;

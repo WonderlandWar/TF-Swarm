@@ -1898,10 +1898,24 @@ public:
 	{
 		return s_bAbsQueriesValid;
 	}
+	
+	virtual bool ShouldBlockNav() const { return true; }
+	
+	virtual bool ShouldForceTransmitsForTeam( int iTeam ) { return false; }
+
+	void 			SetTruceValidForEnt( bool bTruceValidForEnt ) { m_bTruceValidForEnt = bTruceValidForEnt; }
+	virtual bool	IsTruceValidForEnt( void ) const { return m_bTruceValidForEnt; }
 
 #ifdef TF_DLL
 	virtual float GetDefaultItemChargeMeterValue( void ) const { return 100.f; }
 #endif // TF_DLL
+	
+	virtual bool BCanCallVote() { return true; }
+
+private:
+	//CThreadFastMutex m_CalcAbsolutePositionMutex;
+
+	bool	m_bTruceValidForEnt;
 
 public:
 

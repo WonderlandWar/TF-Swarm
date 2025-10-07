@@ -53,7 +53,7 @@ static void RetrieveLeaderboardEntries( LeaderboardScoresDownloaded_t &scores, C
 
 CLeaderboardInfo::CLeaderboardInfo( const char *pLeaderboardName )
 {
-	m_pLeaderboardName = pLeaderboardName ? V_strdup( pLeaderboardName ) : NULL;
+	m_pLeaderboardName = pLeaderboardName ? strdup( pLeaderboardName ) : NULL;
 	memset( &findLeaderboardResults, 0, sizeof( findLeaderboardResults ) );
 	iNumLeaderboardEntries = 0;
 	m_kLeaderboardType = kMapLeaderboard;
@@ -579,7 +579,7 @@ bool Leaderboards_GetDuelWins( CUtlVector< LeaderboardEntry_t* > &scores, bool b
 }
 //-----------------------------------------------------------------------------
 // DUCKS
-void Leaderboards_GetDuckLeaderboardSteamIDs( CUtlVector< AccountID_t > &vecIds )
+void Leaderboards_GetDuckLeaderboardSteamIDs( CUtlVector< uint32 > &vecIds )
 {
 	vecIds.RemoveAll();
 	FOR_EACH_VEC( gMapInfoContainer.m_vecDuckInfo, i )

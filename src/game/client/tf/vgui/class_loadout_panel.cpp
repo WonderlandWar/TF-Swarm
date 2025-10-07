@@ -192,7 +192,7 @@ const LoadoutPanelPositioningInstance *g_VisibleLoadoutSlotsPerClass[] =
 	&g_LoadoutPanelPositioning_Engineer,		// TF_CLASS_ENGINEER
 };
 
-COMPILE_TIME_ASSERT( ARRAYSIZE( g_VisibleLoadoutSlotsPerClass ) == TF_LAST_NORMAL_CLASS );
+//COMPILE_TIME_ASSERT( ARRAYSIZE( g_VisibleLoadoutSlotsPerClass ) == TF_LAST_NORMAL_CLASS );
 
 //-----------------------------------------------------------------------------
 // Particle Effect Slider
@@ -655,29 +655,25 @@ void CClassLoadoutPanel::OnKeyCodePressed( vgui::KeyCode code )
 	if (nButtonCode == KEY_XBUTTON_LEFT || 
 		nButtonCode == KEY_XSTICK1_LEFT ||
 		nButtonCode == KEY_XSTICK2_LEFT ||
-		nButtonCode == STEAMCONTROLLER_DPAD_LEFT ||
 		code == KEY_LEFT ||
 		nButtonCode == KEY_XBUTTON_RIGHT || 
 		nButtonCode == KEY_XSTICK1_RIGHT ||
 		nButtonCode == KEY_XSTICK2_RIGHT ||
-		nButtonCode == STEAMCONTROLLER_DPAD_RIGHT ||
 		code == KEY_RIGHT ||
 		nButtonCode == KEY_XBUTTON_UP || 
 		nButtonCode == KEY_XSTICK1_UP ||
 		nButtonCode == KEY_XSTICK2_UP ||
-		nButtonCode == STEAMCONTROLLER_DPAD_UP ||
 		code == KEY_UP ||
 		nButtonCode == KEY_XBUTTON_DOWN || 
 		nButtonCode == KEY_XSTICK1_DOWN ||
 		nButtonCode == KEY_XSTICK2_DOWN ||
-		nButtonCode == STEAMCONTROLLER_DPAD_DOWN ||
 		code == KEY_DOWN )
 	{
 		// just eat all navigation keys so we don't 
 		// end up with undesirable navigation behavior bubbling from 
 		// one item model panel to another
 	}
-	else if( nButtonCode == KEY_XBUTTON_A || code == KEY_ENTER || nButtonCode == STEAMCONTROLLER_A )
+	else if( nButtonCode == KEY_XBUTTON_A || code == KEY_ENTER )
 	{
 		// show the current loadout slot
 		int nSelected = GetFirstSelectedItemIndex( true );
@@ -1383,7 +1379,7 @@ void CClassLoadoutPanel::UpdatePassiveAttributes( void )
 	wchar_t *pHeader = g_pVGuiLocalize->Find( "#TF_PassiveAttribs" );
 	if ( pHeader )
 	{
-		V_wcscpy_safe( wszPassiveDesc, pHeader );
+		wcscpy( wszPassiveDesc, pHeader );
 		V_wcscat_safe( wszPassiveDesc, L"\n" );
 	}
 

@@ -1611,6 +1611,14 @@ void CBaseCombatWeapon::ItemPreFrame( void )
 #endif
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool CBaseCombatWeapon::CanPerformSecondaryAttack() const
+{
+	return m_flNextSecondaryAttack <= gpGlobals->curtime;
+}
+
 //====================================================================================
 // WEAPON BEHAVIOUR
 //====================================================================================
@@ -1652,7 +1660,7 @@ void CBaseCombatWeapon::ItemPostFrame( void )
 			m_flNextPrimaryAttack = gpGlobals->curtime + 0.2;
 			return;
 		}
-		else
+		else if ( CanPerformSecondaryAttack() )
 		{
 			// FIXME: This isn't necessarily true if the weapon doesn't have a secondary fire!
 			// For instance, the crossbow doesn't have a 'real' secondary fire, but it still 
@@ -2465,8 +2473,8 @@ bool CBaseCombatWeapon::IsLocked( CBaseEntity *pAsker )
 //-----------------------------------------------------------------------------
 Activity CBaseCombatWeapon::ActivityOverride( Activity baseAct, bool *pRequired )
 {
-	acttable_t *pTable = ActivityList();
-	int actCount = ActivityListCount();
+	int actCount = 0;
+	acttable_t *pTable = ActivityList( actCount );
 
 	for ( int i = 0; i < actCount; i++, pTable++ )
 	{

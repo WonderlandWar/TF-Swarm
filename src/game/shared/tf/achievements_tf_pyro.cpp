@@ -972,7 +972,7 @@ class CAchievementTFPyro_DamageGrind : public CBaseTFAchievement
 		m_iCount = classStats.accumulated.m_iStat[TFSTAT_FIREDAMAGE];
 		if ( m_iCount != iOldCount )
 		{
-			m_pAchievementMgr->SetDirty( true );
+			m_pAchievementMgr->SetDirty( true, GET_ACTIVE_SPLITSCREEN_SLOT() );
 		}
 
 		if ( IsLocalTFPlayerClass( TF_CLASS_PYRO ) )

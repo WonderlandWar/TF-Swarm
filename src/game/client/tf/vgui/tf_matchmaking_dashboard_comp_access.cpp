@@ -94,7 +94,7 @@ public:
 		{
 			if ( m_pRankImage )
 			{
-				m_pRankImage->SetupBadge( pMatchDesc, SteamUser()->GetSteamID() );
+				m_pRankImage->SetupBadge( pMatchDesc, steamapicontext->SteamUser()->GetSteamID() );
 			}
 
 			bool bHighEnoughLevel = false;
@@ -103,7 +103,7 @@ public:
 				if ( steamapicontext && steamapicontext->SteamUser() )
 				{
 					CSteamID steamID = steamapicontext->SteamUser()->GetSteamID();
-					const auto pRankRating = CTFRatingData::YieldingGetPlayerRatingDataBySteamID( SteamUser()->GetSteamID(), pMatchDesc->GetCurrentDisplayRank() );
+					const auto pRankRating = CTFRatingData::YieldingGetPlayerRatingDataBySteamID( steamapicontext->SteamUser()->GetSteamID(), pMatchDesc->GetCurrentDisplayRank() );
 					if ( pRankRating )
 					{
 						auto level = pMatchDesc->m_pProgressionDesc->GetLevelByNumber( pRankRating->GetRatingData().unRatingPrimary );

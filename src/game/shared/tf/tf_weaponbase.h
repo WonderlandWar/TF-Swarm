@@ -638,7 +638,7 @@ class CTFWeaponBase : public CBaseCombatWeapon, public IHasOwner, public IHasGen
 	// StatTrak View Model Test
 	void					UpdateAllViewmodelAddons( void );
 
-	void					AddStatTrakModel( CEconItemView *pItem, int nStatTrakType, AccountID_t holderAcctId );
+	void					AddStatTrakModel( CEconItemView *pItem, int nStatTrakType, uint32 holderAcctId );
 	void					RemoveViewmodelStatTrak( void );
 	void					RemoveWorldmodelStatTrak( void );
 

@@ -139,7 +139,7 @@ void C_TFTeam::UpdateTeamName( void )
 											  ( g_TF_PR->GetEventTeamStatus() == 1 ? "#TF_Pyro" : "#TF_HWGuy" ) :
 											  ( g_TF_PR->GetEventTeamStatus() == 1 ? "#TF_HWGuy" : "#TF_Pyro" );
 					wchar_t *pwzWarTeam = g_pVGuiLocalize->Find( pszTeamName );
-					V_swprintf_safe( m_wzTeamname, pFormat, pwzWarTeam );
+					swprintf( m_wzTeamname, pFormat, pwzWarTeam );
 					m_bUsingCustomTeamName = true;
 					return;
 				}
@@ -149,7 +149,7 @@ void C_TFTeam::UpdateTeamName( void )
 					if ( g_TF_PR->IsConnected( iPlayerIndex ) )
 					{
 						g_pVGuiLocalize->ConvertANSIToUnicode( UTIL_SafeName( g_TF_PR->GetPlayerName( iPlayerIndex ) ), wszTempName, sizeof( wszTempName ) );
-						V_swprintf_safe( m_wzTeamname, pFormat, wszTempName );
+						swprintf( m_wzTeamname, pFormat, wszTempName );
 						m_bUsingCustomTeamName = true;
 						return;
 					}
@@ -203,7 +203,7 @@ void C_TFTeam::UpdateTeamName( void )
 		}
 	}
 
-	V_wcscpy_safe( m_wzTeamname, pwzName ? pwzName : L"" );
+	wcscpy( m_wzTeamname, pwzName ? pwzName : L"" );
 }
 
 //-----------------------------------------------------------------------------

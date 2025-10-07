@@ -9,6 +9,7 @@
 #include "vguitextwindow.h"
 #include <networkstringtabledefs.h>
 #include <cdll_client_int.h>
+#include <clientmode_shared.h>
 
 #include <vgui/IScheme.h>
 #include <vgui/ILocalize.h>
@@ -30,6 +31,8 @@ using namespace vgui;
 extern INetworkStringTable *g_pStringTableInfoPanel;
 
 #define TEMP_HTML_FILE	"textwindow_temp.html"
+
+ConVar cl_disablehtmlmotd( "cl_disablehtmlmotd", "0", FCVAR_ARCHIVE, "Disable HTML motds." );
 
 #define MINI_MOTD_FADE_TIME 2.5f
 #define MINI_MOTD_HOLD_TIME 5.0f;
@@ -158,9 +161,32 @@ void CTextWindow::ShowText( const char *text)
 	m_pTextMessage->GotoTextStart();
 }
 
-void CTextWindow::ShowURL( const char *URL)
+void CTextWindow::ShowURL( const char *URL, bool bAllowUserToDisable )
 {
 #if defined( ENABLE_HTMLWINDOW )
+	ClientModeShared *mode = ( ClientModeShared * )GetClientModeNormal();
+	if ( ( bAllowUserToDisable && cl_disablehtmlmotd.GetBool() ) || !mode->IsHTMLInfoPanelAllowed() )
+	{
+		Warning( "Blocking HTML info panel '%s'; Using plaintext instead.\n", URL );
+
+		// User has disabled HTML TextWindows. Show the fallback as text only.
+		if ( g_pStringTableInfoPanel )
+		{
+			int index = g_pStringTableInfoPanel->FindStringIndex( "motd_text" );
+			if ( index != ::INVALID_STRING_INDEX )
+			{
+				int length = 0;
+				const char *data = (const char *)g_pStringTableInfoPanel->GetStringUserData( index, &length );
+				if ( data && data[0] )
+				{
+					m_pHTMLMessage->SetVisible( false );
+					ShowText( data );
+				}
+			}
+		}
+		return;
+	} 
+
 	m_pHTMLMessage->SetVisible( true );
 	m_pHTMLMessage->OpenURL( URL );
 #endif

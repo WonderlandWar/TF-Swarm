@@ -300,8 +300,8 @@ public:
 
 	inline float					GetPlaybackRate() const;
 	inline void						SetPlaybackRate( float rate );
-
-	void							SetModelScale( float scale );
+	
+	void							SetModelScale( float scale, float change_duration = 0.0f  );
 	inline float					GetModelScale() const { return m_flModelScale; }
 	inline bool						IsModelScaleFractional() const;  /// very fast way to ask if the model scale is < 1.0f  (faster than if (GetModelScale() < 1.0f) )
 

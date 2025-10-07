@@ -225,7 +225,8 @@ bool C_PasstimeGoalReticle::Update()
 	auto teamColor = GetTeamColor( pEnt->GetTeamNumber() );
 
 	auto vec = pGoal->WorldSpaceCenter();
-	auto facingFrac = MainViewForward().Dot( (vec - MainViewOrigin()).Normalized() );
+	int splitslot = GET_ACTIVE_SPLITSCREEN_SLOT();
+	auto facingFrac = MainViewForward( splitslot ).Dot( (vec - MainViewOrigin( splitslot )).Normalized() );
 	if ( facingFrac < 0.6 )
 	{
 		return false;
@@ -242,7 +243,7 @@ bool C_PasstimeGoalReticle::Update()
 	float tmp;
 	flPulseFrac = 1.0f - modff( gpGlobals->curtime, &tmp );
 	SetOrigin( 1, vec + Vector(0, 0, flPulseFrac * 64) );
-	SetAllNormals( -MainViewForward() );
+	SetAllNormals( -MainViewForward( splitslot ) );
 	SetRgba( 1, teamColor.r(), teamColor.g(), teamColor.b(), flPulseFrac * (255 * facingFrac) );
 	return true;
 }
@@ -279,8 +280,8 @@ bool C_PasstimePassReticle::Update()
 	{
 		return false;
 	}
-	
-	SetAllNormals( -MainViewForward() );
+	int splitslot = GET_ACTIVE_SPLITSCREEN_SLOT();
+	SetAllNormals( -MainViewForward( splitslot ) );
 
 	// the player's actual pass target always takes precedence, but if it's
 	// not set, try to find a candidate and display a hint for that
@@ -298,7 +299,7 @@ bool C_PasstimePassReticle::Update()
 		SetRgba( 1, neutralColor.r(), neutralColor.g(), neutralColor.b(), 255 );
 		SetRgba( 2, teamColor.r(), teamColor.g(), teamColor.b(), iAlpha );
 
-		auto flDist = (vecTargetPos - MainViewOrigin()).Length();
+		auto flDist = (vecTargetPos - MainViewOrigin( splitslot )).Length();
 		auto flScale = RemapValClamped( flDist, 768.0f, 8192.0f, 1.0f, 8.0f );
 		SetAllScales( flScale * kPassReticleScale * 2 );
 	}
@@ -323,7 +324,7 @@ bool C_PasstimePassReticle::Update()
 		auto vecTargetPos = m_hTarget->WorldSpaceCenter();
 		SetAllOrigins( vecTargetPos );
 	
-		auto flDist = (vecTargetPos - MainViewOrigin()).Length();
+		auto flDist = (vecTargetPos - MainViewOrigin( splitslot )).Length();
 		auto flScale = RemapValClamped( flDist, 768.0f, 8192.0f, 1.0f, 8.0f );
 		SetAllScales( flScale * kPassReticleScale );
 	}
@@ -340,8 +341,9 @@ void C_PasstimePassReticle::FindPassHintTarget( C_TFPlayer *pLocalPlayer )
 
 	auto flFovDeg = 70;
 	auto flDotFov = cosf( DEG2RAD( flFovDeg / 2.0f ) );
-	auto vecViewPos = MainViewOrigin();
-	auto vecViewFwd = MainViewForward();
+	int splitslot = GET_ACTIVE_SPLITSCREEN_SLOT();
+	auto vecViewPos = MainViewOrigin( splitslot );
+	auto vecViewFwd = MainViewForward( splitslot );
 
 	auto flMaxPassDist = g_pPasstimeLogic->GetMaxPassRange() - 400; // arbitrary, based on TF_MAX_SPEED
 
@@ -412,7 +414,7 @@ void C_PasstimeBounceReticle::Show( const Vector &vec, const Vector &normal )
 	SetOrigin( 0, vec );
 	SetOrigin( 1, vec );//+ (normal * 16) );
 	SetNormal( 0, normal );
-	SetNormal( 1, -MainViewForward() );
+	SetNormal( 1, -MainViewForward( GET_ACTIVE_SPLITSCREEN_SLOT() ) );
 	SetRgba( 0, 255, 255, 0, 200 );
 	SetRgba( 1, 255, 255, 0, 200 );
 }
@@ -519,24 +521,24 @@ bool C_PasstimePlayerReticle::Update()
 	{
 		return false;
 	}
-
+	int splitslot = GET_ACTIVE_SPLITSCREEN_SLOT();
 	trace_t	tr;
 	CTraceFilterIgnorePlayers tracefilter( pLocalPlayer, COLLISION_GROUP_PROJECTILE );
-	UTIL_TraceLine( MainViewOrigin(), vecTarget, MASK_PLAYERSOLID, &tracefilter, &tr );
+	UTIL_TraceLine( MainViewOrigin( splitslot ), vecTarget, MASK_PLAYERSOLID, &tracefilter, &tr );
 	if ( tr.fraction == 1 )
 	{
 		// made it all the way, the guy is visible so hide the icon
 		return false;
 	}
 
-	auto flDist = (vecTarget - MainViewOrigin()).Length();
+	auto flDist = (vecTarget - MainViewOrigin( splitslot )).Length();
 	auto flScale = RemapValClamped( flDist, 1024.0f, 4096.0f, 80, 128 );
 
 	SetAlpha( iHideSprite, 0 );
 	SetAlpha( iShowSprite, 100 );
 	SetAllScales( flScale );
 	SetAllOrigins( vecTarget );
-	SetAllNormals( -MainViewForward() );
+	SetAllNormals( -MainViewForward( GET_ACTIVE_SPLITSCREEN_SLOT() ) );
 	return true;
 }
 
@@ -590,12 +592,12 @@ bool C_PasstimeAskForBallReticle::Update()
 	{
 		return false;
 	}
-
-	auto flDist = (vecTarget - MainViewOrigin()).Length();
+	int splitslot = GET_ACTIVE_SPLITSCREEN_SLOT();
+	auto flDist = (vecTarget - MainViewOrigin( splitslot )).Length();
 	auto flScale = RemapValClamped( flDist, 1024.0f, 4096.0f, 40, 200 );
 	SetAllScales( flScale );
 	SetAllOrigins( vecTarget );
-	SetAllNormals( -MainViewForward() );
+	SetAllNormals( -MainViewForward( splitslot ) );
 	SetRgba( 0, 255, 255, 255, (((int)(gpGlobals->curtime * 10)) & 1 ? 200 : 0) );
 	return true;
 }

@@ -12,6 +12,8 @@
 #pragma once
 #endif
 
+#include "tier0/platform.h"
+
 // -------------------------------------------------------
 //
 // commonmacros.h
@@ -145,6 +147,22 @@ char (*RtlpNumberOf( UNALIGNED T (&)[N] ))[N];
 // _ARRAYSIZE is a version useful for anonymous types
 #define ARRAYSIZE(A)    RTL_NUMBER_OF_V2(A)
 #define _ARRAYSIZE(A)   RTL_NUMBER_OF_V1(A)
+
+template< typename IndexType, typename T, unsigned int N >
+IndexType ClampedArrayIndex( const T (&buffer)[N], IndexType index )
+{
+	NOTE_UNUSED( buffer );
+	return clamp( index, 0, (IndexType)N - 1 );
+}
+
+template< typename T, unsigned int N >
+T ClampedArrayElement( const T (&buffer)[N], unsigned int uIndex )
+{
+	// Put index in an unsigned type to halve the clamping.
+	if ( uIndex >= N )
+		uIndex = N - 1;
+	return buffer[ uIndex ];
+}
 
 #endif // COMMONMACROS_H
 

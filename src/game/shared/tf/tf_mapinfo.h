@@ -98,7 +98,7 @@ bool MapInfo_DidPlayerDonate( uint32 unAccountID, const char *pLevelName );
 bool Leaderboards_GetDuelWins( CUtlVector< LeaderboardEntry_t* > &scores, bool bGlobal );
 
 // Get a list of AccountID's for all people on the Duck Leaderboards
-void Leaderboards_GetDuckLeaderboardSteamIDs( CUtlVector< AccountID_t > &vecIds );
+void Leaderboards_GetDuckLeaderboardSteamIDs( CUtlVector< uint32 > &vecIds );
 
 /**
  * Retrieve the duel wins leaderboard

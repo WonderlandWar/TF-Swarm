@@ -20,7 +20,7 @@
 #include "achievements_tf.h"
 
 // NVNT include for tf2 damage
-#include "haptics/haptic_utils.h"
+//#include "haptics/haptic_utils.h"
 
 //-----------------------------------------------------------------------------
 // Halloween Achievements

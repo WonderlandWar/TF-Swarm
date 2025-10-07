@@ -1252,7 +1252,28 @@ void CBaseHudChat::StartMessageMode( int iMessageModeType )
 	if ( !IsConsole() )
 	{
 		m_pChatInput->ClearEntry();
-		SetChatPrompt( iMessageModeType );
+
+		const wchar_t *pszPrompt = NULL;
+		switch ( m_nMessageMode )
+		{
+			case MM_SAY:		pszPrompt = g_pVGuiLocalize->Find( "#chat_say" ); break;
+			case MM_SAY_TEAM:	pszPrompt = g_pVGuiLocalize->Find( "#chat_say_team" ); break;
+			case MM_SAY_PARTY:	pszPrompt = g_pVGuiLocalize->Find( "#chat_party" ); break;
+		}
+
+		if ( pszPrompt )
+		{
+			m_pChatInput->SetPrompt( pszPrompt );
+		}
+		else
+		{
+			switch ( m_nMessageMode )
+			{
+				case MM_SAY:		m_pChatInput->SetPrompt( L"Say :" ); break;
+				case MM_SAY_TEAM:	m_pChatInput->SetPrompt( L"Say (TEAM) :" ); break;
+				case MM_SAY_PARTY:	m_pChatInput->SetPrompt( L"Say (PARTY) :" ); break;
+			}
+		}
 	
 		if ( GetChatHistory() )
 		{
@@ -1292,17 +1313,17 @@ void CBaseHudChat::StartMessageMode( int iMessageModeType )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CBaseHudChat::SetChatPrompt( int iMessageModeType )
-{
-	if ( m_nMessageMode == MM_SAY )
-	{
-		m_pChatInput->SetPrompt( g_pVGuiLocalize->FindSafe( "#chat_say" ) );
-	}
-	else
-	{
-		m_pChatInput->SetPrompt( g_pVGuiLocalize->FindSafe( "#chat_say_team" ) );
-	}
-}
+//void CBaseHudChat::SetChatPrompt( int iMessageModeType )
+//{
+//	if ( m_nMessageMode == MM_SAY )
+//	{
+//		m_pChatInput->SetPrompt( g_pVGuiLocalize->FindSafe( "#chat_say" ) );
+//	}
+//	else
+//	{
+//		m_pChatInput->SetPrompt( g_pVGuiLocalize->FindSafe( "#chat_say_team" ) );
+//	}
+//}
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -1671,8 +1692,21 @@ void CBaseHudChat::Send( void )
 
 	if ( len > 0 )
 	{
-		char szbuf[1024];	// more than 128
-		Q_snprintf( szbuf, sizeof(szbuf), "%s \"%s\"", m_nMessageMode == MM_SAY ? "say" : "say_team", ansi );
+		// Let the game rules at it
+		if ( GameRules() )
+		{
+			GameRules()->ModifySentChat( ansi, ARRAYSIZE(ansi) );
+		}
+
+		char szbuf[144];	// more than 128
+		const char* pszCmd = NULL;
+		switch( m_nMessageMode )
+		{
+			case MM_SAY: pszCmd = "say"; break;
+			case MM_SAY_TEAM: pszCmd = "say_team"; break;
+			case MM_SAY_PARTY: pszCmd = "say_party"; break;
+		}
+		Q_snprintf( szbuf, sizeof(szbuf), "%s \"%s\"", pszCmd, ansi );
 
 		engine->ClientCmd_Unrestricted(szbuf);
 	}

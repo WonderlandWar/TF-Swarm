@@ -136,7 +136,8 @@ void C_BaseObject::UpdateOnRemove( void )
 {
 	StopAnimGeneratedSounds();
 
-	DestroyBoneAttachments();
+	// TF_SWARM: Implement this in C_BaseAnimating
+	//DestroyBoneAttachments();
 
 	CTFHudSpectatorExtras *pSpectatorExtras = GET_HUDELEMENT( CTFHudSpectatorExtras );
 	if ( pSpectatorExtras )

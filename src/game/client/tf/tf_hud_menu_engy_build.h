@@ -131,7 +131,7 @@ public:
 	static void ReplaceBuildings( EngyConstructBuilding_t (&targetBuildings)[ NUM_ENGY_BUILDINGS ] );
 	static void GetBuildingIDAndModeFromSlot( int iSlot, int &iBuilding, int &iMode, const EngyConstructBuilding_t (&buildings)[ NUM_ENGY_BUILDINGS ] );
 
-	virtual GameActionSet_t GetPreferredActionSet() { return IsActive() ? GAME_ACTION_SET_IN_GAME_HUD : GAME_ACTION_SET_NONE; }
+	//	virtual GameActionSet_t GetPreferredActionSet() { return IsActive() ? GAME_ACTION_SET_IN_GAME_HUD : GAME_ACTION_SET_NONE; }
 
 private:
 

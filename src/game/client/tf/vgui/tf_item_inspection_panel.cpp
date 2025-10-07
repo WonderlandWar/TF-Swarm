@@ -438,7 +438,7 @@ void CTFItemInspectionPanel::SetItem( CEconItemView *pItem, bool bReset )
 	RepopulatePaintKitsForItem( pItem );
 	RepopulateItemsForPaintkit( pItem );
 
-	SetControlVisible( "ShowPreviewControlsButton", m_pComboBoxValidPaintkits->GetItemCount() > 1, true );
+	SetControlVisible( "ShowPreviewControlsButton", m_pComboBoxValidPaintkits->GetItemCount() > 1 );
 
 	// Update the team color nav buttons
 	{

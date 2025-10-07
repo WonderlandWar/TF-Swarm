@@ -94,13 +94,12 @@ ConVar tf_disguise_menu_controller_mode( "tf_disguise_menu_controller_mode", "0"
 //-----------------------------------------------------------------------------
 void CHudMenuSpyDisguise::ApplySchemeSettings( IScheme *pScheme )
 {
-	bool bSteamController = ::input->IsSteamControllerActive();
-	bool b360Style = ( bSteamController || IsConsole() || tf_disguise_menu_controller_mode.GetBool() );
+	bool b360Style = ( IsConsole() || tf_disguise_menu_controller_mode.GetBool() );
 
 	if ( b360Style )
 	{
 		// load control settings...
-		auto res_dir = bSteamController ? "resource/UI/disguise_menu_sc" : "resource/UI/disguise_menu_360";
+		auto res_dir = "resource/UI/disguise_menu_360";
 		LoadControlSettings( VarArgs("%s/HudMenuSpyDisguise.res", res_dir ) );
 
 		m_pClassItems_Red[0]->LoadControlSettings( VarArgs( "%s/scout_red.res", res_dir ) );
@@ -216,19 +215,16 @@ int	CHudMenuSpyDisguise::HudElementKeyInput( int down, ButtonCode_t keynum, cons
 		switch( keynum )
 		{
 		case KEY_XBUTTON_UP:
-		case STEAMCONTROLLER_DPAD_UP:
 			// jump to last
 			iNewSelection = 9;
 			break;
 
 		case KEY_XBUTTON_DOWN:
-		case STEAMCONTROLLER_DPAD_DOWN:
 			// jump to first
 			iNewSelection = 1;
 			break;
 
 		case KEY_XBUTTON_RIGHT:
-		case STEAMCONTROLLER_DPAD_RIGHT:
 			// move selection to the right
 			iNewSelection++;
 			if ( iNewSelection > 9 )
@@ -236,7 +232,6 @@ int	CHudMenuSpyDisguise::HudElementKeyInput( int down, ButtonCode_t keynum, cons
 			break;
 
 		case KEY_XBUTTON_LEFT:
-		case STEAMCONTROLLER_DPAD_LEFT:
 			// move selection to the right
 			iNewSelection--;
 			if ( iNewSelection < 1 )
@@ -245,7 +240,6 @@ int	CHudMenuSpyDisguise::HudElementKeyInput( int down, ButtonCode_t keynum, cons
 
 		case KEY_XBUTTON_RTRIGGER:
 		case KEY_XBUTTON_A:
-		case STEAMCONTROLLER_A:
 			{
 				// select disguise
 				int iClass = iRemapKeyToClass[m_iSelectedItem-1];
@@ -256,12 +250,10 @@ int	CHudMenuSpyDisguise::HudElementKeyInput( int down, ButtonCode_t keynum, cons
 			return 0;
 
 		case KEY_XBUTTON_Y:
-		case STEAMCONTROLLER_Y:
 			ToggleDisguiseTeam();
 			return 0;
 
 		case KEY_XBUTTON_B:
-		case STEAMCONTROLLER_B:
 			// cancel, close the menu
 			engine->ExecuteClientCmd( "lastinv" );
 			return 0;
@@ -481,7 +473,7 @@ void CHudMenuSpyDisguise::FindToggleBinding( void )
 void CHudMenuSpyDisguise::ToggleSelectionIcons( bool bGroup )
 {
 	// in controller mode we don't want any of the key icons
-	if( tf_disguise_menu_controller_mode.GetBool() || ::input->IsSteamControllerActive() )
+	if( tf_disguise_menu_controller_mode.GetBool() )
 	{
 		for ( int i=0; i<9; ++i )
 		{
@@ -647,7 +639,7 @@ void CHudMenuSpyDisguise::SetVisible( bool state )
 		// close the weapon selection menu
 		engine->ClientCmd( "cancelselect" );
 
-		bool bConsoleMode = ( IsConsole() || tf_disguise_menu_controller_mode.GetBool() || ::input->IsSteamControllerActive() );
+		bool bConsoleMode = ( IsConsole() || tf_disguise_menu_controller_mode.GetBool() );
 			
 		if ( bConsoleMode != m_bInConsoleMode )
 		{

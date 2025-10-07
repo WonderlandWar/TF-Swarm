@@ -1409,6 +1409,12 @@ void CAchievementMgr::OnKillEvent( CBaseEntity *pVictim, CBaseEntity *pAttacker,
 			if ( !pAchievement->IsActive() )
 				continue;
 
+#ifdef CLIENT_DLL
+			// Swallow kill events that can't be earned right now
+			if ( !pAchievement->LocalPlayerCanEarn() )
+				continue;
+#endif
+
 			// if this achievement only looks for kills where attacker is player and that is not the case here, skip this achievement
 			if ( ( pAchievement->GetFlags() & ACH_FILTER_ATTACKER_IS_PLAYER ) && !bAttackerIsPlayer )
 				continue;
@@ -1445,7 +1451,7 @@ void CAchievementMgr::OnKillEvent( CBaseEntity *pVictim, CBaseEntity *pAttacker,
 	}
 }
 
-void CAchievementMgr::OnAchievementEvent( int iAchievementID, int nUserSlot )
+void CAchievementMgr::OnAchievementEvent( int iAchievementID, int nUserSlot, int iCount = 1 )
 {
 	// handle event for specific achievement
 	CBaseAchievement *pAchievement = GetAchievementByID( iAchievementID, nUserSlot );
@@ -1454,7 +1460,7 @@ void CAchievementMgr::OnAchievementEvent( int iAchievementID, int nUserSlot )
 	{
 		if ( !pAchievement->IsAchieved() )
 		{
-			pAchievement->IncrementCount();
+			pAchievement->IncrementCount( iCount );
 		}
 	}
 }
@@ -1777,10 +1783,11 @@ void CAchievementMgr::SetAchievementThink( CBaseAchievement *pAchievement, float
 void MsgFunc_AchievementEvent( bf_read &msg )
 {
 	int iAchievementID = (int) msg.ReadShort();
+	int iCount = (int) msg.ReadShort();
 	CAchievementMgr *pAchievementMgr = dynamic_cast<CAchievementMgr *>( engine->GetAchievementMgr() );
 	if ( !pAchievementMgr )
 		return;
-	pAchievementMgr->OnAchievementEvent( iAchievementID, STEAM_PLAYER_SLOT );
+	pAchievementMgr->OnAchievementEvent( iAchievementID, STEAM_PLAYER_SLOT, iCount );
 }
 
 #ifdef _DEBUG

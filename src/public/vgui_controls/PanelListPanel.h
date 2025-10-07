@@ -109,9 +109,10 @@ protected:
 	virtual void GetSettings( KeyValues *outResourceData );
 	virtual const char *GetDescription( void );
 
-private:
+public:
 	int	ComputeVPixelsNeeded();
 
+private:
 	enum { DEFAULT_HEIGHT = 24, PANELBUFFER = 5 };
 
 	typedef struct dataitem_s

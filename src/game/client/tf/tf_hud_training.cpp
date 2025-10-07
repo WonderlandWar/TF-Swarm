@@ -68,7 +68,7 @@ bool CTFHudTraining::FormatTrainingText(const char* inputString, wchar_t* output
 		}
 		else
 		{
-			V_wcscpy_safe( token, ws );
+			wcscpy( token, ws );
 		}
 		ws += wcslen( token );
 		if ( isVar )

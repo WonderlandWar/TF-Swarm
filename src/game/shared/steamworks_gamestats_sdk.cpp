@@ -131,7 +131,7 @@ void CSteamWorksGameStatsUploader::ClearSessionID()
 }
 
 #ifndef	NO_STEAM
-
+/*
 //-----------------------------------------------------------------------------
 // Purpose: The steam callback used to get our session IDs.
 //-----------------------------------------------------------------------------
@@ -146,7 +146,7 @@ void CSteamWorksGameStatsUploader::Steam_OnSteamSessionInfoIssued( GameStatsSess
 void CSteamWorksGameStatsUploader::Steam_OnSteamSessionInfoClosed( GameStatsSessionClosed_t *pGameStatsSessionInfo )
 {
 }
-
+*/
 //-----------------------------------------------------------------------------
 // Purpose: Per frame think. Used to periodically check if we have queued operations.
 // For example: we may request a session id before steam is ready.
@@ -262,7 +262,7 @@ bool CSteamWorksGameStatsUploader::AccessToSteamAPI( void )
 {
 	return false;
 }
-
+/*
 //-----------------------------------------------------------------------------
 // Purpose: There's no guarantee that your interface pointer will persist across level transitions,
 //			so this function will update your interface.
@@ -272,7 +272,7 @@ ISteamGameStats* CSteamWorksGameStatsUploader::GetInterface( void )
 
 	return NULL;
 }
-
+*/
 //-----------------------------------------------------------------------------
 // Purpose: Creates a table from the KeyValue file. Do NOT send nested KeyValue objects into this function!
 //-----------------------------------------------------------------------------

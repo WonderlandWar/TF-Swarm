@@ -35,6 +35,7 @@
 #include "achievementmgr.h"
 #include "c_playerresource.h"
 #include <vgui/ILocalize.h>
+#include "ienginevgui.h"
 #if defined( _X360 )
 #include "xbox/xbox_console.h"
 #endif
@@ -160,6 +161,20 @@ static void __MsgFunc_VGUIMenu( bf_read &msg )
 			msg.ReadString( data, sizeof(data) );
 
 			keys->SetString( name, data );
+		}
+	}
+
+	// is the server trying to show an MOTD panel? Check that it's allowed right now.
+	ClientModeShared *mode = ( ClientModeShared * )GetClientModeNormal();
+	if ( Q_stricmp( panelname, PANEL_INFO ) == 0 && mode )
+	{
+		if ( !mode->IsInfoPanelAllowed() )
+		{
+			return;
+		}
+		else
+		{
+			mode->InfoPanelDisplayed();
 		}
 	}
 
@@ -420,6 +435,16 @@ bool ClientModeShared::ShouldDrawDetailObjects( )
 	return true;
 }
 
+
+//-----------------------------------------------------------------------------
+// Purpose: Returns true if VR mode should black out everything outside the HUD.
+//			This is used for things like sniper scopes and full screen UI
+//-----------------------------------------------------------------------------
+bool ClientModeShared::ShouldBlackoutAroundHUD()
+{
+	return enginevgui->IsGameUIVisible();
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Output : Returns true on success, false on failure.
@@ -542,6 +567,16 @@ int	ClientModeShared::KeyInput( int down, ButtonCode_t keynum, const char *pszCu
 		}
 		return 0;
 	}
+	else if ( pszCurrentBinding &&
+		( Q_strcmp( pszCurrentBinding, "messagemode3" ) == 0 ||
+			  Q_strcmp( pszCurrentBinding, "say_party" ) == 0 ) )
+	{
+		if ( down && BCanSendPartyChatMessages() )
+		{
+			StartMessageMode( MM_SAY_PARTY );
+		}
+		return 0;
+	}
 
 	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
 
@@ -659,6 +694,20 @@ int ClientModeShared::HudElementKeyInput( int down, ButtonCode_t keynum, const c
 	}
 
 	return 1;
+}
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool ClientModeShared::DoPostScreenSpaceEffects( const CViewSetup *pSetup )
+{
+#if defined( REPLAY_ENABLED )
+	if ( engine->IsPlayingDemo() )
+	{
+		if ( !replay_rendersetting_renderglow.GetBool() )
+			return false;
+	}
+#endif 
+	return true;
 }
 
 //-----------------------------------------------------------------------------

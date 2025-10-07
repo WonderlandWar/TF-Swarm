@@ -270,7 +270,7 @@ public:
 	virtual int				GetFilterFlags( void ) { return m_iFilterFlags; }
 	void					SetFilterFlag( int iFilter );
 
-	virtual void		SetChatPrompt( int iMessageModeType );
+	//virtual void		SetChatPrompt( int iMessageModeType );
 
 	//-----------------------------------------------------------------------------
 	virtual Color	GetDefaultTextColor( void );

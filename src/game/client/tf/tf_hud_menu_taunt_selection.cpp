@@ -46,7 +46,7 @@ CHudMenuTauntSelection::CHudMenuTauntSelection( const char *pElementName ) : CHu
 	for ( int i=0; i<NUM_TAUNT_SLOTS; ++i )
 	{
 		char pszKeyItemModelPanelName[128];
-		V_sprintf_safe( pszKeyItemModelPanelName, "TauntModelPanel%d", i+1 );
+		sprintf( pszKeyItemModelPanelName, "TauntModelPanel%d", i+1 );
 		m_pItemModelPanels[i] = new CItemModelPanel( this, pszKeyItemModelPanelName );
 
 		/* char pszKeyIconName[64];
@@ -72,15 +72,8 @@ CHudMenuTauntSelection::CHudMenuTauntSelection( const char *pElementName ) : CHu
 void CHudMenuTauntSelection::ApplySchemeSettings( IScheme *pScheme )
 {
 	// load control settings...
-	if ( ::input->IsSteamControllerActive() )
-	{
-		LoadControlSettings( "resource/UI/HudMenuTauntSelection_SC.res" );
-		m_iSelectedItem = 1;
-	}
-	else
-	{
-		LoadControlSettings( "resource/UI/HudMenuTauntSelection.res" );
-	}
+	LoadControlSettings( "resource/UI/HudMenuTauntSelection.res" );
+	
 
 	BaseClass::ApplySchemeSettings( pScheme );
 
@@ -179,7 +172,6 @@ int	CHudMenuTauntSelection::HudElementKeyInput( int down, ButtonCode_t keynum, c
 			break;
 
 		case KEY_XBUTTON_RIGHT:
-		case STEAMCONTROLLER_DPAD_RIGHT:
 			// move selection to the right
 			iNewSelection++;
 			if ( iNewSelection > NUM_TAUNT_SLOTS )
@@ -187,7 +179,6 @@ int	CHudMenuTauntSelection::HudElementKeyInput( int down, ButtonCode_t keynum, c
 			break;
 
 		case KEY_XBUTTON_LEFT:
-		case STEAMCONTROLLER_DPAD_LEFT:
 			// move selection to the right
 			iNewSelection--;
 			if ( iNewSelection < 1 )
@@ -196,24 +187,9 @@ int	CHudMenuTauntSelection::HudElementKeyInput( int down, ButtonCode_t keynum, c
 
 		case KEY_XBUTTON_RTRIGGER:
 		case KEY_XBUTTON_A:
-		case STEAMCONTROLLER_A:
 			{
 				SelectTaunt( m_iSelectedItem );
 			}
-			return 0;
-
-		case STEAMCONTROLLER_B:
-			{
-				CTFPlayer *pPlayer = C_TFPlayer::GetLocalTFPlayer();
-				if ( pPlayer )
-				{
-					pPlayer->SetShowHudMenuTauntSelection( false );
-				}
-			}
-			return 0;
-
-		case STEAMCONTROLLER_X:
-			SelectTaunt( 0 );		// Weapon X
 			return 0;
 
 		default:
@@ -308,8 +284,6 @@ void CHudMenuTauntSelection::UpdateItemModelPanels()
 	if ( !pPlayer )
 		return;
 
-	bool bSteamController = ::input->IsSteamControllerActive();
-
 	int iClass = pPlayer->GetPlayerClass()->GetClassIndex();
 	vgui::IScheme *pScheme = vgui::scheme()->GetIScheme( GetScheme() );
 
@@ -331,7 +305,7 @@ void CHudMenuTauntSelection::UpdateItemModelPanels()
 		
 		IBorder *pBorder = pScheme->GetBorder( pszBorder );
 
-		pItemModelPanel->SetBorder( !bSteamController || i == (m_iSelectedItem - 1) ? pBorder : nullptr );
+		pItemModelPanel->SetBorder( true || i == (m_iSelectedItem - 1) ? pBorder : nullptr );
 
 		pItemModelPanel->UpdatePanels();
 	}
@@ -353,7 +327,7 @@ void CHudMenuTauntSelection::SelectTaunt( int iTaunt )
 		}
 
 		char pszTaunt[32];
-		V_sprintf_safe( pszTaunt, "taunt %d", iTaunt );
+		sprintf( pszTaunt, "taunt %d", iTaunt );
 
 		engine->ClientCmd( pszTaunt );
 

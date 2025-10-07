@@ -1688,7 +1688,7 @@ void C_BaseEntity::UpdateVisibility()
 				// We need to fix up the rendering.
 				SetRenderMode( m_PreviousRenderMode );
 				SetRenderColor( m_PreviousRenderColor.r, m_PreviousRenderColor.g, m_PreviousRenderColor.b );
-				SetRenderAlpha( m_PreviousRenderColor.a );
+				//SetRenderAlpha( m_PreviousRenderColor.a );
 			}
 
 			m_bWasDeemedInvalid = false;

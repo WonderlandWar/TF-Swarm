@@ -4,6 +4,7 @@
 //
 // $NoKeywords: $
 //===========================================================================//
+
 #include "cbase.h"
 #include "c_baseanimating.h"
 #include "c_Sprite.h"
@@ -6561,9 +6562,17 @@ bool C_BaseAnimating::ComputeEntitySpaceHitboxSurroundingBox( Vector *pVecWorldM
 // Purpose: 
 // Input  : scale - 
 //-----------------------------------------------------------------------------
-void C_BaseAnimating::SetModelScale( float scale )
+void C_BaseAnimating::SetModelScale( float scale, float change_duration /*= 0.0f*/  )
 {
-	if ( m_flModelScale != scale )
+	if ( change_duration > 0.0f )
+	{
+		ModelScale *mvs = ( ModelScale * )CreateDataObject( MODELSCALE );
+		mvs->m_flModelScaleStart = m_flModelScale;
+		mvs->m_flModelScaleGoal = scale;
+		mvs->m_flModelScaleStartTime = gpGlobals->curtime;
+		mvs->m_flModelScaleFinishTime = mvs->m_flModelScaleStartTime + change_duration;
+	}
+	else
 	{
 		m_flModelScale = scale;
 		InvalidatePhysicsRecursive( BOUNDS_CHANGED );

@@ -153,8 +153,8 @@ private:
 	{
 		m_bHidden = bSetHidden;
 		SetExpandedHeight( m_bHidden ? YRES( 20 ) : m_nOriginalExpandedHeight );
-		SetControlVisible( "ShowButton", m_bHidden, true );
-		SetControlVisible( "HideButton", !m_bHidden, true );
+		SetControlVisible( "ShowButton", m_bHidden );
+		SetControlVisible( "HideButton", !m_bHidden );
 
 	}
 
@@ -263,7 +263,7 @@ private:
 				// Update the label with the % total
 				pMapChoicePanel->SetDialogVariable( "votes", CFmtStr( "%3.0f%%", flPercent ) );
 				// Do a color change animation
-				if ( g_pClientMode && GetClientMode()->GetViewport() )
+				if ( GetClientMode() && GetClientMode()->GetViewport() )
 				{
 					GetClientMode()->GetViewportAnimationController()->StopAnimationSequence( pMapChoicePanel, i == eWinningVote ? "LosingNextMapVote" : "WinningNextMapVote" );
 					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pMapChoicePanel, i == eWinningVote ? "WinningNextMapVote" : "LosingNextMapVote" );

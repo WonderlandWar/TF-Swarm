@@ -67,7 +67,7 @@ public:
 	virtual void SetData( int type, const char *title, const char *message, const char *command );
 	virtual void ShowFile( const char *filename);
 	virtual void ShowText( const char *text);
-	virtual void ShowURL( const char *URL);
+	virtual void ShowURL( const char *URL, bool bAllowUserToDisable = true );
 	virtual void ShowIndex( const char *entry);
 
 	virtual void ApplySchemeSettings( vgui::IScheme *pScheme );

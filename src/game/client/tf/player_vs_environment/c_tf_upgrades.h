@@ -190,7 +190,7 @@ public:
 	MESSAGE_FUNC_PTR( OnItemPanelExited, "ItemPanelExited", panel );
 	MESSAGE_FUNC_PTR( OnItemPanelMousePressed, "ItemPanelMousePressed", panel );
 
-	virtual GameActionSet_t GetPreferredActionSet() { return IsActive() ? GAME_ACTION_SET_MENUCONTROLS : GAME_ACTION_SET_NONE; }
+	//virtual GameActionSet_t GetPreferredActionSet() { return IsActive() ? GAME_ACTION_SET_MENUCONTROLS : GAME_ACTION_SET_NONE; }
 
 protected:
 	void			CreateItemModelPanel( int iLoadoutSlot );

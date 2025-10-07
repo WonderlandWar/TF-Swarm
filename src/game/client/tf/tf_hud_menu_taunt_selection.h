@@ -40,7 +40,7 @@ public:
 	virtual int GetRenderGroupPriority( void ) { return 90; }
 	void SelectTaunt( int iTaunt );
 
-	virtual GameActionSet_t GetPreferredActionSet() { return IsActive() ? GAME_ACTION_SET_IN_GAME_HUD : GAME_ACTION_SET_NONE; }
+//	virtual GameActionSet_t GetPreferredActionSet() { return IsActive() ? GAME_ACTION_SET_IN_GAME_HUD : GAME_ACTION_SET_NONE; }
 
 private:
 	void SetSelectedItem( int iSlot );

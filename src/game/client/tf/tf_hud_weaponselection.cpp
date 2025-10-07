@@ -260,7 +260,7 @@ void CHudWeaponSelection::OnThink()
 {
 	float flSelectionTimeout = SELECTION_TIMEOUT_THRESHOLD;
 	float flSelectionFadeoutTime = SELECTION_FADEOUT_TIME;
-	if ( hud_fastswitch.GetBool() || (::input->IsSteamControllerActive()) )
+	if ( hud_fastswitch.GetBool() )
 	{
 		flSelectionTimeout = FASTSWITCH_DISPLAY_TIMEOUT;
 		flSelectionFadeoutTime = FASTSWITCH_FADEOUT_TIME;
@@ -332,7 +332,7 @@ bool CHudWeaponSelection::ShouldDrawInternal()
 		return false;
 
 	// we only show demo mode in hud_fastswitch 0
-	if ( hud_fastswitch.GetInt() == 0 && !::input->IsSteamControllerActive() && ( m_iDemoModeSlot >= 0 || m_flDemoStartTime > 0 ) )
+	if ( hud_fastswitch.GetInt() == 0 && ( m_iDemoModeSlot >= 0 || m_flDemoStartTime > 0 ) )
 	{
 		return true;
 	}
@@ -342,7 +342,7 @@ bool CHudWeaponSelection::ShouldDrawInternal()
 		return false;
 
 	// draw weapon selection a little longer if in fastswitch so we can see what we've selected
-	if ( (hud_fastswitch.GetBool() || ::input->IsSteamControllerActive()) && ( gpGlobals->curtime - m_flSelectionTime ) < (FASTSWITCH_DISPLAY_TIMEOUT + FASTSWITCH_FADEOUT_TIME) )
+	if ( hud_fastswitch.GetBool() && ( gpGlobals->curtime - m_flSelectionTime ) < (FASTSWITCH_DISPLAY_TIMEOUT + FASTSWITCH_FADEOUT_TIME) )
 		return true;
 
 	return ( m_bSelectionVisible ) ? true : false;
@@ -516,10 +516,6 @@ void CHudWeaponSelection::PerformLayout( void )
 	// find and display our current selection
 	C_BaseCombatWeapon *pSelectedWeapon = NULL;
 	int fastswitch = hud_fastswitch.GetInt();
-	if ( ::input->IsSteamControllerActive() )
-	{
-		fastswitch = HUDTYPE_FASTSWITCH;
-	}
 
 	switch ( fastswitch )
 	{
@@ -606,10 +602,6 @@ void CHudWeaponSelection::PostChildPaint()
 		return;
 
 	int fastswitch = hud_fastswitch.GetInt();
-	if ( ::input->IsSteamControllerActive() )
-	{
-		fastswitch = HUDTYPE_FASTSWITCH;
-	}
 
 	if ( fastswitch == 0 )
 	{
@@ -706,10 +698,6 @@ void CHudWeaponSelection::DrawSelection( C_BaseCombatWeapon *pSelectedWeapon )
 	// calculate where to start drawing
 	int iActiveSlot = (pSelectedWeapon ? pSelectedWeapon->GetSlot() : -1);
 	int nFastswitchMode = hud_fastswitch.GetInt();
-	if ( ::input->IsSteamControllerActive() )
-	{
-		nFastswitchMode = HUDTYPE_FASTSWITCH;
-	}
 
 	if ( nFastswitchMode == HUDTYPE_FASTSWITCH )
 	{
@@ -1179,7 +1167,7 @@ C_BaseCombatWeapon *CHudWeaponSelection::GetWeaponInSlot( int iSlot, int iSlotPo
 
 C_BaseCombatWeapon *CHudWeaponSelection::GetSelectedWeapon( void )
 { 
-	if ( hud_fastswitch.GetInt() == 0 && !::input->IsSteamControllerActive() && m_iDemoModeSlot >= 0 )
+	if ( hud_fastswitch.GetInt() == 0 && m_iDemoModeSlot >= 0 )
 	{
 		C_BaseCombatWeapon *pWeapon = GetFirstPos( m_iDemoModeSlot );
 		return pWeapon;
@@ -1376,10 +1364,6 @@ void CHudWeaponSelection::SelectWeaponSlot( int iSlot )
 
 	bool bPlaySwitchSound = true;
 	int nFastswitchMode = hud_fastswitch.GetInt();
-	if ( ::input->IsSteamControllerActive() )
-	{
-		nFastswitchMode = HUDTYPE_FASTSWITCH;
-	}
 
 	switch( nFastswitchMode )
 	{
@@ -1457,7 +1441,7 @@ void CHudWeaponSelection::SelectSlot( int iSlot )
 	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
 	if ( pPlayer && pPlayer->IsObserver() )
 	{
-		CTFSpectatorGUI *pPanel = (CTFSpectatorGUI*)gViewPortInterface->FindPanelByName( PANEL_SPECGUI );
+		CTFSpectatorGUI *pPanel = (CTFSpectatorGUI*)GetViewPortInterface()->FindPanelByName( PANEL_SPECGUI );
 		if ( pPanel )
 		{
 			pPanel->SelectSpec( iSlot );

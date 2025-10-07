@@ -109,8 +109,8 @@ public:
 	virtual void	PerformLayout( void ) OVERRIDE;
 
 	virtual void	Paint( void );
-	virtual void	RenderingRootModel( IMatRenderContext *pRenderContext, CStudioHdr *pStudioHdr, MDLHandle_t mdlHandle, matrix3x4_t *pWorldMatrix ) OVERRIDE;
-	virtual IMaterial *GetOverrideMaterial( MDLHandle_t mdlHandle ) OVERRIDE;
+	//virtual void	RenderingRootModel( IMatRenderContext *pRenderContext, CStudioHdr *pStudioHdr, MDLHandle_t mdlHandle, matrix3x4_t *pWorldMatrix ) OVERRIDE;
+	//virtual IMaterial *GetOverrideMaterial( MDLHandle_t mdlHandle ) OVERRIDE;
 	
 	CEconItemView*	GetItem() const { return m_pItem; }
 	void			SetItem( CEconItemView *pItem );
