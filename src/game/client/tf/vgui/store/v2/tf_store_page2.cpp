@@ -251,12 +251,14 @@ void CTFStorePage2::ApplySchemeSettings( IScheme *pScheme )
 	if ( m_pClassFilterTooltipLabel && m_pClassFilterButtons )
 	{
 		m_pClassFilterTooltip = new CClassFilterTooltip(this);
+#if 0
 		for ( int i = 0 ; i < m_pClassFilterButtons->NumButtons() ; ++i )
 		{
 			CExButton *pButton = m_pClassFilterButtons->GetButton( i );
 			CUtlString sSaveText = pButton->GetEffectiveTooltipText();
 			pButton->SetTooltip( m_pClassFilterTooltip, sSaveText );
 		}
+#endif
 	}
 
 	// Setup title text in home page
@@ -280,6 +282,7 @@ void CTFStorePage2::ApplySchemeSettings( IScheme *pScheme )
 			g_pVGuiLocalize->ConstructString( wszText, sizeof( wszText ), pHomePageTitle, 2, pRedText, wszPriceThreshold );
 
 			pTitleLabel->SetText( wszText );
+#if 0
 			TextImage *pTextImage = pTitleLabel->GetTextImage();
 			const wchar_t *pFound = wcsstr( wszText, pRedText );
 			if ( pTextImage && pFound )
@@ -290,6 +293,7 @@ void CTFStorePage2::ApplySchemeSettings( IScheme *pScheme )
 				pTextImage->AddColorChange( Color(200,80,60,255), iRedTextPos );
 				pTextImage->AddColorChange( pTitleLabel->GetFgColor(), iRedTextPos + nRedTextLen );
 			}
+#endif
 		}
 	}
 }

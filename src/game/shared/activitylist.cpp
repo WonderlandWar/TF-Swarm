@@ -173,7 +173,7 @@ int ActivityList_IndexForName( const char *pszActivityName )
 		return pList->activityIndex;
 	}
 
-	return -1;
+	return kActivityLookup_Missing;
 }
 
 // Get the name for a given index

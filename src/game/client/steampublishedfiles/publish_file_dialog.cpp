@@ -90,12 +90,13 @@ CFilePublishDialog::CFilePublishDialog( Panel *parent, const char *name, Publish
 		m_FileDetails = *pDetails;
 		m_bAddingNewFile = false;
 		g_MapFilename = m_FileDetails.lpszFilename;
-		m_nFileID = m_FileDetails.publishedFileDetails.m_nPublishedFileId;
+	//	m_nFileID = m_FileDetails.publishedFileDetails.m_nPublishedFileId;
 	}
 	else
 	{
 		// Clear it out
 		m_FileDetails.lpszFilename = NULL;
+#if 0
 		m_FileDetails.publishedFileDetails.m_eVisibility = k_ERemoteStoragePublishedFileVisibilityPublic;
 		m_FileDetails.publishedFileDetails.m_hFile = k_UGCHandleInvalid;
 		m_FileDetails.publishedFileDetails.m_hPreviewFile = k_UGCHandleInvalid;
@@ -107,10 +108,10 @@ CFilePublishDialog::CFilePublishDialog( Panel *parent, const char *name, Publish
 		m_FileDetails.publishedFileDetails.m_ulSteamIDOwner = 0; // FIXME: Need a real "invalid" value
 		memset( m_FileDetails.publishedFileDetails.m_rgchDescription, 0, k_cchPublishedDocumentDescriptionMax );
 		memset( m_FileDetails.publishedFileDetails.m_rgchTitle, 0, k_cchPublishedDocumentTitleMax );
-
+#endif
 		m_bAddingNewFile = true;
 		g_MapFilename = "";
-		m_nFileID = k_PublishedFileIdInvalid;
+	//	m_nFileID = k_PublishedFileIdInvalid;
 	}
 
 	m_nFileDetailsChanges = 0;
@@ -262,6 +263,7 @@ void CFilePublishDialog::HideStatusWindow( void )
 //-----------------------------------------------------------------------------
 void CFilePublishDialog::DownloadPreviewImage( void )
 {
+#if 0
 	// TODO: We need a generic "no image" image
 	if ( m_bAddingNewFile )
 		return;
@@ -270,6 +272,7 @@ void CFilePublishDialog::DownloadPreviewImage( void )
 	char szTargetFilename[MAX_PATH];
 	V_snprintf( szTargetFilename, sizeof(szTargetFilename), "%llu_thumb.jpg", m_FileDetails.publishedFileDetails.m_nPublishedFileId );
 	m_UGCPreviewFileRequest.StartDownload( m_FileDetails.publishedFileDetails.m_hPreviewFile, "downloads", szTargetFilename );
+#endif
 	m_bPreviewDownloadPending = true;
 }
 
@@ -389,9 +392,10 @@ Bitmap_t &CFilePublishDialog::GetPreviewBitmap()
 //-----------------------------------------------------------------------------
 void CFilePublishDialog::PopulateEditFields( void )
 {
+#if 0
 	m_pFileTitle->SetText( m_FileDetails.publishedFileDetails.m_rgchTitle );
 	m_pFileDescription->SetText( m_FileDetails.publishedFileDetails.m_rgchDescription );
-
+#endif
 	if ( m_FileDetails.lpszFilename && !FStrEq( m_FileDetails.lpszFilename, "" ) )
 	{
 		char szShortName[ MAX_PATH ];
@@ -463,7 +467,7 @@ void CFilePublishDialog::GetPreparedFilename( char *szOut, size_t outLen )
 	V_ComposeFileName( WORKSHOP_TEMP_UPLOAD_DIR, V_GetFileName( g_MapFilename ),
 	                   szOut, outLen );
 }
-
+#if 0
 //-----------------------------------------------------------------------------
 // Purpose: Callback when our create item has completed. Need to do initial update.
 //-----------------------------------------------------------------------------
@@ -489,7 +493,7 @@ void CFilePublishDialog::Steam_OnCreateItem( CreateItemResult_t *pResult, bool b
 		StartPrepareFile();
 	}
 }
-
+#endif
 //-----------------------------------------------------------------------------
 // Purpose: Callback from our map compression thread finishing
 //-----------------------------------------------------------------------------
@@ -511,7 +515,7 @@ void CFilePublishDialog::OnFilePrepared( ErrorCode_t eResult )
 	}
 
 	// Failure
-
+#if 0
 	// This is after OnCreateItem for new files, so cleanup the incomplete item on failure from either the compress or
 	// kicking off the update.
 	if ( m_bAddingNewFile && m_nFileID != k_PublishedFileIdInvalid )
@@ -521,11 +525,12 @@ void CFilePublishDialog::OnFilePrepared( ErrorCode_t eResult )
 		steamapicontext->SteamRemoteStorage()->DeletePublishedFile( m_nFileID );
 		m_nFileID = k_PublishedFileIdInvalid;
 	}
+#endif
 
 	HideStatusWindow();
 	ErrorMessage( eResult );
 }
-
+#if 0
 //-----------------------------------------------------------------------------
 // Purpose: Callback when our publish call has completed
 //-----------------------------------------------------------------------------
@@ -580,7 +585,7 @@ void CFilePublishDialog::Steam_OnPublishFile( SubmitItemUpdateResult_t *pResult,
 		CloseModal();
 	}
 }
-
+#endif
 //-----------------------------------------------------------------------------
 // Purpose: Share the file with Steam Cloud and return the handle for later usage
 //-----------------------------------------------------------------------------
@@ -606,13 +611,13 @@ bool CFilePublishDialog::PublishFile()
 
 	ShowStatusWindow( kPublishing );
 
-	EWorkshopFileType eFileType = WorkshipFileTypeForFile( g_MapFilename );
+	//EWorkshopFileType eFileType = WorkshipFileTypeForFile( g_MapFilename );
 
 	// Create file on UGC
-	SteamAPICall_t hSteamAPICall = steamapicontext->SteamUGC()->CreateItem( GetTargetAppID(), eFileType );
+	//SteamAPICall_t hSteamAPICall = steamapicontext->SteamUGC()->CreateItem( GetTargetAppID(), eFileType );
 
 	// Set the callback
-	m_callbackCreateItem.Set( hSteamAPICall, this, &CFilePublishDialog::Steam_OnCreateItem );
+	//m_callbackCreateItem.Set( hSteamAPICall, this, &CFilePublishDialog::Steam_OnCreateItem );
 
 	return true;
 }
@@ -666,7 +671,7 @@ void CFilePublishDialog::SetPublishButtonState( void )
 bool CFilePublishDialog::UpdateFile( void )
 {
 	// We should have been created for an existing file or published already, both of which set our ID.
-	Assert( m_nFileID != k_PublishedFileIdInvalid );
+	//Assert( m_nFileID != k_PublishedFileIdInvalid );
 	ShowStatusWindow( kUpdating );
 
 	if ( m_bAddingNewFile || m_nFileDetailsChanges & PFILE_FIELD_FILE )
@@ -692,6 +697,7 @@ bool CFilePublishDialog::UpdateFile( void )
 //-----------------------------------------------------------------------------
 bool CFilePublishDialog::UpdateFileInternal()
 {
+#if 0
 	ISteamUGC *pUGC = steamapicontext->SteamUGC();
 
 	UGCUpdateHandle_t hItem = pUGC->StartItemUpdate( GetTargetAppID(), m_nFileID );
@@ -700,7 +706,6 @@ bool CFilePublishDialog::UpdateFileInternal()
 		UGCWarning( "StartItemUpdate failed\n" );
 		return false;
 	}
-
 	bool bError = false;
 
 	// create thumbnail
@@ -794,7 +799,7 @@ bool CFilePublishDialog::UpdateFileInternal()
 
 	// Failed, cleanup prepared map
 	g_pFullFileSystem->RemoveFile( szPreparedMap, UGC_PATHID );
-
+#endif
 	return false;
 }
 
@@ -823,18 +828,18 @@ void CFilePublishDialog::OnCommand( const char *command )
 		}
 
 		// Get our title
-		char szTitle[k_cchPublishedDocumentTitleMax];
-		m_pFileTitle->GetText( szTitle, sizeof(szTitle) );
-		Q_AggressiveStripPrecedingAndTrailingWhitespace( szTitle );
+		//char szTitle[k_cchPublishedDocumentTitleMax];
+		//m_pFileTitle->GetText( szTitle, sizeof(szTitle) );
+		//Q_AggressiveStripPrecedingAndTrailingWhitespace( szTitle );
 
 		// Get our descriptor
-		char szDesc[k_cchPublishedDocumentDescriptionMax];
-		m_pFileDescription->GetText( szDesc, sizeof(szDesc) );
-		Q_AggressiveStripPrecedingAndTrailingWhitespace( szDesc );
+		//char szDesc[k_cchPublishedDocumentDescriptionMax];
+		//m_pFileDescription->GetText( szDesc, sizeof(szDesc) );
+		//Q_AggressiveStripPrecedingAndTrailingWhitespace( szDesc );
 
-		bHasTitle = Q_strlen( szTitle ) != 0;
-		bHasDesc = Q_strlen( szDesc ) != 0;
-		if ( !bHasTitle || !bHasDesc )
+		//bHasTitle = Q_strlen( szTitle ) != 0;
+		//bHasDesc = Q_strlen( szDesc ) != 0;
+		//if ( !bHasTitle || !bHasDesc )
 		{
 			ErrorMessage( kNeedTitleAndDescription );
 			return;

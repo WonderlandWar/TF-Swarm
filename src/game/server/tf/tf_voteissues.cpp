@@ -35,6 +35,7 @@ extern ConVar tf_mm_strict;
 
 static bool VotableMap( const char *pszMapName )
 {
+#if 0 // TF_SWARM: FIXME!
 	char szCanonName[64] = { 0 };
 	V_strncpy( szCanonName, pszMapName, sizeof( szCanonName ) );
 	IVEngineServer::eFindMapResult eResult = engine->FindMap( szCanonName, sizeof( szCanonName ) );
@@ -49,7 +50,7 @@ static bool VotableMap( const char *pszMapName )
 	case IVEngineServer::eFindMap_NotFound:
 		return false;
 	}
-
+#endif
 	AssertMsg( false, "Unhandled engine->FindMap return value\n" );
 	return false;
 }
@@ -573,7 +574,7 @@ TFVoteKickReason CKickIssue::ParseKickReason( const char *pszReason )
 		const google::protobuf::EnumValueDescriptor *reasonDesc;
 		reasonDesc = TFVoteKickReason_descriptor()->value( idxReason );
 
-		if ( V_stricmp( strEnum.Get(), reasonDesc->name().c_str() ) == 0 )
+		if ( V_stricmp( strEnum, reasonDesc->name().c_str() ) == 0 )
 		{
 			return (TFVoteKickReason)(reasonDesc->number());
 		}
@@ -589,7 +590,7 @@ const char* CKickIssue::KickReasonString( TFVoteKickReason eReason )
 	CFmtStr strPrefix( "%s_", TFVoteKickReason_descriptor()->name().c_str() );
 	const char *pszName = TFVoteKickReason_Name( eReason ).c_str();
 
-	if ( V_strncmp( pszName, strPrefix.Get(), strPrefix.Length() ) == 0 )
+	if ( strncmp( pszName, strPrefix, strPrefix.Length() ) == 0 )
 	{
 		return pszName + strPrefix.Length();
 	}
@@ -1746,7 +1747,7 @@ void CPauseGameIssue::ExecuteCommand( void )
 		SetIssueCooldownDuration( sv_vote_issue_pause_game_cooldown.GetFloat() );
 	}
 
-	engine->SetPausedForced( true, sv_vote_issue_pause_game_timer.GetFloat() );
+	//engine->SetPausedForced( true, sv_vote_issue_pause_game_timer.GetFloat() );
 }
 
 //-----------------------------------------------------------------------------

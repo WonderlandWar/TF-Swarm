@@ -19,7 +19,7 @@
 #include "tf_hud_menu_eureka_teleport.h"
 
 // NVNT haptics for buildings
-#include "haptics/haptic_utils.h"
+//#include "haptics/haptic_utils.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

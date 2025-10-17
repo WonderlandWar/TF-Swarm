@@ -123,6 +123,9 @@ public:
 	
 	void     RemoveAll( )									{ m_Tree.RemoveAll(); }
 	void     Purge( )										{ m_Tree.Purge(); }
+
+	// Purges the list and calls delete on each element in it.
+	void PurgeAndDeleteElements();
 			
 	// Iteration
 	IndexType_t  FirstInorder() const						{ return m_Tree.FirstInorder(); }
@@ -197,6 +200,23 @@ public:
 protected:
 	CTree 	   m_Tree;
 };
+
+//-----------------------------------------------------------------------------
+
+// Purges the list and calls delete on each element in it.
+template< typename K, typename T, typename I >
+inline void CUtlMap<K, T, I>::PurgeAndDeleteElements()
+{
+	for ( I i = 0; i < MaxElement(); ++i ) 
+	{
+		if ( !IsValidIndex( i ) ) 
+			continue; 
+
+		delete Element( i );
+	}
+
+	Purge();
+}
 
 //-----------------------------------------------------------------------------
 

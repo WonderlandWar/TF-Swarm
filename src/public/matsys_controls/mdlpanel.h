@@ -81,7 +81,9 @@ public:
 	void	SetMergeMDL( const char *pMDLName );
 	int		GetMergeMDLIndex( MDLHandle_t handle );
 	void	ClearMergeMDLs( void );
-
+#ifdef CLIENT_DLL
+	CMDL	*GetMergeMDL(MDLHandle_t handle );
+#endif
 protected:
 
 	struct MDLData_t

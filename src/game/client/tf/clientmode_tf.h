@@ -146,7 +146,7 @@ private:
 	EConnectState			m_eConnectState           = k_eConnectState_Disconnected;
 	// Valid only when m_eConnectState >= k_eConnectState_Connected
 	// This is the base name of a map, and doesn't include workshop decorations/path/etc.
-	char					m_szMapBaseName[MAX_MAP_NAME] = { 0 };
+	char					m_szMapBaseName[MAX_MAP_NAME];
 
 	float					m_flNextAllowedHighFiveHintTime;
 

@@ -6,6 +6,7 @@
 // and implement another button here.
 //=============================================================================//
 
+#include "cbase.h"
 #include <math.h>
 #define PROTECTED_THINGS_DISABLE
 
@@ -73,52 +74,6 @@ bool BaseTooltip::ShouldLayout( void )
 		return false;
 
 	return true;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: Display the tooltip
-//-----------------------------------------------------------------------------
-void BaseTooltip::HideTooltip()
-{
-	_makeVisible = false;
-	_isDirty = true;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: Set the tooltip text
-//-----------------------------------------------------------------------------
-void BaseTooltip::SetText(const char *text)
-{
-	_isDirty = true;
-
-	if (!text)
-	{
-		text = "";
-	}
-
-	if (m_Text.Count() > 0)
-	{
-		m_Text.RemoveAll();
-	}
-
-	for (unsigned int i = 0; i < strlen(text); i++)
-	{
-		m_Text.AddToTail(text[i]);
-	}
-	m_Text.AddToTail('\0');
-	
-	if (s_TooltipWindow.Get() && m_pParent == s_TooltipWindow.Get()->GetParent())
-	{
-		s_TooltipWindow->SetText(m_Text.Base());
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: Get the tooltip text
-//-----------------------------------------------------------------------------
-const char *BaseTooltip::GetText()
-{
-	return m_Text.Base();
 }
 
 //-----------------------------------------------------------------------------

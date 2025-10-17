@@ -35,6 +35,18 @@ public:
 
 //-------------------------------------
 
+template <typename T>
+class CDefLess
+{
+public:
+	CDefLess() {}
+	CDefLess( int i ) {}
+	inline bool operator()( const T &lhs, const T &rhs ) const { return ( lhs < rhs );	}
+	inline bool operator!() const { return false; }
+};
+
+//-------------------------------------
+
 inline bool StringLessThan( const char * const &lhs, const char * const &rhs)			{ return ( strcmp( lhs, rhs) < 0 );  }
 inline bool CaselessStringLessThan( const char * const &lhs, const char * const &rhs )	{ return ( stricmp( lhs, rhs) < 0 ); }
 

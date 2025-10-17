@@ -16,7 +16,7 @@ extern ConVar		cam_idealyaw;
 extern ConVar		cl_yawspeed;
 extern kbutton_t	in_left;
 extern kbutton_t	in_right;
-extern CThirdPersonManager g_ThirdPersonManager;
+extern CThirdPersonManager &GetThirdPersonManager( int slot = -1 );
 
 //-----------------------------------------------------------------------------
 // Purpose: TF Input interface
@@ -31,7 +31,7 @@ public:
 	virtual		float		CAM_CapPitch( float fVal ) const OVERRIDE;
 	virtual		void		AdjustYaw( float speed, QAngle& viewangles );
 	virtual		float		JoyStickAdjustYaw( float flSpeed ) OVERRIDE;
-	virtual void ApplyMouse( QAngle& viewangles, CUserCmd *cmd, float mouse_x, float mouse_y ) OVERRIDE;
+	virtual void ApplyMouse( int slot, QAngle& viewangles, CUserCmd *cmd, float mouse_x, float mouse_y ) OVERRIDE;
 private:
 
 	QAngle m_angThirdPersonOffset;
@@ -116,11 +116,11 @@ void CTFInput::AdjustYaw( float speed, QAngle& viewangles )
 
 			if ( side || forward )
 			{
-				viewangles[YAW] = RAD2DEG(atan2(side, forward)) + g_ThirdPersonManager.GetCameraOffsetAngles()[ YAW ];
+				viewangles[YAW] = RAD2DEG(atan2(side, forward)) + GetThirdPersonManager().GetCameraOffsetAngles()[ YAW ];
 			}
 			if ( side || forward || KeyState (&in_right) || KeyState (&in_left) )
 			{
-				cam_idealyaw.SetValue( g_ThirdPersonManager.GetCameraOffsetAngles()[ YAW ] - viewangles[ YAW ] );
+				cam_idealyaw.SetValue( GetThirdPersonManager().GetCameraOffsetAngles()[ YAW ] - viewangles[ YAW ] );
 			}
 		}
 	}
@@ -150,7 +150,7 @@ float CTFInput::JoyStickAdjustYaw( float flSpeed )
 }
 
 ConVar tf_halloween_kart_cam_follow( "tf_halloween_kart_cam_follow", "0.3f", FCVAR_CHEAT );
-void CTFInput::ApplyMouse( QAngle& viewangles, CUserCmd *cmd, float mouse_x, float mouse_y )
+void CTFInput::ApplyMouse( int slot, QAngle& viewangles, CUserCmd *cmd, float mouse_x, float mouse_y )
 {
 	CTFPlayer *pPlayer = C_TFPlayer::GetLocalTFPlayer();
 	if ( pPlayer && pPlayer->m_Shared.InCond( TF_COND_HALLOWEEN_KART ) )
@@ -165,6 +165,6 @@ void CTFInput::ApplyMouse( QAngle& viewangles, CUserCmd *cmd, float mouse_x, flo
 	}
 	else
 	{
-		CInput::ApplyMouse( viewangles, cmd, mouse_x, mouse_y );
+		CInput::ApplyMouse( slot, viewangles, cmd, mouse_x, mouse_y );
 	}
 }

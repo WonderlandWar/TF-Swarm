@@ -29,7 +29,7 @@
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include <tier0/memdbgon.h>
-
+#if 0
 #define TF2_PREVIEW_IMAGE_HEIGHT 512
 #define TF2_PREVIEW_IMAGE_WIDTH 512
 
@@ -1688,3 +1688,4 @@ bool ItemTestHandlesKeyInput( int down, ButtonCode_t keynum, const char *pszCurr
 	return false;
 }
 
+#endif

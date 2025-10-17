@@ -3,7 +3,7 @@
 #include "tf_gc_client.h"
 #include "gcsdk/gcsdk_auto.h"
 #include "tf_gcmessages.h"
-#include "kvpacker.h"
+//#include "kvpacker.h"
 #include "tf_party.h"
 // XXX(JohnS): Eventually, we want to send a smaller lobby object to clients. For now, they use the CTFGSLobby, which is
 //             in shared code for that reason.
@@ -39,8 +39,8 @@
 #include "tf_hud_disconnect_prompt.h"
 
 #include "util_shared.h"
-#include <steam/isteamnetworkingutils.h>
-#include <steam/isteamnetworkingsockets.h>
+//#include <steam/isteamnetworkingutils.h>
+//#include <steam/isteamnetworkingsockets.h>
 #include "filesystem.h"
 #include "steam/isteamuser.h"
 #include "mini_sha256.h"
@@ -134,8 +134,8 @@ bool CTFGCClientSystem::Init()
 
 	// Let SDR know that we will likely want access to the relay network, so we're more
 	// likely to have initial ping data to the clusters ready by the time we ask for it
-	if ( SteamNetworkingUtils() )
-		{ SteamNetworkingUtils()->InitRelayNetworkAccess(); }
+	//if ( steamapicontext->SteamNetworkingUtils() )
+	//	{ steamapicontext->SteamNetworkingUtils()->InitRelayNetworkAccess(); }
 
 
 	return true;
@@ -341,17 +341,17 @@ void CTFGCClientSystem::WebapiInventoryThink()
 		state.m_eState = kWebapiInventoryState_RequestAuthToken;
 		// fallthrough
 	case kWebapiInventoryState_RequestAuthToken:
-		if ( !SteamUser() )
+		if ( !steamapicontext->SteamUser() )
 			return;
 
 		if ( state.m_hSteamAuthTicket != k_HAuthTicketInvalid )
 		{
-			SteamUser()->CancelAuthTicket( state.m_hSteamAuthTicket );
+			steamapicontext->SteamUser()->CancelAuthTicket( state.m_hSteamAuthTicket );
 			state.m_hSteamAuthTicket = k_HAuthTicketInvalid;
 		}
 
 		// Request a ticket from Steam
-		state.m_hSteamAuthTicket = SteamUser()->GetAuthTicketForWebApi( "tf2sdk" );
+		state.m_hSteamAuthTicket = k_HAuthTicketInvalid; //steamapicontext->SteamUser()->GetAuthTicketForWebApi( "tf2sdk" );
 		if ( state.m_hSteamAuthTicket == k_HAuthTicketInvalid )
 		{
 			state.Backoff();
@@ -371,57 +371,57 @@ void CTFGCClientSystem::WebapiInventoryThink()
 	case kWebapiInventoryState_RequestInventory:
 	{
 		// need access to http + local steam id
-		if ( !SteamHTTP() || !SteamUser() )
+		//if ( !SteamHTTP() || !steamapicontext->SteamUser() )
 			return;
-
+		
 		// Request inventory from teamfortress.com webapi
 		CFmtStr strUrl( "%swebapi/ISDK/GetInventory/v0001", GetWebBaseUrl() );
 
-		state.m_InventoryRequestCompleted.Cancel();
-		state.m_hInventoryRequest = SteamHTTP()->CreateHTTPRequest( k_EHTTPMethodGET, strUrl.Get() );
-		if ( state.m_hInventoryRequest == INVALID_HTTPREQUEST_HANDLE )
+		//state.m_InventoryRequestCompleted.Cancel();
+		//state.m_hInventoryRequest = SteamHTTP()->CreateHTTPRequest( k_EHTTPMethodGET, strUrl.Get() );
+		//if ( state.m_hInventoryRequest == INVALID_HTTPREQUEST_HANDLE )
 		{
 			// try again next frame
 			return;
 		}
 
 		// This mod's appid (NOT tf2's appid)
-		SteamHTTP()->SetHTTPRequestGetOrPostParameter( state.m_hInventoryRequest, "appid", CNumStr( engine->GetAppID() ) );
+		//SteamHTTP()->SetHTTPRequestGetOrPostParameter( state.m_hInventoryRequest, "appid", CNumStr( engine->GetAppID() ) );
 
 		// Authentication token
 		CUtlMemory<char> strHexToken;
 		int nBufSize = 2 * state.m_bufAuthToken.Count();
 		strHexToken.EnsureCapacity( nBufSize + 1 );
 		V_binarytohex( state.m_bufAuthToken.Base(), state.m_bufAuthToken.Count(), strHexToken.Base(), strHexToken.Count() ); // TODO: Fix V_binarytohex; it's O(n^2) due to repeated uses of strncat.
-		SteamHTTP()->SetHTTPRequestGetOrPostParameter( state.m_hInventoryRequest, "ticket", strHexToken.Base() );
+		//SteamHTTP()->SetHTTPRequestGetOrPostParameter( state.m_hInventoryRequest, "ticket", strHexToken.Base() );
 		
 		if ( GetUniverse() != k_EUniversePublic )
 		{
 			// use beta tf2 appid on non public universes
-			SteamHTTP()->SetHTTPRequestGetOrPostParameter( state.m_hInventoryRequest, "game_appid", "810" );
+			//SteamHTTP()->SetHTTPRequestGetOrPostParameter( state.m_hInventoryRequest, "game_appid", "810" );
 		}
 
 		// If we already have an so cache for this user, include its version so we don't send the whole cache if it's unchanged
-		CGCClientSharedObjectCache* pExistingSOCache = GetSOCache( SteamUser()->GetSteamID() );
-		if( pExistingSOCache && pExistingSOCache->BIsSubscribed() )
+		//CGCClientSharedObjectCache* pExistingSOCache = GetSOCache( steamapicontext->SteamUser()->GetSteamID() );
+		//if( pExistingSOCache && pExistingSOCache->BIsSubscribed() )
 		{
-			SteamHTTP()->SetHTTPRequestGetOrPostParameter( state.m_hInventoryRequest, "version", CNumStr( pExistingSOCache->GetVersion() ) );
+			//SteamHTTP()->SetHTTPRequestGetOrPostParameter( state.m_hInventoryRequest, "version", CNumStr( pExistingSOCache->GetVersion() ) );
 		}
 
 		// Wait a long time for this, api might be slow / inventories are large
-		if ( mod_inventory_request_timeout.GetInt() > 0 )
+		//if ( mod_inventory_request_timeout.GetInt() > 0 )
 		{
-			SteamHTTP()->SetHTTPRequestNetworkActivityTimeout( state.m_hInventoryRequest, mod_inventory_request_timeout.GetInt() );
+			//SteamHTTP()->SetHTTPRequestNetworkActivityTimeout( state.m_hInventoryRequest, mod_inventory_request_timeout.GetInt() );
 		}
 
 		SteamAPICall_t callResult;
-		if ( !SteamHTTP()->SendHTTPRequest( state.m_hInventoryRequest, &callResult ) )
+		//if ( !SteamHTTP()->SendHTTPRequest( state.m_hInventoryRequest, &callResult ) )
 		{
 			state.Backoff();
 			return;
 		}
 
-		state.m_InventoryRequestCompleted.Set( callResult, this, &CTFGCClientSystem::OnWebapiInventoryReceived );
+		//state.m_InventoryRequestCompleted.Set( callResult, this, &CTFGCClientSystem::OnWebapiInventoryReceived );
 		state.m_eState = kWebapiInventoryState_WaitingForInventory;
 		break;
 	}
@@ -442,7 +442,7 @@ void CTFGCClientSystem::WebapiInventoryThink()
 		// Cancel any existing server auth ticket until we are connected.
 		if ( state.m_hServerAuthTicket != k_HAuthTicketInvalid )
 		{
-			SteamUser()->CancelAuthTicket( state.m_hServerAuthTicket );
+			steamapicontext->SteamUser()->CancelAuthTicket( state.m_hServerAuthTicket );
 			state.m_hServerAuthTicket = k_HAuthTicketInvalid;
 		}
 
@@ -462,10 +462,10 @@ void CTFGCClientSystem::WebapiInventoryThink()
 			return;
 		}
 
-		if ( !SteamUser() )
+		if ( !steamapicontext->SteamUser() )
 			return;
 
-		CGCClientSharedObjectCache* pSOCache = GetSOCache( SteamUser()->GetSteamID() );
+		CGCClientSharedObjectCache* pSOCache = GetSOCache( steamapicontext->SteamUser()->GetSteamID() );
 		if ( !pSOCache )
 			return;
 
@@ -500,7 +500,7 @@ void CTFGCClientSystem::WebapiInventoryThink()
 			return;
 		}
 
-		if ( !SteamUser() )
+		if ( !steamapicontext->SteamUser() )
 			return;
 
 		// "Sign" the message by including an auth ticket that identifies itself as the hash of the requested items
@@ -521,7 +521,7 @@ void CTFGCClientSystem::WebapiInventoryThink()
 		V_binarytohex( digest + V_ARRAYSIZE( digest ) - knHashBytesToUse, knHashBytesToUse, strDigest, V_ARRAYSIZE( strDigest ) );
 
 		// Request the auth ticket from steam and wait for it to arrive.
-		state.m_hServerAuthTicket = SteamUser()->GetAuthTicketForWebApi( strDigest );
+		state.m_hServerAuthTicket = k_HAuthTicketInvalid;//steamapicontext->SteamUser()->GetAuthTicketForWebApi( strDigest );
 		state.m_eState = kWebapiInventoryState_WaitingForServerAuthToken;
 		break;
 	}
@@ -562,7 +562,7 @@ void CTFGCClientSystem::WebapiInventoryThink()
 		kv->SetString( "ticket", strHexToken.Base() );
 
 		// Add any server-specific fields so it knows what to do with the given inventory items (per-mod loadout may not match the user's real tf2 loadout)
-		SDK_AddServerInventoryInfo( kv, GetSOCache( SteamUser()->GetSteamID() ) );
+		SDK_AddServerInventoryInfo( kv, GetSOCache( steamapicontext->SteamUser()->GetSteamID() ) );
 
 		// Send to the server
 		engine->ServerCmdKeyValues( kv );
@@ -607,201 +607,6 @@ void CTFGCClientSystem::ServerRequestEquipment()
 void CTFGCClientSystem::LocalInventoryChanged()
 {
 	m_WebapiInventory.m_bLocalChangesApplied = true;
-}
-
-
-void CTFGCClientSystem::OnSteamGetTicketForWebApiResponse( GetTicketForWebApiResponse_t *pInfo )
-{
-	OnWebapiAuthTicketReceived( pInfo );
-	OnWebapiServerAuthTicketReceived( pInfo );
-}
-
-void CTFGCClientSystem::OnWebapiAuthTicketReceived( GetTicketForWebApiResponse_t *pInfo )
-{
-	WebapiInventoryState_t& state = m_WebapiInventory;
-	if ( state.m_eState != kWebapiInventoryState_WaitingForAuthToken )
-		return;
-
-	if ( pInfo->m_hAuthTicket != state.m_hSteamAuthTicket )
-		return;
-
-	// This is our ticket.  Assume failure for now, we'll correct this if we find it worked.
-	state.Backoff();
-	state.m_eState = kWebapiInventoryState_RequestAuthToken;
-
-	// Check that the request succeeded
-	if ( pInfo->m_eResult != k_EResultOK )
-		return;
-
-	// Validate the token makes sense
-	if ( pInfo->m_cubTicket < 0 || pInfo->m_cubTicket > pInfo->k_nCubTicketMaxLength )
-		return;
-
-	// Copy the token
-	state.m_bufAuthToken.SetCount( pInfo->m_cubTicket );
-	memcpy( state.m_bufAuthToken.Base(), pInfo->m_rgubTicket, pInfo->m_cubTicket );
-
-	// Success
-	state.RequestSucceeded();
-	state.m_eState = kWebapiInventoryState_AuthTokenReceived;
-}
-
-// This is just copy-paste from above -- might be nice to refactor
-void CTFGCClientSystem::OnWebapiServerAuthTicketReceived( GetTicketForWebApiResponse_t* pInfo )
-{
-	WebapiInventoryState_t& state = m_WebapiInventory;
-	if ( state.m_eState != kWebapiInventoryState_WaitingForServerAuthToken )
-		return;
-
-	if ( pInfo->m_hAuthTicket != state.m_hServerAuthTicket )
-		return;
-
-	// This is our ticket.  Assume failure for now, we'll correct this if we find it worked.
-	state.Backoff();
-	state.m_eState = kWebapiInventoryState_RequestServerAuthToken;
-
-	// Check that the request succeeded
-	if ( pInfo->m_eResult != k_EResultOK )
-		return;
-
-	// Validate the token makes sense
-	if ( pInfo->m_cubTicket < 0 || pInfo->m_cubTicket > pInfo->k_nCubTicketMaxLength )
-		return;
-
-	// Copy the token
-	state.m_bufServerAuthToken.SetCount( pInfo->m_cubTicket );
-	memcpy( state.m_bufServerAuthToken.Base(), pInfo->m_rgubTicket, pInfo->m_cubTicket );
-
-	// Success
-	state.RequestSucceeded();
-	state.m_eState = kWebapiInventoryState_ServerAuthTokenReceived;
-}
-
-void CTFGCClientSystem::OnWebapiInventoryReceived( HTTPRequestCompleted_t* pInfo, bool bIOFailure )
-{
-	if ( !SteamHTTP() )
-		return; // probably shutting down, just ignore it
-
-	WebapiInventoryState_t& state = m_WebapiInventory;
-	if ( bIOFailure || !pInfo )
-	{
-		Assert( false );
-
-		// Failed to communicate with steam
-		// Free our http request (Can we be sure this is the right one?)
-		if ( state.m_hInventoryRequest != INVALID_HTTPREQUEST_HANDLE )
-		{
-			SteamHTTP()->ReleaseHTTPRequest( state.m_hInventoryRequest );
-			state.m_hInventoryRequest = INVALID_HTTPREQUEST_HANDLE;
-		}
-		return;
-	}
-
-	// Did we lose this request somehow (e.g. reset state while it was in flight)
-	// Just throw it away
-	if ( pInfo->m_hRequest != state.m_hInventoryRequest )
-	{
-		Assert( false );
-		SteamHTTP()->ReleaseHTTPRequest( pInfo->m_hRequest );
-		return;
-	}
-
-	// Assume failure -- we'll correct this if this isn't the case
-	state.Backoff();
-	state.m_eState = kWebapiInventoryState_RequestInventory;
-
-	// This is our handle -- we'll free it by the end of this.
-	state.m_hInventoryRequest = INVALID_HTTPREQUEST_HANDLE;
-
-	if ( !pInfo->m_bRequestSuccessful || pInfo->m_eStatusCode != k_EHTTPStatusCode200OK )
-	{
-		SteamHTTP()->ReleaseHTTPRequest( pInfo->m_hRequest );
-		return;
-	}
-
-	// Extract the result
-	uint32 unBytes;
-	Verify( SteamHTTP()->GetHTTPResponseBodySize( pInfo->m_hRequest, &unBytes ) );
-	CUtlBuffer bufInventory;
-	bufInventory.EnsureCapacity( unBytes );
-	bufInventory.SeekPut( CUtlBuffer::SEEK_HEAD, unBytes );
-	Verify( SteamHTTP()->GetHTTPResponseBodyData( pInfo->m_hRequest, (uint8*)bufInventory.Base(), unBytes ) );
-
-	// We're done with the request now
-	SteamHTTP()->ReleaseHTTPRequest( pInfo->m_hRequest );
-
-	// Parse it to json and extract the data
-	GCSDK::CWebAPIValues* pValues = GCSDK::CWebAPIValues::ParseJSON( bufInventory );
-	if ( !pValues )
-	{
-		Warning( "Received invalid response to inventory request\n" );
-		return;
-	}
-
-	int nResult = pValues->GetChildInt32Value( "result", k_EResultNone );
-	switch ( nResult )
-	{
-	case k_EResultOK:
-		break;
-
-	case k_EResultFail:
-		return; // will retry after backoff timer expires
-
-	case k_EResultNotLoggedOn:
-		// re-request authentication after backoff time
-		state.m_eState = kWebapiInventoryState_RequestAuthToken;
-		return;
-
-	default:
-	{
-		CUtlString strError;
-		pValues->GetChildStringValue( strError, "error", "" );
-		Warning( "Received unexpected result code %d attempting to retrieve inventory. (%s)\n", nResult, strError.Get() );
-		return;
-	}
-	}
-
-	// Parse the inventory message
-	CSteamID userSteamID( pValues->GetChildUInt64Value( "steamID" ) );
-	if ( !userSteamID.IsValid() || userSteamID.GetEAccountType() != k_EAccountTypeIndividual || userSteamID.GetEUniverse() != GetUniverse() )
-	{
-		Warning( "Inventory response has bad owner steam id (%s)\n", userSteamID.Render() );
-		return;
-	}
-
-	if ( pValues->FindChild( "msg" ) )
-	{
-		CUtlBuffer bufMsgSubscription;
-		if ( !pValues->BGetChildBinaryValue( bufMsgSubscription, "msg" ) )
-		{
-			Warning( "Inventory response missing inventory\n" );
-			return;
-		}
-
-		CGCClientSharedObjectCache *pSOCache = GetGCClient()->AddLocalSOCache( userSteamID, bufMsgSubscription.Base(), bufMsgSubscription.TellPut() );
-		if ( !pSOCache )
-		{
-			Warning( "Inventory response failed to create SO cache (probably protobuf didn't parse)\n" );
-			return;
-		}
-
-		// Version should match the one they said we have
-		Assert( pSOCache->GetVersion() == pValues->GetChildUInt64Value( "version" ) );
-	}
-	else
-	{
-		// Cache up to date.  Validate version matches
-		CGCClientSharedObjectCache* pSOCache = GetGCClient()->FindSOCache( userSteamID, false );
-		Assert( pSOCache );
-		if( pSOCache )
-		{
-			Assert( pSOCache->GetVersion() == pValues->GetChildUInt64Value( "version" ) );
-		}
-	}
-
-	// We were successful, clear backoff timers
-	state.RequestSucceeded();
-	state.m_eState = kWebapiInventoryState_InventoryReceived;
 }
 
 void CTFGCClientSystem::SDK_SelectItemsToSendToServer( CMsgAuthorizeServerItemRetrieval* pMsg, CGCClientSharedObjectCache* pSOCache )
@@ -1001,9 +806,8 @@ CTFGSLobby* CTFGCClientSystem::GetLobby() const
 
 bool ForceCompetitiveConvars()
 {
-
 	bool anyFailures = false;
-
+#if 0
 	Assert( ThreadInMainThread() );
 	for ( ConCommandBase *ccb = g_pCVar->GetCommands(); ccb; ccb = ccb->GetNext() )
 	{
@@ -1023,7 +827,7 @@ bool ForceCompetitiveConvars()
 		if ( !pVar->SetCompetitiveMode( true ) )
 			anyFailures = true;
 	}
-
+#endif
 	return !anyFailures;
 }
 
@@ -1058,7 +862,8 @@ void CTFGCClientSystem::SetWorldStatus( CMsgTFWorldStatus &status )
 	{
 		m_WorldStatus = status;
 
-		uint32_t nEngineVer = engine->GetClientVersion();
+		// TF_SWARM: Doesn't seem fixable
+		uint32_t nEngineVer = INT_MAX;//engine->GetClientVersion();
 		uint32_t nWorldVer = status.active_client_version();
 		// World version 0 is dev-universe for disabled checking
 		bool bOutOfDate = ( nWorldVer > 0 && nEngineVer != nWorldVer );

@@ -25,6 +25,7 @@
 #include "ivieweffects.h"
 #include <ctype.h> // isalnum()
 #include <voice_status.h>
+#include "cam_thirdperson.h"
 
 extern ConVar in_joystick;
 extern ConVar cam_idealpitch;
@@ -812,11 +813,11 @@ void CInput::AdjustYaw( int nSlot, float speed, QAngle& viewangles )
 
 		if ( side || forward )
 		{
-			viewangles[YAW] = RAD2DEG(atan2(side, forward)) + user.m_vecCameraOffset[ YAW ];
+			viewangles[YAW] = RAD2DEG(atan2(side, forward)) + GetThirdPersonManager().GetCameraOffsetAngles()[ YAW ];
 		}
 		if ( side || forward || KeyState (&in_right) || KeyState (&in_left) )
 		{
-			cam_idealyaw.SetValue( user.m_vecCameraOffset[ YAW ] - viewangles[ YAW ] );
+			cam_idealyaw.SetValue( GetThirdPersonManager().GetCameraOffsetAngles()[ YAW ] - viewangles[ YAW ] );
 		}
 	}
 }

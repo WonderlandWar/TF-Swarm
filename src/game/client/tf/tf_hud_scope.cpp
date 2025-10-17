@@ -15,8 +15,8 @@
 #include "materialsystem/imaterial.h"
 #include "materialsystem/imesh.h"
 #include "materialsystem/imaterialvar.h"
-#include "client_virtualreality.h"
-#include "sourcevr/isourcevirtualreality.h"
+//#include "client_virtualreality.h"
+//#include "sourcevr/isourcevirtualreality.h"
 #include <vgui/IScheme.h>
 #include <vgui/ISurface.h>
 #include <KeyValues.h>

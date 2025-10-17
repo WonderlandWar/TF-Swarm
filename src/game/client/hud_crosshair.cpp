@@ -123,11 +123,11 @@ void CHudCrosshair::GetDrawPosition ( float *pX, float *pY, bool *pbBehindCamera
 	QAngle curViewAngles = CurrentViewAngles();
 	Vector curViewOrigin = CurrentViewOrigin();
 
-	int vx, vy, vw, vh;
-	vgui::surface()->GetFullscreenViewport( vx, vy, vw, vh );
+	//int vx, vy, vw, vh;
+	//vgui::surface()->GetFullscreenViewport( vx, vy, vw, vh );
 
-	float screenWidth = vw;
-	float screenHeight = vh;
+	float screenWidth = ScreenWidth();
+	float screenHeight = ScreenHeight();
 
 	float x = screenWidth / 2;
 	float y = screenHeight / 2;

@@ -80,6 +80,7 @@ protected:
 	string_t			m_iszControlPointNames[kMAXCONTROLPOINTS];
 	CNetworkArray( EHANDLE, m_hControlPointEnts, kMAXCONTROLPOINTS );
 	CNetworkArray( unsigned char, m_iControlPointParents, kMAXCONTROLPOINTS );
+	CNetworkVar( bool,	m_bWeatherEffect );
 };
 
 #endif // PARTICLE_SYSTEM_H

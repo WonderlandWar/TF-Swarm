@@ -74,8 +74,8 @@
 #include "confirm_dialog.h"
 #include "ServerBrowser/blacklisted_server_manager.h"
 #include "tf_quickplay_shared.h"
-#include "sourcevr/isourcevirtualreality.h"
-#include "client_virtualreality.h"
+//#include "sourcevr/isourcevirtualreality.h"
+//#include "client_virtualreality.h"
 
 #include "econ_gcmessages.h"
 
@@ -95,7 +95,7 @@
 #include "c_tf_notification.h"
 
 #if !defined( _X360 ) && !defined( NO_STEAM )
-#include "steam/isteamtimeline.h"
+//#include "steam/isteamtimeline.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -260,6 +260,7 @@ static void ScreenshotTaggingKeyInput( int down, ButtonCode_t keynum, const char
 static void EnableSteamScreenshots( bool bEnable )
 {
 #if !defined(NO_STEAM)
+#if 0
 	if ( steamapicontext && steamapicontext->SteamScreenshots() )
 	{
 		ConVarRef cl_savescreenshotstosteam( "cl_savescreenshotstosteam" );
@@ -269,6 +270,7 @@ static void EnableSteamScreenshots( bool bEnable )
 			steamapicontext->SteamScreenshots()->HookScreenshots( bEnable );
 		}
 	}
+#endif
 #endif
 }
 
@@ -373,13 +375,14 @@ ClientModeTFNormal::ClientModeTFNormal()
 	m_lastServerName = NULL;
 	m_lastServerConnectTime = 0;
 	m_pTeamGoalTournament = NULL;
+	memset( m_szMapBaseName, 0, sizeof( m_szMapBaseName ) );
 
 #if defined( _X360 )
 	m_pScoreboard = NULL;
 #endif
 	
 #if !defined(NO_STEAM)
-	m_CallbackScreenshotRequested.Register( this, &ClientModeTFNormal::OnScreenshotRequested );
+	//m_CallbackScreenshotRequested.Register( this, &ClientModeTFNormal::OnScreenshotRequested );
 #endif
 
 }
@@ -458,7 +461,7 @@ void ClientModeTFNormal::Init()
 			pPanel->MakePopup( false );
 			m_pGameUI->SetLoadingBackgroundDialog( pPanel->GetVPanel() );
 
-			IViewPortPanel *pMMOverride = ( gViewPortInterface->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
+			IViewPortPanel *pMMOverride = ( GetViewPortInterface()->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
 			if ( pMMOverride )
 			{
 				((CHudMainMenuOverride*)pMMOverride)->AttachToGameUI();	
@@ -467,7 +470,7 @@ void ClientModeTFNormal::Init()
 	}
 
 #if defined( _X360 )
-	m_pScoreboard = (CTFClientScoreBoardDialog *)( gViewPortInterface->FindPanelByName( PANEL_SCOREBOARD ) );
+	m_pScoreboard = (CTFClientScoreBoardDialog *)( GetViewPortInterface()->FindPanelByName( PANEL_SCOREBOARD ) );
 	Assert( m_pScoreboard );
 #endif
 
@@ -690,8 +693,8 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 		m_szMapBaseName[0] = '\0';
 		m_bPendingRichPresenceUpdate = true;
 #if !defined( _X360 ) && !defined( NO_STEAM )
-		if ( SteamTimeline() )
-			SteamTimeline()->ClearTimelineStateDescription( 0 );
+		//if ( SteamTimeline() )
+		//	SteamTimeline()->ClearTimelineStateDescription( 0 );
 #endif
 	}
 	else if ( FStrEq( "server_cvar", eventname ) )
@@ -883,7 +886,7 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 		CTFGSLobby *pLobby = GTFGCClientSystem()->GetLobby();
 		if ( pLobby )
 		{
-			engine->FlashWindow();
+			//engine->FlashWindow();
 
 			{
 				// If minimized, Blink and play noise
@@ -988,7 +991,7 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 			{
 				pKeyValues->SetString( "player", g_TF_PR->GetPlayerName( iPlayerIndex ) );
 
-				pHUDChat->SetCustomColor( colorEyeballBossText );
+				//pHUDChat->SetCustomColor( colorEyeballBossText );
 
 				const int iLevel = event->GetInt( "level" );
 				if ( iLevel > 1 )
@@ -1055,7 +1058,7 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 			{
 				pKeyValues->SetString( "player", g_TF_PR->GetPlayerName( iPlayerIndex ) );
 
-				pHUDChat->SetCustomColor( colorEyeballBossText );
+				//pHUDChat->SetCustomColor( colorEyeballBossText );
 
 				const int iLevel = event->GetInt( "level" );
 
@@ -1088,7 +1091,7 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 		if ( pHUDChat )
 		{
 			char szEyeballBossEscaping[128];
-			pHUDChat->SetCustomColor( colorEyeballBossText );
+			//pHUDChat->SetCustomColor( colorEyeballBossText );
 
 			const int iLevel = event->GetInt( "level" );
 
@@ -1097,13 +1100,13 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 				KeyValuesAD pKeyValues( "data" );
 				pKeyValues->SetInt( "level", iLevel );
 
-				V_sprintf_safe( szEyeballBossEscaping, "#TF_Halloween_Eyeball_Boss_LevelUp_Escaping_In_%i", nSecondsRemaining );
+				sprintf( szEyeballBossEscaping, "#TF_Halloween_Eyeball_Boss_LevelUp_Escaping_In_%i", nSecondsRemaining );
 
 				PrintTextToChat( szEyeballBossEscaping, pKeyValues );
 			}
 			else
 			{
-				V_sprintf_safe( szEyeballBossEscaping, "#TF_Halloween_Eyeball_Boss_Escaping_In_%i", nSecondsRemaining );
+				sprintf( szEyeballBossEscaping, "#TF_Halloween_Eyeball_Boss_Escaping_In_%i", nSecondsRemaining );
 
 				PrintTextToChat( szEyeballBossEscaping );
 			}
@@ -1245,7 +1248,7 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 		if ( pHUDChat )
 		{
 			char szEyeballBossEscaping[128];
-			pHUDChat->SetCustomColor( colorMerasmusText );
+			//pHUDChat->SetCustomColor( colorMerasmusText );
 
 			const int iLevel = event->GetInt( "level" );
 
@@ -1254,13 +1257,13 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 				KeyValuesAD pKeyValues( "data" );
 				pKeyValues->SetInt( "level", iLevel );
 
-				V_sprintf_safe( szEyeballBossEscaping, "#TF_Halloween_Merasmus_LevelUp_Escaping_In_%i", nSecondsRemaining );
+				sprintf( szEyeballBossEscaping, "#TF_Halloween_Merasmus_LevelUp_Escaping_In_%i", nSecondsRemaining );
 
 				PrintTextToChat( szEyeballBossEscaping, pKeyValues );
 			}
 			else
 			{
-				V_sprintf_safe( szEyeballBossEscaping, "#TF_Halloween_Merasmus_Escaping_In_%i", nSecondsRemaining );
+				sprintf( szEyeballBossEscaping, "#TF_Halloween_Merasmus_Escaping_In_%i", nSecondsRemaining );
 
 				PrintTextToChat( szEyeballBossEscaping );
 			}
@@ -1388,12 +1391,14 @@ void ClientModeTFNormal::FireGameEvent( IGameEvent *event )
 	}
 	else if ( FStrEq( "player_teleported", eventname ) )
 	{
+#if 0
 		int iUserID = event->GetInt( "userid" );
 		C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
 		if( pLocalPlayer && pLocalPlayer->GetUserID() == iUserID && UseVR() )
 		{
 			g_ClientVirtualReality.AlignTorsoAndViewToWeapon();
 		}
+#endif
 	}
 	else if ( FStrEq( "scorestats_accumulated_reset", eventname ) )
 	{
@@ -1913,7 +1918,7 @@ bool ClientModeTFNormal::IsTauntSelectPanelVisible() const
 //----------------------------------------------------------------------------
 void ClientModeTFNormal::UpdateSteamRichPresence() const
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	// Update our steam rich presence keys when some event changes that would require it
 	// We don't explicitly flush keys, so this (and callees) should always touch/clear all keys they manage
@@ -1934,10 +1939,10 @@ void ClientModeTFNormal::UpdateSteamRichPresence() const
 	if ( m_szMapBaseName[0] )
 		{ pszPrettyMap = GetMapDisplayName( m_szMapBaseName, /* bTitleCase */ true ); }
 
-	if ( bConnected )
-		{ pSteamFriends->SetRichPresence( "currentmap", pszPrettyMap );}
-	else
-		{ pSteamFriends->SetRichPresence( "currentmap", nullptr ); }
+	//if ( bConnected )
+	//	{ pSteamFriends->SetRichPresence( "currentmap", pszPrettyMap );}
+	//else
+	//	{ pSteamFriends->SetRichPresence( "currentmap", nullptr ); }
 
 	//
 	// Set 'connect'
@@ -1947,38 +1952,38 @@ void ClientModeTFNormal::UpdateSteamRichPresence() const
 	//   MM match you cannot directly join)
 	//
 	// Note that AdvertiseGame() happens as soon as we begin connecting
-	if ( ( bInMatch || ( !bConnected && !bConnecting ) ) && steamapicontext->SteamUser() )
+	//if ( ( bInMatch || ( !bConnected && !bConnecting ) ) && steamapicontext->SteamUser() )
 	{
 		// If they have an MM match, or if they're just on the menus, direct joiners to join their party, they cannot
 		// join the server directly.
-		CFmtStr strConnect( "+tf_party_request_join_user %llu",
-		                    steamapicontext->SteamUser()->GetSteamID().ConvertToUint64() );
+		//CFmtStr strConnect( "+tf_party_request_join_user %llu",
+		//                    steamapicontext->SteamUser()->GetSteamID().ConvertToUint64() );
 
-		engine->SetRichPresenceConnect( strConnect );
+		//engine->SetRichPresenceConnect( strConnect );
 	}
-	else
+	//else
 	{
 		// Otherwise, no connect string.  If they're connected, the engine will handle updating this
 		// correctly.
-		engine->SetRichPresenceConnect( nullptr );
+		//engine->SetRichPresenceConnect( nullptr );
 	}
 
 	//
 	// Set 'steam_player_group' and 'steam_player_group_size'
 	//
-	if ( GTFPartyClient()->BHaveActiveParty() )
+	//if ( GTFPartyClient()->BHaveActiveParty() )
 	{
-		pSteamFriends->SetRichPresence( "steam_player_group",
+		//pSteamFriends->SetRichPresence( "steam_player_group",
 		                                CFmtStr( "party_%llu", GTFPartyClient()->GetActivePartyID() ) );
 		// Only tell steam about online party members, since offline members may still be on steam, but their rich
 		// presence won't attest to their membership in this party.
-		pSteamFriends->SetRichPresence( "steam_player_group_size",
-		                                CFmtStr( "%d", GTFPartyClient()->CountNumOnlinePartyMembers() ) );
+		//pSteamFriends->SetRichPresence( "steam_player_group_size",
+		//                                CFmtStr( "%d", GTFPartyClient()->CountNumOnlinePartyMembers() ) );
 	}
-	else
+	//else
 	{
-		pSteamFriends->SetRichPresence( "steam_player_group", nullptr );
-		pSteamFriends->SetRichPresence( "steam_player_group_size", nullptr );
+		//pSteamFriends->SetRichPresence( "steam_player_group", nullptr );
+		//pSteamFriends->SetRichPresence( "steam_player_group_size", nullptr );
 	}
 
 	//
@@ -2054,13 +2059,13 @@ void ClientModeTFNormal::UpdateSteamRichPresence() const
 		pszState = "MainMenu";
 	}
 
-	pSteamFriends->SetRichPresence( "state", pszState );
-	pSteamFriends->SetRichPresence( "matchgrouploc", pszMatchGroupLoc );
+	//pSteamFriends->SetRichPresence( "state", pszState );
+	//pSteamFriends->SetRichPresence( "matchgrouploc", pszMatchGroupLoc );
 
 	//
 	// 'steam_display' embeds our state and matchgrouploc set above.
 	//
-	pSteamFriends->SetRichPresence( "steam_display", "#TF_RichPresence_Display" );
+	//pSteamFriends->SetRichPresence( "steam_display", "#TF_RichPresence_Display" );
 
 	//
 	// 'status' field -- used by legacy steam client only right now
@@ -2071,13 +2076,13 @@ void ClientModeTFNormal::UpdateSteamRichPresence() const
 	if ( ( bInMatch || ( !bConnecting && !bConnected ) ) &&
 	     BuildRichPresenceStatus( wzStatus, pszState, pszMatchGroupLoc, pszPrettyMap ))
 	{
-			char szStatus[256] = { 0 };
-			V_UnicodeToUTF8( wzStatus, szStatus, sizeof( szStatus ) );
-			pSteamFriends->SetRichPresence( "status", szStatus );
+			//char szStatus[256] = { 0 };
+			//V_UnicodeToUTF8( wzStatus, szStatus, sizeof( szStatus ) );
+			//pSteamFriends->SetRichPresence( "status", szStatus );
 	}
 	else
 	{
-		pSteamFriends->SetRichPresence( "status", nullptr );
+		//pSteamFriends->SetRichPresence( "status", nullptr );
 	}
 }
 
@@ -2087,7 +2092,7 @@ bool ClientModeTFNormal::BuildRichPresenceStatusDirect( wchar_t *pwzOutStatus, s
                                                         const char *pszMatchGroupLocTokenSuffix,
                                                         const char *pszPrettyMapName )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	// We don't support the {#TF_SomeToken} recursion steam does in our localize library, but we only use a few specific
 	// pieces of indirection
@@ -2332,7 +2337,7 @@ USER_MESSAGE( PlayerPickupWeapon )
 
 USER_MESSAGE( QuestObjectiveCompleted )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	itemid_t itemID = (itemid_t)msg.ReadLongLong();
 	uint16 nPoints0 = msg.ReadByte();
@@ -2415,7 +2420,7 @@ CON_COMMAND( tf_rich_presence_set, "Set rich presence key" )
 		return;
 	}
 
-	pSteamFriends->SetRichPresence( pKey, pValue );
+	//pSteamFriends->SetRichPresence( pKey, pValue );
 	ConMsg( "Set rich presence key \"%s\" -> \"%s\"\n", pKey, pValue );
 }
 
@@ -2434,7 +2439,7 @@ CON_COMMAND( tf_rich_presence_clear, "Clear all rich presence" )
 		return;
 	}
 
-	pSteamFriends->ClearRichPresence();
+	//pSteamFriends->ClearRichPresence();
 	ConMsg( "Clear all rich presence keys\n" );
 }
 

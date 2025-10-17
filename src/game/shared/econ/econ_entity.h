@@ -75,8 +75,8 @@ public:
 	virtual void			OnPreDataChanged( DataUpdateType_t type );
 	virtual void			OnDataChanged( DataUpdateType_t updateType );
 	virtual bool			ShouldShowToolTip( void	) { return true; }
-	virtual bool			InitializeAsClientEntity( const char *pszModelName, RenderGroup_t renderGroup );
-	virtual bool			OnInternalDrawModel( ClientModelRenderInfo_t *pInfo );
+	virtual bool			InitializeAsClientEntity( const char *pszModelName, RenderGroup_t renderGroup ) OVERRIDE;
+	virtual bool			OnInternalDrawModel( ClientModelRenderInfo_t *pInfo ) OVERRIDE;
 	virtual IMaterial		*GetEconWeaponMaterialOverride( int iTeam ) OVERRIDE;
 	virtual void			FireEvent( const Vector& origin, const QAngle& angles, int event, const char *options );
 	virtual bool			OnFireEvent( C_BaseViewModel *pViewModel, const Vector& origin, const QAngle& angles, int event, const char *options );
@@ -233,16 +233,16 @@ class C_ViewmodelAttachmentModel : public C_BaseAnimating, public IHasOwner
 public:
 	void SetOuter( CEconEntity *pOuter );
 	CHandle<CEconEntity> GetOuter( void ) { return m_hOuter; }
-	bool InitializeAsClientEntity( const char *pszModelName, RenderGroup_t renderGroup );
-	int  InternalDrawModel( int flags, const RenderableInstance_t &instance );
-	bool OnPostInternalDrawModel( ClientModelRenderInfo_t *pInfo );
-	virtual void StandardBlendingRules( CStudioHdr *hdr, Vector pos[], Quaternion q[], float currentTime, int boneMask );
+	bool InitializeAsClientEntity( const char *pszModelName, RenderGroup_t renderGroup ) OVERRIDE;
+	int  InternalDrawModel( int flags, const RenderableInstance_t &instance ) OVERRIDE;
+	bool OnPostInternalDrawModel( ClientModelRenderInfo_t *pInfo ) OVERRIDE;
+	virtual void StandardBlendingRules( CStudioHdr *hdr, Vector pos[], Quaternion q[], float currentTime, int boneMask ) OVERRIDE;
 	
 	virtual CBaseEntity	*GetOwnerViaInterface( void ) { return GetOuter()->GetAttributeOwner(); }
 
-	virtual void FormatViewModelAttachment( int nAttachment, matrix3x4_t &attachmentToWorld );
+	virtual void FormatViewModelAttachment( int nAttachment, matrix3x4_t &attachmentToWorld ) OVERRIDE;
 
-	virtual int GetSkin( void );
+	virtual int GetSkin( void ) OVERRIDE;
 
 private:
 	CHandle<CEconEntity>  m_hOuter;

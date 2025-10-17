@@ -92,7 +92,7 @@ CQuestObjectiveTextPanel::CQuestObjectiveTextPanel( Panel* pParent, const char *
 //-----------------------------------------------------------------------------
 void CQuestObjectiveTextPanel::ApplySchemeSettings( vgui::IScheme *pScheme )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 
 	BaseClass::ApplySchemeSettings( pScheme );
 	LoadControlSettings( m_strResFileName );
@@ -204,7 +204,9 @@ int CQuestObjectiveTextPanel::GetContentTall() const
 	// Find the bottom of the text
 	int nTextWide = 0, nTextTall = 0;
 	m_pAttribDesc->GetContentSize( nTextWide, nTextTall );
-	int nTextYpos = m_pAttribDesc->GetYPos();
+	int xpos, ypos;
+	m_pAttribDesc->GetPos( xpos, ypos );
+	int nTextYpos = ypos;
 	return nTextYpos + nTextTall;
 }
 
@@ -217,18 +219,18 @@ void CQuestObjectiveTextPanel::SetProgress( Color glowColor )
 	UpdateText();
 
 	// Snap highlight
-	pAnim->RunAnimationCommand( m_pAttribBlur, "alpha", 255, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
-	pAnim->RunAnimationCommand( m_pAttribBlur, "fgcolor", glowColor, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
+	pAnim->RunAnimationCommand( m_pAttribBlur, "alpha", 255, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+	pAnim->RunAnimationCommand( m_pAttribBlur, "fgcolor", glowColor, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f );
 
-	pAnim->RunAnimationCommand( m_pAttribGlow, "alpha", 255, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
-	pAnim->RunAnimationCommand( m_pAttribGlow, "fgcolor", glowColor, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
+	pAnim->RunAnimationCommand( m_pAttribGlow, "alpha", 255, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+	pAnim->RunAnimationCommand( m_pAttribGlow, "fgcolor", glowColor, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f );
 
-	pAnim->RunAnimationCommand( m_pAttribDesc, "alpha", 0, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
+	pAnim->RunAnimationCommand( m_pAttribDesc, "alpha", 0, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f );
 	
 	// Lerp back
-	pAnim->RunAnimationCommand( m_pAttribBlur, "alpha", 0, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
-	pAnim->RunAnimationCommand( m_pAttribGlow, "alpha", 0, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
-	pAnim->RunAnimationCommand( m_pAttribDesc, "alpha", 255, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
+	pAnim->RunAnimationCommand( m_pAttribBlur, "alpha", 0, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+	pAnim->RunAnimationCommand( m_pAttribGlow, "alpha", 0, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+	pAnim->RunAnimationCommand( m_pAttribDesc, "alpha", 255, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f );
 }
 
 void CQuestObjectiveTextPanel::HighlightCompletion()
@@ -239,9 +241,9 @@ void CQuestObjectiveTextPanel::HighlightCompletion()
 	SetProgress( colorHighlight );
 	// Fade to disabled since we're done
 	auto pAnim = GetClientMode()->GetViewportAnimationController();
-	pAnim->RunAnimationCommand( m_pAttribDesc, "alpha", 255, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
-	pAnim->RunAnimationCommand( m_pAttribDesc, "fgcolor", colorHighlight, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
-	pAnim->RunAnimationCommand( m_pAttribDesc, "fgcolor", m_disabledTextColor, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
+	pAnim->RunAnimationCommand( m_pAttribDesc, "alpha", 255, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+	pAnim->RunAnimationCommand( m_pAttribDesc, "fgcolor", colorHighlight, 0, 0, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+	pAnim->RunAnimationCommand( m_pAttribDesc, "fgcolor", m_disabledTextColor, ATTRIB_TRACK_GLOW_HOLD_TIME, ATTRIB_TRACK_GLOW_DECAY_TIME, AnimationController::INTERPOLATOR_LINEAR, 0.f );
 }
 
 static float m_sflEventRecievedTime = 0.f;
@@ -331,7 +333,7 @@ CQuestProgressTrackerPanel::~CQuestProgressTrackerPanel()
 //-----------------------------------------------------------------------------
 void CQuestProgressTrackerPanel::ApplySettings( KeyValues *inResourceData )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 
 	BaseClass::ApplySettings( inResourceData );
 
@@ -358,7 +360,7 @@ void CQuestProgressTrackerPanel::ApplySettings( KeyValues *inResourceData )
 //-----------------------------------------------------------------------------
 void CQuestProgressTrackerPanel::ApplySchemeSettings( IScheme *pScheme )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 
 	BaseClass::ApplySchemeSettings( pScheme );
 	LoadControlSettings( m_strResFile );
@@ -440,7 +442,7 @@ int QuestSort_PointsAscending( CQuestObjectiveTextPanel* const* p1, CQuestObject
 //-----------------------------------------------------------------------------
 void CQuestProgressTrackerPanel::PerformLayout()
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 
 	BaseClass::PerformLayout();	
 
@@ -528,7 +530,9 @@ void CQuestProgressTrackerPanel::PerformLayout()
 		pNotYetCommittedPanel->SetVisible( bPendingCompletion );
 		if ( bPendingCompletion )
 		{
-			pNotYetCommittedPanel->SetPos( pNotYetCommittedPanel->GetXPos(), nY );
+			int xpos, ypos;
+			pNotYetCommittedPanel->GetPos( xpos, ypos );
+			pNotYetCommittedPanel->SetPos( xpos, nY );
 			nY += pNotYetCommittedPanel->GetTall();
 		}
 	}
@@ -565,7 +569,9 @@ void CQuestProgressTrackerPanel::PerformLayout()
 
 			if ( m_bMapView )
 			{
-				m_pPrimaryObjectiveLabel->SetPos( m_pPrimaryObjectiveLabel->GetXPos(), nY );
+				int xpos, ypos;
+				m_pPrimaryObjectiveLabel->GetPos( xpos, ypos );
+				m_pPrimaryObjectiveLabel->SetPos( xpos, nY );
 			}
 			else
 			{
@@ -579,13 +585,17 @@ void CQuestProgressTrackerPanel::PerformLayout()
 			if ( m_bMapView )
 			{
 				bBonusLabelPlaced = true;
-				m_pBonusObjectiveLabel->SetPos( m_pBonusObjectiveLabel->GetXPos(), nY );
+				int xpos, ypos;
+				m_pBonusObjectiveLabel->GetPos( xpos, ypos );
+				m_pBonusObjectiveLabel->SetPos( xpos, nY );
 			}
 		}
 
 		if ( i < ARRAYSIZE( m_arStarImages ) )
 		{
-			m_arStarImages[ i ]->SetPos( m_arStarImages[ i ]->GetXPos(), nY - YRES( 1 ) );
+			int xpos, ypos;
+			m_arStarImages[ i ]->GetPos( xpos, ypos );
+			m_arStarImages[ i ]->SetPos( xpos, nY - YRES( 1 ) );
 		}
 
 		// Hide all objectives if everything is completed, or just hide standard objectives if standard points are completed
@@ -622,7 +632,9 @@ void CQuestProgressTrackerPanel::PerformLayout()
 		if ( i == QUEST_POINTS_NOVICE )
 		{
 			nY += m_nBarGap;
-			m_PointsBars.m_pBarBG->SetPos( m_PointsBars.m_pBarBG->GetXPos(), nY );
+			int xpos, ypos;
+			m_PointsBars.m_pBarBG->GetPos( xpos, ypos );
+			m_PointsBars.m_pBarBG->SetPos( xpos, nY );
 			nY += m_PointsBars.m_pBarBG->GetTall() + 2;
 			nY += m_nBarGap;
 		}
@@ -816,10 +828,12 @@ void CQuestProgressTrackerPanel::FireGameEvent( IGameEvent *pEvent )
 					pScorerPanel->SetDialogVariable( "scorer", wszScorerNameBuf );
 					pScorerPanel->SetAutoDelete( false );
 					// Position it next to the objective that triggered
-					pScorerPanel->SetPos(m_PointsBars.m_pBarBG->GetXPos() - pScorerPanel->GetWide(),
-										  m_PointsBars.m_pBarBG->GetYPos() );
+					int xpos, ypos;
+					m_PointsBars.m_pBarBG->GetPos( xpos, ypos );
+					pScorerPanel->SetPos(xpos - pScorerPanel->GetWide(),
+										  ypos );
 					// Animate the label so it drifts off to the left
-					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pScorerPanel, "ObjectiveCompletedByUser", false );
+					GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( pScorerPanel, "ObjectiveCompletedByUser" );
 
 					// Set the color on the labels to match everything else
 					Label * pScorerLabel = pScorerPanel->FindControl< Label >( "ScorerLabel" );
@@ -860,10 +874,10 @@ void CQuestProgressTrackerPanel::FireGameEvent( IGameEvent *pEvent )
 			const float flHighlightFade = 2.f;
 
 			// Quickly turn bright
-			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand(m_PointsBars.m_pBarJustEarned, "BgColor", colorToUse, 0.0f, 0.1f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, true, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand(m_PointsBars.m_pBarJustEarned, "BgColor", colorToUse, 0.0f, 0.1f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f );
 			// Then fade away after a bit
 			colorToUse.SetColor( colorToUse.r(), colorToUse.g(), colorToUse.b(), 0 );
-			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand(m_PointsBars.m_pBarJustEarned, "BgColor", colorToUse, 1.f, 2.f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f, false, false );
+			GetClientMode()->GetViewportAnimationController()->RunAnimationCommand(m_PointsBars.m_pBarJustEarned, "BgColor", colorToUse, 1.f, 2.f, vgui::AnimationController::INTERPOLATOR_GAIN, 0.8f );
 
 			// If this scoring comes in while we're still highlighting a previous scoring, extend the
 			// just-earned to include the new scoring.  We clear the last earned progress here if it's
@@ -878,7 +892,9 @@ void CQuestProgressTrackerPanel::FireGameEvent( IGameEvent *pEvent )
 			// The just-earned bar goes at the end and is the size of the most recent score
 			float flJustEarnedWide = floor( m_flCurrentJustEarnedProgress * m_PointsBars.m_pBarBG->GetWide() ) ;
 			m_PointsBars.m_pBarJustEarned->SetWide( flJustEarnedWide );
-			m_PointsBars.m_pBarJustEarned->SetPos( floor( m_PointsBars.m_flTargetProgress * m_PointsBars.m_pBarBG->GetWide() ) - flJustEarnedWide, m_PointsBars.m_pBarJustEarned->GetYPos() );
+			int xpos, ypos;
+			m_PointsBars.m_pBarJustEarned->GetPos( xpos, ypos );
+			m_PointsBars.m_pBarJustEarned->SetPos( floor( m_PointsBars.m_flTargetProgress * m_PointsBars.m_pBarBG->GetWide() ) - flJustEarnedWide, ypos );
 
 			//m_arPointsBars[ pObjective->GetPointsType() ].m_pProgressBarPointsHighlight->SetBgColor( colorToUse );
 
@@ -929,7 +945,7 @@ void CQuestProgressTrackerPanel::FireGameEvent( IGameEvent *pEvent )
 				m_PointsBars.m_pBarCommitted->SetBgColor( scheme()->GetIScheme( GetScheme() )->GetColor( "StoreGreen", Color( 255, 255, 255, 255 ) ) );
 				m_PointsBars.m_pBarCommitted->SetWide( 0 );
 				m_PointsBars.m_pBarCommitted->SetPos( 0, 0 );
-				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "wide", m_PointsBars.m_pBarBG->GetWide(), 0.0f, k_flQuestTurnInTime, vgui::AnimationController::INTERPOLATOR_BIAS, RandomFloat( 0.1f, 0.3f ), true, false );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "wide", m_PointsBars.m_pBarBG->GetWide(), 0.0f, k_flQuestTurnInTime, vgui::AnimationController::INTERPOLATOR_BIAS, RandomFloat( 0.1f, 0.3f ) );
 
 				// Tell ourselves to end after a delay
 				PostMessage( this, new KeyValues( "EndTurnInAnimation" ), k_flQuestTurnInTime + 2.5f );
@@ -950,10 +966,10 @@ void CQuestProgressTrackerPanel::FireGameEvent( IGameEvent *pEvent )
 					// Snap to exaggerated bright green
 					Color colorHighlight = scheme()->GetIScheme( GetScheme() )->GetColor( "CreditsGreen", Color( 255, 255, 255, 255 ) );
 					BrigthenColor( colorHighlight, 20 );
-					GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "BgColor", colorHighlight, 0.0f, 0, vgui::AnimationController::INTERPOLATOR_BIAS, 0.f, true, false );
+					GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "BgColor", colorHighlight, 0.0f, 0, vgui::AnimationController::INTERPOLATOR_BIAS, 0.f );
 					// Lerp down to natural color
 					Color colorNatural = scheme()->GetIScheme( GetScheme() )->GetColor( "QuestMap_ActiveOrange", Color( 255, 255, 255, 255 ) );
-					GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "BgColor", colorNatural, 0.5f, 1.0f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
+					GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( m_PointsBars.m_pBarCommitted, "BgColor", colorNatural, 0.5f, 1.0f, vgui::AnimationController::INTERPOLATOR_LINEAR, 0.f );
 
 					// Set them to say "Complete"
 					locchar_t* pwszCompleted = g_pVGuiLocalize->Find( "#QuestPoints_Complete" );
@@ -979,16 +995,18 @@ void CQuestProgressTrackerPanel::FireGameEvent( IGameEvent *pEvent )
 					auto pAnim = GetClientMode()->GetViewportAnimationController();
 					auto pStar = m_arStarImages[ nIndex ];
 					float flScale = 1.5;
-					pAnim->RunAnimationCommand( pStar, "wide", pStar->GetWide() * flScale,	flDelay + 0.0f,	0.05f, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
-					pAnim->RunAnimationCommand( pStar, "wide", pStar->GetWide() ,			flDelay + 0.1f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
-					pAnim->RunAnimationCommand( pStar, "tall", pStar->GetTall() * flScale,	flDelay + 0.0f,	0.05f, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
-					pAnim->RunAnimationCommand( pStar, "tall", pStar->GetTall() ,			flDelay + 0.1f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
+					pAnim->RunAnimationCommand( pStar, "wide", pStar->GetWide() * flScale,	flDelay + 0.0f,	0.05f, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+					pAnim->RunAnimationCommand( pStar, "wide", pStar->GetWide() ,			flDelay + 0.1f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+					pAnim->RunAnimationCommand( pStar, "tall", pStar->GetTall() * flScale,	flDelay + 0.0f,	0.05f, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+					pAnim->RunAnimationCommand( pStar, "tall", pStar->GetTall() ,			flDelay + 0.1f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0.f );
 
 					int nDelta = ( ( pStar->GetWide() * flScale ) - pStar->GetWide() ) * 0.5f;
-					pAnim->RunAnimationCommand( pStar, "xpos", pStar->GetXPos() - nDelta,	flDelay + 0.0f, 0.05f, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
-					pAnim->RunAnimationCommand( pStar, "xpos", pStar->GetXPos(),			flDelay + 0.1f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
-					pAnim->RunAnimationCommand( pStar, "ypos", pStar->GetYPos() - nDelta,	flDelay + 0.0f, 0.05f, AnimationController::INTERPOLATOR_LINEAR, 0.f, true, false );
-					pAnim->RunAnimationCommand( pStar, "ypos", pStar->GetYPos(),			flDelay + 0.1f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0.f, false, false );
+					int xpos, ypos;
+					pStar->GetPos( xpos, ypos );
+					pAnim->RunAnimationCommand( pStar, "xpos", xpos - nDelta,	flDelay + 0.0f, 0.05f, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+					pAnim->RunAnimationCommand( pStar, "xpos", xpos,			flDelay + 0.1f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+					pAnim->RunAnimationCommand( pStar, "ypos", ypos - nDelta,	flDelay + 0.0f, 0.05f, AnimationController::INTERPOLATOR_LINEAR, 0.f );
+					pAnim->RunAnimationCommand( pStar, "ypos", ypos,			flDelay + 0.1f, 0.2f, AnimationController::INTERPOLATOR_LINEAR, 0.f );
 
 					if ( nIndex < m_vecObjectivePanels.Count() )
 					{
@@ -1282,7 +1300,7 @@ CHudItemAttributeTracker::CHudItemAttributeTracker( const char *pElementName )
 //-----------------------------------------------------------------------------
 void CHudItemAttributeTracker::ApplySchemeSettings( IScheme *pScheme )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 
 	BaseClass::ApplySchemeSettings( pScheme );
 
@@ -1386,7 +1404,7 @@ void CHudItemAttributeTracker::PerformLayout()
 		if ( pszText )
 		{					
 			wchar_t wzFinal[512] = L"";
-			UTIL_ReplaceKeyBindings( pszText, 0, wzFinal, sizeof( wzFinal ), ::input->IsSteamControllerActive() ? GAME_ACTION_SET_FPSCONTROLS : GAME_ACTION_SET_NONE );
+			UTIL_ReplaceKeyBindings( pszText, 0, wzFinal, sizeof( wzFinal ) );
 			m_pStatusContainer->SetDialogVariable( "call_to_action", wzFinal );
 		}
 	}
@@ -1395,7 +1413,11 @@ void CHudItemAttributeTracker::PerformLayout()
 
 	if ( m_pStatusContainer )
 	{
-		nY = m_pStatusContainer->GetYPos();
+		int xpos;
+		int statuscontainerY;
+		m_pStatusContainer->GetPos( xpos, statuscontainerY );
+		nY = statuscontainerY;
+		//nY = m_pStatusContainer->GetYPos();
 
 		m_pStatusContainer->SetVisible( bShowExtras );
 		if ( m_pStatusContainer->IsVisible() )
@@ -1405,10 +1427,15 @@ void CHudItemAttributeTracker::PerformLayout()
 			m_pStatusHeaderLabel->GetContentSize( nLabelWide, nLabelTall );
 			
 			m_pStatusContainer->SetWide( m_nStatusBufferWidth + nLabelWide );
-			
-			m_pStatusHeaderLabel->SetPos( m_pStatusContainer->GetWide() - m_pStatusHeaderLabel->GetWide(), m_pStatusHeaderLabel->GetYPos() );
-			m_pCallToActionLabel->SetPos( m_pStatusContainer->GetWide() - m_pCallToActionLabel->GetWide(), m_pCallToActionLabel->GetYPos() );
-			m_pStatusContainer->SetPos( m_pStatusContainer->GetParent()->GetWide() - m_pStatusContainer->GetWide() - YRES( 10 ), m_pStatusContainer->GetYPos() );
+
+			int nStatusHeaderLabelY;
+			int nCallToActionLabelY;
+			m_pStatusHeaderLabel->GetPos( xpos, nStatusHeaderLabelY );
+			m_pCallToActionLabel->GetPos( xpos, nCallToActionLabelY );
+
+			m_pStatusHeaderLabel->SetPos( m_pStatusContainer->GetWide() - m_pStatusHeaderLabel->GetWide(), nStatusHeaderLabelY );
+			m_pCallToActionLabel->SetPos( m_pStatusContainer->GetWide() - m_pCallToActionLabel->GetWide(), nCallToActionLabelY );
+			m_pStatusContainer->SetPos( m_pStatusContainer->GetParent()->GetWide() - m_pStatusContainer->GetWide() - YRES( 10 ), statuscontainerY );
 		}
 	}
 

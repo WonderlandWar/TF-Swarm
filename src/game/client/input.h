@@ -94,7 +94,6 @@ public:
 
 	virtual		void		CAM_Think( void );
 	virtual		int			CAM_IsThirdPerson( int nSlot = -1 );
-	virtual		void		CAM_GetCameraOffset( Vector& ofs );
 	virtual		void		CAM_ToThirdPerson(void);
 	virtual		void		CAM_ToFirstPerson(void);
 	virtual		void		CAM_ToThirdPersonShoulder(void);
@@ -243,8 +242,6 @@ protected:
 			m_fCameraInThirdPerson = 0;
 			// Should we move view along with mouse?
 			m_fCameraMovingWithMouse = 0;
-			// What is the current camera offset from the view origin?
-			m_vecCameraOffset.Init();
 			// Is the camera in distance moving mode?
 			m_fCameraDistanceMove = 0;
 			// Old and current mouse position readings.
@@ -289,8 +286,6 @@ protected:
 		bool		m_fCameraInThirdPerson;
 		// Should we move view along with mouse?
 		bool		m_fCameraMovingWithMouse;
-		// What is the current camera offset from the view origin?
-		Vector		m_vecCameraOffset;
 		// Is the camera in distance moving mode?
 		bool		m_fCameraDistanceMove;
 		// Old and current mouse position readings.

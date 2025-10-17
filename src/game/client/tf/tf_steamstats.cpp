@@ -10,8 +10,8 @@
 #include "tf_steamstats.h"
 #include "tf_hud_statpanel.h"
 #include "achievementmgr.h"
-#include "engine/imatchmaking.h"
-#include "ipresence.h"
+//#include "engine/imatchmaking.h"
+//#include "ipresence.h"
 #include "../game/shared/tf/tf_shareddefs.h"
 #include "../game/shared/tf/tf_gamestats_shared.h"
 
@@ -332,7 +332,7 @@ void CTFSteamStats::UploadStats()
 	}
 
 	// Send our local steam context stats to the server.
-	pAchievementMgr->UploadUserData();
+	pAchievementMgr->UploadUserData( GET_ACTIVE_SPLITSCREEN_SLOT() );
 	SetNextForceUploadTime();
 
 	// Now everything should be sync'd up (stat panel, local steam context, remote steam depot).
@@ -367,11 +367,11 @@ void CTFSteamStats::ReportLiveStats()
 
 		if ( g_SteamStats[i].iLiveStat != -1 )
 		{
-			presence->SetStat( g_SteamStats[i].iLiveStat, statsTotals[i], XUSER_DATA_TYPE_INT32 );
+			//presence->SetStat( g_SteamStats[i].iLiveStat, statsTotals[i], XUSER_DATA_TYPE_INT32 );
 		}
 	}
 
-	presence->UploadStats();
+	//presence->UploadStats();
 }
 
 //-----------------------------------------------------------------------------

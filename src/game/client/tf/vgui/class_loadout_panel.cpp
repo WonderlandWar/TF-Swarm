@@ -192,7 +192,7 @@ const LoadoutPanelPositioningInstance *g_VisibleLoadoutSlotsPerClass[] =
 	&g_LoadoutPanelPositioning_Engineer,		// TF_CLASS_ENGINEER
 };
 
-//COMPILE_TIME_ASSERT( ARRAYSIZE( g_VisibleLoadoutSlotsPerClass ) == TF_LAST_NORMAL_CLASS );
+COMPILE_TIME_ASSERT( ARRAYSIZE( g_VisibleLoadoutSlotsPerClass ) == TF_LAST_NORMAL_CLASS );
 
 //-----------------------------------------------------------------------------
 // Particle Effect Slider

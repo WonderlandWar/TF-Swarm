@@ -33,6 +33,7 @@
 #include "fx_water.h"
 #include "hltvcamera.h"
 #include "dt_utlvector_recv.h"
+#include "cam_thirdperson.h"
 #if defined( REPLAY_ENABLED )
 #include "replaycamera.h"
 #endif
@@ -2105,8 +2106,7 @@ void C_BasePlayer::GetToolRecordingState( KeyValues *msg )
 	// then this code can (should!) be removed
 	if ( state.m_bThirdPerson )
 	{
-		Vector cam_ofs;
-		::input->CAM_GetCameraOffset( cam_ofs );
+		const Vector& cam_ofs = GetThirdPersonManager().GetCameraOffsetAngles();
 
 		QAngle camAngles;
 		camAngles[ PITCH ] = cam_ofs[ PITCH ];

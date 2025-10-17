@@ -22,7 +22,7 @@
 #include "inputsystem/iinputsystem.h"
 
 // NVNT haptics for buildings
-#include "haptics/haptic_utils.h"
+//#include "haptics/haptic_utils.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -148,7 +148,7 @@ CHudMenuEngyBuild::CHudMenuEngyBuild( const char *pElementName )
 //-----------------------------------------------------------------------------
 void CHudMenuEngyBuild::ApplySchemeSettings( IScheme *pScheme )
 {
-	bool bSteamController = ::input->IsSteamControllerActive();
+	bool bSteamController = false;//::input->IsSteamControllerActive();
 	bool b360Style = ( bSteamController || IsConsole() || tf_build_menu_controller_mode.GetBool() );
 
 	// load control settings...
@@ -314,19 +314,16 @@ int	CHudMenuEngyBuild::HudElementKeyInput( int down, ButtonCode_t keynum, const 
 		switch( keynum )
 		{
 		case KEY_XBUTTON_UP:
-		case STEAMCONTROLLER_DPAD_UP:
 			// jump to last
 			iNewSelection = NUM_ENGY_BUILDINGS;
 			break;
 
 		case KEY_XBUTTON_DOWN:
-		case STEAMCONTROLLER_DPAD_DOWN:
 			// jump to first
 			iNewSelection = 1;
 			break;
 
 		case KEY_XBUTTON_RIGHT:
-		case STEAMCONTROLLER_DPAD_RIGHT:
 			// move selection to the right
 			iNewSelection++;
 			if ( iNewSelection > NUM_ENGY_BUILDINGS )
@@ -334,7 +331,6 @@ int	CHudMenuEngyBuild::HudElementKeyInput( int down, ButtonCode_t keynum, const 
 			break;
 
 		case KEY_XBUTTON_LEFT:
-		case STEAMCONTROLLER_DPAD_LEFT:
 			// move selection to the left
 			iNewSelection--;
 			if ( iNewSelection < 1 )
@@ -343,14 +339,12 @@ int	CHudMenuEngyBuild::HudElementKeyInput( int down, ButtonCode_t keynum, const 
 
 		case KEY_XBUTTON_A:
 		case KEY_XBUTTON_RTRIGGER:
-		case STEAMCONTROLLER_A:
 			// build selected item
 			SendBuildMessage( m_iSelectedItem );
 			return 0;
 
 		case KEY_XBUTTON_Y:
 		case KEY_XBUTTON_LTRIGGER:
-		case STEAMCONTROLLER_Y:
 			{
 				// destroy selected item
 				bool bSuccess = SendDestroyMessage( m_iSelectedItem );
@@ -363,7 +357,6 @@ int	CHudMenuEngyBuild::HudElementKeyInput( int down, ButtonCode_t keynum, const 
 			return 0;
 
 		case KEY_XBUTTON_B:
-		case STEAMCONTROLLER_B:
 			// cancel, close the menu
 			engine->ExecuteClientCmd( "lastinv" );
 			return 0;
@@ -424,7 +417,6 @@ int	CHudMenuEngyBuild::HudElementKeyInput( int down, ButtonCode_t keynum, const 
 
 			case KEY_0:
 			case KEY_XBUTTON_B:
-			case STEAMCONTROLLER_B:
 				// cancel, close the menu
 				engine->ExecuteClientCmd( "lastinv" );
 				return 0;
@@ -474,11 +466,6 @@ void CHudMenuEngyBuild::SendBuildMessage( int iSlot )
 		char szCmd[128];
 		Q_snprintf( szCmd, sizeof(szCmd), "build %d %d", iBuilding, iMode );
 		engine->ClientCmd( szCmd );
-		
-		// NVNT send the build command
-		if ( haptics )
-			haptics->ProcessHapticEvent(2, "Game", szCmd);
-
 	}
 	else
 	{
@@ -505,9 +492,7 @@ bool CHudMenuEngyBuild::SendDestroyMessage( int iSlot )
 		char szCmd[128];
 		Q_snprintf( szCmd, sizeof(szCmd), "destroy %d %d", iBuilding, iMode );
 		engine->ClientCmd( szCmd );
-		// NVNT send the destroy command
-		if ( haptics )
-			haptics->ProcessHapticEvent(2, "Game", szCmd);
+
 		bSuccess = true; 
 	}
 	else

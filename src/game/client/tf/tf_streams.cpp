@@ -71,19 +71,20 @@ public:
 		m_sUrlGet = szUrlGet;
 		m_sLocalFile = szLocalFile;
 		m_lTimestampLocal = lTimeStampLocal;
-
+#if 0
 		m_hHTTPRequestHandle = steamapicontext->SteamHTTP()->CreateHTTPRequest( k_EHTTPMethodGET, m_sUrlGet.Get() );
 
 		SteamAPICall_t hCall = NULL;
 		if ( m_hHTTPRequestHandle && steamapicontext->SteamHTTP()->SendHTTPRequest( m_hHTTPRequestHandle, &hCall ) && hCall )
 		{
-			m_CallbackOnHTTPRequestCompleted.Set( hCall, this, &CHelperStreamDownloadUrlToLocalFile::Steam_OnHTTPRequestCompleted );
+			//m_CallbackOnHTTPRequestCompleted.Set( hCall, this, &CHelperStreamDownloadUrlToLocalFile::Steam_OnHTTPRequestCompleted );
 		}
 		else
+#endif
 		{
-			if ( m_hHTTPRequestHandle )
-				steamapicontext->SteamHTTP()->ReleaseHTTPRequest( m_hHTTPRequestHandle );
-			m_hHTTPRequestHandle = NULL;
+			//if ( m_hHTTPRequestHandle )
+			//	steamapicontext->SteamHTTP()->ReleaseHTTPRequest( m_hHTTPRequestHandle );
+			//m_hHTTPRequestHandle = NULL;
 		}
 
 		m_hStreamPanel = pStreamPanel;
@@ -92,12 +93,14 @@ public:
 private:
 	CUtlString m_sUrlGet;
 	CUtlString m_sLocalFile;
+
 	long m_lTimestampLocal;
+#if 0
 	HTTPRequestHandle m_hHTTPRequestHandle;
 	CCallResult< CHelperStreamDownloadUrlToLocalFile, HTTPRequestCompleted_t > m_CallbackOnHTTPRequestCompleted;
-
+#endif
 	DHANDLE<CTFStreamPanel> m_hStreamPanel;
-	
+#if 0
 	void Steam_OnHTTPRequestCompleted( HTTPRequestCompleted_t *p, bool bError )
 	{
 		if ( !m_hHTTPRequestHandle || ( p->m_hRequest != m_hHTTPRequestHandle ) )
@@ -133,6 +136,7 @@ private:
 
 		s_arrDeleteCHelperStreamDownloadUrlToLocalFile.AddToTail( this );
 	}
+#endif
 };
 
 
@@ -264,8 +268,8 @@ CTFStreamManager* StreamManager()
 CTFStreamManager::CTFStreamManager()
 {
 	m_dblTimeStampLastUpdate = 0;
-	m_hHTTPRequestHandle = NULL;
-	m_hHTTPRequestHandleTwitchTv = NULL;
+	//m_hHTTPRequestHandle = NULL;
+	//m_hHTTPRequestHandleTwitchTv = NULL;
 	m_pLoadingAccount = NULL;
 }
 
@@ -305,7 +309,7 @@ void CTFStreamManager::RequestTopStreams()
 	if ( !m_dblTimeStampLastUpdate || ( Plat_FloatTime() - m_dblTimeStampLastUpdate > cl_streams_refresh_interval.GetFloat() ) )
 	{
 		m_dblTimeStampLastUpdate = Plat_FloatTime();
-
+#if 0
 		if ( !m_hHTTPRequestHandle && steamapicontext && steamapicontext->SteamHTTP() )
 		{
 			//
@@ -327,6 +331,7 @@ void CTFStreamManager::RequestTopStreams()
 				m_hHTTPRequestHandle = NULL;
 			}
 		}	
+#endif
 	}
 }
 
@@ -344,7 +349,7 @@ static void Helper_ConvertLanguageToCountryCode( CUtlString &s )
 	if ( !Q_stricmp(s, "en") )
 		s = "gb";
 }
-
+#if 0
 void CTFStreamManager::Steam_OnHTTPRequestCompletedStreams( HTTPRequestCompleted_t *p, bool bError )
 {
 	if ( !m_hHTTPRequestHandle || ( p->m_hRequest != m_hHTTPRequestHandle ) )
@@ -445,7 +450,7 @@ void CTFStreamManager::Steam_OnHTTPRequestCompletedStreams( HTTPRequestCompleted
 	m_hHTTPRequestHandle = NULL;
 	m_dblTimeStampLastUpdate = Plat_FloatTime(); // push the update counter to not update for a little bit
 }
-
+#endif
 CStreamInfo* CTFStreamManager::GetStreamInfoByName( char const *szName )
 {
 	if ( !szName )
@@ -524,8 +529,8 @@ void CTFStreamManager::UpdateTwitchTvAccounts()
 	m_pLoadingAccount->m_eTwitchTvState = k_ETwitchTvState_Loading;
 	m_pLoadingAccount->m_dblTimeStampTwitchTvUpdate = Plat_FloatTime();
 
-	Assert( !m_hHTTPRequestHandleTwitchTv );
-	if ( m_hHTTPRequestHandleTwitchTv ) return;
+	//Assert( !m_hHTTPRequestHandleTwitchTv );
+	//if ( m_hHTTPRequestHandleTwitchTv ) return;
 	//
 	// Create HTTP download job
 	//
@@ -536,6 +541,7 @@ void CTFStreamManager::UpdateTwitchTvAccounts()
 	DevMsg( "Requesting twitch.tv account link...\n" );
 
 	SteamAPICall_t hCall = NULL;
+#if 0
 	if ( m_hHTTPRequestHandleTwitchTv && steamapicontext->SteamHTTP()->SendHTTPRequest( m_hHTTPRequestHandleTwitchTv, &hCall ) && hCall )
 	{
 		m_CallbackOnHTTPRequestCompletedTwitchTv.Set( hCall, this, &CTFStreamManager::Steam_OnHTTPRequestCompletedMyTwitchTv );
@@ -546,8 +552,9 @@ void CTFStreamManager::UpdateTwitchTvAccounts()
 			steamapicontext->SteamHTTP()->ReleaseHTTPRequest( m_hHTTPRequestHandleTwitchTv );
 		m_hHTTPRequestHandleTwitchTv = NULL;
 	}
+#endif
 }
-
+#if 0
 void CTFStreamManager::Steam_OnHTTPRequestCompletedMyTwitchTv( HTTPRequestCompleted_t *p, bool bError )
 {
 	if ( !m_hHTTPRequestHandleTwitchTv || ( p->m_hRequest != m_hHTTPRequestHandleTwitchTv ) )
@@ -609,7 +616,7 @@ void CTFStreamManager::Steam_OnHTTPRequestCompletedMyTwitchTv( HTTPRequestComple
 	// done loading
 	m_pLoadingAccount = NULL;
 }
-
+#endif
 
 CTFStreamPanel::CTFStreamPanel( Panel *parent, const char *panelName ) : EditablePanel( parent, panelName )
 {
@@ -726,7 +733,7 @@ void CTFStreamPanel::SetPreviewImage( const char *pszPreviewImageFile )
 	// center it when it's going to be rendered, and then the BitmapImage needs
 	// to know how big it should be rendered.
 	float flPanelWidthScale = static_cast<float>( m_pPreviewImage->GetWide() ) / wide;
-	m_pPreviewImage->SetShouldCenterImage( false );
+	//m_pPreviewImage->SetShouldCenterImage( false );
 	m_pPreviewImage->SetShouldScaleImage( true );
 	m_pPreviewImage->SetScaleAmount( flPanelWidthScale );
 

@@ -22,7 +22,7 @@
 #include "tf_mapinfomenu.h"
 #include "econ_wearable.h"
 #include "c_tf_playerresource.h"
-#include "playerspawncache.h"
+//#include "playerspawncache.h"
 #include "econ_notifications.h"
 #include <spectatorgui.h>
 #include "hudelement.h"

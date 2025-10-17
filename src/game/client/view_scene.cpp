@@ -45,23 +45,18 @@ void ViewTransform( const Vector &worldSpace, Vector &viewSpace )
 	Vector3DMultiplyPosition( viewMatrix, worldSpace, viewSpace );
 }
 
-
 //-----------------------------------------------------------------------------
-// Purpose: UNDONE: Clean this up some, handle off-screen vertices
-// Input  : *point - 
-//			*screen - 
-// Output : int
+// Purpose: Transforms a world-space position into a 2D position inside a supplied frustum.
 //-----------------------------------------------------------------------------
-int ScreenTransform( const Vector& point, Vector& screen )
+int FrustumTransform( const VMatrix &worldToSurface, const Vector& point, Vector& screen )
 {
 	// UNDONE: Clean this up some, handle off-screen vertices
 	float w;
-	const VMatrix &worldToScreen = engine->WorldToScreenMatrix();
 
-	screen.x = worldToScreen[0][0] * point[0] + worldToScreen[0][1] * point[1] + worldToScreen[0][2] * point[2] + worldToScreen[0][3];
-	screen.y = worldToScreen[1][0] * point[0] + worldToScreen[1][1] * point[1] + worldToScreen[1][2] * point[2] + worldToScreen[1][3];
-	//	z		 = worldToScreen[2][0] * point[0] + worldToScreen[2][1] * point[1] + worldToScreen[2][2] * point[2] + worldToScreen[2][3];
-	w		 = worldToScreen[3][0] * point[0] + worldToScreen[3][1] * point[1] + worldToScreen[3][2] * point[2] + worldToScreen[3][3];
+	screen.x = worldToSurface[0][0] * point[0] + worldToSurface[0][1] * point[1] + worldToSurface[0][2] * point[2] + worldToSurface[0][3];
+	screen.y = worldToSurface[1][0] * point[0] + worldToSurface[1][1] * point[1] + worldToSurface[1][2] * point[2] + worldToSurface[1][3];
+	//	z		 = worldToSurface[2][0] * point[0] + worldToSurface[2][1] * point[1] + worldToSurface[2][2] * point[2] + worldToSurface[2][3];
+	w		 = worldToSurface[3][0] * point[0] + worldToSurface[3][1] * point[1] + worldToSurface[3][2] * point[2] + worldToSurface[3][3];
 
 	// Just so we have something valid here
 	screen.z = 0.0f;
@@ -82,6 +77,29 @@ int ScreenTransform( const Vector& point, Vector& screen )
 	}
 
 	return behind;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: UNDONE: Clean this up some, handle off-screen vertices
+// Input  : *point - 
+//			*screen - 
+// Output : int
+//-----------------------------------------------------------------------------
+int ScreenTransform( const Vector& point, Vector& screen )
+{
+	// UNDONE: Clean this up some, handle off-screen vertices
+	return FrustumTransform ( engine->WorldToScreenMatrix(), point, screen );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Same as ScreenTransform, but transforms to HUD space.
+//			These are totally different things in VR mode!
+//-----------------------------------------------------------------------------
+int HudTransform( const Vector& point, Vector& screen )
+{
+	{
+		return FrustumTransform ( engine->WorldToScreenMatrix(), point, screen );
+	}
 }
 
 

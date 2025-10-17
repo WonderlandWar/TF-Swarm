@@ -1943,6 +1943,9 @@
     <ClInclude Include="..\..\game\client\c_vote_controller.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\cam_thirdperson.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="cdll_bounded_cvars.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -3650,6 +3653,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="c_world.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\cam_thirdperson.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="camomaterialproxy.cpp">

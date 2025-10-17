@@ -369,255 +369,280 @@ void C_BaseFlex::RunFlexRules( CStudioHdr *hdr, const float *pGlobalFlexWeight, 
 	hdr->RunFlexRules( pGlobalFlexWeight, dest );
 }
 
-class CFlexSceneFileManager : CAutoGameSystem
+bool CFlexSceneFileManager::InitRecursive( const char *pFolder )
 {
-public:
-
-	CFlexSceneFileManager() : CAutoGameSystem( "CFlexSceneFileManager" )
+	if ( pFolder == NULL )
 	{
+		pFolder = "expressions";
 	}
 
-	virtual bool InitRecursive( const char *pFolder )
-	{
-		if ( pFolder == NULL )
-		{
-			pFolder = "expressions";
-		}
+	char directory[ MAX_PATH ];
+	Q_snprintf( directory, sizeof( directory ), "%s/*.*", pFolder );
 
-		char directory[ MAX_PATH ];
-		Q_snprintf( directory, sizeof( directory ), "%s/*.*", pFolder );
-
-		FileFindHandle_t fh;
-		const char *fn;
+	FileFindHandle_t fh;
+	const char *fn;
 		
-		for (fn = g_pFullFileSystem->FindFirst( directory, &fh ); fn; fn = g_pFullFileSystem->FindNext( fh ) )
+	for (fn = g_pFullFileSystem->FindFirst( directory, &fh ); fn; fn = g_pFullFileSystem->FindNext( fh ) )
+	{
+		if ( !stricmp( fn, ".") || !stricmp( fn, "..") )
 		{
-			if ( !stricmp( fn, ".") || !stricmp( fn, "..") )
-			{
-				continue;
-			}
-
-			if ( g_pFullFileSystem->FindIsDirectory( fh ) )
-			{
-				char folderpath[MAX_PATH];
-				Q_snprintf( folderpath, sizeof( folderpath ), "%s/%s", pFolder, fn );
-
-				InitRecursive( folderpath );
-				continue;
-			}
-
-			const char *pExt = Q_GetFileExtension( fn );
-			if ( pExt && Q_stricmp( pExt, "vfe" ) )
-			{
-				continue;
-			}
-
-			char fullFileName[MAX_PATH];
-			Q_snprintf( fullFileName, sizeof(fullFileName), "%s/%s", pFolder, fn );
-
-			// strip default folder and extension
-			int index = V_strlen( "expressions/" );
-			char vfeName[ MAX_PATH ];
-			V_StripExtension( &fullFileName[index], vfeName, sizeof( vfeName ) );
-			V_FixSlashes( vfeName );
-
-			FindSceneFile( NULL, vfeName, true );
+			continue;
 		}
-		return true;
+
+		if ( g_pFullFileSystem->FindIsDirectory( fh ) )
+		{
+			char folderpath[MAX_PATH];
+			Q_snprintf( folderpath, sizeof( folderpath ), "%s/%s", pFolder, fn );
+
+			InitRecursive( folderpath );
+			continue;
+		}
+
+		const char *pExt = Q_GetFileExtension( fn );
+		if ( pExt && Q_stricmp( pExt, "vfe" ) )
+		{
+			continue;
+		}
+
+		char fullFileName[MAX_PATH];
+		Q_snprintf( fullFileName, sizeof(fullFileName), "%s/%s", pFolder, fn );
+
+		// strip default folder and extension
+		int index = V_strlen( "expressions/" );
+		char vfeName[ MAX_PATH ];
+		V_StripExtension( &fullFileName[index], vfeName, sizeof( vfeName ) );
+		V_FixSlashes( vfeName );
+
+		FindSceneFile( NULL, vfeName, true );
+	}
+	return true;
+}
+
+bool CFlexSceneFileManager::InitRecursive( const char *pFolder )
+{
+	if ( pFolder == NULL )
+	{
+		pFolder = "expressions";
 	}
 
-	virtual bool Init()
+	char directory[ MAX_PATH ];
+	Q_snprintf( directory, sizeof( directory ), "%s/*.*", pFolder );
+
+	FileFindHandle_t fh;
+	const char *fn;
+		
+	for (fn = g_pFullFileSystem->FindFirst( directory, &fh ); fn; fn = g_pFullFileSystem->FindNext( fh ) )
 	{
-		// Trakcer 16692:  Preload these at startup to avoid hitch first time we try to load them during actual gameplay
-		FindSceneFile( NULL, "phonemes", true );
-		FindSceneFile( NULL, "phonemes_weak", true );
-		FindSceneFile(NULL,  "phonemes_strong", true );
+		if ( !stricmp( fn, ".") || !stricmp( fn, "..") )
+		{
+			continue;
+		}
+
+		if ( g_pFullFileSystem->FindIsDirectory( fh ) )
+		{
+			char folderpath[MAX_PATH];
+			Q_snprintf( folderpath, sizeof( folderpath ), "%s/%s", pFolder, fn );
+
+			InitRecursive( folderpath );
+			continue;
+		}
+
+		const char *pExt = Q_GetFileExtension( fn );
+		if ( pExt && Q_stricmp( pExt, "vfe" ) )
+		{
+			continue;
+		}
+
+		char fullFileName[MAX_PATH];
+		Q_snprintf( fullFileName, sizeof(fullFileName), "%s/%s", pFolder, fn );
+
+		// strip default folder and extension
+		int index = V_strlen( "expressions/" );
+		char vfeName[ MAX_PATH ];
+		V_StripExtension( &fullFileName[index], vfeName, sizeof( vfeName ) );
+		V_FixSlashes( vfeName );
+
+		FindSceneFile( NULL, vfeName, true );
+	}
+	return true;
+}
+
+bool CFlexSceneFileManager::Init()
+{
+	// Trakcer 16692:  Preload these at startup to avoid hitch first time we try to load them during actual gameplay
+	FindSceneFile( NULL, "phonemes", true );
+	FindSceneFile( NULL, "phonemes_weak", true );
+	FindSceneFile(NULL,  "phonemes_strong", true );
 
 #if defined( HL2_CLIENT_DLL )
-		FindSceneFile( NULL, "random", true );
-		FindSceneFile( NULL, "randomAlert", true );
+	FindSceneFile( NULL, "random", true );
+	FindSceneFile( NULL, "randomAlert", true );
 #endif
 
 #if defined( TF_CLIENT_DLL )
-		// HACK TO ALL TF TO HAVE PER CLASS OVERRIDES
-		char const *pTFClasses[] = 
+	// HACK TO ALL TF TO HAVE PER CLASS OVERRIDES
+	char const *pTFClasses[] = 
+	{
+		"scout",
+		"sniper",
+		"soldier",
+		"demo",
+		"medic",
+		"heavy",
+		"pyro",
+		"spy",
+		"engineer",
+	};
+
+	char fn[ MAX_PATH ];
+	for ( int i = 0; i < ARRAYSIZE( pTFClasses ); ++i )
+	{
+		Q_snprintf( fn, sizeof( fn ), "player/%s/phonemes/phonemes", pTFClasses[i] );
+		FindSceneFile( NULL, fn, true );
+		Q_snprintf( fn, sizeof( fn ), "player/%s/phonemes/phonemes_weak", pTFClasses[i] );
+		FindSceneFile( NULL, fn, true );
+		Q_snprintf( fn, sizeof( fn ), "player/%s/phonemes/phonemes_strong", pTFClasses[i] );
+		FindSceneFile( NULL, fn, true );
+
+		if ( !IsX360() )
 		{
-			"scout",
-			"sniper",
-			"soldier",
-			"demo",
-			"medic",
-			"heavy",
-			"pyro",
-			"spy",
-			"engineer",
-		};
-
-		char fn[ MAX_PATH ];
-		for ( int i = 0; i < ARRAYSIZE( pTFClasses ); ++i )
-		{
-			Q_snprintf( fn, sizeof( fn ), "player/%s/phonemes/phonemes", pTFClasses[i] );
+			Q_snprintf( fn, sizeof( fn ), "player/hwm/%s/phonemes/phonemes", pTFClasses[i] );
 			FindSceneFile( NULL, fn, true );
-			Q_snprintf( fn, sizeof( fn ), "player/%s/phonemes/phonemes_weak", pTFClasses[i] );
+			Q_snprintf( fn, sizeof( fn ), "player/hwm/%s/phonemes/phonemes_weak", pTFClasses[i] );
 			FindSceneFile( NULL, fn, true );
-			Q_snprintf( fn, sizeof( fn ), "player/%s/phonemes/phonemes_strong", pTFClasses[i] );
+			Q_snprintf( fn, sizeof( fn ), "player/hwm/%s/phonemes/phonemes_strong", pTFClasses[i] );
 			FindSceneFile( NULL, fn, true );
-
-			if ( !IsX360() )
-			{
-				Q_snprintf( fn, sizeof( fn ), "player/hwm/%s/phonemes/phonemes", pTFClasses[i] );
-				FindSceneFile( NULL, fn, true );
-				Q_snprintf( fn, sizeof( fn ), "player/hwm/%s/phonemes/phonemes_weak", pTFClasses[i] );
-				FindSceneFile( NULL, fn, true );
-				Q_snprintf( fn, sizeof( fn ), "player/hwm/%s/phonemes/phonemes_strong", pTFClasses[i] );
-				FindSceneFile( NULL, fn, true );
-			}
-
-			Q_snprintf( fn, sizeof( fn ), "player/%s/emotion/emotion", pTFClasses[i] );
-			FindSceneFile( NULL, fn, true );
-			if ( !IsX360() )
-			{
-				Q_snprintf( fn, sizeof( fn ), "player/hwm/%s/emotion/emotion", pTFClasses[i] );
-				FindSceneFile( NULL, fn, true );
-			}
 		}
+
+		Q_snprintf( fn, sizeof( fn ), "player/%s/emotion/emotion", pTFClasses[i] );
+		FindSceneFile( NULL, fn, true );
+		if ( !IsX360() )
+		{
+			Q_snprintf( fn, sizeof( fn ), "player/hwm/%s/emotion/emotion", pTFClasses[i] );
+			FindSceneFile( NULL, fn, true );
+		}
+	}
 #endif
 
-		InitRecursive( NULL );
-		return true;
-	}
+	InitRecursive( NULL );
+	return true;
+}
 
-	// Tracker 14992:  We used to load 18K of .vfes for every C_BaseFlex who lipsynced, but now we only load those files once globally.
-	// Note, we could wipe these between levels, but they don't ever load more than the weak/normal/strong phoneme classes that I can tell
-	//  so I'll just leave them loaded forever for now
-	virtual void Shutdown()
-	{
-		DeleteSceneFiles();
-	}
+// Tracker 14992:  We used to load 18K of .vfes for every C_BaseFlex who lipsynced, but now we only load those files once globally.
+// Note, we could wipe these between levels, but they don't ever load more than the weak/normal/strong phoneme classes that I can tell
+//  so I'll just leave them loaded forever for now
+void CFlexSceneFileManager::Shutdown()
+{
+	DeleteSceneFiles();
+}
 
-	//-----------------------------------------------------------------------------
-	// Purpose: Sets up translations
-	// Input  : *instance - 
-	//			*pSettinghdr - 
-	// Output : 	void
-	//-----------------------------------------------------------------------------
-	void EnsureTranslations( C_BaseFlex *instance, const flexsettinghdr_t *pSettinghdr )
+//-----------------------------------------------------------------------------
+// Purpose: Sets up translations
+// Input  : *instance - 
+//			*pSettinghdr - 
+// Output : 	void
+//-----------------------------------------------------------------------------
+void CFlexSceneFileManager::EnsureTranslations( IHasLocalToGlobalFlexSettings *instance, const flexsettinghdr_t *pSettinghdr )
+{
+	// The only time instance is NULL is in Init() above, where we're just loading the .vfe files off of the hard disk.
+	if ( instance )
 	{
-		// The only time instance is NULL is in Init() above, where we're just loading the .vfe files off of the hard disk.
-		if ( instance )
-		{
-			instance->EnsureTranslations( pSettinghdr );
-		}
+		instance->EnsureTranslations( pSettinghdr );
 	}
+}
 
-	const void *FindSceneFile( C_BaseFlex *instance, const char *filename, bool allowBlockingIO )
-	{
-		char szFilename[MAX_PATH];
-		Assert( V_strlen( filename ) < MAX_PATH );
-		V_strcpy( szFilename, filename );
+const void *CFlexSceneFileManager::FindSceneFile( IHasLocalToGlobalFlexSettings *instance, const char *filename, bool allowBlockingIO )
+{
+	char szFilename[MAX_PATH];
+	Assert( V_strlen( filename ) < MAX_PATH );
+	V_strcpy( szFilename, filename );
 	
 #if defined( TF_CLIENT_DLL )	
-		char szHWMFilename[MAX_PATH];
-		if ( GetHWMExpressionFileName( szFilename, szHWMFilename ) )
-		{
-			V_strcpy( szFilename, szHWMFilename );
-		}
+	char szHWMFilename[MAX_PATH];
+	if ( GetHWMExpressionFileName( szFilename, szHWMFilename ) )
+	{
+		V_strcpy( szFilename, szHWMFilename );
+	}
 #endif
 
-		Q_FixSlashes( szFilename );
+	Q_FixSlashes( szFilename );
 
-		// See if it's already loaded
-		int i;
-		for ( i = 0; i < m_FileList.Count(); i++ )
-		{
-			CFlexSceneFile *file = m_FileList[ i ];
-			if ( file && !V_stricmp( file->filename, szFilename ) )
-			{
-				// Make sure translations (local to global flex controller) are set up for this instance
-				EnsureTranslations( instance, ( const flexsettinghdr_t * )file->buffer );
-				return file->buffer;
-			}
-		}
-		
-		if ( !allowBlockingIO )
-		{
-			return NULL;
-		}
-
-		// Load file into memory
-		void *buffer = NULL;
-		int len = filesystem->ReadFileEx( VarArgs( "expressions/%s.vfe", szFilename ), "GAME", &buffer );
-
-		if ( !len )
-			return NULL;
-
-		// Create scene entry
-		CFlexSceneFile *pfile = new CFlexSceneFile;
-		// Remember filename
-		Q_strncpy( pfile->filename, szFilename, sizeof( pfile->filename ) );
-		// Remember data pointer
-		pfile->buffer = buffer;
-		// Add to list
-		m_FileList.AddToTail( pfile );
-
-		// Swap the entire file
-		if ( IsX360() )
-		{
-			CByteswap swap;
-			swap.ActivateByteSwapping( true );
-			byte *pData = (byte*)buffer;
-			flexsettinghdr_t *pHdr = (flexsettinghdr_t*)pData;
-			swap.SwapFieldsToTargetEndian( pHdr );
-
-			// Flex Settings
-			flexsetting_t *pFlexSetting = (flexsetting_t*)((byte*)pHdr + pHdr->flexsettingindex);
-			for ( int i = 0; i < pHdr->numflexsettings; ++i, ++pFlexSetting )
-			{
-				swap.SwapFieldsToTargetEndian( pFlexSetting );
-				
-				flexweight_t *pWeight = (flexweight_t*)(((byte*)pFlexSetting) + pFlexSetting->settingindex );
-				for ( int j = 0; j < pFlexSetting->numsettings; ++j, ++pWeight )
-				{
-					swap.SwapFieldsToTargetEndian( pWeight );
-				}
-			}
-
-			// indexes
-			pData = (byte*)pHdr + pHdr->indexindex;
-			swap.SwapBufferToTargetEndian( (int*)pData, (int*)pData, pHdr->numindexes );
-
-			// keymappings
-			pData  = (byte*)pHdr + pHdr->keymappingindex;
-			swap.SwapBufferToTargetEndian( (int*)pData, (int*)pData, pHdr->numkeys );
-
-			// keyname indices
-			pData = (byte*)pHdr + pHdr->keynameindex;
-			swap.SwapBufferToTargetEndian( (int*)pData, (int*)pData, pHdr->numkeys );
-		}
-
-		// Fill in translation table
-		EnsureTranslations( instance, ( const flexsettinghdr_t * )pfile->buffer );
-
-		// Return data
-		return pfile->buffer;
-	}
-
-private:
-
-	void DeleteSceneFiles()
+	// See if it's already loaded
+	int i;
+	for ( i = 0; i < m_FileList.Count(); i++ )
 	{
-		while ( m_FileList.Count() > 0 )
+		CFlexSceneFile *file = m_FileList[ i ];
+		if ( file && !V_stricmp( file->filename, szFilename ) )
 		{
-			CFlexSceneFile *file = m_FileList[ 0 ];
-			m_FileList.Remove( 0 );
-			delete[] file->buffer;
-			delete file;
+			// Make sure translations (local to global flex controller) are set up for this instance
+			EnsureTranslations( instance, ( const flexsettinghdr_t * )file->buffer );
+			return file->buffer;
 		}
 	}
+		
+	if ( !allowBlockingIO )
+	{
+		return NULL;
+	}
 
-	CUtlVector< CFlexSceneFile * > m_FileList;
-};
+	// Load file into memory
+	void *buffer = NULL;
+	int len = filesystem->ReadFileEx( VarArgs( "expressions/%s.vfe", szFilename ), "GAME", &buffer );
 
+	if ( !len )
+		return NULL;
+
+	// Create scene entry
+	CFlexSceneFile *pfile = new CFlexSceneFile;
+	// Remember filename
+	Q_strncpy( pfile->filename, szFilename, sizeof( pfile->filename ) );
+	// Remember data pointer
+	pfile->buffer = buffer;
+	// Add to list
+	m_FileList.AddToTail( pfile );
+
+	// Swap the entire file
+	if ( IsX360() )
+	{
+		CByteswap swap;
+		swap.ActivateByteSwapping( true );
+		byte *pData = (byte*)buffer;
+		flexsettinghdr_t *pHdr = (flexsettinghdr_t*)pData;
+		swap.SwapFieldsToTargetEndian( pHdr );
+
+		// Flex Settings
+		flexsetting_t *pFlexSetting = (flexsetting_t*)((byte*)pHdr + pHdr->flexsettingindex);
+		for ( int i = 0; i < pHdr->numflexsettings; ++i, ++pFlexSetting )
+		{
+			swap.SwapFieldsToTargetEndian( pFlexSetting );
+				
+			flexweight_t *pWeight = (flexweight_t*)(((byte*)pFlexSetting) + pFlexSetting->settingindex );
+			for ( int j = 0; j < pFlexSetting->numsettings; ++j, ++pWeight )
+			{
+				swap.SwapFieldsToTargetEndian( pWeight );
+			}
+		}
+
+		// indexes
+		pData = (byte*)pHdr + pHdr->indexindex;
+		swap.SwapBufferToTargetEndian( (int*)pData, (int*)pData, pHdr->numindexes );
+
+		// keymappings
+		pData  = (byte*)pHdr + pHdr->keymappingindex;
+		swap.SwapBufferToTargetEndian( (int*)pData, (int*)pData, pHdr->numkeys );
+
+		// keyname indices
+		pData = (byte*)pHdr + pHdr->keynameindex;
+		swap.SwapBufferToTargetEndian( (int*)pData, (int*)pData, pHdr->numkeys );
+	}
+
+	// Fill in translation table
+	EnsureTranslations( instance, ( const flexsettinghdr_t * )pfile->buffer );
+
+	// Return data
+	return pfile->buffer;
+}
+	
 CFlexSceneFileManager g_FlexSceneFileManager;
 
 //-----------------------------------------------------------------------------
@@ -1875,7 +1900,7 @@ bool C_BaseFlex::ProcessFlexSettingSceneEvent( float *pGlobalFlexWeight, CSceneE
 //			rhs - 
 // Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
-bool C_BaseFlex::FlexSettingLessFunc( const FS_LocalToGlobal_t& lhs, const FS_LocalToGlobal_t& rhs )
+bool FlexSettingLessFunc( const FS_LocalToGlobal_t& lhs, const FS_LocalToGlobal_t& rhs )
 {
 	return lhs.m_Key < rhs.m_Key;
 }

@@ -559,6 +559,35 @@ bool GetVectorInScreenSpace( Vector pos, int& iX, int& iY, Vector *vecOffset )
 	return true;
 }
 
+
+//-----------------------------------------------------------------------------
+// Purpose: Get the x & y positions of a world position in HUD space
+//			Returns true if it's onscreen
+//-----------------------------------------------------------------------------
+bool GetVectorInHudSpace( Vector pos, int& iX, int& iY, Vector *vecOffset )
+{
+	Vector screen;
+
+	// Apply the offset, if one was specified
+	if ( vecOffset != NULL )
+		pos += *vecOffset;
+
+	// Transform to HUD space
+	int iFacing = HudTransform( pos, screen );
+	iX = 0.5f * ( 1.0f + screen[0] ) * ScreenWidth();
+	iY = 0.5f * ( 1.0f - screen[1] ) * ScreenHeight();
+
+	// Make sure the player's facing it
+	if ( iFacing )
+	{
+		// We're actually facing away from the Target. Stomp the screen position.
+		iX = -640;
+		iY = -640;
+		return false;
+	}
+
+	return true;
+}
 //-----------------------------------------------------------------------------
 // Purpose: Get the x & y positions of an entity in screenspace
 //			Returns true if it's onscreen
@@ -1364,4 +1393,99 @@ void UTIL_ClearTrace( trace_t &trace )
 	trace.fraction = 1.f;
 	trace.fractionleftsolid = 0;
 	trace.surface = g_NullSurface;
+}
+
+
+
+//-----------------------------------------------------------------------------
+// Purpose: format the time and/or date with the user's current locale
+// If timeVal is 0, gets the current time
+//
+// This is generally for use with chatroom dialogs, etc. which need to be
+// able to say "Last message received: %date% at %time%"
+//
+// Note that this uses time_t because RTime32 is not hooked-up on the client
+//-----------------------------------------------------------------------------
+inline bool BGetLocalFormattedDateAndTime( time_t timeVal, char *pchDate, int cubDate, char *pchTime, int cubTime )
+{
+	if ( 0 == timeVal || timeVal < 0 )
+	{
+		// get the current time
+		time( &timeVal );
+	}
+
+	if ( timeVal )
+	{
+		// Convert it to our local time
+		struct tm tmStruct;
+		struct tm tmToDisplay = *( Plat_localtime( ( const time_t* )&timeVal, &tmStruct ) );
+#ifdef POSIX
+		if ( pchDate != NULL )
+		{
+			pchDate[ 0 ] = 0;
+			if ( 0 == strftime( pchDate, cubDate, "%A %b %d", &tmToDisplay ) )
+				return false;
+		}
+
+		if ( pchTime != NULL )
+		{
+			pchTime[ 0 ] = 0;
+			if ( 0 == strftime( pchTime, cubTime - 6, "%I:%M ", &tmToDisplay ) )
+				return false;
+
+			// append am/pm in lower case (since strftime doesn't have a lowercase formatting option)
+			if (tmToDisplay.tm_hour >= 12)
+			{
+				Q_strcat( pchTime, "p.m.", cubTime );
+			}
+			else
+			{
+				Q_strcat( pchTime, "a.m.", cubTime );
+			}
+		}
+#else // WINDOWS
+		// convert time_t to a SYSTEMTIME
+		SYSTEMTIME st;
+		st.wHour = tmToDisplay.tm_hour;
+		st.wMinute = tmToDisplay.tm_min;
+		st.wSecond = tmToDisplay.tm_sec;
+		st.wDay = tmToDisplay.tm_mday;
+		st.wMonth = tmToDisplay.tm_mon + 1;
+		st.wYear = tmToDisplay.tm_year + 1900;
+		st.wDayOfWeek = tmToDisplay.tm_wday;
+		st.wMilliseconds = 0;
+
+		WCHAR rgwch[ MAX_PATH ];
+
+		if ( pchDate != NULL )
+		{
+			pchDate[ 0 ] = 0;
+			if ( !GetDateFormatW( LOCALE_USER_DEFAULT, DATE_LONGDATE, &st, NULL, rgwch, MAX_PATH ) )
+				return false;
+			Q_strncpy( pchDate, CStrAutoEncode( rgwch ).ToString(), cubDate );
+		}
+
+		if ( pchTime != NULL )
+		{
+			pchTime[ 0 ] = 0;
+			if ( !GetTimeFormatW( LOCALE_USER_DEFAULT, TIME_NOSECONDS, &st, NULL, rgwch, MAX_PATH ) )
+				return false;
+			Q_strncpy( pchTime, CStrAutoEncode( rgwch ).ToString(), cubTime );
+		}
+#endif
+		return true;
+	}
+
+	return false;
+}
+
+
+// And a couple of helpers so people don't have to remember the order of the parameters in the above function
+inline bool BGetLocalFormattedDate( time_t timeVal, char *pchDate, int cubDate )
+{
+	return BGetLocalFormattedDateAndTime( timeVal, pchDate, cubDate, NULL, 0 );
+}
+inline bool BGetLocalFormattedTime( time_t timeVal, char *pchTime, int cubTime )
+{
+	return BGetLocalFormattedDateAndTime( timeVal, NULL, 0, pchTime, cubTime );
 }

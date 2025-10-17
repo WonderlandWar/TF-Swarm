@@ -84,6 +84,7 @@ void CEconWearable::InternalSetPlayerDisplayModel( void )
 		const char *pszPlayerDisplayModel = pItem->GetPlayerDisplayModel( iClass, iTeam );
 		if ( pszPlayerDisplayModel )
 		{
+#if 0
 			if ( pItem->GetStaticData()->IsContentStreamable() )
 			{
 				modelinfo->RegisterDynamicModel( pszPlayerDisplayModel, IsClient() );
@@ -93,6 +94,7 @@ void CEconWearable::InternalSetPlayerDisplayModel( void )
 					modelinfo->RegisterDynamicModel( pItem->GetVisionFilteredDisplayModel(), IsClient() );
 				}
 			}
+#endif
 			SetModel( pszPlayerDisplayModel );
 		}
 	}

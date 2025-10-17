@@ -339,7 +339,7 @@ private:
 	float m_flGoldPercentile;
 };
 
-class CTFGCServerSystem : public CGCClientSystem, public GCSDK::ISharedObjectListener, public IServerGCLobby, public CGameEventListener
+class CTFGCServerSystem : public CGCClientSystem, public GCSDK::ISharedObjectListener, public CGameEventListener
 {
 	DECLARE_CLASS_GAMEROOT( CTFGCServerSystem, CGCClientSystem );
 
@@ -647,15 +647,15 @@ private:
 		bool IsBackingOff();
 
 		// Steam callback
-		void OnWebapiEquipmentReceived( HTTPRequestCompleted_t* pInfo, bool bIOFailure );
+		//void OnWebapiEquipmentReceived( HTTPRequestCompleted_t* pInfo, bool bIOFailure );
 	};
 	typedef CUtlMap< CSteamID, WebapiEquipmentState_t*, int, CDefLess<CSteamID> > TMapEquipmentRequests;
-	TMapEquipmentRequests m_mapEquipmentRequests;
+	//TMapEquipmentRequests m_mapEquipmentRequests;
 	WebapiEquipmentState_t& FindOrCreateWebapiEquipmentState( CSteamID steamID );
 
 	void WebapiEquipmentThink();
 	void WebapiEquipmentThinkRequest( CSteamID steamID, WebapiEquipmentState_t* pState );
-	void OnWebapiEquipmentReceived( CSteamID steamID, HTTPRequestCompleted_t* pInfo, bool bIOFailure );
+	//void OnWebapiEquipmentReceived( CSteamID steamID, HTTPRequestCompleted_t* pInfo, bool bIOFailure );
 
 	void SDK_ApplyInventoryInfo( CGCClientSharedObjectCache* pCache, KeyValues* pKVRequest ); // mod expansion point
 	void SDK_ApplyLocalLoadout(CGCClientSharedObjectCache* pCache, KeyValues* pKVRequest);

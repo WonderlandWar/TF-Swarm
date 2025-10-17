@@ -37,7 +37,7 @@ const char *s_pszMatchGroups[] =
 	"MatchGroup_Competitive_Event",
 };
 
-//COMPILE_TIME_ASSERT( ARRAYSIZE( s_pszMatchGroups ) == ETFMatchGroup_ARRAYSIZE );
+COMPILE_TIME_ASSERT( ARRAYSIZE( s_pszMatchGroups ) == ETFMatchGroup_ARRAYSIZE );
 
 const char *GetMatchGroupLocalizationName( ETFMatchGroup eMatchGroup )
 {
@@ -57,7 +57,7 @@ const char *g_szMatchGroupLeaderboardNames[] =
 	"tf2_ladder_6v6",
 	"tf2_casual_12v12",
 };
-//COMPILE_TIME_ASSERT( ARRAYSIZE( g_szMatchGroupLeaderboardNames ) == k_eMatchGroupLeaderboard_Count );
+COMPILE_TIME_ASSERT( ARRAYSIZE( g_szMatchGroupLeaderboardNames ) == k_eMatchGroupLeaderboard_Count );
 
 const char *GetMatchGroupLeaderboardName( EMatchGroupLeaderboard eMatchGroupLeaderboard )
 {

@@ -27,6 +27,7 @@
 #include "cdll_client_int.h"
 #include "cdll_util.h"
 #include "tier1/convar_serverbounded.h"
+#include "cam_thirdperson.h"
 #include "inputsystem/iinputstacksystem.h"
 
 #if defined( _X360 )
@@ -435,9 +436,13 @@ void CInput::ApplyMouse( int nSlot, QAngle& viewangles, CUserCmd *cmd, float mou
 		{
 			if ( mouse_x )
 			{
+				Vector vTempOffset = GetThirdPersonManager( nSlot ).GetCameraOffsetAngles();
+
 				// use the mouse to orbit the camera around the player, and update the idealAngle
-				user.m_vecCameraOffset[ YAW ] -= m_yaw.GetFloat() * mouse_x;
-				cam_idealyaw.SetValue( user.m_vecCameraOffset[ YAW ] - viewangles[ YAW ] );
+				vTempOffset[ YAW ] -= m_yaw.GetFloat() * mouse_x;
+				cam_idealyaw.SetValue( vTempOffset[ YAW ] - viewangles[ YAW ] );
+
+				GetThirdPersonManager( nSlot ).SetCameraOffsetAngles( vTempOffset );
 
 				// why doesn't this work??? CInput::AdjustYaw is why
 				//cam_idealyaw.SetValue( cam_idealyaw.GetFloat() - m_yaw.GetFloat() * mouse_x );
@@ -468,9 +473,13 @@ void CInput::ApplyMouse( int nSlot, QAngle& viewangles, CUserCmd *cmd, float mou
 		{
 			if ( mouse_y )
 			{
+				Vector vTempOffset = GetThirdPersonManager( nSlot ).GetCameraOffsetAngles();
+
 				// use the mouse to orbit the camera around the player, and update the idealAngle
-				user.m_vecCameraOffset[ PITCH ] += m_pitch->GetFloat() * mouse_y;
-				cam_idealpitch.SetValue( user.m_vecCameraOffset[ PITCH ] - viewangles[ PITCH ] );
+				vTempOffset[ PITCH ] += m_pitch->GetFloat() * mouse_y;
+				cam_idealpitch.SetValue( vTempOffset[ PITCH ] - viewangles[ PITCH ] );
+
+				GetThirdPersonManager( nSlot ).SetCameraOffsetAngles( vTempOffset );
 
 				// why doesn't this work??? CInput::AdjustYaw is why
 				//cam_idealpitch.SetValue( cam_idealpitch.GetFloat() + m_pitch->GetFloat() * mouse_y );

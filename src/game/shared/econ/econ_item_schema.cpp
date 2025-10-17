@@ -21,7 +21,7 @@
 
 #include "materialsystem/imaterialsystem.h"
 #include "materialsystem/itexture.h"
-#include "materialsystem/itexturecompositor.h"
+//#include "materialsystem/itexturecompositor.h"
 
 #include "econ_paintkit.h"
 

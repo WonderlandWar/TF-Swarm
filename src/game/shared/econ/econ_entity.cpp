@@ -110,10 +110,10 @@ void DrawEconEntityAttachedModels( CBaseAnimating *pEnt, CEconEntity *pAttachedM
 	IMaterial* pMaterialOverride = NULL;
 	OverrideType_t nMaterialOverrideType = OVERRIDE_NORMAL;
 
-	if ( ( pInfo->flags & STUDIO_NO_OVERRIDE_FOR_ATTACH ) != 0 )
+	//if ( ( pInfo->flags & STUDIO_NO_OVERRIDE_FOR_ATTACH ) != 0 )
 	{
-		modelrender->GetMaterialOverride( &pMaterialOverride, &nMaterialOverrideType );
-		modelrender->ForcedMaterialOverride( NULL, nMaterialOverrideType );
+	//	modelrender->GetMaterialOverride( &pMaterialOverride, &nMaterialOverrideType );
+	//	modelrender->ForcedMaterialOverride( NULL, nMaterialOverrideType );
 	}
 
 	// Draw our attached models as well
@@ -415,6 +415,7 @@ void CEconEntity::UpdateModelToClass( void )
 	{
 		if ( V_stricmp( STRING( GetModelName() ), pszModel ) != 0 )
 		{
+#if 0
 			if ( pItem->GetStaticData()->IsContentStreamable() )
 			{
 				modelinfo->RegisterDynamicModel( pszModel, IsClient() );
@@ -430,7 +431,7 @@ void CEconEntity::UpdateModelToClass( void )
 					modelinfo->RegisterDynamicModel( pItem->GetVisionFilteredDisplayModel(), IsClient() );
 				}
 			}
-
+#endif
 			SetModel( pszModel );
 		}
 	}
@@ -727,7 +728,7 @@ bool CEconEntity::ValidateEntityAttachedToPlayer( bool &bShouldRetry )
 			const wchar_t *pwzItemName = pScriptItem->GetItemName();
 
 			char szItemName[ MAX_ITEM_NAME_LENGTH ];
-			ILocalize::ConvertUnicodeToANSI( pwzItemName, szItemName, sizeof( szItemName ) );
+			g_pVGuiLocalize->ConvertUnicodeToANSI( pwzItemName, szItemName, sizeof( szItemName ) );
 
 #ifdef _DEBUG
 			Warning("Item '%s' attached to %s, but it's not in his inventory.\n", szItemName, pOwner->GetPlayerName() );
@@ -1771,7 +1772,7 @@ void CEconEntity::UpdateSingleParticleSystem( bool bVisible, const attachedparti
 			if ( bIsVM )
 			{
 				pEffect->SetIsViewModelEffect( true );
-				ClientLeafSystem()->SetRenderGroup( pEffect->RenderHandle(), RENDER_GROUP_VIEW_MODEL_TRANSLUCENT );
+				ClientLeafSystem()->RenderWithViewModels( pEffect->RenderHandle(), true );
 			}
 		}
 	}

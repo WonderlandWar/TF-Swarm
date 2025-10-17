@@ -111,18 +111,18 @@ private: // cache stream info
 
 private: // query for top X viewers
 	double m_dblTimeStampLastUpdate;
-	HTTPRequestHandle m_hHTTPRequestHandle;
-	CCallResult< CTFStreamManager, HTTPRequestCompleted_t > m_CallbackOnHTTPRequestCompleted;
-	void Steam_OnHTTPRequestCompletedStreams( HTTPRequestCompleted_t *p, bool bError );
+	//HTTPRequestHandle m_hHTTPRequestHandle;
+	//CCallResult< CTFStreamManager, HTTPRequestCompleted_t > m_CallbackOnHTTPRequestCompleted;
+	//void Steam_OnHTTPRequestCompletedStreams( HTTPRequestCompleted_t *p, bool bError );
 
 private: // checking for twitch account linking with steam account
 	void UpdateTwitchTvAccounts();
 
 	TwitchTvAccountInfo_t *m_pLoadingAccount;
 	CUtlVector< TwitchTvAccountInfo_t* > m_vecTwitchTvAccounts; // list of steam id to updated twitch account
-	HTTPRequestHandle m_hHTTPRequestHandleTwitchTv;
-	CCallResult< CTFStreamManager, HTTPRequestCompleted_t > m_CallbackOnHTTPRequestCompletedTwitchTv;
-	void Steam_OnHTTPRequestCompletedMyTwitchTv( HTTPRequestCompleted_t *p, bool bError );
+	//HTTPRequestHandle m_hHTTPRequestHandleTwitchTv;
+	//CCallResult< CTFStreamManager, HTTPRequestCompleted_t > m_CallbackOnHTTPRequestCompletedTwitchTv;
+	//void Steam_OnHTTPRequestCompletedMyTwitchTv( HTTPRequestCompleted_t *p, bool bError );
 };
 CTFStreamManager *StreamManager();
 

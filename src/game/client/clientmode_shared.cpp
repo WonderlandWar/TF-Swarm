@@ -34,6 +34,7 @@
 #include "fmtstr.h"
 #include "achievementmgr.h"
 #include "c_playerresource.h"
+#include "cam_thirdperson.h"
 #include <vgui/ILocalize.h>
 #include "ienginevgui.h"
 #if defined( _X360 )
@@ -67,6 +68,7 @@ extern ConVar v_viewmodel_fov;
 extern ConVar cl_enable_text_chat;
 
 extern bool IsInCommentaryMode( void );
+extern const char* GetWearLocalizationString( float flWear );
 
 CON_COMMAND( hud_reloadscheme, "Reloads hud layout and animation scripts." )
 {
@@ -340,18 +342,29 @@ void ClientModeShared::OverrideView( CViewSetup *pSetup )
 
 	if( ::input->CAM_IsThirdPerson() )
 	{
-		Vector cam_ofs;
+		const Vector& cam_ofs = GetThirdPersonManager( GetSplitScreenPlayerSlot() ).GetCameraOffsetAngles();
+		Vector cam_ofs_distance = GetThirdPersonManager( GetSplitScreenPlayerSlot() ).GetFinalCameraOffset();
 
-		::input->CAM_GetCameraOffset( cam_ofs );
+		cam_ofs_distance *= GetThirdPersonManager( GetSplitScreenPlayerSlot() ).GetDistanceFraction();
 
 		camAngles[ PITCH ] = cam_ofs[ PITCH ];
 		camAngles[ YAW ] = cam_ofs[ YAW ];
 		camAngles[ ROLL ] = 0;
 
 		Vector camForward, camRight, camUp;
-		AngleVectors( camAngles, &camForward, &camRight, &camUp );
+		
 
-		VectorMA( pSetup->origin, -cam_ofs[ ROLL ], camForward, pSetup->origin );
+		if ( GetThirdPersonManager( GetSplitScreenPlayerSlot() ).IsOverridingThirdPerson() == false )
+		{
+			engine->GetViewAngles( camAngles );
+		}
+			
+		// get the forward vector
+		AngleVectors( camAngles, &camForward, &camRight, &camUp );
+		
+		VectorMA( pSetup->origin, -cam_ofs_distance[0], camForward, pSetup->origin );
+		VectorMA( pSetup->origin, cam_ofs_distance[1], camRight, pSetup->origin );
+		VectorMA( pSetup->origin, cam_ofs_distance[2], camUp, pSetup->origin );
 
 		static ConVarRef c_thirdpersonshoulder( "c_thirdpersonshoulder" );
 		if ( c_thirdpersonshoulder.GetBool() )
@@ -801,6 +814,10 @@ void ClientModeShared::LevelInit( const char *newmap )
 //-----------------------------------------------------------------------------
 void ClientModeShared::LevelShutdown( void )
 {
+	// Reset the third person camera so we don't crash
+	for ( int i = 0; i < MAX_SPLITSCREEN_PLAYERS; ++i )
+		GetThirdPersonManager( i ).Init();
+
 	if ( m_pChatElement )
 	{
 	m_pChatElement->LevelShutdown();
@@ -1383,18 +1400,18 @@ void ClientModeShared::FireGameEvent( IGameEvent *event )
 						vgui::HScheme scheme = vgui::scheme()->GetScheme( "ClientScheme" );
 						vgui::IScheme *pScheme = vgui::scheme()->GetIScheme( scheme );
 						Color color = pScheme->GetColor( GetColorNameForAttribColor( colorRarity ), Color( 255, 255, 255, 255 ) );
-						hudChat->SetCustomColor( color );
+						//hudChat->SetCustomColor( color );
 					}
 					else
 					{
 						const char *pszQualityColorString = EconQuality_GetColorString( (EEconItemQuality)iItemQuality );
 						if ( pszQualityColorString )
 						{
-							hudChat->SetCustomColor( pszQualityColorString );
+							//hudChat->SetCustomColor( pszQualityColorString );
 						}
 					}
 
-					*(colorMarker+1) = COLOR_CUSTOM;
+					*(colorMarker+1) = COLOR_MOD_CUSTOM;
 				}
 
 				// TODO: Update the localization strings to only have two format parameters since that's all we need.

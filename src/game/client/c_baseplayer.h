@@ -444,6 +444,8 @@ public:
 	bool					HasFiredWeapon( void ) { return m_bFiredWeapon; }
 	void					SetFiredWeapon( bool bFlag ) { m_bFiredWeapon = bFlag; }
 
+	virtual bool			CanUseFirstPersonCommand( void ){ return true; }
+
 protected:
 	fogparams_t				m_CurrentFog;
 	EHANDLE					m_hOldFogController;

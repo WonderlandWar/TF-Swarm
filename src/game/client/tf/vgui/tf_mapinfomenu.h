@@ -12,7 +12,7 @@
 #endif
 
 #include <vgui_controls/Frame.h>
-#include "vgui_controls/KeyRepeat.h"
+//#include "vgui_controls/KeyRepeat.h"
 
 //-----------------------------------------------------------------------------
 // Purpose: displays the MapInfo menu
@@ -40,7 +40,7 @@ public:
 	virtual bool IsVisible(){ return BaseClass::IsVisible(); }
 	virtual void SetParent( vgui::VPANEL parent ){ BaseClass::SetParent( parent ); }
 
-	virtual GameActionSet_t GetPreferredActionSet() { return GAME_ACTION_SET_IN_GAME_HUD; }
+	//virtual GameActionSet_t GetPreferredActionSet() { return GAME_ACTION_SET_IN_GAME_HUD; }
 
 protected:
 	virtual void OnKeyCodePressed(vgui::KeyCode code);
@@ -78,7 +78,7 @@ protected:
 
 	char				m_szMapName[MAX_PATH];
 
-	vgui::CKeyRepeatHandler	m_KeyRepeat;
+	//vgui::CKeyRepeatHandler	m_KeyRepeat;
 };
 
 

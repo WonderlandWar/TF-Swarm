@@ -24,7 +24,7 @@
 	extern ISoundEmitterSystemBase *soundemitterbase;
 
 #ifdef CLIENT_DLL
-	#include "materialsystem/itexturecompositor.h"
+	//	#include "materialsystem/itexturecompositor.h"
 #endif
 
 extern const char *s_pszMatchGroups[];

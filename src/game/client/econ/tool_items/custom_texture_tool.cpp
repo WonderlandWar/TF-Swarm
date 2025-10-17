@@ -1800,7 +1800,7 @@ void CConfirmCustomizeTextureDialog::UseAvatarImage()
 
 		const int k_nAvatarImageSize = 184;
 		m_imgSource.Init( k_nAvatarImageSize, k_nAvatarImageSize, IMAGE_FORMAT_RGBA8888 );
-		int iAvatar = steamapicontext->SteamFriends()->GetLargeFriendAvatar( steamapicontext->SteamUser()->GetSteamID() );
+		int iAvatar = steamapicontext->SteamFriends()->GetFriendAvatar( steamapicontext->SteamUser()->GetSteamID(), k_EAvatarSize64x64 );
 		if ( !steamapicontext->SteamUtils()->GetImageRGBA( iAvatar, m_imgSource.GetBits(), k_nAvatarImageSize*k_nAvatarImageSize*4 ) )
 		{
 			m_imgSource.Clear();

@@ -27,7 +27,7 @@
 #include "tf_hud_disconnect_prompt.h"
 #include "tf_gc_client.h"
 #include "tf_partyclient.h"
-#include "sourcevr/isourcevirtualreality.h"
+//#include "sourcevr/isourcevirtualreality.h"
 #include "materialsystem/imaterialsystem.h"
 #include "materialsystem/materialsystem_config.h"
 #include "tf_warinfopanel.h"
@@ -47,9 +47,9 @@
 #include "tf_rating_data.h"
 #include "tf_progression.h"
 
-#include "replay/ireplaysystem.h"
-#include "replay/ienginereplay.h"
-#include "replay/vgui/replayperformanceeditor.h"
+//#include "replay/ireplaysystem.h"
+//#include "replay/ienginereplay.h"
+//#include "replay/vgui/replayperformanceeditor.h"
 #include "materialsystem/itexture.h"
 #include "imageutils.h"
 #include "icommandline.h"
@@ -558,7 +558,7 @@ void CHudMainMenuOverride::ApplySchemeSettings( IScheme *scheme )
 	}
 	m_pVRModeBackground = FindChildByName( "VRBGPanel" );
 
-	bool bShowVR = materials->GetCurrentConfigForVideoCard().m_nVRModeAdapter == materials->GetCurrentAdapter();
+	bool bShowVR = false;//materials->GetCurrentConfigForVideoCard().m_nVRModeAdapter == materials->GetCurrentAdapter();
 	if ( m_pVRModeBackground )
 	{
 		m_pVRModeBackground->SetVisible( bShowVR );
@@ -618,7 +618,7 @@ void CHudMainMenuOverride::ApplySchemeSettings( IScheme *scheme )
 		Panel* pPanelToAddTooltipTipTo = FindChildByName( pszPanelName );
 		if ( pPanelToAddTooltipTipTo)
 		{
-			pPanelToAddTooltipTipTo->SetTooltip( m_pToolTip, pszTooltipText );
+			//pPanelToAddTooltipTipTo->SetTooltip( m_pToolTip, pszTooltipText );
 
 			pPanelToAddTooltipTipTo->SetVisible(false);
 		}
@@ -847,11 +847,12 @@ void CHudMainMenuOverride::LoadMenuEntries( void )
 			CExImageButton *pButton = dynamic_cast<CExImageButton*>( pPanel->FindChildByName("SubButton") );
 			if ( pButton )
 			{
+#if 0
 				if ( m_pMMButtonEntries[iIdx].pszTooltip )
 				{
 					pButton->SetTooltip( m_pToolTip, m_pMMButtonEntries[iIdx].pszTooltip );
 				}
-
+#endif
 				pButton->SetText( label );
 				pButton->SetCommand( cmd );
 				pButton->SetMouseInputEnabled( true );
@@ -969,7 +970,7 @@ void CHudMainMenuOverride::OnUpdateMenu( void )
 #else
 	bool bInReplay = false;
 #endif
-	bool bIsVREnabled = materials->GetCurrentConfigForVideoCard().m_nVRModeAdapter == materials->GetCurrentAdapter();
+	bool bIsVREnabled = false;//materials->GetCurrentConfigForVideoCard().m_nVRModeAdapter == materials->GetCurrentAdapter();
 
 	// First, reapply any KVs we have to reapply
 	if ( m_bReapplyButtonKVs )
@@ -1020,7 +1021,7 @@ void CHudMainMenuOverride::OnUpdateMenu( void )
 		{
 			shouldBeVisible = false;
 		}
-		else if ( m_pMMButtonEntries[i].bOnlyVREnabled && ( !bIsVREnabled || ShouldForceVRActive() ) )
+		else if ( m_pMMButtonEntries[i].bOnlyVREnabled && ( !bIsVREnabled ) )
 		{
 			shouldBeVisible = false;
 		}
@@ -1125,9 +1126,6 @@ void CHudMainMenuOverride::OnUpdateMenu( void )
 
 	if ( m_pVRModeButton && m_pVRModeButton->IsVisible() )
 	{
-		if( UseVR() )
-			m_pVRModeButton->SetText( "#MMenu_VRMode_Deactivate" );
-		else
 			m_pVRModeButton->SetText( "#MMenu_VRMode_Activate" );
 	}
 

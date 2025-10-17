@@ -7,7 +7,7 @@
 
 #include "cbase.h"
 
-#include "tier1/util_misc.h"
+//#include "tier1/util_misc.h"
 #include "tf_proto_script_obj_def.h"
 #include "tf_quest_map_node.h"
 #include <google/protobuf/text_format.h>
@@ -81,7 +81,7 @@ CUtlString GetProtoDefLocTokenForField( const IProtoBufScriptObjectDefinition* p
 void SaveLocalizationValueToFile( const char* pszToken, wchar_t* pwszValue, bool bDeleted )
 {
 #ifdef CLIENT_DLL
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 
 	char szPathAndFileName[MAX_PATH];
 	if ( !GenerateFullPath( g_pszProtoLocFileName, "MOD", szPathAndFileName, ARRAYSIZE( szPathAndFileName ) ) )
@@ -101,7 +101,8 @@ void SaveLocalizationValueToFile( const char* pszToken, wchar_t* pwszValue, bool
 
 	// Get the name of the file and p4 check it out
 	char szCorrectCaseFilePath[MAX_PATH];
-	g_pFullFileSystem->GetCaseCorrectFullPath( szPathAndFileName, szCorrectCaseFilePath );
+	// TF_SWARM: FIXME! Can't case correct!
+	//g_pFullFileSystem->GetCaseCorrectFullPath( szPathAndFileName, szCorrectCaseFilePath );
 	CP4AutoEditFile a( szCorrectCaseFilePath );
 
 	g_pVGuiLocalize->SaveToFile( szPathAndFileName );
@@ -111,7 +112,7 @@ void SaveLocalizationValueToFile( const char* pszToken, wchar_t* pwszValue, bool
 
 const CMsgProtoDefHeader& GetHeaderFromMessage( const google::protobuf::Message* pMsg )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 	const google::protobuf::FieldDescriptor* pHeaderField = pMsg->GetDescriptor()->FindFieldByName( "header" );
 	const google::protobuf::Message& header = pMsg->GetReflection()->GetMessage( *pMsg, pHeaderField );
 	return *(CMsgProtoDefHeader*)(&header);
@@ -119,7 +120,7 @@ const CMsgProtoDefHeader& GetHeaderFromMessage( const google::protobuf::Message*
 
 CMsgProtoDefHeader& GetMutableHeaderFromMessage( google::protobuf::Message* pMsg )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 	const google::protobuf::FieldDescriptor* pHeaderField = pMsg->GetDescriptor()->FindFieldByName( "header" );
 	google::protobuf::Message* pHeader = pMsg->GetReflection()->MutableMessage( pMsg, pHeaderField );
 	return *(CMsgProtoDefHeader*)pHeader;
@@ -326,7 +327,7 @@ void GetMessageHierarchyFromFieldID( const CMsgFieldID& startingFieldID, const g
 
 void GetDefinitionPath( const IProtoBufScriptObjectDefinition* pDef, CUtlString& strPath )
 {
-	strPath = CFmtStr( "%s%s/%d_%s.txt", g_pszProtoPath, ProtoDefTypes_Name( (ProtoDefTypes)pDef->GetDefType() ).c_str(), pDef->GetDefIndex(), pDef->GetName() ).Get();
+	strPath = CFmtStr( "%s%s/%d_%s.txt", g_pszProtoPath, ProtoDefTypes_Name( (ProtoDefTypes)pDef->GetDefType() ).c_str(), pDef->GetDefIndex(), pDef->GetName() );
 }
 
 bool BDeleteDefinitionFile( const IProtoBufScriptObjectDefinition* pDef )
@@ -347,7 +348,7 @@ bool BDeleteDefinitionFile( const IProtoBufScriptObjectDefinition* pDef )
 		{
 			Warning( "Failed to GenerateFullPath to %s\n", strExistingFile.Get() );
 		}
-
+#if 0 
 		CP4File p4File( szCorrectCaseFilePath );
 		P4FileState_t state = p4File.GetFileState();
 		switch ( state )
@@ -375,6 +376,7 @@ bool BDeleteDefinitionFile( const IProtoBufScriptObjectDefinition* pDef )
 			default:
 				Assert( false );
 		}
+#endif
 	}
 
 	if ( bDeleted )
@@ -412,7 +414,7 @@ void IProtoBufScriptObjectDefinition::SerializeToBuffer( CUtlBuffer& bufOut ) co
 
 bool IProtoBufScriptObjectDefinition::BParseFromBuffer( CUtlBuffer& bufIn, CUtlVector<CUtlString> *pVecErrors )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 
 	// Read the size
 	int nSize = bufIn.GetInt();
@@ -429,7 +431,7 @@ bool IProtoBufScriptObjectDefinition::BParseFromBuffer( CUtlBuffer& bufIn, CUtlV
 
 bool IProtoBufScriptObjectDefinition::BParseFromString( std::string& strIn, CUtlVector<CUtlString> *pVecErrors )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 
 	// Parse the message
 	google::protobuf::Message* pMsg = GetMutableTopLayerMsg();
@@ -481,7 +483,7 @@ bool IProtoBufScriptObjectDefinition::BPostDataLoaded( CUtlVector<CUtlString> *p
 
 void ClearNonInheritedFields( ::google::protobuf::Message* pMsgPrefab )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 	for( int i=0; i < pMsgPrefab->GetDescriptor()->field_count(); ++i )
 	{
 		const ::google::protobuf::FieldDescriptor* pField = pMsgPrefab->GetDescriptor()->field( i );
@@ -633,14 +635,14 @@ bool CProtoBufScriptObjectDefinitionManager::BInitDefinitions()
 
 	SpewOnDestruct spew( vecErrors );
 
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__);
 
 	// Clear out old definitions
 	for (int nType = 0; nType < ProtoDefTypes_MAX + 1; ++nType)
 	{
 		if ( !ProtoDefTypes_IsValid( nType ) )
 			continue;
-		tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s - Purging old definitions", __FUNCTION__ );
+		//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s - Purging old definitions", __FUNCTION__ );
 		m_arDefinitionsMaps[ nType ].PurgeAndDeleteElements();
 	}
 
@@ -686,7 +688,7 @@ bool CProtoBufScriptObjectDefinitionManager::BInitDefinitions()
 
 	if ( buffer.TellPut() > buffer.TellGet() )
 	{
-		tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s - Parsing definitions", __FUNCTION__ );
+		//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s - Parsing definitions", __FUNCTION__ );
 
 		while ( buffer.GetBytesRemaining() > 0 )
 		{
@@ -742,7 +744,7 @@ bool CProtoBufScriptObjectDefinitionManager::BPostDefinitionsLoaded()
 		if ( !ProtoDefTypes_IsValid( nType ) )
 			continue;
 
-		tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s - BPostDataLoaded Type: %s", __FUNCTION__, ProtoDefTypes_Name( (ProtoDefTypes)nType ).c_str() );
+		//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s - BPostDataLoaded Type: %s", __FUNCTION__, ProtoDefTypes_Name( (ProtoDefTypes)nType ).c_str() );
 		FOR_EACH_MAP_FAST( m_arDefinitionsMaps[ nType ], nIndex )
 		{
 			IProtoBufScriptObjectDefinition* pDef = m_arDefinitionsMaps[ nType ][ nIndex ];

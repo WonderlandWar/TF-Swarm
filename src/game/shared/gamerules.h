@@ -175,6 +175,9 @@ public:
 
 	virtual bool InRoundRestart( void ) { return false; }
 
+	//Allow thirdperson camera.
+	virtual bool AllowThirdPersonCamera( void ) { return false; }
+
 	virtual void RegisterScriptFunctions( void ){ };
 
 	virtual void ClientCommandKeyValues( edict_t *pEntity, KeyValues *pKeyValues ) {} 
@@ -182,6 +185,12 @@ public:
 #ifdef CLIENT_DLL
 
 	virtual bool IsBonusChallengeTimeBased( void );
+
+	virtual bool AllowMapParticleEffect( const char *pszParticleEffect ) { return true; }
+
+	virtual bool AllowWeatherParticles( void ) { return true; }
+	
+	virtual bool AllowMapVisionFilterShaders( void ) { return false; }
 	
 #else
 

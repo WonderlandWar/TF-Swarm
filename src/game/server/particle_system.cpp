@@ -34,10 +34,12 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE(CParticleSystem, DT_ParticleSystem)
 
 	SendPropArray3( SENDINFO_ARRAY3(m_hControlPointEnts), SendPropEHandle( SENDINFO_ARRAY(m_hControlPointEnts) ) ),
 	SendPropArray3( SENDINFO_ARRAY3(m_iControlPointParents), SendPropInt( SENDINFO_ARRAY(m_iControlPointParents), 3, SPROP_UNSIGNED ) ),
+	SendPropBool( SENDINFO(m_bWeatherEffect) ),
 END_SEND_TABLE()
 
 BEGIN_DATADESC( CParticleSystem )
 	DEFINE_KEYFIELD( m_bStartActive,	FIELD_BOOLEAN, "start_active" ),
+	DEFINE_KEYFIELD( m_bWeatherEffect,	FIELD_BOOLEAN, "flag_as_weather" ),
 	DEFINE_FIELD( m_bActive,			FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_flStartTime,		FIELD_TIME ),
 	DEFINE_ARRAY( m_vServerControlPoints, FIELD_VECTOR, CParticleSystem::kSERVERCONTROLLEDPOINTS ),
@@ -138,6 +140,8 @@ CParticleSystem::CParticleSystem( void ) : m_bNoSave( false )
 	{
 		m_iServerControlPointAssignments.GetForModify(i) = 255;
 	}
+
+	m_bWeatherEffect = false;
 }
 
 //-----------------------------------------------------------------------------

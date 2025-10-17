@@ -41,7 +41,7 @@ static ConVar tf_hide_custom_decals( "tf_hide_custom_decals", "0", FCVAR_ARCHIVE
 #endif
 
 #include "materialsystem/itexture.h"
-#include "materialsystem/itexturecompositor.h"
+//#include "materialsystem/itexturecompositor.h"
 
 #include "activitylist.h"
 

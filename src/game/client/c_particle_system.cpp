@@ -61,6 +61,8 @@ protected:
 	EHANDLE		m_hControlPointEnts[kMAXCONTROLPOINTS];
 	//	SendPropArray3( SENDINFO_ARRAY3(m_iControlPointParents), SendPropInt( SENDINFO_ARRAY(m_iControlPointParents), 3, SPROP_UNSIGNED ) ),
 	unsigned char m_iControlPointParents[kMAXCONTROLPOINTS];
+
+	bool		m_bWeatherEffect;
 };
 
 IMPLEMENT_CLIENTCLASS(C_ParticleSystem, DT_ParticleSystem, CParticleSystem);
@@ -82,6 +84,7 @@ BEGIN_RECV_TABLE_NOBASE( C_ParticleSystem, DT_ParticleSystem )
 
 	RecvPropArray3( RECVINFO_ARRAY(m_hControlPointEnts), RecvPropEHandle( RECVINFO( m_hControlPointEnts[0] ) ) ),
 	RecvPropArray3( RECVINFO_ARRAY(m_iControlPointParents), RecvPropInt( RECVINFO(m_iControlPointParents[0]))), 
+	RecvPropBool( RECVINFO( m_bWeatherEffect ) ),
 END_RECV_TABLE();
 
 //-----------------------------------------------------------------------------
@@ -91,6 +94,7 @@ C_ParticleSystem::C_ParticleSystem( void )
  :	m_pSnapshot( NULL )
 {
 	memset( m_szSnapshotFileName, 0, sizeof( m_szSnapshotFileName ) );
+	m_bWeatherEffect = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -204,9 +208,14 @@ void C_ParticleSystem::ClientThink( void )
 		const char *pszName = GetParticleSystemNameFromIndex( m_iEffectIndex );
 		if ( pszName && pszName[0] )
 		{
+			if ( !GameRules()->AllowMapParticleEffect( pszName ) )
+				return;
+
+			if ( m_bWeatherEffect && !GameRules()->AllowWeatherParticles() )
+				return;
+
 			CNewParticleEffect *pEffect = ParticleProp()->Create( pszName, PATTACH_ABSORIGIN_FOLLOW );
-			m_pEffect = pEffect;
-	
+			m_pEffect = pEffect;	
 			if (pEffect)
 			{
 				for ( int i = 0 ; i < kMAXCONTROLPOINTS ; ++i )

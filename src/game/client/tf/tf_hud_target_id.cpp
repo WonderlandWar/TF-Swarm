@@ -19,7 +19,7 @@
 #include "replay/ienginereplay.h"
 #endif // REPLAY_ENABLED
 #include "tf_weapon_bonesaw.h"
-#include "sourcevr/isourcevirtualreality.h"
+//#include "sourcevr/isourcevirtualreality.h"
 #include "tf_revive.h"
 #include "tf_logic_robot_destruction.h"
 #include "entity_capture_flag.h"
@@ -686,11 +686,6 @@ void CTargetID::PerformLayout( void )
 	SetSize( iWidth, GetTall() );
 
 	int nOffset = m_bArenaPanelVisible ? YRES (120) : 0; // HACK: move the targetID up a bit so it won't overlap the panel
-	if( UseVR() )
-	{
-		SetPos( ScreenWidth() - iWidth - m_iXOffset,  m_nOriginalY - nOffset + YRES( tf_hud_target_id_offset.GetInt() ) );
-	}
-	else
 	{
 		SetPos( (ScreenWidth() - iWidth) * 0.5,  m_nOriginalY - nOffset + YRES( tf_hud_target_id_offset.GetInt() ) );
 	}
@@ -1019,16 +1014,6 @@ void CTargetID::UpdateID( void )
 			if ( m_pMoveableSubPanel->IsVisible() )
 			{
 				const char *pBoundKey = nullptr;
-				if ( pszActionCommand && ::input->IsSteamControllerActive() )
-				{
-					auto origin = g_pInputSystem->GetSteamControllerActionOrigin( *pszActionCommand == '+' ? pszActionCommand + 1 : pszActionCommand, GAME_ACTION_SET_FPSCONTROLS );
-					if ( origin != k_EControllerActionOrigin_None )
-					{
-						auto pSteamController = g_pInputSystem->SteamControllerInterface();
-						pBoundKey = pSteamController ? pSteamController->GetStringForActionOrigin( origin ) : "";
-					}
-
-				}
 				if ( !pBoundKey )
 				{
 					pBoundKey = engine->Key_LookupBinding( pszActionCommand );

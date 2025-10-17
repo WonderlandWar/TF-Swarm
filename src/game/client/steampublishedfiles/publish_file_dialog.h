@@ -25,7 +25,7 @@
 
 struct PublishedFileDetails_t
 {
-	SteamUGCDetails_t  publishedFileDetails;
+	//SteamUGCDetails_t  publishedFileDetails;
 	const char        *lpszFilename;
 };
 
@@ -126,7 +126,7 @@ protected:
 	virtual unsigned int DesiredPreviewHeight( void ) { return PREVIEW_HEIGHT; }
 	virtual unsigned int DesiredPreviewWidth( void ) { return PREVIEW_WIDTH; }
 	// Decides which type to use for publishing this file
-	virtual EWorkshopFileType WorkshipFileTypeForFile( const char *pszFileName ) { return k_EWorkshopFileTypeCommunity; }
+	//virtual EWorkshopFileType WorkshipFileTypeForFile( const char *pszFileName ) { return k_EWorkshopFileTypeCommunity; }
 	virtual bool BForceSquarePreviewImage( void ) { return false; } // Force preview images to be square
 	virtual const char *GetPreviewFileTypes( void ) { return "*.jpg"; }
 	virtual const char *GetPreviewFileTypeDescriptions( void ) { return "JPEG Files (*.jpg)"; }
@@ -134,7 +134,7 @@ protected:
 	virtual const char *GetFileTypeDescriptions( eFilterType_t eType = IMPORT_FILTER_NONE ) { return "BSP Files (*.bsp)"; }
 	virtual const char *GetResFile() const { return "PublishFileDialog.res"; }
 	virtual void ErrorMessage( ErrorCode_t errorCode, KeyValues *pkvTokens = NULL );
-	virtual void PopulateTags( SteamParamStringArray_t &strArray ) {}
+	//virtual void PopulateTags( SteamParamStringArray_t &strArray ) {}
 	virtual const char* GetStatusString( StatusCode_t statusCode );
 	virtual void ShowStatusWindow( StatusCode_t statusCode );
 	virtual void HideStatusWindow( void );
@@ -182,7 +182,7 @@ protected:
 	Bitmap_t m_imgSquare;
 	Bitmap_t m_imgTemp;
 
-	PublishedFileId_t      m_nFileID;
+	//PublishedFileId_t      m_nFileID;
 	PublishedFileDetails_t m_FileDetails;
 	unsigned int           m_nFileDetailsChanges;
 
@@ -191,13 +191,13 @@ protected:
 	vgui::TextEntry  *m_pFileDescription;
 	vgui::Label      *m_pFilename;
 	vgui::Button     *m_pPublishButton;
-
+#if 0
 	CCallResult<CFilePublishDialog, CreateItemResult_t> m_callbackCreateItem;
 	void Steam_OnCreateItem( CreateItemResult_t *pResult, bool bError );
 
 	CCallResult<CFilePublishDialog, SubmitItemUpdateResult_t> m_callbackPublishFile;
 	void Steam_OnPublishFile( SubmitItemUpdateResult_t *pResult, bool bError );
-
+#endif
 	// TODO Switch to using the auto-downloaded ISteamUGC previews
 	CUGCFileRequest m_UGCPreviewFileRequest;
 	bool            m_bPreviewDownloadPending;

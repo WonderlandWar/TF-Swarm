@@ -43,8 +43,10 @@ CQuestObjectivePanel::CQuestObjectivePanel( Panel* pParent, const char* pszPanel
 void CQuestObjectivePanel::PerformLayout()
 {
 	BaseClass::PerformLayout();
-
-	SetTall( m_pItemTrackerPanel->GetYPos() + m_pItemTrackerPanel->GetContentTall() );
+	
+	int xpos, ypos;
+	m_pItemTrackerPanel->GetPos( xpos, ypos );
+	SetTall( ypos + m_pItemTrackerPanel->GetContentTall() );
 
 	if ( m_pItemTrackerPanel->IsLayoutInvalid() )
 	{
@@ -200,15 +202,15 @@ void CQuestViewSubPanel::PerformLayout()
 	if ( !pNodeDef || !m_pQuestDef )
 		return;
 
-	m_pInfo->SetTooltip( m_pToolTip, "#TF_QuestView_ObjectivesInfo" );
+	//m_pInfo->SetTooltip( m_pToolTip, "#TF_QuestView_ObjectivesInfo" );
 
-	if ( pNodeDef->GetNumOfferedQuests() > 1 && !m_pQuest )
+	//if ( pNodeDef->GetNumOfferedQuests() > 1 && !m_pQuest )
 	{
-		SetTooltip( m_pObjectiveTooltip, NULL );
+		//SetTooltip( m_pObjectiveTooltip, NULL );
 	}
-	else
+	//else
 	{
-		SetTooltip( NULL, NULL );
+		//SetTooltip( NULL, NULL );
 	}
 
 	// Show the info button if we're expanded
@@ -251,14 +253,16 @@ void CQuestViewSubPanel::PerformLayout()
 		pNodeDef->GetCantUnlockReason( wszBuff, sizeof( wszBuff ) );
 
 		m_pAcceptTooltipHack->SetVisible( true );
-		m_pAcceptTooltipHack->SetTooltip( m_pToolTip, NULL );
+		//m_pAcceptTooltipHack->SetTooltip( m_pToolTip, NULL );
 		m_pAcceptTooltipHack->SetDialogVariable( "tiptext", wszBuff );
 	}
 
 	if ( m_bShowObjectives )
 	{
 		nExpandedHeight += YRES( 15 ); // Objectives label
-		nExpandedHeight += m_pObjectivePanel->GetYPos() + m_pObjectivePanel->GetTall(); // Objectives is relative to Objectives label
+		int xpos, ypos;
+		m_pObjectivePanel->GetPos( xpos, ypos );
+		nExpandedHeight += ypos + m_pObjectivePanel->GetTall(); // Objectives is relative to Objectives label
 	}
 
 	SetExpandedHeight( nCollapsedHeight + nExpandedHeight );
@@ -269,7 +273,7 @@ void CQuestViewSubPanel::PerformLayout()
 		SetDialogVariable( "name", g_pVGuiLocalize->Find( m_pQuestDef->GetLocName() ) );
 	}
 	
-	SetControlVisible( "TurnInContainer", bCanTurnIn, true );
+	SetControlVisible( "TurnInContainer", bCanTurnIn );
 }
 
 void CQuestViewSubPanel::OnSizeChanged( int nWide, int nTall )
@@ -403,7 +407,7 @@ void CQuestViewSubPanel::FireGameEvent( IGameEvent *event )
 			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( this, "QuestViewSubPanel_QuestPurchased" );	
 			HideSelectQuestInfo();
 			m_pObjectiveTooltip->HideTooltip();
-			SetTooltip( NULL, NULL );
+			//SetTooltip( NULL, NULL );
 			InvalidateLayout();
 		}
 		else if ( nRequest == k_EMsgGCQuestNodeTurnIn )
@@ -620,13 +624,13 @@ void CQuestNodeViewPanel::PerformLayout()
 	//
 	// Figure out the tooltip text in the Contract area
 	//
-	if ( bHasQuest )
+	//if ( bHasQuest )
 	{
-		m_pContractsInfo->SetTooltip( m_pToolTip, "#TF_QuestView_ActiveContractInfo" );
+		//m_pContractsInfo->SetTooltip( m_pToolTip, "#TF_QuestView_ActiveContractInfo" );
 	}
-	else
+	//else
 	{
-		m_pContractsInfo->SetTooltip( m_pToolTip, pNodeDef->GetNumOfferedQuests() == 1 ? "#TF_QuestView_SingleContractsInfo" : "#TF_QuestView_MultipleContractsInfo" );
+		//m_pContractsInfo->SetTooltip( m_pToolTip, pNodeDef->GetNumOfferedQuests() == 1 ? "#TF_QuestView_SingleContractsInfo" : "#TF_QuestView_MultipleContractsInfo" );
 	}
 
 	//
@@ -639,7 +643,9 @@ void CQuestNodeViewPanel::PerformLayout()
 
 		if ( i == 0 )
 		{
-			nQuestY = pQuestTrackerPanel->GetYPos();
+			int xpos, ypos;
+			pQuestTrackerPanel->GetPos( xpos, ypos );
+			nQuestY = ypos;
 		}
 
 		nQuestY += pQuestTrackerPanel->GetTall();
@@ -660,10 +666,10 @@ void CQuestNodeViewPanel::PerformLayout()
 			pBloodMoneyContainer->SetVisible( nNumCredits > 0 );
 			if ( nNumCredits > 0 )
 			{
-				pBloodMoneyContainer->SetTooltip( m_pToolTip, NULL );
+				//pBloodMoneyContainer->SetTooltip( m_pToolTip, NULL );
 				pBloodMoneyContainer->SetDialogVariable( "tiptext", g_pVGuiLocalize->Find( "#TF_QuestMap_BloodMoney" ) );
 				pBloodMoneyContainer->SetControlVisible( "BloodMoneyObtainedIndicator", m_msgNodeData.loot_claimed() );
-				pBloodMoneyContainer->SetDialogVariable( "cash", CFmtStr( "x%d", nNumCredits ).Get() );
+				pBloodMoneyContainer->SetDialogVariable( "cash", CFmtStr( "x%d", nNumCredits ) );
 
 				ImagePanel* pCashImage = pBloodMoneyContainer->FindControl< ImagePanel >( "CashImage" );
 				if ( pCashImage )
@@ -679,10 +685,11 @@ void CQuestNodeViewPanel::PerformLayout()
 					}
 				}
 			}
-
+			int xpos, ypos;
+			m_pRewardItemPanel->GetPos( xpos, ypos );
 			pBloodMoneyContainer->SetPos( m_pRewardItemPanel->IsVisible() ? XRES( 5 )
 										 : ( m_pRewardsContainer->GetWide() / 2.f ) - ( pBloodMoneyContainer->GetWide() / 2.f )
-										 , pBloodMoneyContainer->GetYPos() );
+										 , ypos );
 		}
 
 		//
@@ -690,9 +697,11 @@ void CQuestNodeViewPanel::PerformLayout()
 		//
 		if ( m_pRewardItemPanel->IsVisible() )
 		{
+			int xpos, ypos;
+			m_pRewardItemPanel->GetPos( xpos, ypos );
 			m_pRewardItemPanel->SetPos( pBloodMoneyContainer->IsVisible() ? m_pRewardsContainer->GetWide() - m_pRewardItemPanel->GetWide() - XRES( 5 )
 										: ( m_pRewardsContainer->GetWide() / 2.f ) - ( pBloodMoneyContainer->GetWide() / 2.f )
-										, m_pRewardItemPanel->GetYPos() );
+										, ypos );
 
 		}
 
@@ -702,10 +711,10 @@ void CQuestNodeViewPanel::PerformLayout()
 		//
 		{
 			// Check mark over the loot if they've already got it
-			m_pRewardsContainer->SetControlVisible( "RewardObtainedIndicator", bLootEarned, true );
+			m_pRewardsContainer->SetControlVisible( "RewardObtainedIndicator", bLootEarned );
 
 			// Update the tooltip to reflect what they can get
-			m_pRewardsInfo->SetTooltip( m_pToolTip, "#TF_QuestView_RewardsInfo" );
+			//m_pRewardsInfo->SetTooltip( m_pToolTip, "#TF_QuestView_RewardsInfo" );
 		}
 	}
 
@@ -747,7 +756,9 @@ void CQuestNodeViewPanel::PerformLayout()
 	Panel* pExpireLabel = FindChildByName( "ExpireLabel" );
 	if ( pExpireLabel )
 	{
-		pExpireLabel->SetPos( pExpireLabel->GetXPos(), GetTall() - pExpireLabel->GetTall() ); 
+		int xpos, ypos;
+		pExpireLabel->GetPos( xpos, ypos );
+		pExpireLabel->SetPos( xpos, GetTall() - pExpireLabel->GetTall() ); 
 	}
 }
 
@@ -762,14 +773,17 @@ void CQuestNodeViewPanel::UpdateHeights()
 		{
 			if ( !m_vecQuestSubPanels[ i ]->IsVisible() )
 				continue;
+			
+			int xpos, ypos;
+			m_vecQuestSubPanels[ i ]->GetPos( xpos, ypos );
 
 			if ( nFullTall == 0 )
 			{
-				nFullTall = m_vecQuestSubPanels[ i ]->GetYPos();
+				nFullTall = ypos;
 			}
 			else
 			{
-				nFullTall += m_vecQuestSubPanels[ i ]->GetYPos();
+				nFullTall += ypos;
 			}
 		
 			nFullTall += m_vecQuestSubPanels[ i ]->GetTall();
@@ -795,13 +809,15 @@ void CQuestNodeViewPanel::UpdateHeights()
 			if ( !m_vecQuestSubPanels[ i ]->IsVisible() )
 				continue;
 
+			int xpos, ypos;
+			m_vecQuestSubPanels[ i ]->GetPos( xpos, ypos );
 			if ( nFullTall == 0 )
 			{
-				nFullTall = m_vecQuestSubPanels[ i ]->GetYPos();
+				nFullTall = ypos;
 			}
 			else
 			{
-				nFullTall += m_vecQuestSubPanels[ i ]->GetYPos();
+				nFullTall += ypos;
 			}
 
 			nFullTall += m_vecQuestSubPanels[ i ]->GetTall();
@@ -988,8 +1004,8 @@ void CQuestNodeViewPanel::FireGameEvent( IGameEvent *event )
 				Color colorGreen = GetColor( "CreditsGreen" );
 				Color colorHighlight = colorGreen;
 				BrigthenColor( colorHighlight, 60 );
-				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pPanel, "bgcolor", colorHighlight, 0.f, 0.f, AnimationController::INTERPOLATOR_LINEAR, 0, true, false );
-				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pPanel, "bgcolor", colorGreen, 0.2f, 1.5f, AnimationController::INTERPOLATOR_LINEAR, 0, false, false );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pPanel, "bgcolor", colorHighlight, 0.f, 0.f, AnimationController::INTERPOLATOR_LINEAR, 0 );
+				GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( pPanel, "bgcolor", colorGreen, 0.2f, 1.5f, AnimationController::INTERPOLATOR_LINEAR, 0 );
 			}
 		};
 
@@ -1100,7 +1116,7 @@ void CQuestNodeViewPanel::SetData( const CSOQuestMapNode& msgNodeData )
 		m_pRewardItemPanel->SetItem( &tempItem );
 		m_pRewardItemPanel->SetVisible( true );
 		m_pRewardItemPanel->SetMouseInputEnabled( true );
-		m_pRewardItemPanel->SetTooltip( m_pItemToolTip, "" );
+		//m_pRewardItemPanel->SetTooltip( m_pItemToolTip, "" );
 	}
 	else
 	{
@@ -1110,15 +1126,15 @@ void CQuestNodeViewPanel::SetData( const CSOQuestMapNode& msgNodeData )
 	//
 	// Show different strings based on > 1 quest or not or quest chosen
 	//
-	if ( pNodeDef )
+	//if ( pNodeDef )
 	{
-		if ( m_msgNodeData.selected_quest_def() != 0 )
+		//if ( m_msgNodeData.selected_quest_def() != 0 )
 		{
-			m_pContractsInfo->SetTooltip( m_pToolTip, "#TF_QuestView_ContractChosenInfo" );
+			//m_pContractsInfo->SetTooltip( m_pToolTip, "#TF_QuestView_ContractChosenInfo" );
 		}
-		else
+		//else
 		{
-			m_pContractsInfo->SetTooltip( m_pToolTip, pNodeDef->GetNumOfferedQuests() > 1 ? "#TF_QuestView_MultipleContractsInfo" : "#TF_QuestView_SingleContractsInfo" );
+			//m_pContractsInfo->SetTooltip( m_pToolTip, pNodeDef->GetNumOfferedQuests() > 1 ? "#TF_QuestView_MultipleContractsInfo" : "#TF_QuestView_SingleContractsInfo" );
 		}
 	}
 }

@@ -270,9 +270,11 @@ inline bool IsIndexIntoPlayerArrayValid( int iIndex )
 
 #define MAX_PLACE_NAME_LENGTH		18
 
+#define MAX_FOV						90
+
 //===================================================================================================================
 // Team Defines
-#define TEAM_ANY				-1	// for some team query methods
+#define TEAM_ANY				-2	// for some team query methods
 #define	TEAM_INVALID			-1
 #define TEAM_UNASSIGNED			0	// not assigned to a team
 #define TEAM_SPECTATOR			1	// spectator team
@@ -949,6 +951,15 @@ enum
 	HILL_TYPE_NONE = 0,
 	HILL_TYPE_UPHILL,
 	HILL_TYPE_DOWNHILL,
+};
+
+//-----------------------------------------------------------------------------
+// Generic activity lookup support
+//-----------------------------------------------------------------------------
+enum
+{
+	kActivityLookup_Unknown = -2,			// hasn't been searched for
+	kActivityLookup_Missing = -1,			// has been searched for but wasn't found
 };
 
 bool IsHeadTrackingEnabled();

@@ -637,6 +637,7 @@ int CTFWearable::GetSkin()
 //-----------------------------------------------------------------------------
 void CTFWearable::InternalSetPlayerDisplayModel( void )
 {
+#if 0
 	// Set our model to the player model
 	CEconItemView *pItem = GetAttributeContainer()->GetItem();
 	if ( pItem && pItem->IsValid() && pItem->GetStaticData() )
@@ -650,7 +651,7 @@ void CTFWearable::InternalSetPlayerDisplayModel( void )
 			}
 		}
 	}
-
+#endif
 	BaseClass::InternalSetPlayerDisplayModel();
 }
 

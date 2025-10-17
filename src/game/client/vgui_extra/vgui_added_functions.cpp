@@ -6,6 +6,7 @@
 #include "vgui_controls/menu.h"
 #include "vgui_controls/ComboBox.h"
 #include "vgui_controls/AnimationController.h"
+#include "matsys_controls/mdlpanel.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -194,4 +195,19 @@ void AnimationController::CancelAnimationsForPanel( Panel *pWithinParent )
 		m_ActiveAnimations.Remove(i);
 		--i;
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+CMDL *CMDLPanel::GetMergeMDL( MDLHandle_t handle )
+{
+	int nMergeCount = m_aMergeMDLs.Count();
+	for ( int iMerge = 0; iMerge < nMergeCount; ++iMerge )
+	{
+		if ( m_aMergeMDLs[iMerge].m_MDL.GetMDL() == handle )
+			return (&m_aMergeMDLs[iMerge].m_MDL);
+	}
+
+	return NULL;
 }

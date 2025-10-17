@@ -14,7 +14,7 @@
 
 #include "utldict.h"
 #include "filesystem.h"
-#include "steam/isteamhttp.h"
+//#include "steam/isteamhttp.h"
 
 
 #if defined(CLIENT_DLL) || defined(GAME_DLL)
@@ -385,7 +385,7 @@ entityquality_t CEconItemSystem::GetRandomQualityForItem( bool bPreventUnique )
 
 	return AE_NORMAL;
 }
-
+#if 0
 static ISteamHTTP *GetISteamHTTP()
 {
 	if ( steamapicontext != NULL && steamapicontext->SteamHTTP() )
@@ -400,7 +400,7 @@ static ISteamHTTP *GetISteamHTTP()
 	#endif
 	return NULL;
 }
-
+#endif
 //-----------------------------------------------------------------------------
 // Purpose: Common functionality for using our raw buffer data to initialize
 // the schema when safe.
@@ -474,8 +474,8 @@ private:
 	CUtlBuffer m_bufRawData;
 };
 
-extern bool CheckValveSignature( const void *data, uint32 nDataSize, const void *signature, uint32 nSignatureSize );
-
+extern bool CheckValveSignature(const void *data, uint32 nDataSize, const void *signature, uint32 nSignatureSize);
+#if 0
 //-----------------------------------------------------------------------------
 // Purpose: We received a text file from an HTML request.
 //-----------------------------------------------------------------------------
@@ -508,7 +508,7 @@ private:
 	CUtlBuffer m_bufRawData;
 	uint32 m_nExpectedVersion;
 };
-
+#endif
 #define GC_ITEM_SCHEMA_UPDATE_APPLIED "Applied updated item schema from GC. %d bytes, version %08X.\n"
 #define GC_ITEM_SCHEMA_UPDATE_QUEUED "Received %d bytes item schema version %08X direct data; update is queued.\n"
 
@@ -527,7 +527,7 @@ public:
 	char m_szUrl[512];
 	uint32 m_nExpectedVersion;
 	bool bHTTPCompleted;
-	CCallResult< CGCUpdateItemSchema, HTTPRequestCompleted_t > callback;
+	//CCallResult< CGCUpdateItemSchema, HTTPRequestCompleted_t > callback;
 	std::string m_sSignature;
 
 	virtual bool BYieldingRunGCJob( GCSDK::IMsgNetPacket *pNetPacket )
@@ -593,7 +593,7 @@ public:
 			{
 				Q_strncpy( m_szUrl, szURL, sizeof( m_szUrl ) );
 				//Msg( "Fetching %s to update item schema\n", m_szUrl );
-
+#if 0
 				// Send an HTTP request for the file
 				ISteamHTTP *pHTTP = GetISteamHTTP();
 				if ( !pHTTP )
@@ -631,12 +631,15 @@ public:
 				{
 					BYieldingWaitOneFrame();
 				}
+#else
+				return false;
+#endif
 			}
 		}
 
 		return true;
 	}
-
+#if 0
 	void OnHTTPCompleted( HTTPRequestCompleted_t *arg, bool bFailed )
 	{
 		// Clear flag, no matter what else, so we can stop yielding
@@ -679,6 +682,7 @@ public:
 
 		pHTTP->ReleaseHTTPRequest( arg->m_hRequest );
 	}
+#endif
 };
 GC_REG_JOB( GCSDK::CGCClient, CGCUpdateItemSchema, "CGCUpdateItemSchema", k_EMsgGCUpdateItemSchema, GCSDK::k_EServerTypeGCClient );
 

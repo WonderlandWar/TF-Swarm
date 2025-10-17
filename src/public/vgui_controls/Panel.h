@@ -508,6 +508,7 @@ public:
 	virtual void SetScheme(HScheme scheme);
 	virtual Color GetSchemeColor(const char *keyName,IScheme *pScheme);
 	virtual Color GetSchemeColor(const char *keyName, Color defaultColor,IScheme *pScheme);
+	Color GetColor( const char* pszColorName ) { return GetSchemeColor( pszColorName, vgui::scheme()->GetIScheme( GetScheme() ) ); }
 
 	// called when scheme settings need to be applied; called the first time before the panel is painted
 	virtual void ApplySchemeSettings(IScheme *pScheme);

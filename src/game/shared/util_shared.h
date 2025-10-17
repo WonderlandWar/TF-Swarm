@@ -901,6 +901,23 @@ char* ReadAndAllocStringValue( KeyValues *pSub, const char *pName, const char *p
 
 int UTIL_StringFieldToInt( const char *szValue, const char **pValueStrings, int iNumStrings );
 
+//-----------------------------------------------------------------------------
+// Holidays
+//-----------------------------------------------------------------------------
+
+// Used at level change and round start to re-calculate which holiday is active
+void				UTIL_CalculateHolidays();
+
+bool				UTIL_IsHolidayActive( /*EHoliday*/ int eHoliday );
+/*EHoliday*/ int	UTIL_GetHolidayForString( const char* pszHolidayName );
+
+const char *UTIL_GetRandomSoundFromEntry( const char* pszEntryName );
+
+/// Clamp and round float vals to int.  The values are in the 0...255 range.
+Color FloatRGBAToColor( float r, float g, float b, float a );
+float LerpFloat( float x0, float x1, float t );
+Color LerpColor( const Color &c0, const Color &c1, float t );
+
 // Global econ-level helper functionality.
 EUniverse GetUniverse();
 

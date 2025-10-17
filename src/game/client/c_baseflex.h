@@ -35,12 +35,95 @@ public:
 
 // For phoneme emphasis track
 struct Emphasized_Phoneme;
+
 class CSentence;
+enum
+{
+	PHONEME_CLASS_WEAK = 0,
+	PHONEME_CLASS_NORMAL,
+	PHONEME_CLASS_STRONG,
+
+	NUM_PHONEME_CLASSES
+};
+
+// Mapping for each loaded scene file used by this actor
+struct FS_LocalToGlobal_t
+{
+	explicit FS_LocalToGlobal_t() :
+		m_Key( 0 ),
+		m_nCount( 0 ),
+		m_Mapping( 0 )
+	{
+	}
+
+	explicit FS_LocalToGlobal_t( const flexsettinghdr_t *key ) :
+		m_Key( key ),
+		m_nCount( 0 ),
+		m_Mapping( 0 )
+	{
+	}		
+
+	void SetCount( int count )
+	{
+		Assert( !m_Mapping );
+		Assert( count > 0 );
+		m_nCount = count;
+		m_Mapping = new int[ m_nCount ];
+		Q_memset( m_Mapping, 0, m_nCount * sizeof( int ) );
+	}
+
+	FS_LocalToGlobal_t( const FS_LocalToGlobal_t& src )
+	{
+		m_Key = src.m_Key;
+		delete m_Mapping;
+		m_Mapping = new int[ src.m_nCount ];
+		Q_memcpy( m_Mapping, src.m_Mapping, src.m_nCount * sizeof( int ) );
+
+		m_nCount = src.m_nCount;
+	}
+
+	~FS_LocalToGlobal_t()
+	{
+		delete m_Mapping;
+		m_nCount = 0;
+		m_Mapping = 0;
+	}
+
+	const flexsettinghdr_t	*m_Key;
+	int						m_nCount;
+	int						*m_Mapping;	
+};
+
+bool FlexSettingLessFunc( const FS_LocalToGlobal_t& lhs, const FS_LocalToGlobal_t& rhs );
+
+class IHasLocalToGlobalFlexSettings
+{
+public:
+	virtual void		EnsureTranslations( const flexsettinghdr_t *pSettinghdr ) = 0;
+};
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-class C_BaseFlex : public C_BaseAnimatingOverlay
+struct Emphasized_Phoneme
+{
+	// Global fields, setup at start
+	char			classname[ 64 ];
+	bool			required;
+	// Global fields setup first time tracks played
+	bool			basechecked;
+	const flexsettinghdr_t *base;
+	const flexsetting_t *exp;
+
+	// Local fields, processed for each sentence
+	bool			valid;
+	float			amount;
+};
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+class C_BaseFlex : public C_BaseAnimatingOverlay, public IHasLocalToGlobalFlexSettings
 {
 	DECLARE_CLASS( C_BaseFlex, C_BaseAnimatingOverlay );
 public:
@@ -163,55 +246,6 @@ private:
 	bool				HasSceneEvents() const;
 
 private:
-// Mapping for each loaded scene file used by this actor
-	struct FS_LocalToGlobal_t
-	{
-		explicit FS_LocalToGlobal_t() :
-			m_Key( 0 ),
-			m_nCount( 0 ),
-			m_Mapping( 0 )
-		{
-		}
-
-		explicit FS_LocalToGlobal_t( const flexsettinghdr_t *key ) :
-			m_Key( key ),
-			m_nCount( 0 ),
-			m_Mapping( 0 )
-		{
-		}		
-
-		void SetCount( int count )
-		{
-			Assert( !m_Mapping );
-			Assert( count > 0 );
-			m_nCount = count;
-			m_Mapping = new int[ m_nCount ];
-			Q_memset( m_Mapping, 0, m_nCount * sizeof( int ) );
-		}
-
-		FS_LocalToGlobal_t( const FS_LocalToGlobal_t& src )
-		{
-			m_Key = src.m_Key;
-			delete m_Mapping;
-			m_Mapping = new int[ src.m_nCount ];
-			Q_memcpy( m_Mapping, src.m_Mapping, src.m_nCount * sizeof( int ) );
-
-			m_nCount = src.m_nCount;
-		}
-
-		~FS_LocalToGlobal_t()
-		{
-			delete m_Mapping;
-			m_nCount = 0;
-			m_Mapping = 0;
-		}
-
-		const flexsettinghdr_t	*m_Key;
-		int						m_nCount;
-		int						*m_Mapping;	
-	};
-
-	static bool FlexSettingLessFunc( const FS_LocalToGlobal_t& lhs, const FS_LocalToGlobal_t& rhs );
 	
 	CUtlRBTree< FS_LocalToGlobal_t, unsigned short > m_LocalToGlobal;
 
@@ -237,33 +271,6 @@ private:
 
 protected:
 
-	enum
-	{
-		PHONEME_CLASS_WEAK = 0,
-		PHONEME_CLASS_NORMAL,
-		PHONEME_CLASS_STRONG,
-
-		NUM_PHONEME_CLASSES
-	};
-
-	//-----------------------------------------------------------------------------
-	// Purpose: 
-	//-----------------------------------------------------------------------------
-	struct Emphasized_Phoneme
-	{
-		// Global fields, setup at start
-		char			classname[ 64 ];
-		bool			required;
-		// Global fields setup first time tracks played
-		bool			basechecked;
-		const flexsettinghdr_t *base;
-		const flexsetting_t *exp;
-
-		// Local fields, processed for each sentence
-		bool			valid;
-		float			amount;
-	};
-
 	Emphasized_Phoneme m_PhonemeClasses[ NUM_PHONEME_CLASSES ];
 
 private:
@@ -288,6 +295,28 @@ public:
 #endif
 };
 
+class CFlexSceneFileManager : CAutoGameSystem
+{
+public:
+
+	CFlexSceneFileManager() : CAutoGameSystem( "CFlexSceneFileManager" )
+	{
+	}
+
+	virtual bool InitRecursive( const char *pFolder );
+
+	virtual bool Init();
+	virtual void Shutdown();
+
+	void EnsureTranslations( IHasLocalToGlobalFlexSettings *instance, const flexsettinghdr_t *pSettinghdr );
+	const void *FindSceneFile( IHasLocalToGlobalFlexSettings *instance, const char *filename, bool allowBlockingIO );
+
+private:
+
+	void DeleteSceneFiles();
+
+	CUtlVector< CFlexSceneFile * > m_FileList;
+};
 
 //-----------------------------------------------------------------------------
 // Do we have active expressions?

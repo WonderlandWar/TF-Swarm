@@ -45,6 +45,12 @@ struct Bitmap_t
 	bool IsValid() const;
 
 	unsigned char *GetPixel( int x, int y );
+	
+
+	/// Set this bitmap to be a cropped rectangle from the given bitmap.
+	/// The source pointer can be NULL or point to this, which means to do
+	/// the crop in place.
+	void Crop( int x0, int y0, int nWidth, int nHeight, const Bitmap_t *pImgSource = NULL );
 
 	int m_nWidth;
 	int m_nHeight;
@@ -104,6 +110,50 @@ inline unsigned char *Bitmap_t::GetPixel( int x, int y )
 	return &m_pBits[ ( m_nWidth * y + x ) * nPixelSize ];
 }
 
+inline void Bitmap_t::Crop( int x0, int y0, int nWidth, int nHeight, const Bitmap_t *pImgSource )
+{
+#if 0
+	// Check for cropping in place, then save off our data to a temp
+	Bitmap_t temp;
+	if ( pImgSource == this || !pImgSource )
+	{
+		temp.MakeLogicalCopyOf( *this, m_bOwnsBuffer );
+		pImgSource = &temp;
+	}
+
+	// No source image?
+	if ( !pImgSource->IsValid() )
+	{
+		Assert( pImgSource->IsValid() );
+		return;
+	}
+
+	// Sanity check crop rectangle
+	Assert( x0 >= 0 );
+	Assert( y0 >= 0 );
+	Assert( x0 + nWidth <= pImgSource->Width() );
+	Assert( y0 + nHeight <= pImgSource->Height() );
+
+	// Allocate buffer
+	Init( nWidth, nHeight, pImgSource->Format() );
+
+	// Something wrong?
+	if ( !IsValid() )
+	{
+		Assert( IsValid() );
+		return;
+	}
+
+	// Copy the data a row at a time
+	int nRowSize = m_nWidth * m_nPixelSize;
+	for ( int y = 0 ; y < m_nHeight ; ++y )
+	{
+		memcpy( GetPixel(0,y), pImgSource->GetPixel( x0, y + y0 ), nRowSize );
+	}
+#else
+	// Can't crop
+#endif
+}
 
 //-----------------------------------------------------------------------------
 // Loads a bitmap from an arbitrary file: could be a TGA, PSD, or PFM.

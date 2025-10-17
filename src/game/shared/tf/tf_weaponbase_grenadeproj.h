@@ -67,7 +67,7 @@ public:
 	CBaseEntity			*GetDeflectOwner( void ) { return m_hDeflectOwner; }
 	virtual float		GetDamageRadius();
 	virtual int			GetDamageCustom();
-	virtual int			GetCustomParticleIndex() { return INVALID_STRING_INDEX; }
+	virtual int			GetCustomParticleIndex() { return -1; }
 	void				BounceOff( IPhysicsObject *pPhysics );
 
 protected:

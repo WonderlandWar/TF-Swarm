@@ -55,7 +55,6 @@ private:
 	int m_nActualLength;
 };
 
-
 //-----------------------------------------------------------------------------
 // class inlines
 //-----------------------------------------------------------------------------
@@ -144,6 +143,11 @@ public:
 	void		Clear();
 	void		Purge();
 
+	// Case Change
+	void		ToLower();
+
+	void		Append( const char *pchAddition );
+
 	// Strips the trailing slash
 	void		StripTrailingSlash();
 
@@ -200,6 +204,16 @@ private:
 };
 
 
+inline void CUtlString::ToLower()
+{
+	for( int nLength = Length() - 1; nLength >= 0; nLength-- )
+	{
+		// HACK!
+		_Check_return_ _CRT_JIT_INTRINSIC _CRTIMP int __cdecl tolower(_In_ int _C);
+		m_Storage[ nLength ] = tolower( m_Storage[ nLength ] );
+	}
+}
+
 //-----------------------------------------------------------------------------
 // Inline methods
 //-----------------------------------------------------------------------------
@@ -219,6 +233,13 @@ inline int __cdecl CUtlString::SortCaseSensitive( const CUtlString *pString1, co
 }
 
 
+//-----------------------------------------------------------------------------
+// Purpose: concatenate the provided string to our current content
+//-----------------------------------------------------------------------------
+inline void CUtlString::Append( const char *pchAddition )
+{
+	(*this) += pchAddition;
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: Implementation of low-level string functionality for character types.

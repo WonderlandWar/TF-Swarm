@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2008, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -158,18 +158,20 @@ public:
 	virtual ~CBaseModelPanel();
 
 	// Overridden mdlpanel.h
-	virtual void SetMDL( MDLHandle_t handle );
-	virtual void SetMDL( const char *pMDLName );
+	virtual void SetMDL( MDLHandle_t handle, void *pProxyData = NULL );
+	virtual void SetMDL( const char *pMDLName, void *pProxyData = NULL );
+	virtual void SetModelAnglesAndPosition( const QAngle &angRot, const Vector &vecPos );
 
 	// Overridden methods of vgui::Panel
 	virtual void ApplySettings( KeyValues *inResourceData );
 	virtual void PerformLayout();
+	virtual void OnTick() OVERRIDE;
+	virtual void OnThink() OVERRIDE;
 
-	// Animaiton.
+	// Animation.
 	int FindDefaultAnim( void );
 	int FindAnimByName( const char *pszName );
 	void SetModelAnim( int iAnim );
-	void SetModelAnim( const char *pszName );
 
 	// Manipulation.
 	virtual void OnKeyCodePressed ( vgui::KeyCode code );
@@ -178,8 +180,29 @@ public:
 	virtual void OnMouseReleased( vgui::MouseCode code );
 	virtual void OnCursorMoved( int x, int y );
 	virtual void OnMouseWheeled( int delta );
+	bool		 BIsBeingManipulated() const { return m_bMousePressed; }
 
-private:
+	studiohdr_t* GetStudioHdr( void ) { return m_RootMDL.m_MDL.GetStudioHdr(); }
+	// Might screw up memory
+	//CStudioHdr* GetStudioHdrFull( void ) { return new CStudioHdr( m_RootMDL.m_MDL.GetStudioHdr(), mdlcache ); }
+	void SetBody( unsigned int nBody ) { m_RootMDL.m_MDL.m_nBody = nBody; }
+
+	void		RotateYaw( float flDelta );
+	void		RotatePitch( float flDelta );
+
+	Vector		GetPlayerPos() const;
+	QAngle		GetPlayerAngles() const;
+
+	void PlaySequence( const char *pszSequenceName );
+
+	void LookAtBounds( const Vector &vecBoundsMin, const Vector &vecBoundsMax );
+
+	// Set to true if external code has set a specific camera position that shouldn't be clobbered by layout
+	void SetForcedCameraPosition( bool bForcedCameraPosition ) { m_bForcedCameraPosition = bForcedCameraPosition; }
+
+	int FindSequenceFromActivity( CStudioHdr *pStudioHdr, const char *pszActivity );
+
+protected:
 
 	// Resource file data.
 	void ParseModelResInfo( KeyValues *inResourceData );
@@ -189,11 +212,7 @@ private:
 	void SetupModelDefaults( void );
 	void SetupModelAnimDefaults( void );
 
-	void LookAtBounds( const Vector &vecBoundsMin, const Vector &vecBoundsMax );
-
-	int FindSequenceFromActivity( CStudioHdr *pStudioHdr, const char *pszActivity );
 public:
-
 	BMPResData_t	m_BMPResData;			// Base model panel data set in the .res file.
 	QAngle			m_angPlayer;
 	Vector			m_vecPlayerPos;
@@ -202,10 +221,25 @@ protected:
 	bool			m_bForcePos;
 	bool			m_bMousePressed;
 	bool			m_bAllowRotation;
+	bool			m_bAllowPitch;
+	bool			m_bAllowFullManipulation;
+	bool			m_bApplyManipulators;
+	bool			m_bForcedCameraPosition;
+	float			m_flYawVelocity = 0.f;
+	float			m_flPitchVelocity = 0.f;
+	float			m_flYawVelocityDecay = 0.9f;
+	float			m_flPitchVelocityDecay = 0.9f;
+	bool			m_bUseVelocity = true;
+	float			m_flLastThink = 0.f;
+
+	int m_nActiveSequence;
+	float m_flActiveSequenceDuration;
 
 	// VGUI script accessible variables.
 	CPanelAnimationVar( bool, m_bStartFramed, "start_framed", "0" );
 	CPanelAnimationVar( bool, m_bDisableManipulation, "disable_manipulation", "0" );
+	CPanelAnimationVar( bool, m_bUseParticle, "use_particle", "0" );
+	CPanelAnimationVar( float, m_flMaxPitch, "max_pitch", "90" );
 
 	struct particle_data_t
 	{
@@ -223,7 +257,9 @@ protected:
 	particle_data_t *CreateParticleData( const char *pszParticleName );
 	bool SafeDeleteParticleData( particle_data_t **pData );
 
-	// TF_SWARM: FIXME!
+	// TF_SWARM: This *might* work
+	int m_nClickStartX, m_nClickStartY;
+
 	//virtual void PrePaint3D( IMatRenderContext *pRenderContext ) OVERRIDE;
 	//virtual void PostPaint3D( IMatRenderContext *pRenderContext ) OVERRIDE;
 };

@@ -10,7 +10,7 @@
 #include "voice_gamemgr.h"
 
 // NVNT include to register in haptic user messages
-#include "haptics/haptic_msgs.h"
+//#include "haptics/haptic_msgs.h"
 
 void RegisterUserMessages()
 {
@@ -130,7 +130,7 @@ void RegisterUserMessages()
 	usermessages->Register( "BuiltObject", 3 ); // object type, object mode (entrance vs. exit), index
 
 	// NVNT register haptic user messages
-	RegisterHapticMessages();
-	RegisterScriptMessages();
+	//RegisterHapticMessages();
+	//RegisterScriptMessages();
 }
 

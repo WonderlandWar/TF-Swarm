@@ -102,6 +102,7 @@ void UTIL_PrecacheOther( const char *szClassname );
 void UTIL_SetTrace(trace_t& tr, const Ray_t& ray, C_BaseEntity *edict, float fraction, int hitgroup, unsigned int contents, const Vector& normal, float intercept );
 
 bool GetVectorInScreenSpace( Vector pos, int& iX, int& iY, Vector *vecOffset = NULL );
+bool GetVectorInHudSpace( Vector pos, int& iX, int& iY, Vector *vecOffset = NULL );
 bool GetTargetInScreenSpace( C_BaseEntity *pTargetEntity, int& iX, int& iY, Vector *vecOffset = NULL );
 
 // prints messages through the HUD (stub in client .dll right now )
@@ -180,5 +181,9 @@ wchar_t *UTIL_GetLocalizedKeyString( const char *command, const char *fmt, const
 class CGameTrace;
 typedef CGameTrace trace_t;
 void		UTIL_ClearTrace			( trace_t &trace );
+
+bool BGetLocalFormattedDateAndTime( time_t timeVal, char *pchDate, int cubDate, char *pchTime, int cubTime );
+bool BGetLocalFormattedDate( time_t timeVal, char *pchDate, int cubDate );
+bool BGetLocalFormattedTime( time_t timeVal, char *pchTime, int cubTime );
 
 #endif // !CDLL_UTIL_H

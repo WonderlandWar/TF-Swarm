@@ -421,13 +421,15 @@ void SetAppropriateCamera( C_TFPlayer *pPlayer )
 	if ( pPlayer->IsLocalPlayer() == false )
 		return;
 
+	int slot = pPlayer->GetSplitScreenPlayerSlot();
+	
 	if ( TFGameRules() &&
 		( ( TFGameRules()->IsInMedievalMode() && tf_medieval_thirdperson.GetBool() )
 		|| pPlayer->m_Shared.InCond( TF_COND_HALLOWEEN_GHOST_MODE ) ) )
 	{
-		g_ThirdPersonManager.SetForcedThirdPerson( true );
+		GetThirdPersonManager( slot ).SetForcedThirdPerson(true);
 		Vector offset( tf_medieval_cam_idealdist.GetFloat(), tf_medieval_cam_idealdistright.GetFloat(), tf_medieval_cam_idealdistup.GetFloat() );
-		g_ThirdPersonManager.SetDesiredCameraOffset( offset );
+		GetThirdPersonManager( slot ).SetDesiredCameraOffset( offset );
 		cam_idealpitch.SetValue( tf_medieval_cam_idealpitch.GetFloat() );
 
 		::input->CAM_ToThirdPerson();
@@ -436,7 +438,7 @@ void SetAppropriateCamera( C_TFPlayer *pPlayer )
 	}
 	else
 	{
-		g_ThirdPersonManager.SetForcedThirdPerson( false );
+		GetThirdPersonManager( slot ).SetForcedThirdPerson( false );
 	}
 }
 
@@ -5491,8 +5493,8 @@ void C_TFPlayer::TurnOnTauntCam( void )
 	}
 	else
 	{
-		g_ThirdPersonManager.SetDesiredCameraOffset( Vector( 0, 0, 0 ) );
-		g_ThirdPersonManager.SetOverridingThirdPerson( true );
+		GetThirdPersonManager( GetSplitScreenPlayerSlot() ).SetDesiredCameraOffset( Vector( 0, 0, 0 ) );
+		GetThirdPersonManager( GetSplitScreenPlayerSlot() ).SetOverridingThirdPerson( true );
 	
 		::input->CAM_ToThirdPerson();
 		ThirdPersonSwitch( true );
@@ -5523,15 +5525,15 @@ void C_TFPlayer::TurnOffTauntCam( void )
 		return;
 
 	// We want to interpolate back into the guy's head.
-	if ( g_ThirdPersonManager.GetForcedThirdPerson() == false )
+	if ( GetThirdPersonManager( GetSplitScreenPlayerSlot() ).GetForcedThirdPerson() == false )
 	{
 		m_flTauntCamTargetDist = 0.f;
 		m_TauntCameraData.m_flDist = m_flTauntCamTargetDist;
 	}
 
-	g_ThirdPersonManager.SetOverridingThirdPerson( false );
+	GetThirdPersonManager( GetSplitScreenPlayerSlot() ).SetOverridingThirdPerson( false );
 
-	if ( g_ThirdPersonManager.GetForcedThirdPerson() )
+	if ( GetThirdPersonManager( GetSplitScreenPlayerSlot() ).GetForcedThirdPerson() )
 	{
 		TurnOffTauntCam_Finish();
 	}
@@ -5548,7 +5550,7 @@ void C_TFPlayer::TurnOffTauntCam_Finish( void )
 	if ( TFGameRules() && TFGameRules()->ShowMatchSummary() )
 		return;
 
-	const Vector& vecOffset = g_ThirdPersonManager.GetCameraOffsetAngles();
+	const Vector& vecOffset = GetThirdPersonManager( GetSplitScreenPlayerSlot() ).GetCameraOffsetAngles();
 	tf_tauntcam_pitch.SetValue( vecOffset[PITCH] - m_angTauntPredViewAngles[PITCH] );
 	tf_tauntcam_yaw.SetValue( vecOffset[YAW] - m_angTauntPredViewAngles[YAW] );
 	
@@ -5558,7 +5560,7 @@ void C_TFPlayer::TurnOffTauntCam_Finish( void )
 	angles[YAW] = vecOffset[YAW];
 	angles[DIST] = vecOffset[DIST];
 
-	if( g_ThirdPersonManager.WantToUseGameThirdPerson() == false )
+	if( GetThirdPersonManager( GetSplitScreenPlayerSlot() ).WantToUseGameThirdPerson() == false )
 	{
 		::input->CAM_ToFirstPerson();
 		ThirdPersonSwitch( false );
@@ -5683,7 +5685,7 @@ void C_TFPlayer::TauntCamInterpolation()
 			m_flTauntCamCurrentDistUp = clamp( m_flTauntCamCurrentDistUp, m_flTauntCamCurrentDistUp, m_flTauntCamTargetDistUp );
 		}
 
-		const Vector& vecCamOffset = g_ThirdPersonManager.GetCameraOffsetAngles();
+		const Vector& vecCamOffset = GetThirdPersonManager( GetSplitScreenPlayerSlot() ).GetCameraOffsetAngles();
 
 		Vector vecOrigin = pLocalPlayer->GetLocalOrigin();
 		vecOrigin += pLocalPlayer->GetViewOffset();
@@ -5701,7 +5703,7 @@ void C_TFPlayer::TauntCamInterpolation()
 		QAngle angCameraOffset = QAngle( vecCamOffset[PITCH], vecCamOffset[YAW], m_flTauntCamCurrentDist );
 		::input->CAM_SetCameraThirdData( &m_TauntCameraData, angCameraOffset ); // Override camera distance interpolation.
 
-		g_ThirdPersonManager.SetDesiredCameraOffset( Vector( m_flTauntCamCurrentDist, 0, m_flTauntCamCurrentDistUp ) );
+		GetThirdPersonManager( GetSplitScreenPlayerSlot() ).SetDesiredCameraOffset( Vector( m_flTauntCamCurrentDist, 0, m_flTauntCamCurrentDistUp ) );
 
 		if ( m_flTauntCamCurrentDist == m_flTauntCamTargetDist && m_flTauntCamCurrentDistUp == m_flTauntCamTargetDistUp )
 		{
@@ -8313,11 +8315,11 @@ void C_TFPlayer::OverrideView( CViewSetup *pSetup )
 
 	TFPlayerClassData_t *pData = GetPlayerClass()->GetData();
 
-	if ( pData  && g_ThirdPersonManager.WantToUseGameThirdPerson() )
+	if ( pData  && GetThirdPersonManager( GetSplitScreenPlayerSlot() ).WantToUseGameThirdPerson() )
 	{
 		Vector vecOffset = pData->m_vecThirdPersonOffset;
 
-		g_ThirdPersonManager.SetDesiredCameraOffset( vecOffset );
+		GetThirdPersonManager( GetSplitScreenPlayerSlot() ).SetDesiredCameraOffset( vecOffset );
 	}
 }
 

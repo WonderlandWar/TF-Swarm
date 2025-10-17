@@ -27,6 +27,7 @@
 #include "inputsystem/ButtonCode.h"
 #include "math.h"
 #include "tier1/convar_serverbounded.h"
+#include "cam_thirdperson.h"
 #include "c_baseplayer.h"
 #include "inputsystem/iinputstacksystem.h"
 #if defined( _X360 )
@@ -870,7 +871,7 @@ void CInput::JoyStickThirdPersonPlatformer( CUserCmd *cmd, float &forward, float
 	{
 		// apply turn control [ YAW ]
 		// factor in the camera offset, so that the move direction is relative to the thirdperson camera
-		viewangles[ YAW ] = RAD2DEG(atan2(-side, -forward)) + user.m_vecCameraOffset[ YAW ];
+		viewangles[ YAW ] = RAD2DEG(atan2(-side, -forward)) + GetThirdPersonManager( nSlot ).GetCameraOffsetAngles()[ YAW ];
 		engine->SetViewAngles( viewangles );
 
 		// apply movement
@@ -883,16 +884,22 @@ void CInput::JoyStickThirdPersonPlatformer( CUserCmd *cmd, float &forward, float
 		static SplitScreenConVarRef s_joy_yawsensitivity( "joy_yawsensitivity" );
 		static SplitScreenConVarRef s_joy_pitchsensitivity( "joy_pitchsensitivity" );
 
+		Vector vTempOffset = GetThirdPersonManager( nSlot ).GetCameraOffsetAngles();
+
 		// look around with the camera
-		user.m_vecCameraOffset[ PITCH ] += pitch * s_joy_pitchsensitivity.GetFloat( nSlot );
-		user.m_vecCameraOffset[ YAW ]   += yaw * s_joy_yawsensitivity.GetFloat( nSlot );
+		vTempOffset[ PITCH ] += pitch * s_joy_pitchsensitivity.GetFloat( nSlot);
+		vTempOffset[ YAW ]   += yaw * s_joy_yawsensitivity.GetFloat( nSlot );
+
+		GetThirdPersonManager( nSlot ).SetCameraOffsetAngles( vTempOffset );
 	}
 
 	if ( forward || side || pitch || yaw )
 	{
+		const Vector& vTempOffset = GetThirdPersonManager( nSlot ).GetCameraOffsetAngles();
+
 		// update the ideal pitch and yaw
-		cam_idealpitch.SetValue( user.m_vecCameraOffset[ PITCH ] - viewangles[ PITCH ] );
-		cam_idealyaw.SetValue( user.m_vecCameraOffset[ YAW ] - viewangles[ YAW ] );
+		cam_idealpitch.SetValue( vTempOffset[ PITCH ] - viewangles[ PITCH ] );
+		cam_idealyaw.SetValue( vTempOffset[ YAW ] - viewangles[ YAW ] );
 	}
 }
 

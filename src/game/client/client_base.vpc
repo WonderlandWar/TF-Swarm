@@ -232,6 +232,8 @@ $Project
 		$File	"hl2\c_waterbullet.cpp"
 		$File	"C_WaterLODControl.cpp"
 		$File	"c_world.cpp"
+		$File	"$SRCDIR\game\shared\cam_thirdperson.cpp"
+		$File	"$SRCDIR\game\shared\cam_thirdperson.h"
 		$File	"camomaterialproxy.cpp"
 		$File	"cdll_client_int.cpp"
 		$File	"cdll_bounded_cvars.cpp"

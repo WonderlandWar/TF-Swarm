@@ -28,7 +28,7 @@
 #include "tool_items/custom_texture_cache.h"
 #include "econ_dynamic_recipe.h"
 #include "materialsystem/imaterialvar.h"
-#include "materialsystem/itexturecompositor.h"
+//#include "materialsystem/itexturecompositor.h"
 #include "bone_setup.h"
 #include "animation.h"
 #include "iconrenderreceiver.h"
@@ -199,14 +199,14 @@ CEmbeddedItemModelPanel::~CEmbeddedItemModelPanel()
 
 void CEmbeddedItemModelPanel::CleanUpCachedWeaponIcon()
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	SafeRelease( &m_pCachedWeaponIcon );
 	SafeRelease( &m_pCachedWeaponMaterial );
 
 	if ( m_iCachedTextureID != -1 )
 	{
-		surface()->DeleteTextureByID( m_iCachedTextureID );
+		//surface()->DeleteTextureByID( m_iCachedTextureID );
 		m_iCachedTextureID = -1;
 	}
 
@@ -255,7 +255,7 @@ void CEmbeddedItemModelPanel::UpdateCameraForIcon()
 //-----------------------------------------------------------------------------
 void CEmbeddedItemModelPanel::SetItem( CEconItemView *pItem ) 
 { 
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	m_iTextureID = -1; 
 	m_iToolTargetItemTextureID = -1;
@@ -265,9 +265,9 @@ void CEmbeddedItemModelPanel::SetItem( CEconItemView *pItem )
 
 	// reset all models
 	SetMDL( MDLHANDLE_INVALID );
-	m_ItemModel.m_bDisabled = true;
+	//m_ItemModel.m_bDisabled = true;
 	m_ItemModel.m_MDL.SetMDL( MDLHANDLE_INVALID );
-	m_StatTrackModel.m_bDisabled = true;
+	//m_StatTrackModel.m_bDisabled = true;
 	m_StatTrackModel.m_MDL.SetMDL( MDLHANDLE_INVALID );
 
 	m_AttachedModels.Purge();
@@ -383,8 +383,8 @@ void CEmbeddedItemModelPanel::SetItem( CEconItemView *pItem )
 							m_iPedestalAttachment = Studio_FindAttachment( &HDR, "pedestal_0" );
 							if ( m_iPedestalAttachment != -1 )
 							{
-								m_ItemModel.m_MDL.m_pProxyData = static_cast<IClientRenderable*>(m_pItem);
-								m_ItemModel.m_bDisabled = false;
+								//m_ItemModel.m_MDL.m_pProxyData = static_cast<IClientRenderable*>(m_pItem);
+								//m_ItemModel.m_bDisabled = false;
 								m_ItemModel.m_MDL.m_nSequence = ACT_IDLE;
 								SetIdentityMatrix( m_ItemModel.m_MDLToWorld );
 							}
@@ -539,8 +539,8 @@ void CEmbeddedItemModelPanel::LoadAttachedModel( attachedmodel_t *pModel )
 	m_AttachedModels[iIndex].m_MDL.SetMDL( hMDL );
 	mdlcache->Release( hMDL ); // counterbalance addref from within FindMDL
 
-	m_AttachedModels[iIndex].m_MDL.m_pProxyData = static_cast<IClientRenderable*>( m_pItem );
-	m_AttachedModels[iIndex].m_bDisabled = false;
+	//m_AttachedModels[iIndex].m_MDL.m_pProxyData = static_cast<IClientRenderable*>( m_pItem );
+	//m_AttachedModels[iIndex].m_bDisabled = false;
 	m_AttachedModels[iIndex].m_MDL.m_nSequence = ACT_IDLE;
 	SetIdentityMatrix( m_AttachedModels[iIndex].m_MDLToWorld );
 }
@@ -1508,7 +1508,7 @@ void CItemModelPanel::ApplySettings( KeyValues *inResourceData )
 
 void CItemModelPanel::LoadResFileForCurrentItem( bool bForceLoad )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 	const CEconItemView *pItem = GetItem();
 
 	bool bCollectionMouseover = false;
@@ -1532,7 +1532,7 @@ void CItemModelPanel::LoadResFileForCurrentItem( bool bForceLoad )
 		{
 			if ( bForceLoad || m_nCollectionItemLoaded != LOADED_COLLECTION_WEAPON )
 			{
-				tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s ItemModelPanelCollectionItem", __FUNCTION__ );
+				//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s ItemModelPanelCollectionItem", __FUNCTION__ );
 				LoadControlSettings( "Resource/UI/econ/ItemModelPanelCollectionItem.res" );
 				m_nCollectionItemLoaded = LOADED_COLLECTION_WEAPON;
 			}
@@ -1541,7 +1541,7 @@ void CItemModelPanel::LoadResFileForCurrentItem( bool bForceLoad )
 		{
 			if ( bForceLoad || m_nCollectionItemLoaded != LOADED_COLLECTION_COSMETIC )
 			{
-				tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s ItemModelPanelCollectionCosmeticItem", __FUNCTION__ );
+				//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s ItemModelPanelCollectionCosmeticItem", __FUNCTION__ );
 				LoadControlSettings( "Resource/UI/econ/ItemModelPanelCollectionCosmeticItem.res" );
 				m_nCollectionItemLoaded = LOADED_COLLECTION_COSMETIC;
 			}
@@ -1552,7 +1552,7 @@ void CItemModelPanel::LoadResFileForCurrentItem( bool bForceLoad )
 	{
 		if ( bForceLoad || m_nCollectionItemLoaded != LOADED_COLLECTION_NONE )
 		{
-			tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s ItemModelPanel", __FUNCTION__ );
+			//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s ItemModelPanel", __FUNCTION__ );
 			LoadControlSettings( "Resource/UI/econ/ItemModelPanel.res" );
 		}
 		m_bHideModel = m_bHideModelDefault;
@@ -2210,7 +2210,7 @@ void CItemModelPanel::ResizeLabels( void )
 //-----------------------------------------------------------------------------
 void CItemModelPanel::SetItem( const CEconItemView *pItem )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	HideContainedItemPanel();
 
@@ -2334,7 +2334,7 @@ void CItemModelPanel::Dragged( bool bDragging )
 //-----------------------------------------------------------------------------
 void CItemModelPanel::ShowContainedItemPanel( const CEconItemView *pItem )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	// If this item contains another item, create an interior item model panel.
 	if ( pItem->GetSOCData() && pItem->GetSOCData()->GetInteriorItem() && m_pContainedItemPanel )
@@ -2585,7 +2585,7 @@ void CItemModelPanel::UpdateDescription( bool bIsToolTip /* = false */ )
 	if ( !m_bDescriptionDirty )
 		return;
 
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	m_bDescriptionDirty = false;
 	
@@ -2994,7 +2994,7 @@ void CItemModelPanel::HideAllModifierIcons()
 //-----------------------------------------------------------------------------
 void CItemModelPanel::UpdatePanels( void )
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	//tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 
 	if ( !m_pModelPanel )
 		return;

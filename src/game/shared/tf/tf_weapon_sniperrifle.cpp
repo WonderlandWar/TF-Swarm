@@ -21,8 +21,8 @@
 #include "materialsystem/imaterialvar.h"
 #include "toolframework_client.h"
 #include "input.h"
-#include "client_virtualreality.h"
-#include "sourcevr/isourcevirtualreality.h"
+//#include "client_virtualreality.h"
+//#include "sourcevr/isourcevirtualreality.h"
 
 // forward declarations
 void ToolFramework_RecordMaterialParams( IMaterial *pMaterial );

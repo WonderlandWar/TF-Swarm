@@ -13,7 +13,7 @@
 
 #include <classmenu.h>
 #include <vgui_controls/EditablePanel.h>
-#include "vgui_controls/KeyRepeat.h"
+//#include "vgui_controls/KeyRepeat.h"
 #include <filesystem.h>
 #include <tf_shareddefs.h>
 #include "cbase.h"
@@ -86,7 +86,7 @@ public:
 
 	MESSAGE_FUNC( OnEconUIClosed, "EconUIClosed" );			// If the econ UI was opened (for editing loadout), we'll get notified when the user's done.
 
-	virtual GameActionSet_t GetPreferredActionSet() { return GAME_ACTION_SET_IN_GAME_HUD; }
+	//virtual GameActionSet_t GetPreferredActionSet() { return GAME_ACTION_SET_IN_GAME_HUD; }
 
 protected:
 	virtual void ApplySchemeSettings( IScheme *pScheme );

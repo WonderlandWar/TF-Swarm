@@ -237,7 +237,7 @@ static void ColorizeText( CEconNotification *pNotification, CExLabel *pControl, 
 					bSetColor = true;
 				}
 				break;
-			case COLOR_CUSTOM:
+			case COLOR_MOD_CUSTOM:
 				newColor = pControl->GetFgColor();
 				KeyValues *pKeyValues = pNotification->GetKeyValues();
 				if ( pKeyValues )

@@ -1553,6 +1553,57 @@ int	UTIL_GetHolidayForString( const char* pszHolidayName )
 #endif
 }
 
+extern ISoundEmitterSystemBase *soundemitterbase;
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+const char *UTIL_GetRandomSoundFromEntry( const char* pszEntryName )
+{
+	Assert( pszEntryName );
+
+	if ( pszEntryName )
+	{
+		int soundIndex = soundemitterbase->GetSoundIndex( pszEntryName );
+		CSoundParametersInternal *internal = ( soundIndex != -1 ) ? soundemitterbase->InternalGetParametersForSound( soundIndex ) : NULL;
+		// See if we need to pick a random one
+		if ( internal )
+		{
+			int wave = RandomInt( 0, internal->NumSoundNames() - 1 );
+			pszEntryName = soundemitterbase->GetWaveName( internal->GetSoundNames()[wave].symbol );
+		}
+	}
+
+	return pszEntryName;
+}
+
+/// Clamp and round float vals to int.  The values are in the 0...255 range.
+Color FloatRGBAToColor( float r, float g, float b, float a )
+{
+	return Color(
+		(unsigned char)clamp(r + .5f, 0.0, 255.0f),
+		(unsigned char)clamp(g + .5f, 0.0, 255.0f),
+		(unsigned char)clamp(b + .5f, 0.0, 255.0f),
+		(unsigned char)clamp(a + .5f, 0.0, 255.0f)
+	);
+}
+
+float LerpFloat( float x0, float x1, float t )
+{
+	return x0 + (x1 - x0) * t;
+}
+
+Color LerpColor( const Color &c0, const Color &c1, float t )
+{
+	if ( t <= 0.0f ) return c0;
+	if ( t >= 1.0f ) return c1;
+	return FloatRGBAToColor(
+		LerpFloat( (float)c0.r(), (float)c1.r(), t ),
+		LerpFloat( (float)c0.g(), (float)c1.g(), t ),
+		LerpFloat( (float)c0.b(), (float)c1.b(), t ),
+		LerpFloat( (float)c0.a(), (float)c1.a(), t )
+	);
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------

@@ -988,15 +988,16 @@ void CTFPlayerModelPanel::EquipItem( CEconItemView *pItem )
 		{
 			MDLCACHE_CRITICAL_SECTION();
 
+			studiohdr_t *studioHdr = m_RootMDL.m_MDL.GetStudioHdr();
 			// Get the studio header of the root model.
-			if ( !m_RootMDL.m_pStudioHdr )
+			if ( !studioHdr )
 				return;
 
-			CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
-			int iSequence = FindSequenceFromActivity( &studioHdr, s_pszDefaultAnimForWpnSlot[ iAnimSlot ] );
+			CStudioHdr Hdr = CStudioHdr( studioHdr, mdlcache );
+			int iSequence = FindSequenceFromActivity( &Hdr, s_pszDefaultAnimForWpnSlot[ iAnimSlot ] );
 			if ( iSequence != ACT_INVALID )
 			{
-				SetSequence( iSequence, true );
+				SetSequence( iSequence );
 			}
 		}
 	}
@@ -1099,7 +1100,7 @@ void CTFPlayerModelPanel::RemoveAdditionalModels( void )
 	ClearMergeMDLs();
 
 	// Unregister for all callbacks
-	modelinfo->UnregisterModelLoadCallback( -1, this );
+	//modelinfo->UnregisterModelLoadCallback( -1, this );
 	m_vecDynamicAssetsLoaded.Purge();
 	m_vecItemsLoaded.PurgeAndDeleteElements();
 }
@@ -1115,7 +1116,7 @@ void CTFPlayerModelPanel::LoadAndAttachAdditionalModel( const char *pMDLName, CE
 	{
 		// Get the client-only dynamic model index. The auto-addref
 		// of vecDynamicAssetsLoaded will actually trigger the load.
-		nModelIndex = modelinfo->RegisterDynamicModel( pMDLName, true );
+		//nModelIndex = modelinfo->RegisterDynamicModel( pMDLName, true );
 		// Dynamic models never fail to register in this engine.
 		Assert( nModelIndex != -1 );
 	}
@@ -1132,7 +1133,7 @@ void CTFPlayerModelPanel::LoadAndAttachAdditionalModel( const char *pMDLName, CE
 		if ( hMDL != MDLHANDLE_INVALID )
 		{
 			// Model not loaded, not dynamic. Hard load and exit out.
-			SetMergeMDL( hMDL, static_cast<IClientRenderable*>(pItem), pItem->GetSkin( m_iTeam ) );
+			//SetMergeMDL( hMDL, static_cast<IClientRenderable*>(pItem), pItem->GetSkin( m_iTeam ) );
 		}
 		m_MergeMDL = hMDL;
 		return;
@@ -1144,7 +1145,7 @@ void CTFPlayerModelPanel::LoadAndAttachAdditionalModel( const char *pMDLName, CE
 	m_vecItemsLoaded.AddToTail( pClone );
 
 	// callback triggers immediately if not dynamic
-	modelinfo->RegisterModelLoadCallback( nModelIndex, this, true );
+	//modelinfo->RegisterModelLoadCallback( nModelIndex, this, true );
 }
 
 //-----------------------------------------------------------------------------
@@ -1172,45 +1173,10 @@ static void SetMDLSkinForTeam( CMDL *pMDL, const CEconItemView *pItem, int iTeam
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CTFPlayerModelPanel::OnModelLoadComplete( const model_t *pModel )
+/*void CTFPlayerModelPanel::OnModelLoadComplete( const model_t *pModel )
 {
-	CEconItemView *pItem = NULL;
-	FOR_EACH_VEC_BACK( m_vecDynamicAssetsLoaded, i )
-	{
-		if ( modelinfo->GetModel( m_vecDynamicAssetsLoaded[ i ] ) == pModel )
-		{
-			pItem = GetPreviewItem( m_vecItemsLoaded[ i ] );
-			break;
-		}
-	}
 
-	Assert( pItem );
-	if ( pItem )
-	{
-		MDLHandle_t hMDL = modelinfo->GetCacheHandle( pModel );
-		Assert( hMDL != MDLHANDLE_INVALID );
-		if ( hMDL != MDLHANDLE_INVALID )
-		{
-			SetMergeMDL( hMDL, static_cast<IClientRenderable*>(pItem) );
-
-			int nBody = 0;
-			if ( pItem->GetStaticData()->UsesPerClassBodygroups( m_iTeam ) )
-			{
-				CMDL *pMDL = GetMergeMDL(hMDL);
-				if ( pMDL )
-				{
-					// Classes start at 1, bodygroups at 0, so we shift them all back 1.
-					MDLCACHE_CRITICAL_SECTION();
-					::SetBodygroup( GetMergeMDLStudioHdr( hMDL ), nBody, 1, m_iCurrentClassIndex-1 );
-					pMDL->m_nBody = nBody;
-				}
-			}
-
-			// Set the custom skin.
-			SetMDLSkinForTeam( GetMergeMDL( hMDL ), pItem, m_iTeam );
-		}
-	}
-}
+}*/
 
 void CTFPlayerModelPanel::SetTeam( int iTeam )
 {
@@ -1515,6 +1481,7 @@ IMaterial* CTFPlayerModelPanel::GetOverrideMaterial( MDLHandle_t mdlHandle )
 bool CTFPlayerModelPanel::RenderStatTrack( CStudioHdr *pStudioHdr, matrix3x4_t *pWorldMatrix )
 {
 	// Draw the merge MDLs.
+#if 0
 	if ( !m_StatTrackModel.m_bDisabled )
 	{
 		matrix3x4_t matMergeBoneToWorld[MAXSTUDIOBONES];
@@ -1538,7 +1505,7 @@ bool CTFPlayerModelPanel::RenderStatTrack( CStudioHdr *pStudioHdr, matrix3x4_t *
 
 		return true;
 	}
-
+#endif
 	return false;
 }
 
@@ -1912,7 +1879,7 @@ void CTFPlayerModelPanel::StartEvent( float currenttime, CChoreoScene *scene, CC
 			es.m_pSoundName = event->GetParameters();
 
 			C_RecipientFilter filter;
-			C_BaseEntity::EmitSound( filter, SOUND_FROM_UI_PANEL, es );
+			C_BaseEntity::EmitSound( filter, SOUND_FROM_WORLD, es );
 		}
 		break;
 
@@ -2054,25 +2021,26 @@ void CTFPlayerModelPanel::ProcessSequence( CChoreoScene *scene, CChoreoEvent *ev
 {
 	Assert( event->GetType() == CChoreoEvent::SEQUENCE );
 
-	CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
-
+	//CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+	studiohdr_t *studioHdr = m_RootMDL.m_MDL.GetStudioHdr();
+	CStudioHdr hdr( studioHdr, mdlcache );
 	if ( !event->GetActor() )
 		return;
 
-	int iSequence = LookupSequence( &studioHdr, event->GetParameters() );
+	int iSequence = LookupSequence( &hdr, event->GetParameters() );
 	if (iSequence < 0)
 		return;
 
 	// making sure the mdl has correct playback rate
-	mstudioseqdesc_t &seqdesc = studioHdr.pSeqdesc( iSequence );
-	mstudioanimdesc_t &animdesc = studioHdr.pAnimdesc( studioHdr.iRelativeAnim( iSequence, seqdesc.anim(0,0) ) );
+	mstudioseqdesc_t &seqdesc = studioHdr->pSeqdesc( iSequence );
+	mstudioanimdesc_t &animdesc = studioHdr->pAnimdesc( studioHdr->iRelativeAnim( iSequence, seqdesc.anim(0,0) ) );
 	m_RootMDL.m_MDL.m_flPlaybackRate = animdesc.fps;
 
 	MDLSquenceLayer_t	tmpSequenceLayers[1];
 	tmpSequenceLayers[0].m_nSequenceIndex = iSequence;
 	tmpSequenceLayers[0].m_flWeight = 1.0;
-	tmpSequenceLayers[0].m_bNoLoop = true;
-	tmpSequenceLayers[0].m_flCycleBeganAt = m_RootMDL.m_MDL.m_flTime;
+	//tmpSequenceLayers[0].m_bNoLoop = true;
+	//tmpSequenceLayers[0].m_flCycleBeganAt = m_RootMDL.m_MDL.m_flTime;
 	SetSequenceLayers( tmpSequenceLayers, 1 );
 }
 
@@ -2116,7 +2084,7 @@ void CTFPlayerModelPanel::ProcessLoop( CChoreoScene *scene, CChoreoEvent *event 
 	float flDelta = flPrevTime - backtime;
 
 	//Msg("	-> Delta %.2f\n", flDelta );
-
+#if 0
 	// If we're running noloop sequences, we need to push out their begin time, so they keep playing
 	for ( int i = 0; i < m_nNumSequenceLayers; i++ )
 	{
@@ -2125,6 +2093,7 @@ void CTFPlayerModelPanel::ProcessLoop( CChoreoScene *scene, CChoreoEvent *event 
 			m_SequenceLayers[i].m_flCycleBeganAt += flDelta;
 		}
 	}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -2141,9 +2110,10 @@ LocalFlexController_t CTFPlayerModelPanel::GetNumFlexControllers( void )
 //-----------------------------------------------------------------------------
 const char *CTFPlayerModelPanel::GetFlexDescFacs( int iFlexDesc )
 {
-	CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+	//CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+	studiohdr_t *studioHdr = m_RootMDL.m_MDL.GetStudioHdr();
 
-	mstudioflexdesc_t *pflexdesc = studioHdr.pFlexdesc( iFlexDesc );
+	mstudioflexdesc_t *pflexdesc = studioHdr->pFlexdesc( iFlexDesc );
 
 	return pflexdesc->pszFACS( );
 }
@@ -2153,9 +2123,10 @@ const char *CTFPlayerModelPanel::GetFlexDescFacs( int iFlexDesc )
 //-----------------------------------------------------------------------------
 const char *CTFPlayerModelPanel::GetFlexControllerName( LocalFlexController_t iFlexController )
 {
-	CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+	//CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+	studiohdr_t *studioHdr = m_RootMDL.m_MDL.GetStudioHdr();
 
-	mstudioflexcontroller_t *pflexcontroller = studioHdr.pFlexcontroller( iFlexController );
+	mstudioflexcontroller_t *pflexcontroller = studioHdr->pFlexcontroller( iFlexController );
 
 	return pflexcontroller->pszName( );
 }
@@ -2165,9 +2136,10 @@ const char *CTFPlayerModelPanel::GetFlexControllerName( LocalFlexController_t iF
 //-----------------------------------------------------------------------------
 const char *CTFPlayerModelPanel::GetFlexControllerType( LocalFlexController_t iFlexController )
 {
-	CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+	//CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+	studiohdr_t *studioHdr = m_RootMDL.m_MDL.GetStudioHdr();
 
-	mstudioflexcontroller_t *pflexcontroller = studioHdr.pFlexcontroller( iFlexController );
+	mstudioflexcontroller_t *pflexcontroller = studioHdr->pFlexcontroller( iFlexController );
 
 	return pflexcontroller->pszType( );
 }
@@ -2196,9 +2168,10 @@ void CTFPlayerModelPanel::SetFlexWeight( LocalFlexController_t index, float valu
 {
 	if (index >= 0 && index < GetNumFlexControllers())
 	{
-		CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+		//CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+		studiohdr_t *studioHdr = m_RootMDL.m_MDL.GetStudioHdr();
 
-		mstudioflexcontroller_t *pflexcontroller = studioHdr.pFlexcontroller( index );
+		mstudioflexcontroller_t *pflexcontroller = studioHdr->pFlexcontroller( index );
 
 		if (pflexcontroller->max != pflexcontroller->min)
 		{
@@ -2217,9 +2190,10 @@ float CTFPlayerModelPanel::GetFlexWeight( LocalFlexController_t index )
 {
 	if (index >= 0 && index < GetNumFlexControllers())
 	{
-		CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+		//CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+		studiohdr_t *studioHdr = m_RootMDL.m_MDL.GetStudioHdr();
 
-		mstudioflexcontroller_t *pflexcontroller = studioHdr.pFlexcontroller( index );
+		mstudioflexcontroller_t *pflexcontroller = studioHdr->pFlexcontroller( index );
 
 		if (pflexcontroller->max != pflexcontroller->min)
 		{
@@ -2240,13 +2214,14 @@ void CTFPlayerModelPanel::SetupFlexWeights( void )
 		return;
 
 	// initialize the models local to global flex controller mappings
-	CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
-	if (studioHdr.pFlexcontroller( LocalFlexController_t(0) )->localToGlobal == -1)
+	//CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+	studiohdr_t *studioHdr = m_RootMDL.m_MDL.GetStudioHdr();
+	if (studioHdr->pFlexcontroller( LocalFlexController_t(0) )->localToGlobal == -1)
 	{
-		for ( LocalFlexController_t i = LocalFlexController_t(0); i < studioHdr.numflexcontrollers(); i++)
+		for ( LocalFlexController_t i = LocalFlexController_t(0); i < studioHdr->numflexcontrollers; i++)
 		{
-			int j = C_BaseFlex::AddGlobalFlexController( studioHdr.pFlexcontroller( i )->pszName() );
-			studioHdr.pFlexcontroller( i )->localToGlobal = j;
+			int j = C_BaseFlex::AddGlobalFlexController( studioHdr->pFlexcontroller( i )->pszName() );
+			studioHdr->pFlexcontroller( i )->localToGlobal = j;
 		}
 	}
 
@@ -2272,9 +2247,9 @@ void CTFPlayerModelPanel::SetupFlexWeights( void )
 	}
 
 	// get the networked flexweights and convert them from 0..1 to real dynamic range
-	for (i = LocalFlexController_t(0); i < studioHdr.numflexcontrollers(); i++)
+	for (i = LocalFlexController_t(0); i < studioHdr->numflexcontrollers; i++)
 	{
-		mstudioflexcontroller_t *pflex = studioHdr.pFlexcontroller( i );
+		mstudioflexcontroller_t *pflex = studioHdr->pFlexcontroller( i );
 
 		m_RootMDL.m_MDL.m_pFlexControls[pflex->localToGlobal] = m_flexWeight[i];
 		// rescale
@@ -2471,8 +2446,9 @@ void CTFPlayerModelPanel::ProcessFlexAnimation( CChoreoScene *scene, CChoreoEven
 {
 	Assert( event->GetType() == CChoreoEvent::FLEXANIMATION );
 
-	CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
-	CStudioHdr *hdr = &studioHdr;
+	studiohdr_t *hdr = m_RootMDL.m_MDL.GetStudioHdr();
+	//CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+	//CStudioHdr *hdr = &studioHdr;
 	if ( !hdr )
 		return;
 
@@ -2686,8 +2662,9 @@ void CTFPlayerModelPanel::AddVisemesForSentence( Emphasized_Phoneme *classes, fl
 //-----------------------------------------------------------------------------
 void CTFPlayerModelPanel::AddViseme( Emphasized_Phoneme *classes, float emphasis_intensity, int phoneme, float scale, bool newexpression )
 {
-	CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
-	CStudioHdr *hdr = &studioHdr;
+	studiohdr_t *hdr = m_RootMDL.m_MDL.GetStudioHdr();
+	//CStudioHdr &studioHdr = *m_RootMDL.m_pStudioHdr;
+//	CStudioHdr *hdr = &studioHdr;
 	if ( !hdr )
 		return;
 
@@ -2859,8 +2836,9 @@ void CTFPlayerModelPanel::ComputeBlendedSetting( Emphasized_Phoneme *classes, fl
 //-----------------------------------------------------------------------------
 void CTFPlayerModelPanel::InitPhonemeMappings( void )
 {
-	CStudioHdr *pStudioHdr = m_RootMDL.m_pStudioHdr;
-	if ( pStudioHdr && pStudioHdr->IsValid() )
+	studiohdr_t *pStudioHdr = m_RootMDL.m_MDL.GetStudioHdr();
+	//CStudioHdr *pStudioHdr = m_RootMDL.m_pStudioHdr;
+	if ( pStudioHdr )
 	{
 		char szBasename[MAX_PATH];
 		Q_StripExtension( pStudioHdr->pszName(), szBasename, sizeof( szBasename ) );

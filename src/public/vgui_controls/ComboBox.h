@@ -110,7 +110,7 @@ public:
 
 	virtual void SetUseFallbackFont( bool bState, HFont hFallback );
 
-	ComboBoxButton *GetComboButton( void ) { return m_pButton; }
+	vgui::Button *GetComboButton( void ) { return (vgui::Button*)m_pButton; }
 
 protected:
 	// overrides
